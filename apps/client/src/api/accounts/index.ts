@@ -2,9 +2,14 @@ import { client } from '@/lib/client';
 import { AccountFormSchemaType, AccountType } from '@/pages/trades/Accounts/types';
 
 export const getAccounts = async (): Promise<AccountType[]> => {
-  const response = await client.get('accounts');
-  if (response.statusText !== 'OK') throw new Error('Failed to fetch');
-  return response.data;
+  try {
+    const response = await client.get('accounts');
+    if (response.statusText !== 'OK') throw new Error('Failed to fetch');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch accounts');
+  }
 };
 
 export const addAccount = async (data: AccountFormSchemaType): Promise<AccountType | null> => {
