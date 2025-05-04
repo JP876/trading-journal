@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -12,8 +12,13 @@ export class AccountsService {
   constructor(@InjectModel(Account.name) private readonly accountModel: Model<Account>) {}
 
   public async findAll(user: User): Promise<Account[] | null> {
-    const results = await this.accountModel.find({ user: user._id });
-    return results;
+    try {
+      const results = await this.accountModel.find({ user: user._id });
+      console.log(results);
+      return results;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   public async findById(id: string): Promise<Account | null> {
@@ -41,8 +46,12 @@ export class AccountsService {
     account.description = updateAccountDto?.description || account.description;
     account.isMain = updateAccountDto?.isMain || account.isMain;
 
-    await account.save({ validateBeforeSave: true });
-    return account;
+    try {
+      await account.save({ validateBeforeSave: true });
+      return account;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   public async delete(id: string) {

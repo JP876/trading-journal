@@ -4,6 +4,8 @@ import { AccountFormSchemaType, AccountType } from '@/pages/trades/Accounts/type
 export const getAccounts = async (): Promise<AccountType[]> => {
   try {
     const response = await client.get('accounts');
+    console.log(response);
+
     if (response.statusText !== 'OK') throw new Error('Failed to fetch');
     return response.data;
   } catch (error) {
