@@ -8,7 +8,6 @@ export const tradesLimit = 10;
 
 export const getTrades = async (page: number): Promise<getTradesResult> => {
   const response = await client.get('trades', { params: { page, limit: tradesLimit } });
-  if (response.statusText !== 'OK') throw new Error('Failed to fetch');
   return response.data;
 };
 
