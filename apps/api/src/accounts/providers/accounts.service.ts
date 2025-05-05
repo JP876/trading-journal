@@ -12,13 +12,8 @@ export class AccountsService {
   constructor(@InjectModel(Account.name) private readonly accountModel: Model<Account>) {}
 
   public async findAll(user: User): Promise<Account[] | null> {
-    try {
-      const results = await this.accountModel.find({ user: user._id });
-      console.log(results);
-      return results;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    const results = await this.accountModel.find({ user: user._id });
+    return results;
   }
 
   public async findById(id: string): Promise<Account | null> {
