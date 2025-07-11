@@ -24,6 +24,7 @@ import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
 import { Link, Outlet, useLocation } from 'react-router';
 
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
+import AccountMain from './Account';
 
 type navItem = { label: string; to: string; icon: ReactNode };
 
@@ -76,12 +77,24 @@ const NavigationList = ({ open }: { open: boolean }) => {
   );
 };
 
+type navigationValueType = 'true' | 'false' | undefined;
+
 const NavigationMain = () => {
   const theme = useTheme();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(() => {
+    const initialValue = localStorage.getItem('navigation-open') as navigationValueType;
+    return initialValue ? initialValue === 'true' : false;
+  });
 
-  const handleDrawerOpen = () => setOpen(true);
-  const handleDrawerClose = () => setOpen(false);
+  const handleDrawerOpen = () => {
+    localStorage.setItem('navigation-open', 'true');
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    localStorage.setItem('navigation-open', 'false');
+    setOpen(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -97,11 +110,12 @@ const NavigationMain = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" gap={1}>
               <CandlestickChartIcon />
               <Typography variant="h6">Trading Journal</Typography>
             </Stack>
+            <AccountMain />
           </Stack>
         </Toolbar>
       </AppBar>
