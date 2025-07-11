@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { Edit, Files, Info, MoreVertical, Trash, X } from 'lucide-react';
+import { Edit, Files, Info, MoreVertical, Trash } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { TradeDirection, TradeType, TradeDialogListIds, TradeResult } from '../types';
@@ -16,14 +16,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import useAppStore from '@/store';
-
-const ValueNotFound = ({ className }: { className?: string }) => {
-  return (
-    <div className={cn('flex items-center', className)}>
-      <X className=" w-5 h-5" />
-    </div>
-  );
-};
+import ValueNotFound from '@/components/ui/ValueNotFound';
 
 const TradeActions = ({ trade }: { trade: TradeType }) => {
   const openModal = useAppStore((state) => state.openModal);

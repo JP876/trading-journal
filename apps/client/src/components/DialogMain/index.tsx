@@ -16,7 +16,7 @@ const DialogMain = ({ size = '2xl', ...props }: DialogMainProps) => {
 
   return (
     <Dialog modal open={!!modalInfo?.[props.id]} onOpenChange={() => closeModal(props.id)}>
-      <DialogContent className={`sm:max-w-2xl`}>
+      <DialogContent className={`sm:max-w-3xl`}>
         <DialogHeader>
           <DialogTitle>{props.title}</DialogTitle>
           <DialogDescription className="sr-only">Description</DialogDescription>

@@ -5,7 +5,7 @@ import DialogMain from '../DialogMain';
 const DialogList = () => {
   return (
     <>
-      <DialogMain id={DialogListIds.EDIT_USER} title="Edit Account">
+      <DialogMain id={DialogListIds.EDIT_USER} size="4xl" title="Edit Account">
         <UserSettings />
       </DialogMain>
     </>

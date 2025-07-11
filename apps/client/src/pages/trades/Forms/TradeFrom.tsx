@@ -28,6 +28,8 @@ const resultItems = [
 const pairItems: ISelectItem[] = [
   { label: 'EUR/USD', value: 'EUR/USD' },
   { label: 'USD/JPY', value: 'USD/JPY' },
+  { label: 'EUR/JPY', value: 'EUR/JPY' },
+  { label: 'AUD/JPY', value: 'AUD/JPY' },
   { label: 'GBP/USD', value: 'GBP/USD' },
   { label: 'AUD/USD', value: 'AUD/USD' },
   { label: 'USD/CAD', value: 'USD/CAD' },

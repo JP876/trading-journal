@@ -9,7 +9,7 @@ import { AccountDialogListIds } from './types';
 
 const AccountSelect = () => {
   const queryClient = useQueryClient();
-  const { data, isError, error } = useQuery({ queryKey: ['accounts'], queryFn: getAccounts });
+  const { data } = useQuery({ queryKey: ['accounts'], queryFn: getAccounts });
 
   const mutation = useMutation({
     mutationFn: (id: string) => updateAccount(id, { isMain: true }),
@@ -20,7 +20,6 @@ const AccountSelect = () => {
       ]);
     },
   });
-  console.log(isError, error);
 
   const mainAccount = (data || []).find((el) => el?.isMain);
 
@@ -46,7 +45,7 @@ const AccountsMain = () => {
   return (
     <div className="flex justify-between items-center">
       <div>
-        <h5 className=" font-bold text-2xl">Trades</h5>
+        <h5 className="font-bold text-2xl">Trades</h5>
       </div>
       <div className="flex items-center gap-4">
         <AccountSelect />
