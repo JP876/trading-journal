@@ -7,8 +7,8 @@ import LoginIcon from '@mui/icons-material/Login';
 import { AxiosError } from 'axios';
 
 import { ErrorResponse } from '@/types';
-import { loginFormSchema, LoginFormType } from '../../types';
 import { loginUser } from '@/api/auth';
+import { loginFormSchema, LoginFormType } from '@/types/auth';
 
 const LoginForm = () => {
   const navigate = useNavigate();

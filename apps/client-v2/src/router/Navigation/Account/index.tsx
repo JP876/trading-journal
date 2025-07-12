@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router';
 import { useMutation } from '@tanstack/react-query';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { Avatar, Tooltip } from '@mui/material';
 
 import useAppStore from '@/store';
-import { Avatar, Tooltip } from '@mui/material';
 import MenuActions from '@/components/MenuActions';
 import { logoutUser } from '@/api/auth';
 import { menuActionType } from '@/components/MenuActions/types';

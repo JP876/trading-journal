@@ -79,8 +79,7 @@ const MenuActions = (props: menuActionsPropsType) => {
         : setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (event: buttonClickEvent, reason: reasonType) => {
-    event.stopPropagation();
+  const handleClose = (event: {} | undefined, reason: reasonType) => {
     typeof onClose === 'function'
       ? onClose(event, reason)
       : typeof setOpenMenu === 'function'

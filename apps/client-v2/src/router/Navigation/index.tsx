@@ -11,6 +11,7 @@ import {
   ListItemText,
   Stack,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -45,33 +46,40 @@ const NavigationList = ({ open }: { open: boolean }) => {
   return (
     <List>
       {navItems.map(({ label, to, icon }) => (
-        <ListItem component={Link} discover="none" to={to} key={label} disablePadding sx={{ display: 'block' }}>
-          <ListItemButton
-            disableRipple
-            sx={[
-              {
-                minHeight: 48,
-                transition: (theme) => theme.transitions.create(['background-color', 'color']),
-                svg: {
-                  transition: (theme) => theme.transitions.create(['color']),
+        <Tooltip
+          key={label}
+          arrow
+          placement="right"
+          title={open ? '' : <Typography variant="body1">{label}</Typography>}
+        >
+          <ListItem component={Link} discover="none" to={to} disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              disableRipple
+              sx={[
+                {
+                  minHeight: 48,
+                  transition: (theme) => theme.transitions.create(['background-color', 'color']),
+                  svg: {
+                    transition: (theme) => theme.transitions.create(['color']),
+                  },
                 },
-              },
-              open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
-              activeLink?.to === to && {
-                backgroundColor: (theme) => theme.palette.grey[200],
-                color: (theme) => theme.palette.primary.main,
-                svg: {
+                open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
+                activeLink?.to === to && {
+                  backgroundColor: (theme) => theme.palette.grey[200],
                   color: (theme) => theme.palette.primary.main,
+                  svg: {
+                    color: (theme) => theme.palette.primary.main,
+                  },
                 },
-              },
-            ]}
-          >
-            <ListItemIcon sx={[{ minWidth: 0, justifyContent: 'center' }, open ? { mr: 3 } : { mr: 'auto' }]}>
-              {icon}
-            </ListItemIcon>
-            <ListItemText primary={label} sx={{ opacity: +open }} />
-          </ListItemButton>
-        </ListItem>
+              ]}
+            >
+              <ListItemIcon sx={[{ minWidth: 0, justifyContent: 'center' }, open ? { mr: 3 } : { mr: 'auto' }]}>
+                {icon}
+              </ListItemIcon>
+              <ListItemText primary={label} sx={{ opacity: +open }} />
+            </ListItemButton>
+          </ListItem>
+        </Tooltip>
       ))}
     </List>
   );
@@ -128,7 +136,7 @@ const NavigationMain = () => {
         <Divider />
         <NavigationList open={open} />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
         <DrawerHeader />
         <Outlet />
       </Box>

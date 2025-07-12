@@ -3,3 +3,8 @@ export type ErrorResponse = {
   message: string | string[];
   statusCode: number;
 };
+
+export type selectOptionType = {
+  id: string;
+  label: string;
+};

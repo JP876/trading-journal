@@ -1,5 +1,5 @@
 import { client } from '@/lib/client';
-import { LoginFormType } from '@/pages/Auth/types';
+import { LoginFormType, RegisterFormType } from '@/types/auth';
 
 type refreshTokenData = { _id: string };
 
@@ -13,10 +13,10 @@ export const getLoggedInUser = async () => {
   return response.data;
 };
 
-/* export const registerUser = async (data: RegisterFormType) => {
+export const registerUser = async (data: RegisterFormType) => {
   const response = await client.post('auth/register', data);
   return response.data;
-}; */
+};
 
 export const loginUser = async (data: LoginFormType) => {
   const response = await client.post('auth/login', data);
