@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useEffect, useRef } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, Updater, useReactTable, VisibilityState } from '@tanstack/react-table';
 import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
-import { editLoggedInUser } from '@/api/user';
 import useAppStore from '@/store';
 import { getTrades } from '@/api/trades';
 import useColumns from './hooks/useColumns';
@@ -11,21 +10,21 @@ import AddTradeBtn from './AddTradeBtn';
 
 const TradesTableMain = () => {
   const prevVisibilityRef = useRef<VisibilityState>({});
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
 
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const tradesColumnVisibility = useAppStore((state) => state.user?.userSettings?.tradesColumnVisibility);
 
-  const mutation = useMutation({
+  /* const mutation = useMutation({
     mutationFn: editLoggedInUser,
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
-  });
+  }); */
 
   const { data, isLoading } = useQuery({
-    queryKey: ['trades', page],
-    queryFn: () => getTrades(page),
+    queryKey: ['trades', 1],
+    queryFn: () => getTrades(1),
     placeholderData: keepPreviousData,
   });
 
@@ -33,10 +32,10 @@ const TradesTableMain = () => {
 
   const handleColumnVisibility = useCallback((updaterOrValue: Updater<VisibilityState>) => {
     if (typeof updaterOrValue === 'function') {
-      const nextValue = updaterOrValue(prevVisibilityRef.current);
-      mutation.mutate({ userSettings: { tradesColumnVisibility: nextValue } });
+      // const nextValue = updaterOrValue(prevVisibilityRef.current);
+      // mutation.mutate({ userSettings: { tradesColumnVisibility: nextValue } });
     } else {
-      mutation.mutate({ userSettings: { tradesColumnVisibility: updaterOrValue } });
+      // mutation.mutate({ userSettings: { tradesColumnVisibility: updaterOrValue } });
     }
   }, []);
 

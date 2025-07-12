@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-import { userType } from '@/types';
+import { userType } from '@/types/user';
 
 export interface IUserSlice {
   user: userType | null;

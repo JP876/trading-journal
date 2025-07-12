@@ -1,4 +1,3 @@
-import { isAfter, isBefore } from 'date-fns';
 import { z } from 'zod';
 
 export enum TradeDialogListIds {
@@ -38,31 +37,10 @@ export const tradeFormSchema = z.object({
 
 export type TradeFormSchemaType = z.infer<typeof tradeFormSchema>;
 
-export const editTradeFormSchema = tradeFormSchema
-  .extend({
-    deleteFiles: z.array(z.string()).optional(),
-  })
-  .superRefine((data, ctx) => {
-    if (data?.openDate && data?.closeDate) {
-      if (isAfter(data.openDate, data.closeDate)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.invalid_date,
-          path: ['openDate'],
-          message: 'Invalid date',
-        });
-      }
-      if (isBefore(data.closeDate, data.openDate)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.invalid_date,
-          path: ['closeDate'],
-          message: 'Invalid date',
-          fatal: true,
-        });
-      }
-    }
+export const editTradeFormSchema = tradeFormSchema.extend({
+  deleteFiles: z.array(z.string()).optional(),
+});
 
-    return true;
-  });
 export type EditTradeFormSchemaType = z.infer<typeof editTradeFormSchema>;
 
 export type TradeType = { _id: string; files?: FilesType[] } & Omit<TradeFormSchemaType, 'files'>;
