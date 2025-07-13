@@ -35,7 +35,7 @@ const ProtectedRoutes = () => {
 
   useEffect(() => {
     setUser(userData);
-  }, [userData]);
+  }, [setUser, userData]);
 
   if ((isLoading || isFetching) && !isFetchedAfterMount) {
     return null;
