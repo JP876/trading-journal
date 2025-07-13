@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { Controller, useForm } from 'react-hook-form';
-import { Autocomplete, Box, Button, Divider, Stack, TextField } from '@mui/material';
-import { DateTimePicker, renderTimeViewClock } from '@mui/x-date-pickers';
+import { Box, Button, Divider, Stack } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 
 import { addTrade } from '@/api/trades';
@@ -10,7 +9,9 @@ import useAppStore from '@/store';
 import { tradeFormSchema, TradeFormSchemaType } from '@/types/trades';
 import { directionItems, pairOptions, resultItems } from '../consts';
 import SelectInput from '@/components/formInputs/SelectInput';
-import { selectOptionType } from '@/types';
+import TextInput from '@/components/formInputs/TextInput';
+import DateTimeInput from '@/components/formInputs/DateTimeInput';
+import AutocompleteInput from '@/components/formInputs/AutocompleteInput';
 
 const AddTradeForm = () => {
   const queryClient = useQueryClient();
@@ -55,45 +56,17 @@ const AddTradeForm = () => {
         <Controller
           name="pair"
           control={form.control}
-          render={({ field, fieldState: { error } }) => (
-            <Autocomplete
-              fullWidth
-              options={pairOptions}
-              renderInput={(params) => (
-                <TextField inputRef={field.ref} error={!!error?.message} {...params} size="small" label="Pair *" />
-              )}
-              value={field.value ? pairOptions.find((option) => option.id === field.value) : null}
-              onChange={(_: any, newValue: selectOptionType | null) => {
-                field.onChange(newValue?.id);
-              }}
-            />
-          )}
+          render={({ field }) => <AutocompleteInput field={field} options={pairOptions} label="Pair *" />}
         />
         <Controller
           name="direction"
           control={form.control}
-          render={({ field }) => (
-            <SelectInput
-              options={directionItems}
-              label="Direction *"
-              value={field.value}
-              onChange={field.onChange}
-              ref={field.ref}
-            />
-          )}
+          render={({ field }) => <SelectInput options={directionItems} label="Direction *" field={field} />}
         />
         <Controller
           name="result"
           control={form.control}
-          render={({ field }) => (
-            <SelectInput
-              options={resultItems}
-              label="Result *"
-              value={field.value}
-              onChange={field.onChange}
-              ref={field.ref}
-            />
-          )}
+          render={({ field }) => <SelectInput options={resultItems} label="Result *" field={field} />}
         />
       </Stack>
 
@@ -101,33 +74,17 @@ const AddTradeForm = () => {
         <Controller
           name="stopLoss"
           control={form.control}
-          render={({ field }) => (
-            <TextField
-              size="small"
-              type="number"
-              label="Stop Loss *"
-              {...field}
-              onChange={(e) => field.onChange(+e.target.value)}
-            />
-          )}
+          render={({ field }) => <TextInput label="Stop Loss *" field={field} type="number" />}
         />
         <Controller
           name="takeProfit"
           control={form.control}
-          render={({ field }) => (
-            <TextField
-              size="small"
-              type="number"
-              label="Take Profit *"
-              {...field}
-              onChange={(e) => field.onChange(+e.target.value)}
-            />
-          )}
+          render={({ field }) => <TextInput label="Take Profit *" field={field} type="number" />}
         />
         <Controller
           name="pl"
           control={form.control}
-          render={({ field }) => <TextField size="small" type="number" label="Profit/Loss" {...field} />}
+          render={({ field }) => <TextInput label="Profit/Loss" field={field} type="number" />}
         />
       </Stack>
 
@@ -135,34 +92,12 @@ const AddTradeForm = () => {
         <Controller
           name="openDate"
           control={form.control}
-          render={({ field }) => (
-            <DateTimePicker
-              views={['year', 'month', 'day', 'hours', 'minutes']}
-              format="dd/MM/yyyy HH:mm"
-              label="Open Date"
-              value={field.value || null}
-              onChange={(newValue) => field.onChange(newValue)}
-              ampm={false}
-              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-              viewRenderers={{ hours: renderTimeViewClock, minutes: renderTimeViewClock }}
-            />
-          )}
+          render={({ field }) => <DateTimeInput label="Open Date" field={field} />}
         />
         <Controller
           name="closeDate"
           control={form.control}
-          render={({ field }) => (
-            <DateTimePicker
-              views={['year', 'month', 'day', 'hours', 'minutes']}
-              format="dd/MM/yyyy HH:mm"
-              label="Open Date"
-              value={field.value || null}
-              onChange={(newValue) => field.onChange(newValue)}
-              ampm={false}
-              slotProps={{ textField: { size: 'small', fullWidth: true } }}
-              viewRenderers={{ hours: renderTimeViewClock, minutes: renderTimeViewClock }}
-            />
-          )}
+          render={({ field }) => <DateTimeInput label="Close Date" field={field} />}
         />
       </Stack>
 
@@ -170,7 +105,7 @@ const AddTradeForm = () => {
         <Controller
           name="comment"
           control={form.control}
-          render={({ field }) => <TextField fullWidth size="small" label="Comment" rows={6} multiline {...field} />}
+          render={({ field }) => <TextInput label="Comment" field={field} fullWidth multiline rows={6} />}
         />
       </Stack>
 

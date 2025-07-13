@@ -1,34 +1,24 @@
-import { ForwardedRef, forwardRef, useId } from 'react';
+import { useId } from 'react';
 import { FormControl, InputLabel } from '@mui/material';
-import Select, { SelectProps, SelectChangeEvent } from '@mui/material/Select';
+import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
 
-import { selectOptionType } from '@/types';
+import { FormFieldType, SelectOptionType } from '@/types';
 
-type selectInputPropsType = {
-  options: (selectOptionType & { menuItemProps?: MenuItemProps })[];
-  label: string;
-  onChange: (event: SelectChangeEvent<unknown>, child: React.ReactNode) => void;
-  value?: string;
-  selectProps?: SelectProps;
+type SelectInputPropsType = {
+  field: FormFieldType;
+  options: (SelectOptionType & { menuItemProps?: MenuItemProps })[];
 };
 
-const SelectInput = (props: selectInputPropsType, ref: ForwardedRef<HTMLElement>) => {
+const SelectInput = ({ field, options, ...rest }: SelectInputPropsType & SelectProps) => {
   const labelId = useId();
+  const { value, ...restField } = field;
 
   return (
     <FormControl fullWidth size="small">
-      <InputLabel id={labelId}>{props.label}</InputLabel>
-      <Select
-        labelId={labelId}
-        id="simple-select"
-        {...props?.selectProps}
-        label={props.label}
-        onChange={props.onChange}
-        value={props?.value || ''}
-        ref={ref}
-      >
-        {props.options.map(({ id, label, menuItemProps }) => (
+      <InputLabel id={labelId}>{rest.label}</InputLabel>
+      <Select labelId={labelId} id="simple-select" {...rest} value={value || ''} {...restField}>
+        {options.map(({ id, label, menuItemProps }) => (
           <MenuItem key={id} {...(menuItemProps || {})} value={id}>
             {label}
           </MenuItem>
@@ -38,4 +28,4 @@ const SelectInput = (props: selectInputPropsType, ref: ForwardedRef<HTMLElement>
   );
 };
 
-export default forwardRef(SelectInput);
+export default SelectInput;
