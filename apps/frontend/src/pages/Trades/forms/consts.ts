@@ -1,6 +1,6 @@
-import { selectOptionType } from '@/types';
+import { SelectOptionType } from '@/types';
 
-export const pairOptions: selectOptionType[] = [
+export const pairOptions: SelectOptionType[] = [
   { label: 'EUR/USD', id: 'EUR/USD' },
   { label: 'USD/JPY', id: 'USD/JPY' },
   { label: 'EUR/JPY', id: 'EUR/JPY' },
@@ -13,12 +13,12 @@ export const pairOptions: selectOptionType[] = [
   { label: 'EUR/GBP', id: 'EUR/GBP' },
 ];
 
-export const directionItems: selectOptionType[] = [
+export const directionItems: SelectOptionType[] = [
   { label: 'BUY', id: 'buy' },
   { label: 'SELL', id: 'sell' },
 ];
 
-export const resultItems: selectOptionType[] = [
+export const resultItems: SelectOptionType[] = [
   { label: 'WIN', id: 'win' },
   { label: 'BE', id: 'be' },
   { label: 'LOSS', id: 'loss' },
