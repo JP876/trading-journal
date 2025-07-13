@@ -19,7 +19,7 @@ const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({ rootPath: join(__dirname, '../..', 'client', 'dist') }),
+    ServeStaticModule.forRoot({ rootPath: join(__dirname, '../..', 'frontend', 'dist') }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],
