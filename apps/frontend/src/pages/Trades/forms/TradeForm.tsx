@@ -7,7 +7,6 @@ import AutocompleteInput from '@/components/form/AutocompleteInput';
 import SelectInput from '@/components/form/SelectInput';
 import TextInput from '@/components/form/TextInput';
 import DateTimeInput from '@/components/form/DateTimeInput';
-import UploadFilesInput from '@/components/form/UploadFilesInput';
 import FormMain from '@/components/form/FormMain';
 import { EditTradeFormSchemaType, TradeFormSchemaType } from '@/types/trades';
 

@@ -131,7 +131,15 @@ const useColumns = () => {
           return format(new Date(value), 'dd/MM/yy HH:mm');
         },
       },
-      { accessorKey: 'comment', header: 'Comment' },
+      {
+        accessorKey: 'comment',
+        header: 'Comment',
+        cell: ({ row }) => {
+          const value: string | undefined = row.getValue('comment');
+          if (!value) return <NotFoundValue />;
+          return value;
+        },
+      },
       {
         accessorKey: 'actions',
         header: '',

@@ -1,4 +1,4 @@
-import { Paper, Stack } from '@mui/material';
+import { Paper, Stack, Typography } from '@mui/material';
 
 import TradesTableMain from './TradesTable';
 import useAppStore from '@/store';
@@ -6,6 +6,8 @@ import DialogMain from '@/components/DialogMain';
 import AddTradeForm from './forms/AddTrade';
 import DeleteTradeDialog from './DeleteTrade';
 import EditTradeForm from './forms/EditTrade';
+import AddTradeBtn from './AddTradeBtn';
+import VisibilityColumnSelect from './VisibilityColumnSelect';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -29,7 +31,17 @@ const TradesModalList = () => {
 const TradesMain = () => {
   return (
     <Stack>
-      <Paper>
+      <Paper sx={{ p: 2 }}>
+        <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Typography variant="h4" fontWeight="400">
+              Trades
+            </Typography>
+            <AddTradeBtn />
+          </Stack>
+          <VisibilityColumnSelect />
+        </Stack>
+
         <TradesTableMain />
       </Paper>
 

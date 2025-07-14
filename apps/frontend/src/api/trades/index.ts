@@ -4,7 +4,7 @@ import { EditTradeFormSchemaType, TradeFormSchemaType, TradeType } from '@/types
 
 type getTradesResult = { results: TradeType[]; count: number };
 
-export const tradesLimit = 20;
+export const tradesLimit = 10;
 
 export const getTrades = async (page: number): Promise<getTradesResult> => {
   const response = await client.get('trades', { params: { page, limit: tradesLimit } });

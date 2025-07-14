@@ -1,55 +1,34 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { flexRender, getCoreRowModel, Updater, useReactTable, VisibilityState } from '@tanstack/react-table';
-import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 
 import useAppStore from '@/store';
-import { getTrades } from '@/api/trades';
+import { getTrades, tradesLimit } from '@/api/trades';
 import useColumns from './hooks/useColumns';
-import AddTradeBtn from './AddTradeBtn';
 
 const TradesTableMain = () => {
-  const prevVisibilityRef = useRef<VisibilityState>({});
-  // const [page, setPage] = useState(1);
-
-  // const queryClient = useQueryClient();
+  const [page, setPage] = useState(1);
   const tradesColumnVisibility = useAppStore((state) => state.user?.userSettings?.tradesColumnVisibility);
 
-  /* const mutation = useMutation({
-    mutationFn: editLoggedInUser,
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-    },
-  }); */
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['trades', 1],
-    queryFn: () => getTrades(1),
+    queryKey: ['trades', page],
+    queryFn: () => getTrades(page),
     placeholderData: keepPreviousData,
   });
 
   const columns = useColumns();
 
-  const handleColumnVisibility = useCallback((updaterOrValue: Updater<VisibilityState>) => {
-    if (typeof updaterOrValue === 'function') {
-      // const nextValue = updaterOrValue(prevVisibilityRef.current);
-      // mutation.mutate({ userSettings: { tradesColumnVisibility: nextValue } });
-    } else {
-      // mutation.mutate({ userSettings: { tradesColumnVisibility: updaterOrValue } });
-    }
-  }, []);
-
   const table = useReactTable({
     data: data?.results || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
-    onColumnVisibilityChange: handleColumnVisibility,
     state: { columnVisibility: tradesColumnVisibility || {} },
   });
-
-  useEffect(() => {
-    prevVisibilityRef.current = tradesColumnVisibility || {};
-  }, [tradesColumnVisibility]);
 
   if (isLoading) {
     return (
@@ -61,9 +40,6 @@ const TradesTableMain = () => {
 
   return (
     <Stack gap={2}>
-      <Stack m={2} direction="row" alignItems="center" justifyContent="space-between">
-        <AddTradeBtn />
-      </Stack>
       <TableContainer>
         <Table size="small" stickyHeader>
           <TableHead>
@@ -99,6 +75,18 @@ const TradesTableMain = () => {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {data?.count && data.count > tradesLimit ? (
+        <Stack direction="row" alignItems="center" justifyContent="flex-end">
+          <Pagination
+            variant="outlined"
+            shape="rounded"
+            count={Math.ceil(data.count / tradesLimit)}
+            page={page}
+            onChange={handlePageChange}
+          />
+        </Stack>
+      ) : null}
     </Stack>
   );
 };
