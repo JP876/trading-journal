@@ -33,7 +33,7 @@ const DialogMain = (props: dialogMainPropsType) => {
 
   return (
     <Dialog
-      maxWidth="lg"
+      maxWidth="sm"
       keepMounted={false}
       slots={{ transition: Transition }}
       {...props?.dialogProps}

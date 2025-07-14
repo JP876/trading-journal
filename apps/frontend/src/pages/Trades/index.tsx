@@ -5,6 +5,7 @@ import useAppStore from '@/store';
 import DialogMain from '@/components/DialogMain';
 import AddTradeForm from './forms/AddTrade';
 import DeleteTradeDialog from './DeleteTrade';
+import EditTradeForm from './forms/EditTrade';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -14,6 +15,10 @@ const TradesModalList = () => {
     <>
       <DialogMain title="Add Trade" id="addTrade">
         <AddTradeForm />
+      </DialogMain>
+
+      <DialogMain title="Edit Trade" id="editTrade">
+        <EditTradeForm trade={modalInfo?.editTrade?.data} />
       </DialogMain>
 
       <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />

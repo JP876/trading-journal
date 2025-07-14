@@ -1,13 +1,5 @@
 import { z } from 'zod';
 
-export enum TradeDialogListIds {
-  ADD_TRADE = 'addTrade',
-  EDIT_TRADE = 'editTrade',
-  DELETE_TRADE = 'deleteTrade',
-  TRADE_DETAILS = 'tradeDetails',
-  TRADE_FILES = 'tradeFiles',
-}
-
 const filesObject = z.object({ id: z.string(), url: z.string(), name: z.string() });
 export type FilesType = z.infer<typeof filesObject>;
 
