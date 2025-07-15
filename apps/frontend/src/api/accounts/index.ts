@@ -3,7 +3,6 @@ import { AccountFormSchemaType, AccountType } from '@/types/accounts';
 
 export const getAccounts = async (): Promise<AccountType[]> => {
   const response = await client.get('accounts');
-  if (response.statusText !== 'OK') throw new Error('Failed to fetch');
   return response.data;
 };
 

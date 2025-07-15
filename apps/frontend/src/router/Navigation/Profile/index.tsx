@@ -9,10 +9,10 @@ import useAppStore from '@/store';
 import MenuActions from '@/components/MenuActions';
 import { logoutUser } from '@/api/auth';
 import { menuActionType } from '@/components/MenuActions/types';
-// import DialogMain from '@/components/DialogMain';
-// import ProfileSettings from './ProfileSettings';
+import DialogMain from '@/components/DialogMain';
+import ProfileSettings from './ProfileSettings';
 
-/* const ProfileModalList = () => {
+const ProfileModalList = () => {
   return (
     <>
       <DialogMain id="profileSettings" title="Profile">
@@ -20,7 +20,7 @@ import { menuActionType } from '@/components/MenuActions/types';
       </DialogMain>
     </>
   );
-}; */
+};
 
 const ProfileMain = () => {
   const navigate = useNavigate();
@@ -70,7 +70,7 @@ const ProfileMain = () => {
         </Tooltip>
       </MenuActions>
 
-      {/* <ProfileModalList /> */}
+      <ProfileModalList />
     </>
   );
 };

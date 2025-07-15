@@ -24,8 +24,6 @@ const AccountsSelect = () => {
     mutation.mutate(event.target.value);
   };
 
-  if (!Array.isArray(data) || data?.length === 0) return null;
-
   return (
     <Box sx={{ minWidth: '12rem' }}>
       <FormControl size="small" fullWidth>
@@ -36,6 +34,7 @@ const AccountsSelect = () => {
           value={(data || []).find((el) => el?.isMain)?._id || ''}
           label="Main account"
           onChange={handleOnChange}
+          disabled={!Array.isArray(data) || data?.length === 0}
         >
           {(data || []).map((el) => (
             <MenuItem key={el?._id} value={el._id}>
