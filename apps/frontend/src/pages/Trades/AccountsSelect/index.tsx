@@ -24,6 +24,8 @@ const AccountsSelect = () => {
     mutation.mutate(event.target.value);
   };
 
+  if (!Array.isArray(data) || data?.length === 0) return null;
+
   return (
     <Box sx={{ minWidth: '12rem' }}>
       <FormControl size="small" fullWidth>

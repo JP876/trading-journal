@@ -6,10 +6,9 @@ import { MenuItemProps } from '@mui/material/MenuItem';
 import { BadgeProps } from '@mui/material/Badge';
 
 export type reasonType = 'escapeKeyDown' | 'backdropClick' | 'tabKeyDown' | undefined;
-export type buttonClickEvent = React.MouseEvent<HTMLElement>;
-export type handleCloseType = (e?: buttonClickEvent, reason?: reasonType) => void;
+export type handleCloseType = (e?: React.MouseEvent<HTMLElement>, reason?: reasonType) => void;
 export type renderMenuBtnType = {
-  handleClick: (e: buttonClickEvent) => void;
+  handleClick: (e: React.MouseEvent<HTMLElement>) => void;
   handleClose: handleCloseType;
   open: boolean;
 };
@@ -18,7 +17,7 @@ export type menuActionType = {
   id: string;
   icon: ReactNode;
   label: string;
-  onClick: (e: buttonClickEvent, handleClose: handleCloseType) => void;
+  onClick: (e: React.MouseEvent<HTMLElement>, handleClose: handleCloseType) => void;
   renderAction?: (handleClose: handleCloseType) => ReactNode;
   isLoading?: boolean;
   dividerProps?: DividerProps;
@@ -35,6 +34,6 @@ export type menuActionsPropsType = {
   openMenu?: null | HTMLElement;
   setOpenMenu?: Dispatch<SetStateAction<null | HTMLElement>>;
   renderMenuBtn?: (options: renderMenuBtnType) => ReactNode;
-  onOpen?: (e: buttonClickEvent) => void;
-  onClose?: (e?: buttonClickEvent | {}, reason?: reasonType) => void;
+  onOpen?: (e: React.MouseEvent<HTMLElement>) => void;
+  onClose?: (e?: React.MouseEvent<HTMLElement> | {}, reason?: reasonType) => void;
 };

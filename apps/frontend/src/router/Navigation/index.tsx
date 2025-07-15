@@ -25,7 +25,7 @@ import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
 import { Link, Outlet, useLocation } from 'react-router';
 
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
-import AccountMain from './Account';
+import ProfileMain from './Profile';
 
 type navItem = { label: string; to: string; icon: ReactNode };
 
@@ -91,7 +91,7 @@ const NavigationMain = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(() => {
     const initialValue = localStorage.getItem('navigation-open') as navigationValueType;
-    return initialValue ? initialValue === 'true' : false;
+    return initialValue === 'true';
   });
 
   const handleDrawerOpen = () => {
@@ -123,7 +123,7 @@ const NavigationMain = () => {
               <CandlestickChartIcon />
               <Typography variant="h6">Trading Journal</Typography>
             </Stack>
-            <AccountMain />
+            <ProfileMain />
           </Stack>
         </Toolbar>
       </AppBar>

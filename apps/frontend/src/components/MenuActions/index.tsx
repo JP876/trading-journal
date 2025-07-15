@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Badge from '@mui/material/Badge';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import { buttonClickEvent, handleCloseType, menuActionsPropsType, menuActionType, reasonType } from './types';
+import { handleCloseType, menuActionsPropsType, menuActionType, reasonType } from './types';
 
 export const itemMenuTypeIds = {
   divider: 'divider',
@@ -70,7 +70,7 @@ const MenuActions = (props: menuActionsPropsType) => {
   const { menuActions, btnProps, openMenu, setOpenMenu, renderMenuBtn, onOpen, onClose, menuProps, children } = props;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const handleClick = (event: buttonClickEvent) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     typeof onOpen === 'function'
       ? onOpen(event)
