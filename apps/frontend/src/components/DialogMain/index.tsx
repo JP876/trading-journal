@@ -12,7 +12,7 @@ type dialogMainPropsType<T = any> = {
   id: string;
   title: string | ReactNode;
   children: ReactNode | ((options: { data: T; handleCloseModal: () => void }) => ReactNode);
-  dialogProps?: DialogProps;
+  dialogProps?: Omit<DialogProps, 'open' | 'onClose'>;
   dialogContentProps?: DialogContentProps;
   dialogTitleProps?: DialogTitleProps;
   hideCloseBtn?: boolean;
