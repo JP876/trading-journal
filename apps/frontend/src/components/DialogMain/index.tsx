@@ -11,7 +11,7 @@ import useAppStore from '@/store';
 type dialogMainPropsType<T = any> = {
   id: string;
   title: string | ReactNode;
-  children: ReactNode | ((options: { data: T; closeModal: (id: string) => void }) => ReactNode);
+  children: ReactNode | ((options: { data: T; handleCloseModal: () => void }) => ReactNode);
   dialogProps?: DialogProps;
   dialogContentProps?: DialogContentProps;
   dialogTitleProps?: DialogTitleProps;
@@ -31,6 +31,8 @@ function DialogMain<T>(props: dialogMainPropsType<T>) {
   const modalInfo = useAppStore((state) => state.modalInfo?.[props.id]);
   const closeModal = useAppStore((state) => state.closeModal);
 
+  const handleCloseModal = () => closeModal(props.id);
+
   return (
     <Dialog
       maxWidth="sm"
@@ -38,18 +40,20 @@ function DialogMain<T>(props: dialogMainPropsType<T>) {
       slots={{ transition: Transition }}
       {...props?.dialogProps}
       open={!!modalInfo}
-      onClose={() => closeModal(props.id)}
+      onClose={handleCloseModal}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <DialogTitle {...props?.dialogTitleProps}>{props.title}</DialogTitle>
         {props?.hideCloseBtn ? null : (
-          <IconButton sx={{ mr: 3 }} size="small" onClick={() => closeModal(props.id)}>
+          <IconButton sx={{ mr: 3 }} size="small" onClick={handleCloseModal}>
             <CloseIcon />
           </IconButton>
         )}
       </Stack>
       <DialogContent dividers {...props?.dialogContentProps}>
-        {typeof props.children === 'function' ? props.children({ data: modalInfo?.data, closeModal }) : props.children}
+        {typeof props.children === 'function'
+          ? props.children({ data: modalInfo?.data, handleCloseModal })
+          : props.children}
       </DialogContent>
     </Dialog>
   );
