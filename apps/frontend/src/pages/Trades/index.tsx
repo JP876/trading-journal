@@ -8,6 +8,7 @@ import DeleteTradeDialog from './DeleteTrade';
 import EditTradeForm from './forms/EditTrade';
 import AddTradeBtn from './AddTradeBtn';
 import VisibilityColumnSelect from './VisibilityColumnSelect';
+import AccountsSelect from './AccountsSelect';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -39,7 +40,11 @@ const TradesMain = () => {
             </Typography>
             <AddTradeBtn />
           </Stack>
-          <VisibilityColumnSelect />
+
+          <Stack direction="row" alignItems="center" gap={2}>
+            <AccountsSelect />
+            <VisibilityColumnSelect />
+          </Stack>
         </Stack>
 
         <TradesTableMain />

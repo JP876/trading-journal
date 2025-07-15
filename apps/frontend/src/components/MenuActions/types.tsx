@@ -8,6 +8,11 @@ import { BadgeProps } from '@mui/material/Badge';
 export type reasonType = 'escapeKeyDown' | 'backdropClick' | 'tabKeyDown' | undefined;
 export type buttonClickEvent = React.MouseEvent<HTMLElement>;
 export type handleCloseType = (e?: buttonClickEvent, reason?: reasonType) => void;
+export type renderMenuBtnType = {
+  handleClick: (e: buttonClickEvent) => void;
+  handleClose: handleCloseType;
+  open: boolean;
+};
 
 export type menuActionType = {
   id: string;
@@ -29,7 +34,7 @@ export type menuActionsPropsType = {
   children?: ReactNode;
   openMenu?: null | HTMLElement;
   setOpenMenu?: Dispatch<SetStateAction<null | HTMLElement>>;
-  renderMenuBtn?: ({}) => ReactNode;
+  renderMenuBtn?: (options: renderMenuBtnType) => ReactNode;
   onOpen?: (e: buttonClickEvent) => void;
   onClose?: (e?: buttonClickEvent | {}, reason?: reasonType) => void;
 };

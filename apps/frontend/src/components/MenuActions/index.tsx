@@ -106,12 +106,6 @@ const MenuActions = (props: menuActionsPropsType) => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         {...menuProps}
-        sx={{
-          '& .MuiPaper-root': {
-            px: 0.5,
-          },
-          ...(menuProps?.sx || {}),
-        }}
         anchorEl={openMenu || anchorEl}
         open={Boolean(openMenu || anchorEl)}
         onClose={handleClose}

@@ -112,7 +112,15 @@ const useColumns = () => {
           return value;
         },
       },
-      { accessorKey: 'pl', header: 'Profit/loss' },
+      {
+        accessorKey: 'pl',
+        header: 'Profit/Loss',
+        cell: ({ row }) => {
+          const value: string | undefined = row.getValue('pl');
+          if (!value) return <NotFoundValue />;
+          return value;
+        },
+      },
       {
         accessorKey: 'openDate',
         header: 'Open Date',

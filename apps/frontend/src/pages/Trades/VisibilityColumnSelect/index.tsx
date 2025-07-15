@@ -11,8 +11,8 @@ import {
 } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { editLoggedInUser } from '@/api/user';
 import useAppStore from '@/store';
+import { editLoggedInUser } from '@/api/user';
 
 const columnOptions = [
   { id: 'direction', label: 'Direction' },
@@ -67,8 +67,8 @@ const VisibilityColumnSelect = () => {
         input={<OutlinedInput label="Columns" />}
       >
         {columnOptions.map((column) => (
-          <MenuItem key={column.id} value={column.id} disableRipple sx={{ p: 0.5 }}>
-            <Checkbox checked={tradesColumnVisibility?.[column.id]} />
+          <MenuItem key={column.id} value={column.id} disableRipple sx={{ p: 0.2 }}>
+            <Checkbox size="small" checked={tradesColumnVisibility?.[column.id]} />
             <ListItemText primary={column.label} />
           </MenuItem>
         ))}
