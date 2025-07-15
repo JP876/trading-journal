@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode } from 'react';
+import { forwardRef, memo, ReactNode } from 'react';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogContent, { DialogContentProps } from '@mui/material/DialogContent';
 import DialogTitle, { DialogTitleProps } from '@mui/material/DialogTitle';
@@ -8,10 +8,10 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import useAppStore from '@/store';
 
-type dialogMainPropsType = {
+type dialogMainPropsType<T = any> = {
   id: string;
   title: string | ReactNode;
-  children: ReactNode;
+  children: ReactNode | ((options: { data: T; closeModal: (id: string) => void }) => ReactNode);
   dialogProps?: DialogProps;
   dialogContentProps?: DialogContentProps;
   dialogTitleProps?: DialogTitleProps;
@@ -27,8 +27,8 @@ const Transition = forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogMain = (props: dialogMainPropsType) => {
-  const modalInfo = useAppStore((state) => state.modalInfo);
+function DialogMain<T>(props: dialogMainPropsType<T>) {
+  const modalInfo = useAppStore((state) => state.modalInfo?.[props.id]);
   const closeModal = useAppStore((state) => state.closeModal);
 
   return (
@@ -37,7 +37,7 @@ const DialogMain = (props: dialogMainPropsType) => {
       keepMounted={false}
       slots={{ transition: Transition }}
       {...props?.dialogProps}
-      open={!!modalInfo?.[props.id]}
+      open={!!modalInfo}
       onClose={() => closeModal(props.id)}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -49,10 +49,10 @@ const DialogMain = (props: dialogMainPropsType) => {
         )}
       </Stack>
       <DialogContent dividers {...props?.dialogContentProps}>
-        {props.children}
+        {typeof props.children === 'function' ? props.children({ data: modalInfo?.data, closeModal }) : props.children}
       </DialogContent>
     </Dialog>
   );
-};
+}
 
-export default DialogMain;
+export default memo(DialogMain);

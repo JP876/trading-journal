@@ -31,7 +31,7 @@ const AccountsSelect = () => {
         <Select
           labelId={labelId}
           id="accounts-simple-select"
-          value={(data || []).find((el) => el?.isMain)?._id}
+          value={(data || []).find((el) => el?.isMain)?._id || ''}
           label="Main account"
           onChange={handleOnChange}
         >
@@ -40,7 +40,6 @@ const AccountsSelect = () => {
               {el?.title}
             </MenuItem>
           ))}
-          <MenuItem value={10}>Ten</MenuItem>
         </Select>
       </FormControl>
     </Box>
