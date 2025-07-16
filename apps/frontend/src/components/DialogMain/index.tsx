@@ -38,6 +38,7 @@ function DialogMain<T>(props: dialogMainPropsType<T>) {
       maxWidth="sm"
       keepMounted={false}
       slots={{ transition: Transition }}
+      slotProps={{ paper: { sx: { width: '100%' } } }}
       {...props?.dialogProps}
       open={!!modalInfo}
       onClose={handleCloseModal}

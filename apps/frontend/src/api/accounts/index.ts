@@ -15,3 +15,11 @@ export const updateAccount = async (id: string, data: Partial<AccountFormSchemaT
   const response = await client.patch(`accounts/${id}`, data);
   return response.data;
 };
+
+export const deleteAccount = async (id: string | undefined) => {
+  if (!id) {
+    throw new Error(`Account ID not found: ${id}`);
+  }
+  const response = await client.delete(`accounts/${id}`);
+  return response.data;
+};

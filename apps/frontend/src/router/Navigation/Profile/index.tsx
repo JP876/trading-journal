@@ -15,7 +15,7 @@ import ProfileSettings from './ProfileSettings';
 const ProfileModalList = () => {
   return (
     <>
-      <DialogMain id="profileSettings" title="Profile" dialogProps={{ maxWidth: 'lg' }}>
+      <DialogMain id="profileSettings" title="Profile" dialogProps={{ maxWidth: 'sm' }}>
         <ProfileSettings />
       </DialogMain>
     </>

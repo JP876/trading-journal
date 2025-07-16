@@ -1,4 +1,6 @@
-import { Paper, Stack, Typography } from '@mui/material';
+import { IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 import TradesTableMain from './TradesTable';
 import useAppStore from '@/store';
@@ -6,9 +8,10 @@ import DialogMain from '@/components/DialogMain';
 import AddTradeForm from './forms/AddTrade';
 import DeleteTradeDialog from './DeleteTrade';
 import EditTradeForm from './forms/EditTrade';
-import AddTradeBtn from './AddTradeBtn';
 import VisibilityColumnSelect from './VisibilityColumnSelect';
 import AccountsSelect from './AccountsSelect';
+import TradesSettings from './TradesSettings';
+import DeleteAccountDialog from './TradesSettings/Accounts/DeleteAccount';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -24,8 +27,35 @@ const TradesModalList = () => {
         <EditTradeForm trade={modalInfo?.editTrade?.data} />
       </DialogMain>
 
+      <DialogMain dialogProps={{ maxWidth: 'md' }} title="Trades Settings" id="tradesSettings">
+        <TradesSettings />
+      </DialogMain>
+
       <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />
+      <DeleteAccountDialog account={modalInfo?.deleteAccount?.data} closeModal={() => closeModal('deleteAccount')} />
     </>
+  );
+};
+
+const AddTradeBtn = () => {
+  const openModal = useAppStore((state) => state.openModal);
+  return (
+    <Tooltip arrow title="Add Trade" disableInteractive>
+      <IconButton size="small" onClick={() => openModal({ id: 'addTrade' })}>
+        <AddIcon />
+      </IconButton>
+    </Tooltip>
+  );
+};
+
+const TradesSettingsBtn = () => {
+  const openModal = useAppStore((state) => state.openModal);
+  return (
+    <Tooltip arrow title="Settings" disableInteractive>
+      <IconButton size="small" onClick={() => openModal({ id: 'tradesSettings' })}>
+        <SettingsIcon />
+      </IconButton>
+    </Tooltip>
   );
 };
 
@@ -42,6 +72,7 @@ const TradesMain = () => {
           </Stack>
 
           <Stack direction="row" alignItems="center" gap={2}>
+            <TradesSettingsBtn />
             <AccountsSelect />
             <VisibilityColumnSelect />
           </Stack>

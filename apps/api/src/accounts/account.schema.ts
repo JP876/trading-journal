@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 import { User } from 'src/user/user.schema';
 
-@Schema()
+@Schema({ timestamps: true })
 export class Account extends mongoose.Document {
   @Prop({ type: String, isRequired: true })
   title: string;
