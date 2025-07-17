@@ -57,21 +57,22 @@ const NavigationList = ({ open }: { open: boolean }) => {
             <ListItemButton
               disableRipple
               sx={[
-                {
+                (theme) => ({
                   minHeight: 48,
-                  transition: (theme) => theme.transitions.create(['background-color', 'color']),
+                  transition: theme.transitions.create(['background-color', 'color']),
                   svg: {
-                    transition: (theme) => theme.transitions.create(['color']),
+                    transition: theme.transitions.create(['color']),
                   },
-                },
+                }),
                 open ? { justifyContent: 'initial' } : { justifyContent: 'center' },
-                activeLink?.to === to && {
-                  backgroundColor: (theme) => theme.palette.grey[200],
-                  color: (theme) => theme.palette.primary.main,
-                  svg: {
-                    color: (theme) => theme.palette.primary.main,
-                  },
-                },
+                activeLink?.to === to &&
+                  ((theme) => ({
+                    backgroundColor: theme.palette.action.selected,
+                    color: theme.palette.primary.main,
+                    svg: {
+                      color: theme.palette.primary.main,
+                    },
+                  })),
               ]}
             >
               <ListItemIcon sx={[{ minWidth: 0, justifyContent: 'center' }, open ? { mr: 3 } : { mr: 'auto' }]}>
