@@ -2,7 +2,7 @@ import { useId } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { getAccounts, updateAccount } from '@/api/accounts';
+import { editAccount, getAccounts } from '@/api/accounts';
 
 const AccountsSelect = () => {
   const labelId = useId();
@@ -11,7 +11,7 @@ const AccountsSelect = () => {
   const { data } = useQuery({ queryKey: ['accounts'], queryFn: getAccounts });
 
   const mutation = useMutation({
-    mutationFn: (id: string) => updateAccount(id, { isMain: true }),
+    mutationFn: (id: string) => editAccount(id, { isMain: true }),
     onSuccess: () => {
       return Promise.all([
         queryClient.invalidateQueries({ queryKey: ['accounts'] }),

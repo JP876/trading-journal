@@ -11,7 +11,7 @@ export const addAccount = async (data: AccountFormSchemaType): Promise<AccountTy
   return response.data;
 };
 
-export const updateAccount = async (id: string, data: Partial<AccountFormSchemaType>): Promise<AccountType | null> => {
+export const editAccount = async (id: string, data: Partial<AccountFormSchemaType>): Promise<AccountType | null> => {
   const response = await client.patch(`accounts/${id}`, data);
   return response.data;
 };

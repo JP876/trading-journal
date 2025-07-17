@@ -12,6 +12,8 @@ import VisibilityColumnSelect from './VisibilityColumnSelect';
 import AccountsSelect from './AccountsSelect';
 import TradesSettings from './TradesSettings';
 import DeleteAccountDialog from './TradesSettings/Accounts/DeleteAccount';
+import AddAccountForm from './TradesSettings/Accounts/forms/AddAccount';
+import EditAccountForm from './TradesSettings/Accounts/forms/EditAccount';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -19,20 +21,33 @@ const TradesModalList = () => {
 
   return (
     <>
-      <DialogMain title="Add Trade" id="addTrade">
-        <AddTradeForm />
-      </DialogMain>
-
-      <DialogMain title="Edit Trade" id="editTrade">
-        <EditTradeForm trade={modalInfo?.editTrade?.data} />
-      </DialogMain>
-
       <DialogMain dialogProps={{ maxWidth: 'md' }} title="Trades Settings" id="tradesSettings">
         <TradesSettings />
       </DialogMain>
 
-      <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />
-      <DeleteAccountDialog account={modalInfo?.deleteAccount?.data} closeModal={() => closeModal('deleteAccount')} />
+      <>
+        <DialogMain title="Add Trade" id="addTrade">
+          <AddTradeForm />
+        </DialogMain>
+
+        <DialogMain title="Edit Trade" id="editTrade">
+          <EditTradeForm trade={modalInfo?.editTrade?.data} />
+        </DialogMain>
+
+        <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />
+      </>
+
+      <>
+        <DialogMain title="Add Account" id="addAccount">
+          <AddAccountForm />
+        </DialogMain>
+
+        <DialogMain title="Edit Account" id="editAccount">
+          <EditAccountForm account={modalInfo?.editAccount?.data} />
+        </DialogMain>
+
+        <DeleteAccountDialog account={modalInfo?.deleteAccount?.data} closeModal={() => closeModal('deleteAccount')} />
+      </>
     </>
   );
 };

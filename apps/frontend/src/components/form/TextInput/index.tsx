@@ -10,6 +10,7 @@ const TextInput = ({ field, ...rest }: TextInputPropsType & TextFieldProps) => {
   return (
     <TextField
       size="small"
+      fullWidth
       {...rest}
       {...field}
       onChange={(e) => {

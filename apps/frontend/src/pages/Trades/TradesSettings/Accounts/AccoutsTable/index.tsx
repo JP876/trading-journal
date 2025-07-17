@@ -13,11 +13,12 @@ import { getAccounts } from '@/api/accounts';
 import useAppStore from '@/store';
 import { menuActionType } from '@/components/MenuActions/types';
 import MenuActions from '@/components/MenuActions';
+import LineClamp from '@/components/LineClamp';
 
 const AccountActions = ({ account }: { account: AccountType }) => {
   const openModal = useAppStore((state) => state.openModal);
 
-  const menuActions = [
+  const menuActions: menuActionType[] = [
     {
       id: 'editAccount',
       label: 'Edit Account',
@@ -39,7 +40,7 @@ const AccountActions = ({ account }: { account: AccountType }) => {
         handleClose();
       },
     },
-  ] as menuActionType[];
+  ];
 
   return <MenuActions menuActions={menuActions} />;
 };
@@ -51,6 +52,7 @@ const useColumns = () => {
       {
         accessorKey: 'isMain',
         header: 'Main',
+        size: 80,
         cell: ({ row }) => {
           const value: boolean | undefined = row.getValue('isMain');
           return value ? <CheckIcon fontSize="small" color="success" /> : <CloseIcon fontSize="small" />;
@@ -62,12 +64,17 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('description');
           if (!value) return <NotFoundValue />;
-          return value;
+          return (
+            <LineClamp label={value} maxNumOfRows={2}>
+              {value}
+            </LineClamp>
+          );
         },
       },
       {
         accessorKey: 'actions',
         header: '',
+        size: 60,
         cell: ({ row }) => <AccountActions account={row.original} />,
       },
     ];
@@ -87,6 +94,7 @@ const AccountsTable = () => {
     data: accountsData,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    defaultColumn: { size: 120 },
   });
 
   if (isLoading) {
@@ -105,7 +113,7 @@ const AccountsTable = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableCell key={header.id}>
+                  <TableCell colSpan={header.colSpan} sx={{ minWidth: `${header.getSize()}px` }} key={header.id}>
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableCell>
                 );
