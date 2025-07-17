@@ -26,6 +26,7 @@ import { Link, Outlet, useLocation } from 'react-router';
 
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
 import ProfileMain from './Profile';
+import ColorModeMain from './ColorMode';
 
 type navItem = { label: string; to: string; icon: ReactNode };
 
@@ -107,6 +108,7 @@ const NavigationMain = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
+
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
@@ -118,15 +120,21 @@ const NavigationMain = () => {
           >
             <MenuIcon />
           </IconButton>
+
           <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" gap={1}>
               <CandlestickChartIcon />
               <Typography variant="h6">Trading Journal</Typography>
             </Stack>
-            <ProfileMain />
+
+            <Stack direction="row" alignItems="center" gap={4}>
+              <ColorModeMain />
+              <ProfileMain />
+            </Stack>
           </Stack>
         </Toolbar>
       </AppBar>
+
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
@@ -136,6 +144,7 @@ const NavigationMain = () => {
         <Divider />
         <NavigationList open={open} />
       </Drawer>
+
       <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
         <DrawerHeader />
         <Outlet />
