@@ -1,15 +1,15 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import createThemeSlice, { IThemeSlice } from './themeSlice';
 import createModalSlice, { IModalSlice } from './modalSlice';
 import createUserSlice, { IUserSlice } from './userSlice';
+import createToastSlice, { IToastSlice } from './toastSlice';
 
-const useAppStore = create<IThemeSlice & IModalSlice & IUserSlice>()(
+const useAppStore = create<IModalSlice & IUserSlice & IToastSlice>()(
   devtools((...a) => ({
-    ...createThemeSlice(...a),
     ...createModalSlice(...a),
     ...createUserSlice(...a),
+    ...createToastSlice(...a),
   }))
 );
 

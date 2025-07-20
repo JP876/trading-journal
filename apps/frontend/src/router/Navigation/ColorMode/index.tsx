@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo } from 'react';
 import { Button, useColorScheme } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -7,49 +7,53 @@ import AutoModeIcon from '@mui/icons-material/AutoMode';
 import MenuActions from '@/components/MenuActions';
 import { menuActionType } from '@/components/MenuActions/types';
 
+type modeOptions = 'system' | 'light' | 'dark';
+
+const modeIcons = {
+  dark: <DarkModeIcon fontSize="small" />,
+  light: <LightModeIcon fontSize="small" />,
+  system: <AutoModeIcon fontSize="small" />,
+};
+
 const ColorModeMain = () => {
   const { mode, setMode } = useColorScheme();
 
   const buttonIcon = (() => {
     switch (mode) {
       case 'dark':
-        return <DarkModeIcon />;
+        return modeIcons.dark;
       case 'light':
-        return <LightModeIcon />;
+        return modeIcons.light;
       default:
-        return <AutoModeIcon />;
+        return modeIcons.system;
     }
   })();
 
-  const menuActions = useMemo<menuActionType[]>(() => {
-    const handleOnChange = (value: 'system' | 'light' | 'dark') => setMode(value);
+  const handleOnChange = (value: modeOptions) => setMode(value);
 
-    return [
-      { id: 'light', label: 'Light', icon: <LightModeIcon fontSize="small" />, onClick: () => handleOnChange('light') },
-      { id: 'dark', label: 'Dark', icon: <DarkModeIcon fontSize="small" />, onClick: () => handleOnChange('dark') },
-      {
-        id: 'system',
-        label: 'System',
-        icon: <AutoModeIcon fontSize="small" />,
-        onClick: () => handleOnChange('system'),
-      },
-    ].map((el) => ({
-      ...el,
-      menuItemProps: {
-        sx: [
-          mode === el.id &&
-            ((theme) => ({
+  const menuActions: menuActionType[] = [
+    { id: 'light', label: 'Light', icon: modeIcons.light },
+    { id: 'dark', label: 'Dark', icon: modeIcons.dark },
+    { id: 'system', label: 'System', icon: modeIcons.system },
+  ].map((el) => ({
+    ...el,
+    onClick: () => handleOnChange(el.id as modeOptions),
+    icon: modeIcons[el.id as modeOptions],
+    menuItemProps: {
+      sx: [
+        mode === el.id &&
+          ((theme) => ({
+            color: theme.palette.primary.main,
+            transition: theme.transitions.create(['color', 'background-color']),
+            backgroundColor: theme.palette.background.default,
+            svg: {
+              transition: theme.transitions.create(['color']),
               color: theme.palette.primary.main,
-              transition: theme.transitions.create(['color', 'background-color']),
-              backgroundColor: theme.palette.background.default,
-              svg: {
-                color: theme.palette.primary.main,
-              },
-            })),
-        ],
-      },
-    }));
-  }, [mode, setMode]);
+            },
+          })),
+      ],
+    },
+  }));
 
   if (!mode) return null;
 
@@ -65,4 +69,4 @@ const ColorModeMain = () => {
   );
 };
 
-export default ColorModeMain;
+export default memo(ColorModeMain);

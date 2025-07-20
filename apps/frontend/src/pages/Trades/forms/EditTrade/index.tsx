@@ -13,12 +13,15 @@ type EditTradeFormProps = {
 
 const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   const queryClient = useQueryClient();
+
   const closeModal = useAppStore((state) => state.closeModal);
+  const openToast = useAppStore((state) => state.openToast);
 
   const mutation = useMutation({
     mutationFn: (data: EditTradeFormSchemaType) => editTrade(trade._id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trades'] });
+      openToast({ severity: 'success', message: 'Your trade details have been updated.' });
       closeModal('editTrade');
     },
   });
@@ -35,8 +38,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   });
 
   const onSubmit = (data: EditTradeFormSchemaType) => {
-    console.log(data);
-    // mutation.mutate({ ...data });
+    mutation.mutate({ ...data });
   };
 
   return <TradeForm onSubmit={onSubmit} form={form} isLoading={mutation.isPending} />;

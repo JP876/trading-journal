@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateAccountDto {
   @IsString()
@@ -11,4 +11,12 @@ export class CreateAccountDto {
   @IsBoolean()
   @IsOptional()
   readonly isMain?: boolean;
+
+  @IsNumber()
+  @IsOptional()
+  readonly defaultStopLoss?: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly defaultTakeProfit?: number;
 }

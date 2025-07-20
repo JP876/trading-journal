@@ -6,17 +6,22 @@ import { addTrade } from '@/api/trades';
 import useAppStore from '@/store';
 import { tradeFormSchema, TradeFormSchemaType } from '@/types/trades';
 import TradeForm from '../TradeForm';
+import { AccountType } from '@/types/accounts';
 
 const AddTradeForm = () => {
   const queryClient = useQueryClient();
 
   const closeModal = useAppStore((state) => state.closeModal);
-  const userSettings = useAppStore((state) => state.user?.userSettings);
+  const openToast = useAppStore((state) => state.openToast);
+
+  const accounts = queryClient.getQueryData<AccountType[]>(['accounts']);
+  const mainAccount = (accounts || []).find((el) => el?.isMain);
 
   const mutation = useMutation({
     mutationFn: addTrade,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trades'] });
+      openToast({ severity: 'success', message: 'Your trade details have been saved.' });
       closeModal('addTrade');
     },
   });
@@ -24,8 +29,8 @@ const AddTradeForm = () => {
   const form = useForm<TradeFormSchemaType>({
     resolver: standardSchemaResolver(tradeFormSchema),
     defaultValues: {
-      takeProfit: userSettings?.defaultTakeProfit,
-      stopLoss: userSettings?.defaultStopLoss,
+      takeProfit: mainAccount?.defaultTakeProfit || 0,
+      stopLoss: mainAccount?.defaultStopLoss || 0,
     },
   });
 

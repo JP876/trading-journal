@@ -37,9 +37,19 @@ export class AccountsService {
       throw new NotFoundException();
     }
 
-    account.title = updateAccountDto?.title || account.title;
-    account.description = updateAccountDto?.description || account.description;
-    account.isMain = updateAccountDto?.isMain || account.isMain;
+    account.title = typeof updateAccountDto?.title === 'string' ? updateAccountDto?.title : account.title;
+    account.description =
+      typeof updateAccountDto?.description === 'string' ? updateAccountDto?.description : account.description;
+    account.isMain = typeof updateAccountDto?.isMain === 'boolean' ? updateAccountDto?.isMain : account.isMain;
+
+    account.defaultTakeProfit =
+      typeof updateAccountDto.defaultTakeProfit === 'number'
+        ? updateAccountDto?.defaultTakeProfit
+        : account?.defaultTakeProfit;
+    account.defaultStopLoss =
+      typeof updateAccountDto.defaultStopLoss === 'number'
+        ? updateAccountDto?.defaultStopLoss
+        : account?.defaultStopLoss;
 
     try {
       await account.save({ validateBeforeSave: true });

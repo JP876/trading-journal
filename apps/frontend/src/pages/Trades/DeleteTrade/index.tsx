@@ -7,14 +7,17 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { deleteTrade } from '@/api/trades';
 import DialogMain from '@/components/DialogMain';
 import { TradeType } from '@/types/trades';
+import useAppStore from '@/store';
 
 const DeleteTradeDialog = ({ trade, closeModal }: { trade: TradeType; closeModal: () => void }) => {
   const queryClient = useQueryClient();
+  const openToast = useAppStore((state) => state.openToast);
 
   const mutation = useMutation({
     mutationFn: deleteTrade,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trades'] });
+      openToast({ severity: 'success', message: 'Your trade have been deleted.' });
       closeModal();
     },
   });

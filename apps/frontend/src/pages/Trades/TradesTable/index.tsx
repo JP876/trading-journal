@@ -1,7 +1,17 @@
 import { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { Pagination, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  Pagination,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 
 import useAppStore from '@/store';
 import { getTrades, tradesLimit } from '@/api/trades';
@@ -77,8 +87,15 @@ const TradesTableMain = () => {
       </TableContainer>
 
       {data?.count && data.count > tradesLimit ? (
-        <Stack direction="row" alignItems="center" justifyContent="flex-end">
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Typography>
+            Results {page === 1 ? 1 : page - 1 + tradesLimit} -{' '}
+            {page * tradesLimit > data?.count ? data?.count : page * tradesLimit} out of {data?.count}
+          </Typography>
+
           <Pagination
+            showFirstButton
+            showLastButton
             variant="outlined"
             shape="rounded"
             count={Math.ceil(data.count / tradesLimit)}

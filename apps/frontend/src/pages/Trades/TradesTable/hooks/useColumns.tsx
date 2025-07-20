@@ -1,8 +1,11 @@
 import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { Stack, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import Chip from '@mui/material/Chip';
 
 import { TradeDirection, TradeResult, TradeType } from '@/types/trades';
@@ -14,7 +17,7 @@ import useAppStore from '@/store';
 const TradeActions = ({ trade }: { trade: TradeType }) => {
   const openModal = useAppStore((state) => state.openModal);
 
-  const menuActions = [
+  const menuActions: menuActionType[] = [
     {
       id: 'editTrade',
       label: 'Edit Trade',
@@ -33,13 +36,13 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
         handleClose();
       },
     },
-  ] as menuActionType[];
+  ];
 
   return <MenuActions menuActions={menuActions} />;
 };
 
 const useColumns = () => {
-  return useMemo(() => {
+  return useMemo<ColumnDef<TradeType>[]>(() => {
     return [
       { accessorKey: 'pair', header: 'Pair', enableHiding: false },
       {
@@ -49,20 +52,30 @@ const useColumns = () => {
           const value: TradeDirection | undefined = row.getValue('direction');
           if (!value) return <NotFoundValue />;
 
+          const valueIcon =
+            value === TradeDirection.BUY ? <TrendingUpIcon fontSize="small" /> : <TrendingDownIcon fontSize="small" />;
+
           return (
             <Chip
-              label={value}
+              label={
+                <Stack direction="row" alignItems="center" gap={0.5}>
+                  {valueIcon}
+                  <Typography variant="caption">{value}</Typography>
+                </Stack>
+              }
               size="small"
               sx={[
-                { textTransform: 'uppercase', width: '3.6rem' },
-                value === TradeDirection.BUY && {
-                  backgroundColor: (theme) => theme.palette.success.light,
-                  color: (theme) => theme.palette.common.white,
-                },
-                value === TradeDirection.SELL && {
-                  backgroundColor: (theme) => theme.palette.error.main,
-                  color: (theme) => theme.palette.common.white,
-                },
+                { textTransform: 'uppercase', width: '4.4rem' },
+                value === TradeDirection.BUY &&
+                  ((theme) => ({
+                    backgroundColor: theme.palette.success.light,
+                    color: theme.palette.background.default,
+                  })),
+                value === TradeDirection.SELL &&
+                  ((theme) => ({
+                    backgroundColor: theme.palette.error.main,
+                    color: theme.palette.background.default,
+                  })),
               ]}
             />
           );
@@ -80,15 +93,17 @@ const useColumns = () => {
               label={value}
               size="small"
               sx={[
-                { textTransform: 'uppercase', width: '3.6rem' },
-                value === TradeResult.WIN && {
-                  backgroundColor: (theme) => theme.palette.success.light,
-                  color: (theme) => theme.palette.common.white,
-                },
-                value === TradeResult.LOSS && {
-                  backgroundColor: (theme) => theme.palette.error.main,
-                  color: (theme) => theme.palette.common.white,
-                },
+                (_) => ({ textTransform: 'uppercase', width: '3.6rem' }),
+                value === TradeResult.WIN &&
+                  ((theme) => ({
+                    backgroundColor: theme.palette.success.light,
+                    color: theme.palette.background.default,
+                  })),
+                value === TradeResult.LOSS &&
+                  ((theme) => ({
+                    backgroundColor: theme.palette.error.main,
+                    color: theme.palette.background.default,
+                  })),
               ]}
             />
           );
@@ -98,18 +113,48 @@ const useColumns = () => {
         accessorKey: 'takeProfit',
         header: 'TP',
         cell: ({ row }) => {
-          const value = row.getValue('takeProfit');
+          const value: string | undefined = row.getValue('takeProfit');
+          const result: TradeResult | undefined = row.getValue('result');
+
           if (!value) return <NotFoundValue />;
-          return value;
+
+          return (
+            <Typography
+              sx={[
+                result === TradeResult.WIN &&
+                  ((theme) => ({
+                    color: theme.palette.success.main,
+                    fontWeight: theme.typography.h6.fontWeight,
+                  })),
+              ]}
+            >
+              {value}
+            </Typography>
+          );
         },
       },
       {
         accessorKey: 'stopLoss',
         header: 'SL',
         cell: ({ row }) => {
-          const value = row.getValue('stopLoss');
+          const value: string | undefined = row.getValue('stopLoss');
+          const result: TradeResult | undefined = row.getValue('result');
+
           if (!value) return <NotFoundValue />;
-          return value;
+
+          return (
+            <Typography
+              sx={[
+                result === TradeResult.LOSS &&
+                  ((theme) => ({
+                    color: theme.palette.error.main,
+                    fontWeight: theme.typography.h6.fontWeight,
+                  })),
+              ]}
+            >
+              {value}
+            </Typography>
+          );
         },
       },
       {
@@ -155,7 +200,7 @@ const useColumns = () => {
         enableHiding: false,
       },
     ];
-  }, []) as ColumnDef<TradeType>[];
+  }, []);
 };
 
 export default useColumns;

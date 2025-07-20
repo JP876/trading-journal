@@ -39,6 +39,19 @@ const AccountForm = ({ onSubmit, form, isLoading }: AccountFormProps) => {
         />
       </Stack>
 
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="defaultTakeProfit"
+          control={form.control}
+          render={({ field }) => <TextInput label="Default take profit" field={field} type="number" />}
+        />
+        <Controller
+          name="defaultStopLoss"
+          control={form.control}
+          render={({ field }) => <TextInput label="Default stop loss" field={field} type="number" />}
+        />
+      </Stack>
+
       <Stack direction="row" alignItems="center">
         <Controller
           name="description"

@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { memo, ReactNode, useState } from 'react';
 import {
   Box,
   CssBaseline,
@@ -37,12 +37,8 @@ const navItems: navItem[] = [
 ];
 
 const NavigationList = ({ open }: { open: boolean }) => {
-  const [activeLink, setActiveLink] = useState<navItem | undefined>();
   const location = useLocation();
-
-  useEffect(() => {
-    setActiveLink(navItems.find(({ to }) => location.pathname.includes(to)));
-  }, [location.pathname]);
+  const activeLink: navItem | undefined = navItems.find(({ to }) => location.pathname.includes(to));
 
   return (
     <List>
@@ -88,6 +84,15 @@ const NavigationList = ({ open }: { open: boolean }) => {
 };
 
 type navigationValueType = 'true' | 'false' | undefined;
+
+const MainContainer = memo(() => {
+  return (
+    <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
+      <DrawerHeader />
+      <Outlet />
+    </Box>
+  );
+});
 
 const NavigationMain = () => {
   const theme = useTheme();
@@ -146,10 +151,7 @@ const NavigationMain = () => {
         <NavigationList open={open} />
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-        <DrawerHeader />
-        <Outlet />
-      </Box>
+      <MainContainer />
     </Box>
   );
 };

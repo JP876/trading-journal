@@ -21,7 +21,7 @@ const AddAccountForm = () => {
 
   const form = useForm<AccountFormSchemaType>({
     resolver: standardSchemaResolver(accountFormSchema),
-    defaultValues: { title: '', description: '', isMain: false },
+    defaultValues: { title: '', description: '', isMain: false, defaultStopLoss: 0, defaultTakeProfit: 0 },
   });
 
   const onSubmit = (data: AccountFormSchemaType) => {

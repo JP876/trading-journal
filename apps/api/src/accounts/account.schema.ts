@@ -15,9 +15,18 @@ export class Account extends mongoose.Document {
   @Prop({ type: Boolean, isRequired: false, default: false })
   isMain?: boolean;
 
+  @Prop({ type: mongoose.Types.Decimal128 })
+  defaultStopLoss?: number;
+
+  @Prop({ type: mongoose.Types.Decimal128 })
+  defaultTakeProfit?: number;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name, required: true })
   @Type(() => User)
   user: mongoose.Types.ObjectId;
+
+  reatedAt?: Date;
+  updatedAt?: Date;
 }
 
 export type AccountDocument = mongoose.HydratedDocument<Account>;
@@ -25,7 +34,7 @@ export type AccountDocument = mongoose.HydratedDocument<Account>;
 const AccountSchema = SchemaFactory.createForClass(Account);
 
 AccountSchema.pre<AccountDocument>('save', async function () {
-  if (!this.isMain) return;
+  if (!this.isModified('isMain')) return;
   const model = this.constructor as mongoose.Model<Account>;
   await model.updateMany({ isMain: true }, { isMain: false });
 });

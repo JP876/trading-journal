@@ -27,10 +27,6 @@ const UserFormMain = () => {
       userName: userData?.userName,
       firstName: userData?.firstName,
       lastName: userData?.lastName,
-      userSettings: {
-        defaultStopLoss: userData?.userSettings?.defaultStopLoss,
-        defaultTakeProfit: userData?.userSettings?.defaultTakeProfit,
-      },
     },
   });
 
@@ -56,19 +52,6 @@ const UserFormMain = () => {
           name="lastName"
           control={form.control}
           render={({ field }) => <TextInput label="Last name" field={field} />}
-        />
-      </Stack>
-
-      <Stack direction="row" alignItems="center" gap={2}>
-        <Controller
-          name="userSettings.defaultTakeProfit"
-          control={form.control}
-          render={({ field }) => <TextInput label="Default take profit" field={field} type="number" />}
-        />
-        <Controller
-          name="userSettings.defaultStopLoss"
-          control={form.control}
-          render={({ field }) => <TextInput label="Default stop loss" field={field} type="number" />}
         />
       </Stack>
 

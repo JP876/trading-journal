@@ -8,8 +8,6 @@ export const userFormSchema = z.object({
   userSettings: z
     .object({
       tradesColumnVisibility: z.object({}).optional(),
-      defaultStopLoss: z.number().positive().optional(),
-      defaultTakeProfit: z.number().positive().optional(),
     })
     .optional(),
 });
@@ -18,8 +16,6 @@ export type UserFormSchema = z.infer<typeof userFormSchema>;
 
 export type userSettingsType = {
   tradesColumnVisibility?: VisibilityState;
-  defaultStopLoss?: number;
-  defaultTakeProfit?: number;
 };
 
 export type userType = {

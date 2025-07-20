@@ -40,14 +40,14 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
       <Stack direction="row" alignItems="center" gap={3}>
         <Controller
-          name="stopLoss"
-          control={form.control}
-          render={({ field }) => <TextInput label="Stop Loss *" field={field} type="number" />}
-        />
-        <Controller
           name="takeProfit"
           control={form.control}
           render={({ field }) => <TextInput label="Take Profit *" field={field} type="number" />}
+        />
+        <Controller
+          name="stopLoss"
+          control={form.control}
+          render={({ field }) => <TextInput label="Stop Loss *" field={field} type="number" />}
         />
         <Controller
           name="pl"

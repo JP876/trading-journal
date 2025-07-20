@@ -13,8 +13,8 @@ export type renderMenuBtnType = {
   open: boolean;
 };
 
-export type menuActionType = {
-  id: string;
+export type menuActionType<T = string> = {
+  id: T;
   icon: ReactNode;
   label: string;
   onClick: (e: React.MouseEvent<HTMLElement>, handleClose: handleCloseType) => void;

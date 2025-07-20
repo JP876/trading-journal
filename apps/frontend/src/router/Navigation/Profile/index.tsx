@@ -11,6 +11,7 @@ import { logoutUser } from '@/api/auth';
 import { menuActionType } from '@/components/MenuActions/types';
 import DialogMain from '@/components/DialogMain';
 import ProfileSettings from './ProfileSettings';
+import { memo } from 'react';
 
 const ProfileModalList = () => {
   return (
@@ -75,4 +76,4 @@ const ProfileMain = () => {
   );
 };
 
-export default ProfileMain;
+export default memo(ProfileMain);
