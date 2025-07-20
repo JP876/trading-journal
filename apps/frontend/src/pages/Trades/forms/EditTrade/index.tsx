@@ -38,7 +38,12 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   });
 
   const onSubmit = (data: EditTradeFormSchemaType) => {
-    mutation.mutate({ ...data });
+    const formData = { ...data };
+
+    if (!(formData?.openDate instanceof Date)) delete formData.openDate;
+    if (!(formData?.closeDate instanceof Date)) delete formData.closeDate;
+
+    mutation.mutate(formData);
   };
 
   return <TradeForm onSubmit={onSubmit} form={form} isLoading={mutation.isPending} />;
