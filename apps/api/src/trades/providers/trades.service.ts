@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { CreateTradeDto } from '../dtos/create-tradet.dto';
 import { UpdateTradeDto } from '../dtos/update-trade.dto';
-import { Trade } from '../trade.schema';
+import { Trade, type TradeFilterFields } from '../trade.schema';
 import { PaginationParams } from 'src/common/dtos/pagination-params.dto';
 import { User } from 'src/user/user.schema';
 import { Account } from 'src/accounts/account.schema';
@@ -20,27 +20,43 @@ export class TradesService {
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
-  public async findAll({ limit = 10, page = 1 }: PaginationParams, user: User) {
+  public async findAll(
+    { limit = 10, page = 1, ...rest }: PaginationParams & TradeFilterFields,
+    user: User
+  ): Promise<{ results: Trade[]; totalCount: number; count: number }> {
     if (page < 1) {
       throw new NotFoundException();
     }
 
     const accounts = await this.accountsService.findMainAccount(user);
-    if (!Array.isArray(accounts)) {
-      throw new NotFoundException();
-    }
+
+    if (!Array.isArray(accounts)) throw new NotFoundException();
+    if (accounts.length === 0) return { totalCount: 0, count: 0, results: [] };
+
+    const findBy: TradeFilterFields & { account: unknown } = { account: accounts[0]?._id };
+
+    if (rest?.pair) findBy.pair = rest.pair;
+    if (rest?.direction) findBy.direction = rest.direction;
+    if (rest?.result) findBy.result = rest.result;
+    if (rest?.openDate) findBy.openDate = rest.openDate;
+    if (rest?.closeDate) findBy.closeDate = rest.closeDate;
 
     const newPage = limit * (page - 1);
     const tradesQuery = this.tradeModel
-      .find({ account: accounts[0]?._id })
+      .find({ ...findBy })
       .sort({ _id: -1 })
       .skip(newPage)
       .limit(limit);
 
     const results = await tradesQuery;
-    const count = await this.tradeModel.find({ account: accounts[0]?._id }).countDocuments();
+    const totalCount = await this.tradeModel.find({ account: accounts[0]?._id }).countDocuments();
+    let count = totalCount;
 
-    return { count, results };
+    if (Object.keys(findBy).length > 1) {
+      count = await this.tradeModel.find({ ...findBy }).countDocuments();
+    }
+
+    return { totalCount, results, count };
   }
 
   public async findOneById(id: string): Promise<Trade | null> {

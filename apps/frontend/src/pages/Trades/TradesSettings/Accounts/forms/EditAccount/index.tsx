@@ -19,7 +19,7 @@ const EditAccountForm = ({ account }: EditAccountFormProps) => {
     mutationFn: (data: AccountFormSchemaType) => editAccount(account?._id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] });
-      if (form.getValues('isMain')) {
+      if (form.getValues('isMain') !== account.isMain) {
         queryClient.invalidateQueries({ queryKey: ['trades'] });
       }
       closeModal('editAccount');

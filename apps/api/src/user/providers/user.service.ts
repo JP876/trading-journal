@@ -6,11 +6,13 @@ import { User } from '../user.schema';
 import { CreateUserDto } from '../dtos/create-user-dto';
 import { UpdateUserDto } from '../dtos/update-user-dto';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { AccountsService } from 'src/accounts/providers/accounts.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly accountsService: AccountsService,
     private readonly cloudinaryService: CloudinaryService
   ) {}
 
@@ -32,6 +34,7 @@ export class UserService {
     }
 
     const created = await this.userModel.create(createUserDto);
+    await this.accountsService.create({ title: 'Demo', isMain: true }, created);
     return created;
   }
 

@@ -14,6 +14,9 @@ import TradesSettings from './TradesSettings';
 import DeleteAccountDialog from './TradesSettings/Accounts/DeleteAccount';
 import AddAccountForm from './TradesSettings/Accounts/forms/AddAccount';
 import EditAccountForm from './TradesSettings/Accounts/forms/EditAccount';
+import TableProviderMain from '@/components/table/Provider';
+import TableSelectFilter from '@/components/table/filters/TableSelectFilter';
+import { directionItems, pairOptions, resultItems } from './forms/consts';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -93,7 +96,16 @@ const TradesMain = () => {
           </Stack>
         </Stack>
 
-        <TradesTableMain />
+        <TableProviderMain>
+          <Stack gap={2}>
+            <Stack direction="row" alignItems="center" gap={2}>
+              <TableSelectFilter name="pair" label="Pair" options={pairOptions} />
+              <TableSelectFilter name="direction" label="Direction" options={directionItems} />
+              <TableSelectFilter name="result" label="Result" options={resultItems} />
+            </Stack>
+            <TradesTableMain />
+          </Stack>
+        </TableProviderMain>
       </Paper>
 
       <TradesModalList />

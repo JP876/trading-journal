@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Button, useColorScheme } from '@mui/material';
+import { Box, Button, useColorScheme } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
@@ -10,31 +10,20 @@ import { menuActionType } from '@/components/MenuActions/types';
 type modeOptions = 'system' | 'light' | 'dark';
 
 const modeIcons = {
-  dark: <DarkModeIcon fontSize="small" />,
-  light: <LightModeIcon fontSize="small" />,
-  system: <AutoModeIcon fontSize="small" />,
+  dark: <DarkModeIcon fontSize="small" id="dark-mode" />,
+  light: <LightModeIcon fontSize="small" id="light-mode" />,
+  system: <AutoModeIcon fontSize="small" id="system-mode" />,
 };
 
 const ColorModeMain = () => {
   const { mode, setMode } = useColorScheme();
 
-  const buttonIcon = (() => {
-    switch (mode) {
-      case 'dark':
-        return modeIcons.dark;
-      case 'light':
-        return modeIcons.light;
-      default:
-        return modeIcons.system;
-    }
-  })();
-
   const handleOnChange = (value: modeOptions) => setMode(value);
 
   const menuActions: menuActionType[] = [
-    { id: 'light', label: 'Light', icon: modeIcons.light },
-    { id: 'dark', label: 'Dark', icon: modeIcons.dark },
-    { id: 'system', label: 'System', icon: modeIcons.system },
+    { id: 'light', label: 'Light' },
+    { id: 'dark', label: 'Dark' },
+    { id: 'system', label: 'System' },
   ].map((el) => ({
     ...el,
     onClick: () => handleOnChange(el.id as modeOptions),
@@ -45,7 +34,7 @@ const ColorModeMain = () => {
           ((theme) => ({
             color: theme.palette.primary.main,
             transition: theme.transitions.create(['color', 'background-color']),
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.action.selected,
             svg: {
               transition: theme.transitions.create(['color']),
               color: theme.palette.primary.main,
@@ -61,7 +50,33 @@ const ColorModeMain = () => {
     <MenuActions
       menuActions={menuActions}
       renderMenuBtn={({ handleClick }) => (
-        <Button startIcon={buttonIcon} onClick={handleClick} color="inherit" size="small" variant="outlined">
+        <Button
+          startIcon={
+            <Box
+              display="flex"
+              alignItems="center"
+              sx={[
+                { position: 'relative', mr: 2.5 },
+                (theme) => ({
+                  svg: {
+                    position: 'absolute',
+                    opacity: 0,
+                    transition: theme.transitions.create(['opacity'], { duration: 500 }),
+                  },
+                  [`#${mode}-mode`]: { opacity: 1 },
+                }),
+              ]}
+            >
+              {modeIcons.light}
+              {modeIcons.dark}
+              {modeIcons.system}
+            </Box>
+          }
+          onClick={handleClick}
+          color="inherit"
+          size="small"
+          variant="outlined"
+        >
           Theme
         </Button>
       )}

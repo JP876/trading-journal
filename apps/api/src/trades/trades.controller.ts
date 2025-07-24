@@ -21,14 +21,15 @@ import { UpdateTradeDto } from './dtos/update-trade.dto';
 import ParamsWithId from 'src/utils/params-with-id';
 import { PaginationParams } from 'src/common/dtos/pagination-params.dto';
 import RequestWithUser from 'src/auth/interfaces/request-with-user.interface';
+import { TradeFilterFields } from './trade.schema';
 
 @Controller('trades')
 export class TradesController {
   constructor(private readonly tradesService: TradesService) {}
 
   @Get()
-  public async findAll(@Req() request: RequestWithUser, @Query() { page, limit }: PaginationParams) {
-    return this.tradesService.findAll({ page, limit }, request.user);
+  public async findAll(@Req() request: RequestWithUser, @Query() query: PaginationParams & TradeFilterFields) {
+    return this.tradesService.findAll(query, request.user);
   }
 
   @Get(':id')

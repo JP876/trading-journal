@@ -123,8 +123,8 @@ const useColumns = () => {
               sx={[
                 result === TradeResult.WIN &&
                   ((theme) => ({
-                    color: theme.palette.success.main,
-                    fontWeight: theme.typography.h6.fontWeight,
+                    color: theme.palette.success.light,
+                    fontWeight: 600,
                   })),
               ]}
             >
@@ -147,8 +147,8 @@ const useColumns = () => {
               sx={[
                 result === TradeResult.LOSS &&
                   ((theme) => ({
-                    color: theme.palette.error.main,
-                    fontWeight: theme.typography.h6.fontWeight,
+                    color: theme.palette.error.light,
+                    fontWeight: 600,
                   })),
               ]}
             >

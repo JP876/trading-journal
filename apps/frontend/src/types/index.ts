@@ -15,3 +15,8 @@ export type FormFieldType<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = ControllerRenderProps<TFieldValues, TName>;
+
+export type TablePaginationType = {
+  page: number;
+  rowsPerPage?: number;
+};

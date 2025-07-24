@@ -1,13 +1,29 @@
 import { client } from '@/lib/client';
 import transformToFormData from '@/lib/transformToFormData';
-import { EditTradeFormSchemaType, TradeFormSchemaType, TradeType } from '@/types/trades';
-
-type getTradesResult = { results: TradeType[]; count: number };
+import { TablePaginationType } from '@/types';
+import {
+  type TradeFilters,
+  type EditTradeFormSchemaType,
+  type TradeFormSchemaType,
+  type TradesResult,
+} from '@/types/trades';
 
 export const tradesLimit = 10;
 
-export const getTrades = async (page: number): Promise<getTradesResult> => {
-  const response = await client.get('trades', { params: { page, limit: tradesLimit } });
+export const getTrades = async ({
+  page,
+  rowsPerPage,
+  ...rest
+}: TablePaginationType & TradeFilters): Promise<TradesResult> => {
+  const response = await client.get('trades', {
+    params: {
+      page: page || 1,
+      limit: rowsPerPage || tradesLimit,
+      pair: rest?.pair || undefined,
+      direction: rest?.direction || undefined,
+      result: rest?.result || undefined,
+    },
+  });
   return response.data;
 };
 

@@ -1,4 +1,4 @@
-import { Divider, Stack, Button } from '@mui/material';
+import { Divider, Stack, Button, Typography } from '@mui/material';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
 
@@ -39,24 +39,28 @@ const AccountForm = ({ onSubmit, form, isLoading }: AccountFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={3}>
-        <Controller
-          name="defaultTakeProfit"
-          control={form.control}
-          render={({ field }) => <TextInput label="Default take profit" field={field} type="number" />}
-        />
-        <Controller
-          name="defaultStopLoss"
-          control={form.control}
-          render={({ field }) => <TextInput label="Default stop loss" field={field} type="number" />}
-        />
-      </Stack>
-
       <Stack direction="row" alignItems="center">
         <Controller
           name="description"
           control={form.control}
           render={({ field }) => <TextInput label="Description" field={field} multiline rows={6} />}
+        />
+      </Stack>
+
+      <Divider>
+        <Typography variant="body2">Default trade values</Typography>
+      </Divider>
+
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="defaultTakeProfit"
+          control={form.control}
+          render={({ field }) => <TextInput label="Take profit" field={field} type="number" />}
+        />
+        <Controller
+          name="defaultStopLoss"
+          control={form.control}
+          render={({ field }) => <TextInput label="Stop loss" field={field} type="number" />}
         />
       </Stack>
 

@@ -1,33 +1,36 @@
-import { useState } from 'react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import {
-  Pagination,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { useDebounce } from 'use-debounce';
+import { useAtomValue } from 'jotai';
 
 import useAppStore from '@/store';
 import { getTrades, tradesLimit } from '@/api/trades';
 import useColumns from './hooks/useColumns';
+import { filtersAtom, pageAtom, rowsPerPageAtom } from '@/components/table/tableAtoms';
+import TableRowsPerPageSelect from '@/components/table/pagination/TableRowsPerPageSelect';
+import TablePaginationMain from '@/components/table/pagination/TablePaginationMain';
+import TableResults from '@/components/table/pagination/TableResults';
 
 const TradesTableMain = () => {
-  const [page, setPage] = useState(1);
+  const page = useAtomValue(pageAtom);
+  const rowsPerPage = useAtomValue(rowsPerPageAtom);
+
+  const filters = useAtomValue(filtersAtom);
+  const [debouncedFilters] = useDebounce(filters, 200);
+
   const tradesColumnVisibility = useAppStore((state) => state.user?.userSettings?.tradesColumnVisibility);
 
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
-  };
-
   const { data, isLoading } = useQuery({
-    queryKey: ['trades', page],
-    queryFn: () => getTrades(page),
+    queryKey: ['trades', page, rowsPerPage, debouncedFilters],
+    queryFn: () =>
+      getTrades({
+        page,
+        rowsPerPage,
+        pair: debouncedFilters?.pair,
+        direction: debouncedFilters?.direction,
+        result: debouncedFilters?.result,
+      }),
     placeholderData: keepPreviousData,
   });
 
@@ -86,24 +89,15 @@ const TradesTableMain = () => {
         </Table>
       </TableContainer>
 
-      {data?.count && data.count > tradesLimit ? (
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography>
-            Results {page === 1 ? 1 : page - 1 + tradesLimit} -{' '}
-            {page * tradesLimit > data?.count ? data?.count : page * tradesLimit} out of {data?.count}
-          </Typography>
-
-          <Pagination
-            showFirstButton
-            showLastButton
-            variant="outlined"
-            shape="rounded"
-            count={Math.ceil(data.count / tradesLimit)}
-            page={page}
-            onChange={handlePageChange}
-          />
-        </Stack>
-      ) : null}
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <TableResults count={data?.count} totalCount={data?.totalCount} />
+        {data?.count && data?.count > tradesLimit ? (
+          <Stack direction="row" alignItems="center" gap={3}>
+            <TableRowsPerPageSelect />
+            <TablePaginationMain count={data.count} />
+          </Stack>
+        ) : null}
+      </Stack>
     </Stack>
   );
 };
