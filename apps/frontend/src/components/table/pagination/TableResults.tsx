@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai';
 
 import { filtersAtom, pageAtom, rowsPerPageAtom } from '../tableAtoms';
 
-const isEmpty = (object: { [key: string]: string }) => {
+const isEmpty = (object: { [key: string]: string | null }) => {
   if (!object) return false;
   return Object.values(object).every((x) => x === null || x === '');
 };
