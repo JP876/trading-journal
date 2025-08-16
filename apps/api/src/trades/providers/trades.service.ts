@@ -21,7 +21,7 @@ export class TradesService {
   ) {}
 
   public async findAll(
-    { limit = 10, page = 1, ...rest }: PaginationParams & TradeFilterFields,
+    { limit = 10, page = 1, sort, ...rest }: PaginationParams & TradeFilterFields & { sort: string },
     user: User
   ): Promise<{ results: Trade[]; totalCount: number; count: number }> {
     if (page < 1) {
@@ -33,18 +33,24 @@ export class TradesService {
     if (!Array.isArray(accounts)) throw new NotFoundException();
     if (accounts.length === 0) return { totalCount: 0, count: 0, results: [] };
 
-    const findBy: TradeFilterFields & { account: unknown } = { account: accounts[0]?._id };
+    const findBy: Omit<TradeFilterFields, 'openDate' | 'closeDate'> & {
+      account: unknown;
+      openDate?: { $gte: Date };
+      closeDate?: { $lte: Date };
+    } = {
+      account: accounts[0]?._id,
+    };
 
     if (rest?.pair) findBy.pair = rest.pair;
     if (rest?.direction) findBy.direction = rest.direction;
     if (rest?.result) findBy.result = rest.result;
-    if (rest?.openDate) findBy.openDate = rest.openDate;
-    if (rest?.closeDate) findBy.closeDate = rest.closeDate;
+    if (rest?.openDate) findBy.openDate = { $gte: new Date(rest.openDate) };
+    if (rest?.closeDate) findBy.closeDate = { $lte: new Date(rest.closeDate) };
 
     const newPage = limit * (page - 1);
     const tradesQuery = this.tradeModel
       .find({ ...findBy })
-      .sort({ _id: -1 })
+      .sort(sort ? sort : '-_id')
       .skip(newPage)
       .limit(limit);
 

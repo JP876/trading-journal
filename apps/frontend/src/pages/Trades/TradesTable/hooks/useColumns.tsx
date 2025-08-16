@@ -44,7 +44,7 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
 const useColumns = () => {
   return useMemo<ColumnDef<TradeType>[]>(() => {
     return [
-      { accessorKey: 'pair', header: 'Pair', enableHiding: false },
+      { accessorKey: 'pair', header: 'Pair', enableHiding: false, enableSorting: false },
       {
         accessorKey: 'direction',
         header: () => <div>Direction</div>,

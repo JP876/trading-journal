@@ -37,5 +37,11 @@ export type EditTradeFormSchemaType = z.infer<typeof editTradeFormSchema>;
 
 export type TradeType = { _id: string; files?: FilesType[] } & Omit<TradeFormSchemaType, 'files'>;
 
-export type TradeFilters = { pair?: string; direction?: string; result?: string };
+export type TradeFilters = {
+  pair?: string;
+  direction?: string;
+  result?: string;
+  openDate?: string;
+  closeDate?: string;
+};
 export type TradesResult = { results: TradeType[]; totalCount: number; count: number };

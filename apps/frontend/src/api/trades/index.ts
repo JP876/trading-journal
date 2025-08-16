@@ -7,14 +7,16 @@ import {
   type TradeFormSchemaType,
   type TradesResult,
 } from '@/types/trades';
+import { format } from 'date-fns';
 
 export const tradesLimit = 10;
 
 export const getTrades = async ({
   page,
   rowsPerPage,
+  sort,
   ...rest
-}: TablePaginationType & TradeFilters): Promise<TradesResult> => {
+}: TablePaginationType & TradeFilters & { sort?: string }): Promise<TradesResult> => {
   const response = await client.get('trades', {
     params: {
       page: page || 1,
@@ -22,6 +24,9 @@ export const getTrades = async ({
       pair: rest?.pair || undefined,
       direction: rest?.direction || undefined,
       result: rest?.result || undefined,
+      openDate: rest?.openDate ? format(new Date(rest?.openDate), 'yyyy/MM/dd') : undefined,
+      closeDate: rest?.closeDate ? format(new Date(rest?.closeDate), 'yyyy/MM/dd') : undefined,
+      sort: sort || undefined,
     },
   });
   return response.data;

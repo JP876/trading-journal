@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { useDebounce } from 'use-debounce';
 import { useAtomValue } from 'jotai';
 
@@ -11,10 +11,12 @@ import { filtersAtom, pageAtom, rowsPerPageAtom } from '@/components/table/table
 import TableRowsPerPageSelect from '@/components/table/pagination/TableRowsPerPageSelect';
 import TablePaginationMain from '@/components/table/pagination/TablePaginationMain';
 import TableResults from '@/components/table/pagination/TableResults';
+import useTableSort from '@/components/table/hooks/useTableSort';
 
 const TradesTableMain = () => {
   const page = useAtomValue(pageAtom);
   const rowsPerPage = useAtomValue(rowsPerPageAtom);
+  const [orderBy, handleOrderBy] = useTableSort();
 
   const filters = useAtomValue(filtersAtom);
   const [debouncedFilters] = useDebounce(filters, 200);
@@ -22,15 +24,8 @@ const TradesTableMain = () => {
   const tradesColumnVisibility = useAppStore((state) => state.user?.userSettings?.tradesColumnVisibility);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['trades', page, rowsPerPage, debouncedFilters],
-    queryFn: () =>
-      getTrades({
-        page,
-        rowsPerPage,
-        pair: debouncedFilters?.pair,
-        direction: debouncedFilters?.direction,
-        result: debouncedFilters?.result,
-      }),
+    queryKey: ['trades', page, rowsPerPage, debouncedFilters, orderBy],
+    queryFn: () => getTrades({ page, rowsPerPage, ...debouncedFilters, sort: orderBy }),
     placeholderData: keepPreviousData,
   });
 
@@ -59,9 +54,23 @@ const TradesTableMain = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  const value = header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext());
+
+                  if (!header.column.getCanSort()) {
+                    return <TableCell key={header.id}>{value}</TableCell>;
+                  }
+
                   return (
                     <TableCell key={header.id}>
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      <TableSortLabel
+                        active={orderBy.includes(header.id)}
+                        direction={orderBy.startsWith('-') ? 'desc' : 'asc'}
+                        onClick={(e) => handleOrderBy(e, header.id)}
+                      >
+                        {value}
+                      </TableSortLabel>
                     </TableCell>
                   );
                 })}

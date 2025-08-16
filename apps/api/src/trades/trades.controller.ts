@@ -28,7 +28,10 @@ export class TradesController {
   constructor(private readonly tradesService: TradesService) {}
 
   @Get()
-  public async findAll(@Req() request: RequestWithUser, @Query() query: PaginationParams & TradeFilterFields) {
+  public async findAll(
+    @Req() request: RequestWithUser,
+    @Query() query: PaginationParams & TradeFilterFields & { sort: string }
+  ) {
     return this.tradesService.findAll(query, request.user);
   }
 

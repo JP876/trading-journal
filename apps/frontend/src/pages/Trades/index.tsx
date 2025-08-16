@@ -17,6 +17,7 @@ import EditAccountForm from './TradesSettings/Accounts/forms/EditAccount';
 import TableProviderMain from '@/components/table/Provider';
 import TableSelectFilter from '@/components/table/filters/TableSelectFilter';
 import { directionItems, pairOptions, resultItems } from './forms/consts';
+import TableDateFilter from '@/components/table/filters/TableDateFilter';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -102,7 +103,10 @@ const TradesMain = () => {
               <TableSelectFilter name="pair" label="Pair" options={pairOptions} />
               <TableSelectFilter name="direction" label="Direction" options={directionItems} />
               <TableSelectFilter name="result" label="Result" options={resultItems} />
+              <TableDateFilter name="openDate" label="Open Date" />
+              <TableDateFilter name="closeDate" label="Close Date" />
             </Stack>
+
             <TradesTableMain />
           </Stack>
         </TableProviderMain>
