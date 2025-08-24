@@ -13,6 +13,7 @@ import { TradesModule } from './trades/trades.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { AccountsModule } from './accounts/accounts.module';
+import { UploadsModule } from './uploads/uploads.module';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
 
 const ENV = process.env.NODE_ENV;
@@ -38,6 +39,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     UserModule,
     AccountsModule,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
