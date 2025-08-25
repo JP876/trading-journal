@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { VisibilityState } from '@tanstack/react-table';
 
+import { FilesType } from '../trades';
+
 export const userFormSchema = z.object({
   userName: z.string().optional(),
   firstName: z.string().optional(),
@@ -26,8 +28,5 @@ export type userType = {
   firstName?: string;
   lastName?: string;
   userSettings?: userSettingsType;
-  avatar?: {
-    url: string;
-    id: string;
-  };
+  avatar?: FilesType;
 };

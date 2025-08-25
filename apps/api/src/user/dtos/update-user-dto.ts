@@ -3,7 +3,6 @@ import { IsOptional, IsString, MaxLength } from 'class-validator';
 
 import { CreateUserDto } from './create-user-dto';
 import { UserSettingsDocument } from '../settings.schema';
-import { avatarType } from '../user.schema';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
@@ -19,7 +18,6 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   userSettings?: UserSettingsDocument;
 
-  @IsString()
   @IsOptional()
-  avatar?: avatarType;
+  readonly files: string[];
 }

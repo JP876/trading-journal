@@ -3,22 +3,7 @@ import mongoose from 'mongoose';
 import { genSalt, hash, compare } from 'bcrypt-ts';
 
 import { UserSettings, UserSettingsSchema } from './settings.schema';
-
-export type avatarType = {
-  url: string;
-  id: string;
-};
-
-@Schema()
-class UserAvatar {
-  @Prop({ type: String, required: true })
-  url: string;
-
-  @Prop({ type: String, required: true })
-  id: string;
-}
-
-const UserAvatarSchema = SchemaFactory.createForClass(UserAvatar);
+import { Upload } from 'src/uploads/uploads.schema';
 
 @Schema({
   timestamps: true,
@@ -48,8 +33,8 @@ export class User extends mongoose.Document {
   @Prop(UserSettingsSchema)
   userSettings?: UserSettings;
 
-  @Prop(UserAvatarSchema)
-  avatar?: UserAvatar;
+  @Prop(Upload)
+  avatar?: Upload;
 
   comparePassword: (pass: string) => Promise<boolean>;
 
@@ -58,7 +43,7 @@ export class User extends mongoose.Document {
 }
 
 export type UserDocumentOverride = {
-  name: mongoose.Types.Subdocument<mongoose.Types.ObjectId> & UserSettings & UserAvatar;
+  name: mongoose.Types.Subdocument<mongoose.Types.ObjectId> & UserSettings & Upload;
 };
 
 export type UserDocument = mongoose.HydratedDocument<User, UserDocumentOverride>;

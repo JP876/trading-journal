@@ -5,15 +5,15 @@ import { Model } from 'mongoose';
 import { User } from '../user.schema';
 import { CreateUserDto } from '../dtos/create-user-dto';
 import { UpdateUserDto } from '../dtos/update-user-dto';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { AccountsService } from 'src/accounts/providers/accounts.service';
+import { UploadsService } from 'src/uploads/providers/uploads.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
     private readonly accountsService: AccountsService,
-    private readonly cloudinaryService: CloudinaryService
+    private readonly uploadsService: UploadsService
   ) {}
 
   public async findUserByEmail(email: string): Promise<User | null> {
@@ -55,17 +55,12 @@ export class UserService {
         throw new NotFoundException();
       }
 
-      if (user?.avatar?.id) {
-        await this.cloudinaryService.deleteFile(user.avatar.id);
+      if (user?.avatar?.name) {
+        await this.uploadsService.deleteFiles([user.avatar.name]);
       }
 
-      const file = await this.cloudinaryService.uploadFile(avatar, id, { folder: 'avatar' });
-      const userAvatar = {
-        url: file.secure_url as string,
-        id: file.public_id as string,
-      };
-
-      await this.userModel.updateOne({ _id: id }, { avatar: userAvatar });
+      const file = await this.uploadsService.uploadFile(avatar, `user-${user.id}/profile`);
+      await this.userModel.updateOne({ _id: id }, { avatar: file });
     } catch (error) {
       throw new BadRequestException(error);
     }

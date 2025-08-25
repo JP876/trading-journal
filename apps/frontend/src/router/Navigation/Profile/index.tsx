@@ -61,8 +61,8 @@ const ProfileMain = () => {
     <>
       <MenuActions menuActions={menuActions}>
         <Tooltip arrow disableInteractive title={userName}>
-          {avatar?.url ? (
-            <Avatar src={avatar?.url} />
+          {avatar?.path ? (
+            <Avatar src={avatar?.path} />
           ) : (
             <Avatar>
               <PersonIcon />
