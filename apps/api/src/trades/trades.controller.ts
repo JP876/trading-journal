@@ -87,8 +87,8 @@ export class TradesController {
     return this.tradesService.delete(userId, id);
   }
 
-  @Delete('file/:trade_id/:file_id')
-  public async deleteFile(@Param() param: { trade_id: string; file_id: string }) {
-    return this.tradesService.deleteFile(param.trade_id, param.file_id);
+  @Delete('file/:trade_id/:file_name')
+  public async deleteFile(@Param() param: { trade_id: string; file_name: string }) {
+    return this.tradesService.deleteFile(param.trade_id, param.file_name);
   }
 }

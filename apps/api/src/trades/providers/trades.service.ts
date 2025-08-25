@@ -9,15 +9,15 @@ import { PaginationParams } from 'src/common/dtos/pagination-params.dto';
 import { User } from 'src/user/user.schema';
 import { Account } from 'src/accounts/account.schema';
 import { AccountsService } from 'src/accounts/providers/accounts.service';
-import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { FileType } from 'src/common/types';
+import { UploadsService } from 'src/uploads/providers/uploads.service';
+import { UploadFile } from 'src/uploads/interfaces/upload-file.interface';
 
 @Injectable()
 export class TradesService {
   constructor(
     @InjectModel(Trade.name) private readonly tradeModel: Model<Trade>,
     private readonly accountsService: AccountsService,
-    private readonly cloudinaryService: CloudinaryService
+    private readonly uploadsService: UploadsService
   ) {}
 
   public async findAll(
@@ -90,13 +90,9 @@ export class TradesService {
 
     if (Array.isArray(files) && files.length !== 0) {
       const tradeFiles = await Promise.all(
-        files.map((file) => this.cloudinaryService.uploadFile(file, userId, { folder: `trades/${trade?.id}` }))
+        files.map((file) => this.uploadsService.uploadFile(file, `user-${userId}/trades/${trade?.id}`))
       );
-      trade.files = tradeFiles.map((file) => ({
-        url: file?.secure_url as string,
-        id: file?.public_id as string,
-        name: file?.original_filename as string,
-      }));
+      trade.files = tradeFiles;
       await trade.save({ validateBeforeSave: true });
     }
 
@@ -111,48 +107,39 @@ export class TradesService {
       throw new NotFoundException();
     }
 
-    let updatedfiles: FileType[] = [...(trade?.files || [])];
+    let updatedfiles = [...(trade?.files || [])];
     const updateData = { ...updateTradeDto };
 
     delete updateData.deleteFiles;
 
     if (updateTradeDto?.deleteFiles) {
-      const fileIds = JSON.parse(updateTradeDto.deleteFiles || '') as string[] | '';
+      const files = JSON.parse(updateTradeDto.deleteFiles || '') as UploadFile[] | '';
 
-      if (Array.isArray(fileIds) && fileIds.length !== 0) {
-        await Promise.all(fileIds.map((id) => this.cloudinaryService.deleteFile(id)));
-        updatedfiles = updatedfiles.filter((file) => !fileIds.includes(file.id));
+      if (Array.isArray(files) && files.length !== 0) {
+        await this.uploadsService.deleteFiles(files.map((file) => file.name));
+        updatedfiles = updatedfiles.filter((file) => !files.some((f) => f?.name === file?.name));
       }
     }
 
     if (Array.isArray(files) && files.length !== 0) {
       const tradeFiles = await Promise.all(
-        files.map((file) => this.cloudinaryService.uploadFile(file, userId, { folder: `trades/${trade?.id}` }))
+        files.map((file) => this.uploadsService.uploadFile(file, `user-${userId}/trades/${trade?.id}`))
       );
-
-      updatedfiles = [
-        ...updatedfiles,
-        ...tradeFiles.map((file) => ({
-          url: file?.secure_url as string,
-          id: file?.public_id as string,
-          name: files?.[0]?.originalname,
-        })),
-      ];
+      updatedfiles = [...updatedfiles, ...tradeFiles];
     }
 
     await this.tradeModel.updateOne({ _id: id }, { ...updateData, files: updatedfiles });
   }
 
-  public async deleteFile(tradeId: string, fileId: string) {
+  public async deleteFile(tradeId: string, name: string) {
     const trade = await this.findOneById(tradeId);
     if (!trade) {
       throw new NotFoundException();
     }
 
-    trade.files = (trade.files || []).filter((file) => file.id !== fileId);
+    trade.files = (trade.files || []).filter((file) => file.name !== name);
     await trade.save();
-
-    return this.cloudinaryService.deleteFile(fileId);
+    return this.uploadsService.deleteFiles([name]);
   }
 
   public async delete(userId: string, id: string) {
@@ -162,7 +149,7 @@ export class TradesService {
     }
 
     if (Array.isArray(trade?.files) && trade?.files.length !== 0) {
-      await this.cloudinaryService.deleteFolderWithAssets(userId, `trades/${id}`);
+      await this.uploadsService.deleteFiles(trade?.files.map((file) => file.name));
     }
 
     await trade.deleteOne();

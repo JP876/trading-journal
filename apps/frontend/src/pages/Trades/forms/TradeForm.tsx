@@ -9,6 +9,7 @@ import TextInput from '@/components/form/TextInput';
 import DateTimeInput from '@/components/form/DateTimeInput';
 import FormMain from '@/components/form/FormMain';
 import { EditTradeFormSchemaType, TradeFormSchemaType } from '@/types/trades';
+import UploadFilesInput from '@/components/form/UploadFilesInput';
 
 type FormSchema = TradeFormSchemaType | EditTradeFormSchemaType;
 type TradeFormProps = {
@@ -77,9 +78,9 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      {/* <Stack direction="row" alignItems="center">
+      <Stack direction="row" alignItems="center">
         <Controller name="files" control={form.control} render={({ field }) => <UploadFilesInput field={field} />} />
-      </Stack> */}
+      </Stack>
 
       <Divider />
 

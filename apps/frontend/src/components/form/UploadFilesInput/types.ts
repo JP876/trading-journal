@@ -12,7 +12,7 @@ export type InputFileUploadProps = {
 
 export type FilesPreviewProps = {
   value: File[] | FilesType[] | undefined;
-  handleDeleteFile: (e: MouseEvent<HTMLButtonElement>, index: number) => void;
+  handleDeleteFile: (e: MouseEvent<HTMLButtonElement>, index: number, file: FilesType | null) => void;
 };
 
 export type UploadFilesInputProps = {

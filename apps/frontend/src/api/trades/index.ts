@@ -1,13 +1,14 @@
+import { format } from 'date-fns';
+
 import { client } from '@/lib/client';
 import transformToFormData from '@/lib/transformToFormData';
-import { TablePaginationType } from '@/types';
+import { type TablePaginationType } from '@/types';
 import {
   type TradeFilters,
   type EditTradeFormSchemaType,
   type TradeFormSchemaType,
   type TradesResult,
 } from '@/types/trades';
-import { format } from 'date-fns';
 
 export const tradesLimit = 10;
 

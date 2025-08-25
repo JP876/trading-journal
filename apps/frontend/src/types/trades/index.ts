@@ -1,6 +1,15 @@
 import { z } from 'zod';
 
-const filesObject = z.object({ id: z.string(), url: z.string(), name: z.string() });
+const filesObject = z.object({
+  _id: z.string(),
+  path: z.string(),
+  name: z.string(),
+  mime: z.string(),
+  size: z.number(),
+  originalName: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
 export type FilesType = z.infer<typeof filesObject>;
 
 export enum TradeDirection {
@@ -30,7 +39,7 @@ export const tradeFormSchema = z.object({
 export type TradeFormSchemaType = z.infer<typeof tradeFormSchema>;
 
 export const editTradeFormSchema = tradeFormSchema.extend({
-  deleteFiles: z.array(z.string()).optional(),
+  deleteFiles: z.array(filesObject).optional(),
 });
 
 export type EditTradeFormSchemaType = z.infer<typeof editTradeFormSchema>;

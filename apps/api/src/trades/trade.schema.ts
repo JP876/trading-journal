@@ -4,20 +4,7 @@ import mongoose from 'mongoose';
 
 import { tradeDirection, tradeResult } from './enums';
 import { Account } from 'src/accounts/account.schema';
-
-@Schema()
-class TradeFiles {
-  @Prop({ type: String, required: true })
-  url: string;
-
-  @Prop({ type: String, required: true })
-  id: string;
-
-  @Prop({ type: String, required: true })
-  name: string;
-}
-
-const TradeFilesSchema = SchemaFactory.createForClass(TradeFiles);
+import { Upload, UploadSchema } from 'src/uploads/uploads.schema';
 
 @Schema({
   timestamps: true,
@@ -57,8 +44,8 @@ export class Trade extends mongoose.Document {
   @Type(() => Account)
   account: mongoose.Types.ObjectId;
 
-  @Prop([TradeFilesSchema])
-  files?: TradeFiles[];
+  @Prop([UploadSchema])
+  files?: Upload[];
 }
 
 export type TradeDocument = mongoose.HydratedDocument<Trade>;

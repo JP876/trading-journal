@@ -6,4 +6,5 @@ export interface UploadFile {
   type: fileTypes;
   mime: string;
   size: number;
+  originalName: string;
 }

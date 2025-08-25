@@ -3,6 +3,7 @@ import { Avatar, Button, IconButton, List, ListItem, ListItemAvatar, ListItemTex
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useFormContext } from 'react-hook-form';
 
 import { FilesPreviewProps, InputFileUploadProps, UploadFilesInputProps } from './types';
 import { FilesType } from '@/types/trades';
@@ -48,16 +49,20 @@ const FilesPreview = ({ value, handleDeleteFile }: FilesPreviewProps) => {
           key={`file-${index}`}
           secondaryAction={
             <Stack direction="row" alignItems="center">
-              <IconButton size="small" color="error" onClick={(e) => handleDeleteFile(e, index)}>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={(e) => handleDeleteFile(e, index, file instanceof File ? null : file)}
+              >
                 <DeleteIcon />
               </IconButton>
             </Stack>
           }
         >
           <ListItemAvatar>
-            <Avatar src={file instanceof File ? URL.createObjectURL(file) : file?.url || ''} alt={file.name} />
+            <Avatar src={file instanceof File ? URL.createObjectURL(file) : file?.path || ''} alt={file.name} />
           </ListItemAvatar>
-          <ListItemText primary={file.name} />
+          <ListItemText primary={file instanceof File ? file.name : file.originalName} />
         </ListItem>
       ))}
     </List>
@@ -66,9 +71,16 @@ const FilesPreview = ({ value, handleDeleteFile }: FilesPreviewProps) => {
 
 const UploadFilesInput = ({ field, ...rest }: UploadFilesInputProps & InputHTMLAttributes<HTMLInputElement>) => {
   const { value, onChange, disabled, onBlur, ...restField } = field;
+  const methods = useFormContext();
 
-  const handleDeleteFile = (_: MouseEvent<HTMLButtonElement>, index: number) => {
-    onChange((value || []).filter((_: File, fielIndex: number) => fielIndex !== index));
+  const handleDeleteFile = (_: MouseEvent<HTMLButtonElement>, index: number, existingFile: FilesType | null) => {
+    const nextValue = (value || []).filter((_: File, fielIndex: number) => fielIndex !== index);
+    onChange(nextValue);
+
+    if (existingFile?._id) {
+      const deleteFiles: FilesType[] = methods.getValues('deleteFiles') || [];
+      methods.setValue('deleteFiles', [...deleteFiles, existingFile]);
+    }
   };
 
   return (

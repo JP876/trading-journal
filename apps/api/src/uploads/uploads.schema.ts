@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { fileTypes } from './enums/file-types.enum';
 
 @Schema({ timestamps: true })
-export class Upload extends mongoose.Document {
+export class Upload {
   @Prop({ type: String, required: true })
   name: string;
 
@@ -19,6 +19,9 @@ export class Upload extends mongoose.Document {
 
   @Prop({ type: Number, required: true })
   size: number;
+
+  @Prop({ type: String, required: true })
+  originalName: string;
 
   createdAt?: Date;
   updatedAt?: Date;
