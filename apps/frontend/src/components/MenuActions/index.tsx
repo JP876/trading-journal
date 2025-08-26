@@ -25,28 +25,30 @@ export const MenuActionsList = ({
     return null;
   }
 
-  return actions.map((action) => {
-    if (action.id.includes(itemMenuTypeIds.divider)) {
-      return <Divider key={action.id} {...action?.dividerProps} sx={{ mx: -0.5 }} />;
+  return actions.map((action, index) => {
+    if (action.id === itemMenuTypeIds.divider) {
+      return (
+        <Divider key={`${action.id}_${index}`} {...action?.dividerProps} sx={{ mx: -0.5, my: '0px !important' }} />
+      );
     }
 
-    if (action.id.includes(itemMenuTypeIds.customItem)) {
+    if (action.id === itemMenuTypeIds.customItem) {
       if (typeof action?.renderAction === 'function') {
-        return <Box key={action.id}>{action.renderAction(handleClose)}</Box>;
+        return <Box key={`${action.id}_${index}`}>{action.renderAction(handleClose)}</Box>;
       } else {
-        console.error(`Function renderAction not found`);
+        console.warn('Function renderAction not found');
         return null;
       }
     }
 
     return (
       <MenuItem
-        key={action.id}
+        key={`menu-item_${index}`}
         sx={{ width: '100%' }}
-        onClick={(e) => typeof action?.onClick === 'function' && action.onClick(e, () => handleClose(e))}
-        disabled={action?.isLoading}
         disableRipple
         {...action?.menuItemProps}
+        disabled={action?.isLoading || action?.menuItemProps?.disabled}
+        onClick={(e) => typeof action?.onClick === 'function' && action.onClick(e, () => handleClose(e))}
       >
         {action?.isLoading ? (
           <CircularProgress size={24} sx={{ mr: 1.6 }} />

@@ -44,7 +44,7 @@ export const editTradeFormSchema = tradeFormSchema.extend({
 
 export type EditTradeFormSchemaType = z.infer<typeof editTradeFormSchema>;
 
-export type TradeType = { _id: string; files?: FilesType[] } & Omit<TradeFormSchemaType, 'files'>;
+export type TradeType = { id: string; _id: string; files?: FilesType[] } & Omit<TradeFormSchemaType, 'files'>;
 
 export type TradeFilters = {
   pair?: string;

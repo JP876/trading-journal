@@ -1,4 +1,4 @@
-import { IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { Backdrop, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -18,6 +18,7 @@ import TableProviderMain from '@/components/table/Provider';
 import TableSelectFilter from '@/components/table/filters/TableSelectFilter';
 import { directionItems, pairOptions, resultItems } from './forms/consts';
 import TableDateFilter from '@/components/table/filters/TableDateFilter';
+import TradeFilesMain from './TradeFiles';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -37,6 +38,13 @@ const TradesModalList = () => {
         <DialogMain title="Edit Trade" id="editTrade">
           <EditTradeForm trade={modalInfo?.editTrade?.data} />
         </DialogMain>
+
+        <Backdrop
+          open={!!modalInfo?.tradeFiles?.open}
+          sx={[(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })]}
+        >
+          <TradeFilesMain trade={modalInfo?.tradeFiles?.data} closeModal={() => closeModal('tradeFiles')} />
+        </Backdrop>
 
         <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />
       </>

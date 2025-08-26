@@ -15,9 +15,9 @@ export type renderMenuBtnType = {
 
 export type menuActionType<T = string> = {
   id: T;
-  icon: ReactNode;
-  label: string;
-  onClick: (e: React.MouseEvent<HTMLElement>, handleClose: handleCloseType) => void;
+  icon?: ReactNode;
+  label?: string;
+  onClick?: (e: React.MouseEvent<HTMLElement>, handleClose: handleCloseType) => void;
   renderAction?: (handleClose: handleCloseType) => ReactNode;
   isLoading?: boolean;
   dividerProps?: DividerProps;

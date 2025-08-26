@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import PhotoIcon from '@mui/icons-material/Photo';
 import Chip from '@mui/material/Chip';
 
 import { TradeDirection, TradeResult, TradeType } from '@/types/trades';
@@ -18,6 +19,19 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
   const openModal = useAppStore((state) => state.openModal);
 
   const menuActions: menuActionType[] = [
+    {
+      id: 'tradeFiles',
+      label: 'Pictures',
+      icon: <PhotoIcon fontSize="small" />,
+      menuItemProps: {
+        disabled: !Array.isArray(trade?.files) || trade?.files?.length === 0,
+      },
+      onClick: (_, handleClose) => {
+        openModal({ id: 'tradeFiles', data: trade });
+        handleClose();
+      },
+    },
+    { id: 'divider' },
     {
       id: 'editTrade',
       label: 'Edit Trade',
@@ -44,7 +58,7 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
 const useColumns = () => {
   return useMemo<ColumnDef<TradeType>[]>(() => {
     return [
-      { accessorKey: 'pair', header: 'Pair', enableHiding: false, enableSorting: false },
+      { accessorKey: 'pair', header: 'Pair', enableHiding: false },
       {
         accessorKey: 'direction',
         header: () => <div>Direction</div>,
