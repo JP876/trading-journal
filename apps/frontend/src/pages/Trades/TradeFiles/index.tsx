@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { format } from 'date-fns';
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -5,8 +7,6 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { atom, Provider, useAtomValue, useSetAtom } from 'jotai';
 
 import { FilesType, TradeType } from '@/types/trades';
-import { useEffect } from 'react';
-import { format } from 'date-fns';
 
 type TradeFileProps = {
   trade: TradeType;

@@ -26,6 +26,7 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
       menuItemProps: {
         disabled: !Array.isArray(trade?.files) || trade?.files?.length === 0,
       },
+      badgeContent: trade?.files?.length,
       onClick: (_, handleClose) => {
         openModal({ id: 'tradeFiles', data: trade });
         handleClose();

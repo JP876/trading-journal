@@ -1,19 +1,17 @@
-import { Box } from '@mui/material';
+import { Stack } from '@mui/material';
 
 import UserFormMain from './UsetForm';
 import TabsNavigation, { tabItem } from '@/components/TabsNavigation';
 import ProfileAvatarMain from '../ProfileAvatar';
 
-const tabItems: tabItem[] = [
-  { label: 'User Info', content: UserFormMain },
-  { label: 'Profile Picture', content: ProfileAvatarMain },
-];
+const tabItems: tabItem[] = [{ label: 'User Info', content: UserFormMain }];
 
 const ProfileSettings = () => {
   return (
-    <Box sx={{ width: '100%' }}>
+    <Stack sx={{ width: '100%' }}>
+      <ProfileAvatarMain />
       <TabsNavigation tabItems={tabItems} />
-    </Box>
+    </Stack>
   );
 };
 

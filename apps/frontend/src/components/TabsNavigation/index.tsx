@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Stack, Tab, Tabs, type TabsProps, type BoxProps } from '@mui/material';
+import { Box, Stack, Tab, Tabs, type TabsProps, type BoxProps, StackProps } from '@mui/material';
 
 const a11yProps = (index: number) => {
   return {
@@ -22,6 +22,7 @@ export type tabItem = {
 };
 
 type TabsNavigationProps = {
+  containerProps?: StackProps;
   tabsProps?: Omit<TabsProps, 'value'>;
   tabItems: tabItem[];
 };
@@ -41,7 +42,7 @@ const TabPanel = ({ index, value, children, ...rest }: TabPanelProps & BoxProps)
   );
 };
 
-const TabsNavigation = ({ tabsProps, tabItems }: TabsNavigationProps) => {
+const TabsNavigation = ({ containerProps, tabsProps, tabItems }: TabsNavigationProps) => {
   const [value, setValue] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -52,7 +53,7 @@ const TabsNavigation = ({ tabsProps, tabItems }: TabsNavigationProps) => {
   };
 
   return (
-    <Stack direction="row" sx={{ width: '100%', flexGrow: 1 }}>
+    <Stack {...containerProps} direction="row" sx={{ width: '100%', flexGrow: 1, ...containerProps?.sx }}>
       <Tabs
         orientation="vertical"
         aria-label="Tabs Navigation"
