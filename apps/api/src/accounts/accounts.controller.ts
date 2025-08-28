@@ -32,6 +32,6 @@ export class AccountsController {
 
   @Delete(':id')
   public async deleteAccount(@Param() { id }: ParamsWithId) {
-    return this.accountsService.delete(id);
+    return await this.accountsService.delete(id);
   }
 }

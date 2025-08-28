@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { tradeDirection, tradeResult } from './enums';
 import { Account } from 'src/accounts/account.schema';
 import { Upload, UploadSchema } from 'src/uploads/uploads.schema';
+import { Tag } from 'src/tags/tag.schema';
 
 @Schema({
   timestamps: true,
@@ -43,6 +44,10 @@ export class Trade extends mongoose.Document {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Account.name, required: true })
   @Type(() => Account)
   account: mongoose.Types.ObjectId;
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: Tag.name }] })
+  @Type(() => Tag)
+  tags?: Tag[];
 
   @Prop([UploadSchema])
   files?: Upload[];
