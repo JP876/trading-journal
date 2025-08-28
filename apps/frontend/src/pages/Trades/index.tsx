@@ -19,6 +19,9 @@ import TableSelectFilter from '@/components/table/filters/TableSelectFilter';
 import { directionItems, pairOptions, resultItems } from './forms/consts';
 import TableDateFilter from '@/components/table/filters/TableDateFilter';
 import TradeFilesMain from './TradeFiles';
+import AddTagForm from './TradesSettings/Tags/forms/AddTag';
+import EditTagForm from './TradesSettings/Tags/forms/EditTag';
+import DeleteTagDialog from './TradesSettings/Tags/DeleteTag';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -59,6 +62,18 @@ const TradesModalList = () => {
         </DialogMain>
 
         <DeleteAccountDialog account={modalInfo?.deleteAccount?.data} closeModal={() => closeModal('deleteAccount')} />
+      </>
+
+      <>
+        <DialogMain title="Add Tag" id="addTag">
+          <AddTagForm />
+        </DialogMain>
+
+        <DialogMain title="Edit Tag" id="editTag">
+          <EditTagForm tag={modalInfo?.editTag?.data} />
+        </DialogMain>
+
+        <DeleteTagDialog tag={modalInfo?.deleteTag?.data} closeModal={() => closeModal('deleteTag')} />
       </>
     </>
   );
