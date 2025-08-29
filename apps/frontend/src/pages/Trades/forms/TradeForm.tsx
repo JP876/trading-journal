@@ -1,15 +1,17 @@
 import { Button, Divider, Stack } from '@mui/material';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
+import { useQuery } from '@tanstack/react-query';
 
 import { directionItems, pairOptions, resultItems } from './consts';
 import AutocompleteInput from '@/components/form/AutocompleteInput';
-import SelectInput from '@/components/form/SelectInput';
+import SelectInput, { SelectInputOptionType } from '@/components/form/SelectInput';
 import TextInput from '@/components/form/TextInput';
 import DateTimeInput from '@/components/form/DateTimeInput';
 import FormMain from '@/components/form/FormMain';
 import { EditTradeFormSchemaType, TradeFormSchemaType } from '@/types/trades';
 import UploadFilesInput from '@/components/form/UploadFilesInput';
+import { getTags } from '@/api/tags';
 
 type FormSchema = TradeFormSchemaType | EditTradeFormSchemaType;
 type TradeFormProps = {
@@ -19,6 +21,14 @@ type TradeFormProps = {
 };
 
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
+  const tagsQuery = useQuery({ queryKey: ['tags'], queryFn: getTags });
+
+  const tagOptions: SelectInputOptionType[] = (tagsQuery.data || []).map((tag) => ({
+    id: tag._id,
+    label: tag.name,
+    chipBackgroundColor: tag.color,
+  }));
+
   return (
     <FormMain onSubmit={onSubmit} form={form}>
       <Stack direction="row" alignItems="center" gap={3}>
@@ -54,6 +64,23 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           name="pl"
           control={form.control}
           render={({ field }) => <TextInput label="Profit/Loss" field={field} type="number" />}
+        />
+      </Stack>
+
+      <Stack>
+        <Controller
+          name="tags"
+          control={form.control}
+          render={({ field }) => (
+            <SelectInput
+              field={field}
+              renderChips
+              label="Tags"
+              multiple
+              disabled={tagsQuery.isLoading || tagsQuery.isError}
+              options={tagOptions}
+            />
+          )}
         />
       </Stack>
 

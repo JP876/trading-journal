@@ -18,8 +18,11 @@ const DeleteTagDialog = ({ tag, closeModal }: DeleteTagDialogProps) => {
 
   const mutation = useMutation({
     mutationFn: deleteTag,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['tags'] }),
+        queryClient.invalidateQueries({ queryKey: ['trades'] }),
+      ]);
       closeModal();
     },
   });

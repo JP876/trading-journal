@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { TagType } from '../tags';
 
 const filesObject = z.object({
   _id: z.string(),
@@ -34,6 +35,7 @@ export const tradeFormSchema = z.object({
   pl: z.number().optional(),
   comment: z.string().optional(),
   files: z.array(z.union([z.instanceof(File), filesObject])).optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export type TradeFormSchemaType = z.infer<typeof tradeFormSchema>;
@@ -44,7 +46,10 @@ export const editTradeFormSchema = tradeFormSchema.extend({
 
 export type EditTradeFormSchemaType = z.infer<typeof editTradeFormSchema>;
 
-export type TradeType = { id: string; _id: string; files?: FilesType[] } & Omit<TradeFormSchemaType, 'files'>;
+export type TradeType = { id: string; _id: string; files?: FilesType[]; tags?: TagType[] } & Omit<
+  TradeFormSchemaType,
+  'files' | 'tags'
+>;
 
 export type TradeFilters = {
   pair?: string;

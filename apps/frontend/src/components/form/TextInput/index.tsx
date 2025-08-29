@@ -13,6 +13,7 @@ const TextInput = ({ field, ...rest }: TextInputPropsType & TextFieldProps) => {
       fullWidth
       {...rest}
       {...field}
+      value={field.value || ''}
       onChange={(e) => {
         if (rest?.type === 'number') {
           field.onChange(+e.target.value);

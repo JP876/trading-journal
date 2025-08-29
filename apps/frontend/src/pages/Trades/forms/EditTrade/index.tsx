@@ -34,6 +34,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       openDate: trade?.openDate ? new Date(trade.openDate) : undefined,
       closeDate: trade?.closeDate ? new Date(trade.closeDate) : undefined,
       deleteFiles: [],
+      tags: trade?.tags ? trade.tags.map((tag) => tag._id) : [],
     },
   });
 

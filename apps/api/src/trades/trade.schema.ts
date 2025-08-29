@@ -55,7 +55,7 @@ export class Trade extends mongoose.Document {
 
 export type TradeDocument = mongoose.HydratedDocument<Trade>;
 export type TradeFilterFields = Partial<
-  Pick<TradeDocument, 'openDate' | 'closeDate' | 'pair' | 'result' | 'stopLoss' | 'takeProfit' | 'direction'>
+  Pick<TradeDocument, 'openDate' | 'closeDate' | 'pair' | 'result' | 'stopLoss' | 'takeProfit' | 'direction' | 'tags'>
 >;
 
 const TradeSchema = SchemaFactory.createForClass(Trade);

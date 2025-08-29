@@ -20,6 +20,16 @@ export class TradesService {
     private readonly uploadsService: UploadsService
   ) {}
 
+  private formatTags(tags: string | string[] | undefined) {
+    let t: string[] = [];
+    if (Array.isArray(tags)) {
+      t = tags;
+    } else if (typeof tags === 'string' && tags !== '') {
+      t = [tags];
+    }
+    return t;
+  }
+
   public async findAll(
     { limit = 10, page = 1, sort, ...rest }: PaginationParams & TradeFilterFields & { sort: string },
     user: User
@@ -46,13 +56,15 @@ export class TradesService {
     if (rest?.result) findBy.result = rest.result;
     if (rest?.openDate) findBy.openDate = { $gte: new Date(rest.openDate) };
     if (rest?.closeDate) findBy.closeDate = { $lte: new Date(rest.closeDate) };
+    if (rest?.tags) findBy.tags = rest.tags;
 
     const newPage = limit * (page - 1);
     const tradesQuery = this.tradeModel
       .find({ ...findBy })
       .sort(sort ? sort : '-_id')
       .skip(newPage)
-      .limit(limit);
+      .limit(limit)
+      .populate(['tags']);
 
     const results = await tradesQuery;
     const totalCount = await this.tradeModel.find({ account: accounts[0]?._id }).countDocuments();
@@ -66,12 +78,13 @@ export class TradesService {
   }
 
   public async findOneById(id: string): Promise<Trade | null> {
-    return this.tradeModel.findById(id).exec();
+    return this.tradeModel.findById(id).populate('tags').exec();
   }
 
   public async create(createTradeDto: CreateTradeDto, user: User, files?: Express.Multer.File[]): Promise<Trade> {
     const userId = user._id as string;
     let account: Account | null = null;
+    const tags = this.formatTags(createTradeDto.tags);
 
     if (createTradeDto?.account) {
       account = await this.accountsService.findById(createTradeDto.account);
@@ -86,7 +99,7 @@ export class TradesService {
       account = accounts[0];
     }
 
-    const trade = await this.tradeModel.create({ ...createTradeDto, user: userId, account });
+    const trade = await this.tradeModel.create({ ...createTradeDto, user: userId, account, files: [], tags });
 
     if (Array.isArray(files) && files.length !== 0) {
       const tradeFiles = await Promise.all(
@@ -102,6 +115,7 @@ export class TradesService {
   public async update(user: User, id: string, updateTradeDto: UpdateTradeDto, files: Express.Multer.File[]) {
     const userId = user._id as string;
     const trade = await this.findOneById(id);
+    const tags = this.formatTags(updateTradeDto.tags);
 
     if (!trade) {
       throw new NotFoundException();
@@ -128,7 +142,7 @@ export class TradesService {
       updatedfiles = [...updatedfiles, ...tradeFiles];
     }
 
-    await this.tradeModel.updateOne({ _id: id }, { ...updateData, files: updatedfiles });
+    await this.tradeModel.updateOne({ _id: id }, { ...updateData, files: updatedfiles, tags }, { runValidators: true });
   }
 
   public async deleteFile(tradeId: string, name: string) {

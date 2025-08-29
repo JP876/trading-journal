@@ -3,6 +3,7 @@ import { Avatar, Button, IconButton, List, ListItem, ListItemAvatar, ListItemTex
 import { styled } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
 import { useFormContext } from 'react-hook-form';
 
 import { FilesPreviewProps, InputFileUploadProps, UploadFilesInputProps } from './types';
@@ -48,7 +49,12 @@ const FilesPreview = ({ value, handleDeleteFile }: FilesPreviewProps) => {
         <ListItem
           key={`file-${index}`}
           secondaryAction={
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" gap={1}>
+              {file instanceof File ? null : (
+                <IconButton size="small" onClick={() => window.open(file.path, '_blank')}>
+                  <DownloadIcon />
+                </IconButton>
+              )}
               <IconButton
                 size="small"
                 color="error"

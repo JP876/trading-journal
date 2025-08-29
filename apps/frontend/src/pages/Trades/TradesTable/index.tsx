@@ -59,11 +59,15 @@ const TradesTableMain = () => {
                     : flexRender(header.column.columnDef.header, header.getContext());
 
                   if (!header.column.getCanSort()) {
-                    return <TableCell key={header.id}>{value}</TableCell>;
+                    return (
+                      <TableCell key={header.id} sx={{ width: header.getSize() }}>
+                        {value}
+                      </TableCell>
+                    );
                   }
 
                   return (
-                    <TableCell key={header.id}>
+                    <TableCell sx={{ width: header.getSize() }} key={header.id}>
                       <TableSortLabel
                         active={orderBy.includes(header.id)}
                         direction={orderBy.startsWith('-') ? 'desc' : 'asc'}

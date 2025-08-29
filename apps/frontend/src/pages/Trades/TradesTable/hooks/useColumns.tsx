@@ -14,6 +14,8 @@ import NotFoundValue from '@/components/NotFoundValue';
 import MenuActions from '@/components/MenuActions';
 import { menuActionType } from '@/components/MenuActions/types';
 import useAppStore from '@/store';
+import { TagType } from '@/types/tags';
+import checkBrightness from '@/lib/checkBrightness';
 
 const TradeActions = ({ trade }: { trade: TradeType }) => {
   const openModal = useAppStore((state) => state.openModal);
@@ -59,9 +61,10 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
 const useColumns = () => {
   return useMemo<ColumnDef<TradeType>[]>(() => {
     return [
-      { accessorKey: 'pair', header: 'Pair', enableHiding: false },
+      { accessorKey: 'pair', header: 'Pair', enableHiding: false, size: 140 },
       {
         accessorKey: 'direction',
+        size: 120,
         header: () => <div>Direction</div>,
         cell: ({ row }) => {
           const value: TradeDirection | undefined = row.getValue('direction');
@@ -99,6 +102,7 @@ const useColumns = () => {
       {
         accessorKey: 'result',
         header: 'Result',
+        size: 120,
         cell: ({ row }) => {
           const value: TradeResult | undefined = row.getValue('result');
           if (!value) return <NotFoundValue />;
@@ -126,6 +130,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'takeProfit',
+        size: 80,
         header: 'TP',
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('takeProfit');
@@ -151,6 +156,7 @@ const useColumns = () => {
       {
         accessorKey: 'stopLoss',
         header: 'SL',
+        size: 80,
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('stopLoss');
           const result: TradeResult | undefined = row.getValue('result');
@@ -179,6 +185,34 @@ const useColumns = () => {
           const value: string | undefined = row.getValue('pl');
           if (!value) return <NotFoundValue />;
           return value;
+        },
+      },
+      {
+        accessorKey: 'tags',
+        header: 'Tags',
+        maxSize: 320,
+        minSize: 200,
+        enableSorting: false,
+        cell: ({ row }) => {
+          const value: TagType[] | undefined = row.getValue('tags');
+          if (!value || value.length === 0) return <NotFoundValue />;
+
+          return (
+            <Stack sx={{ width: 'inherit' }} direction="row" alignItems="center" gap={0.5} flexWrap="wrap">
+              {value.map(({ _id, color, name }) => (
+                <Chip
+                  key={_id}
+                  label={name}
+                  size="small"
+                  sx={() => ({
+                    px: 0.6,
+                    backgroundColor: color,
+                    color: checkBrightness(color) ? 'white' : 'black',
+                  })}
+                />
+              ))}
+            </Stack>
+          );
         },
       },
       {
@@ -211,6 +245,7 @@ const useColumns = () => {
       {
         accessorKey: 'actions',
         header: '',
+        size: 80,
         cell: ({ row }) => <TradeActions trade={row.original} />,
         enableHiding: false,
       },

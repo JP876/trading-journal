@@ -17,8 +17,11 @@ const EditTagForm = ({ tag }: EditTagFormProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: TagFormSchemaType) => editTag(tag?._id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tags'] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['tags'] }),
+        queryClient.invalidateQueries({ queryKey: ['trades'] }),
+      ]);
       closeModal('editTag');
     },
   });

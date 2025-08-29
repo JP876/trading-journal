@@ -10,7 +10,7 @@ const ColorInput = ({
   field,
   ...rest
 }: ColorInputPropsType & Omit<MuiColorInputProps, 'onChange' | 'value' | 'onBlur'>) => {
-  return <MuiColorInput size="small" format="hex" fullWidth {...rest} {...field} />;
+  return <MuiColorInput size="small" format="hsl" fullWidth {...rest} {...field} />;
 };
 
 export default ColorInput;

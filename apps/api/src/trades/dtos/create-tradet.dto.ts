@@ -42,5 +42,8 @@ export class CreateTradeDto {
   readonly account?: string;
 
   @IsOptional()
-  readonly files: string[];
+  readonly files: string[] | string;
+
+  @IsOptional()
+  readonly tags?: string[] | string;
 }
