@@ -60,14 +60,14 @@ const TradesTableMain = () => {
 
                   if (!header.column.getCanSort()) {
                     return (
-                      <TableCell key={header.id} sx={{ width: header.getSize() }}>
+                      <TableCell key={header.id} sx={{ maxWidth: header.getSize() }}>
                         {value}
                       </TableCell>
                     );
                   }
 
                   return (
-                    <TableCell sx={{ width: header.getSize() }} key={header.id}>
+                    <TableCell sx={{ maxWidth: header.getSize() }} key={header.id}>
                       <TableSortLabel
                         active={orderBy.includes(header.id)}
                         direction={orderBy.startsWith('-') ? 'desc' : 'asc'}

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { Stack, Typography } from '@mui/material';
+import { Badge, IconButton, Stack, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
@@ -22,20 +22,6 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
 
   const menuActions: menuActionType[] = [
     {
-      id: 'tradeFiles',
-      label: 'Pictures',
-      icon: <PhotoIcon fontSize="small" />,
-      menuItemProps: {
-        disabled: !Array.isArray(trade?.files) || trade?.files?.length === 0,
-      },
-      badgeContent: trade?.files?.length,
-      onClick: (_, handleClose) => {
-        openModal({ id: 'tradeFiles', data: trade });
-        handleClose();
-      },
-    },
-    { id: 'divider' },
-    {
       id: 'editTrade',
       label: 'Edit Trade',
       icon: <EditIcon fontSize="small" />,
@@ -55,7 +41,20 @@ const TradeActions = ({ trade }: { trade: TradeType }) => {
     },
   ];
 
-  return <MenuActions menuActions={menuActions} />;
+  return (
+    <Stack direction="row" alignItems="center" justifyContent="center" gap={0.5}>
+      <Badge badgeContent={trade?.files?.length} color="primary" sx={{ '& .MuiBadge-badge': { top: '5px' } }}>
+        <IconButton
+          size="small"
+          disabled={!Array.isArray(trade?.files) || trade?.files?.length === 0}
+          onClick={() => openModal({ id: 'tradeFiles', data: trade })}
+        >
+          <PhotoIcon />
+        </IconButton>
+      </Badge>
+      <MenuActions menuActions={menuActions} />
+    </Stack>
+  );
 };
 
 const useColumns = () => {

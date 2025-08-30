@@ -20,6 +20,7 @@ const columnOptions = [
   { id: 'takeProfit', label: 'Take Profit' },
   { id: 'stopLoss', label: 'Stop Loss' },
   { id: 'pl', label: 'Profit/Loss' },
+  { id: 'tags', label: 'Tags' },
   { id: 'openDate', label: 'Open Date' },
   { id: 'closeDate', label: 'Close Date' },
   { id: 'comment', label: 'Comment' },

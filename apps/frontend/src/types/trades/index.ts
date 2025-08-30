@@ -57,5 +57,6 @@ export type TradeFilters = {
   result?: string;
   openDate?: string;
   closeDate?: string;
+  tags?: string;
 };
 export type TradesResult = { results: TradeType[]; totalCount: number; count: number };

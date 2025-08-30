@@ -31,7 +31,7 @@ export class TradesService {
   }
 
   public async findAll(
-    { limit = 10, page = 1, sort, ...rest }: PaginationParams & TradeFilterFields & { sort: string },
+    { limit = 10, page = 1, sort, ...rest }: PaginationParams & TradeFilterFields & { sort: string; tags?: string },
     user: User
   ): Promise<{ results: Trade[]; totalCount: number; count: number }> {
     if (page < 1) {
@@ -47,6 +47,7 @@ export class TradesService {
       account: unknown;
       openDate?: { $gte: Date };
       closeDate?: { $lte: Date };
+      tags?: { $in: string[] };
     } = {
       account: accounts[0]?._id,
     };
@@ -56,7 +57,7 @@ export class TradesService {
     if (rest?.result) findBy.result = rest.result;
     if (rest?.openDate) findBy.openDate = { $gte: new Date(rest.openDate) };
     if (rest?.closeDate) findBy.closeDate = { $lte: new Date(rest.closeDate) };
-    if (rest?.tags) findBy.tags = rest.tags;
+    if (rest?.tags) findBy.tags = { $in: rest.tags.split(',') };
 
     const newPage = limit * (page - 1);
     const tradesQuery = this.tradeModel

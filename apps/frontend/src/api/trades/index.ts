@@ -28,6 +28,7 @@ export const getTrades = async ({
       openDate: rest?.openDate ? format(new Date(rest?.openDate), 'yyyy/MM/dd') : undefined,
       closeDate: rest?.closeDate ? format(new Date(rest?.closeDate), 'yyyy/MM/dd') : undefined,
       sort: sort || undefined,
+      tags: rest?.tags || undefined,
     },
   });
   return response.data;

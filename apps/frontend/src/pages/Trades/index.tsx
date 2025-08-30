@@ -22,10 +22,15 @@ import TradeFilesMain from './TradeFiles';
 import AddTagForm from './TradesSettings/Tags/forms/AddTag';
 import EditTagForm from './TradesSettings/Tags/forms/EditTag';
 import DeleteTagDialog from './TradesSettings/Tags/DeleteTag';
+import { getTags } from '@/api/tags';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
   const closeModal = useAppStore((state) => state.closeModal);
+
+  const handleCloseTradeFiles = () => closeModal('tradeFiles');
 
   return (
     <>
@@ -46,7 +51,7 @@ const TradesModalList = () => {
           open={!!modalInfo?.tradeFiles?.open}
           sx={[(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })]}
         >
-          <TradeFilesMain trade={modalInfo?.tradeFiles?.data} closeModal={() => closeModal('tradeFiles')} />
+          <TradeFilesMain trade={modalInfo?.tradeFiles?.data} closeModal={handleCloseTradeFiles} />
         </Backdrop>
 
         <DeleteTradeDialog trade={modalInfo?.deleteTrade?.data} closeModal={() => closeModal('deleteTrade')} />
@@ -101,6 +106,35 @@ const TradesSettingsBtn = () => {
   );
 };
 
+const TradeTagsFilter = () => {
+  const { data, isLoading } = useQuery({ queryKey: ['tags'], queryFn: getTags });
+
+  const tagOptions = useMemo(() => {
+    return (data || []).map((tag) => ({ id: tag._id, label: tag.name }));
+  }, [data]);
+
+  return <TableSelectFilter name="tags" label="Tags" options={tagOptions} disabled={isLoading} multiple />;
+};
+
+const TradesTableContainer = () => {
+  return (
+    <TableProviderMain>
+      <Stack gap={2}>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <TableSelectFilter name="pair" label="Pair" options={pairOptions} />
+          <TableSelectFilter name="direction" label="Direction" options={directionItems} />
+          <TableSelectFilter name="result" label="Result" options={resultItems} />
+          <TableDateFilter name="openDate" label="Open Date" />
+          <TableDateFilter name="closeDate" label="Close Date" />
+          <TradeTagsFilter />
+        </Stack>
+
+        <TradesTableMain />
+      </Stack>
+    </TableProviderMain>
+  );
+};
+
 const TradesMain = () => {
   return (
     <>
@@ -120,19 +154,7 @@ const TradesMain = () => {
           </Stack>
         </Stack>
 
-        <TableProviderMain>
-          <Stack gap={2}>
-            <Stack direction="row" alignItems="center" gap={2}>
-              <TableSelectFilter name="pair" label="Pair" options={pairOptions} />
-              <TableSelectFilter name="direction" label="Direction" options={directionItems} />
-              <TableSelectFilter name="result" label="Result" options={resultItems} />
-              <TableDateFilter name="openDate" label="Open Date" />
-              <TableDateFilter name="closeDate" label="Close Date" />
-            </Stack>
-
-            <TradesTableMain />
-          </Stack>
-        </TableProviderMain>
+        <TradesTableContainer />
       </Paper>
 
       <TradesModalList />
