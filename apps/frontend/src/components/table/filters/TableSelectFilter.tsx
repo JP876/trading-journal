@@ -1,9 +1,17 @@
-import { memo, useMemo } from 'react';
-import { Autocomplete, AutocompleteProps, TextField } from '@mui/material';
+import { memo, useCallback, useMemo } from 'react';
+import {
+  Autocomplete,
+  AutocompleteProps,
+  AutocompleteRenderValueGetItemProps,
+  Chip,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useAtom, useSetAtom } from 'jotai';
 
 import { SelectOptionType } from '@/types';
 import { filtersAtom, pageAtom } from '../tableAtoms';
+import checkBrightness from '@/lib/checkBrightness';
 
 type TableSelectFilterType = {
   label: string;
@@ -32,7 +40,7 @@ const TableSelectFilter = ({ label, name, ...rest }: TableSelectFilterType & Cus
   }, [filterValue, rest?.options, rest?.multiple]);
 
   const handleOnChange = (
-    _: any,
+    _: React.SyntheticEvent,
     newValue: NonNullable<string | SelectOptionType> | (string | SelectOptionType)[] | null
   ) => {
     if (Array.isArray(newValue)) {
@@ -49,14 +57,58 @@ const TableSelectFilter = ({ label, name, ...rest }: TableSelectFilterType & Cus
     setPage(1);
   };
 
+  const handleRenderValue = useCallback(
+    (
+      value: NonNullable<string | SelectOptionType> | (string | SelectOptionType)[] | null,
+      getTagProps: AutocompleteRenderValueGetItemProps<boolean>
+    ) => {
+      if (Array.isArray(value)) {
+        return value.map((option: SelectOptionType | string, index: number) => {
+          const tagProps = getTagProps({ index });
+          const { className, disabled, tabIndex, onDelete } = tagProps;
+
+          return (
+            <Chip
+              key={index}
+              variant="outlined"
+              size="small"
+              data-item-index={tagProps?.['data-item-index']}
+              className={className}
+              disabled={disabled}
+              tabIndex={tabIndex}
+              onDelete={onDelete}
+              label={typeof option === 'string' ? option : option?.label}
+              sx={[
+                { height: '24px' },
+                (theme) =>
+                  typeof option !== 'string' && option?.chipBackground
+                    ? {
+                        backgroundColor: option.chipBackground,
+                        color: checkBrightness(option.chipBackground)
+                          ? theme.palette.common.white
+                          : theme.palette.common.black,
+                      }
+                    : {},
+              ]}
+            />
+          );
+        });
+      } else {
+        return <Typography ml={1}>{typeof value === 'string' ? value : value?.label}</Typography>;
+      }
+    },
+    []
+  );
+
   return (
     <Autocomplete
-      sx={{ minWidth: '12rem' }}
       size="small"
-      {...rest}
+      fullWidth
+      renderValue={handleRenderValue}
       renderInput={(params) => <TextField {...params} size="small" label={label} />}
-      value={value}
+      {...rest}
       onChange={handleOnChange}
+      value={value}
     />
   );
 };

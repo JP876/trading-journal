@@ -1,4 +1,6 @@
-import { Backdrop, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Backdrop, Box, IconButton, Paper, Stack, Tooltip, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 
@@ -23,8 +25,7 @@ import AddTagForm from './TradesSettings/Tags/forms/AddTag';
 import EditTagForm from './TradesSettings/Tags/forms/EditTag';
 import DeleteTagDialog from './TradesSettings/Tags/DeleteTag';
 import { getTags } from '@/api/tags';
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { SelectOptionType } from '@/types';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -109,25 +110,33 @@ const TradesSettingsBtn = () => {
 const TradeTagsFilter = () => {
   const { data, isLoading } = useQuery({ queryKey: ['tags'], queryFn: getTags });
 
-  const tagOptions = useMemo(() => {
-    return (data || []).map((tag) => ({ id: tag._id, label: tag.name }));
+  const tagOptions: SelectOptionType[] = useMemo(() => {
+    return (data || []).map((tag) => ({ id: tag._id, label: tag.name, chipBackground: tag?.color }));
   }, [data]);
 
-  return <TableSelectFilter name="tags" label="Tags" options={tagOptions} disabled={isLoading} multiple />;
+  return (
+    <TableSelectFilter name="tags" label="Tags" options={tagOptions} disabled={isLoading} multiple limitTags={2} />
+  );
 };
 
 const TradesTableContainer = () => {
   return (
     <TableProviderMain>
       <Stack gap={2}>
-        <Stack direction="row" alignItems="center" gap={2}>
+        <Box
+          sx={() => ({
+            gap: 2,
+            display: 'grid',
+            gridTemplateColumns: { lg: '1fr .8fr .8fr 1fr 1fr 1.5fr', md: '1fr 1fr 1fr' },
+          })}
+        >
           <TableSelectFilter name="pair" label="Pair" options={pairOptions} />
           <TableSelectFilter name="direction" label="Direction" options={directionItems} />
           <TableSelectFilter name="result" label="Result" options={resultItems} />
           <TableDateFilter name="openDate" label="Open Date" />
           <TableDateFilter name="closeDate" label="Close Date" />
           <TradeTagsFilter />
-        </Stack>
+        </Box>
 
         <TradesTableMain />
       </Stack>

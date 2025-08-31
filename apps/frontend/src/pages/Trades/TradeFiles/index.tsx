@@ -1,9 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Box, BoxProps, Button, IconButton, Stack, styled, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import CircleIcon from '@mui/icons-material/Circle';
 import { atom, Provider, useAtom, useAtomValue, useSetAtom } from 'jotai';
 
 import { FilesType, TradeType } from '@/types/trades';
@@ -35,7 +36,6 @@ const SelectedImage = styled(Box, {
   ...(fullScreen && {
     top: 0,
     left: 0,
-    zIndex: 1,
     position: 'absolute',
     backgroundColor: 'black',
     cursor: 'zoom-out',
@@ -60,7 +60,7 @@ const NextPictureButton = ({ files }: { files: FilesType[] }) => {
   useKeyPress('ArrowRight', handleNextPicture);
 
   return (
-    <Button size="large" onClick={handleNextPicture} disableRipple sx={[() => ({ height: '100%' })]}>
+    <Button size="large" onClick={handleNextPicture} disableRipple sx={[() => ({ height: '100%', zIndex: 1 })]}>
       <ArrowForwardIosIcon sx={(theme) => ({ color: theme.palette.common.white })} />
     </Button>
   );
@@ -80,7 +80,7 @@ const PreviousPictureButton = ({ files }: { files: FilesType[] }) => {
   useKeyPress('ArrowLeft', handlePreviousPicture);
 
   return (
-    <Button size="large" onClick={handlePreviousPicture} disableRipple sx={[() => ({ height: '100%' })]}>
+    <Button size="large" onClick={handlePreviousPicture} disableRipple sx={[() => ({ height: '100%', zIndex: 1 })]}>
       <ArrowBackIosNewIcon sx={(theme) => ({ color: theme.palette.common.white })} />
     </Button>
   );
@@ -101,10 +101,53 @@ const SelectedImageContainer = () => {
   );
 };
 
-const TradeFilesMain = ({ trade, closeModal }: TradeFileProps) => {
+const NavigationDot = memo(({ file, isSelected }: { file: FilesType; isSelected: boolean }) => {
   const setSelected = useSetAtom(selectedPictureAtom);
 
-  useKeyPress('Escape', closeModal);
+  return (
+    <IconButton
+      size="small"
+      onClick={() => setSelected(file)}
+      disableRipple
+      sx={[
+        (theme) => ({
+          '& svg': {
+            color: isSelected ? theme.palette.primary.main : theme.palette.common.white,
+            transition: theme.transitions.create(['color']),
+            width: theme.spacing(2.5),
+            height: theme.spacing(2.5),
+          },
+        }),
+      ]}
+    >
+      <CircleIcon />
+    </IconButton>
+  );
+});
+
+const NavigationDotsContainer = ({ files }: { files: FilesType[] }) => {
+  const selected = useAtomValue(selectedPictureAtom);
+
+  return (
+    <Stack direction="row" alignItems="center" gap={4} py={2}>
+      {(files || []).map((file) => (
+        <NavigationDot key={file._id} file={file} isSelected={selected?._id === file._id} />
+      ))}
+    </Stack>
+  );
+};
+
+const TradeFilesMain = ({ trade, closeModal }: TradeFileProps) => {
+  const setSelected = useSetAtom(selectedPictureAtom);
+  const setFullScreen = useSetAtom(fullScreenAtom);
+
+  const handleCloseModal = () => {
+    setSelected(null);
+    setFullScreen(false);
+    closeModal();
+  };
+
+  useKeyPress('Escape', handleCloseModal);
 
   useEffect(() => {
     if (Array.isArray(trade?.files) && trade?.files.length !== 0) {
@@ -133,8 +176,8 @@ const TradeFilesMain = ({ trade, closeModal }: TradeFileProps) => {
             {formatDate(trade.openDate)} - {formatDate(trade.closeDate)}
           </Typography>
         </Stack>
-        <IconButton size="large" onClick={closeModal}>
-          <CloseIcon sx={(theme) => ({ color: theme.palette.common.white })} />
+        <IconButton size="large" onClick={handleCloseModal}>
+          <CloseIcon sx={(theme) => ({ color: theme.palette.common.white, zIndex: 1 })} />
         </IconButton>
       </Stack>
 
@@ -142,13 +185,19 @@ const TradeFilesMain = ({ trade, closeModal }: TradeFileProps) => {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        sx={() => ({ height: 'calc(100% - 64px)', py: 6, px: 6 })}
+        sx={() => ({ height: 'calc(100% - 64px - 66px)', pt: 4, px: 6 })}
         gap={6}
       >
         <PreviousPictureButton files={trade.files} />
         <SelectedImageContainer />
         <NextPictureButton files={trade.files} />
       </Stack>
+
+      {Array.isArray(trade?.files) && trade?.files?.length > 1 ? (
+        <Stack direction="row" alignItems="center" justifyContent="center">
+          <NavigationDotsContainer files={trade?.files} />
+        </Stack>
+      ) : null}
     </Box>
   );
 };
@@ -161,4 +210,4 @@ const TradeFiles = (props: TradeFileProps) => {
   );
 };
 
-export default TradeFiles;
+export default memo(TradeFiles);

@@ -9,6 +9,7 @@ export type ErrorResponse = {
 export type SelectOptionType = {
   id: string;
   label: string;
+  chipBackground?: string;
 };
 
 export type FormFieldType<

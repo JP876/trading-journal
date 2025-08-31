@@ -53,7 +53,6 @@ const TableDateFilter = ({ name, ...rest }: TableDateFilter & DateTimePickerProp
         field: { clearable: true, onClear: () => handleClearValue() },
       }}
       {...rest}
-      sx={{ width: '12rem', ...(rest?.sx || {}) }}
       value={date}
       onChange={(newValue) => handleOnChange(newValue)}
       onClose={handleOnClose}
