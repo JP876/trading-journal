@@ -15,6 +15,7 @@ import { UserModule } from './user/user.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { TagsModule } from './tags/tags.module';
+import { ExchangeRatesModule } from './exchange-rates/exchange-rates.module';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
 
 const ENV = process.env.NODE_ENV;
@@ -42,6 +43,7 @@ const ENV = process.env.NODE_ENV;
     AccountsModule,
     UploadsModule,
     TagsModule,
+    ExchangeRatesModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
