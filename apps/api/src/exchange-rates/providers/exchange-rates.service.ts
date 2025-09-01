@@ -3,9 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
+import { addHours, isAfter } from 'date-fns';
 
 import { ExchangeRates } from '../interfaces/exchange-rates.interface';
 import { ExchangeRates as ExchangeRatesSchema } from '../exchange-rates.schema';
+
+interface CreateExchangeRate extends ExchangeRates {
+  latest?: boolean;
+}
 
 @Injectable()
 export class ExchangeRatesService {
@@ -19,7 +24,7 @@ export class ExchangeRatesService {
     this.id = this.configService.get('appConfig.exchangeRatesApiKey');
   }
 
-  private async handleExchangeRates(): Promise<ExchangeRates | null> {
+  private async getLatestExchangeRates(): Promise<ExchangeRates | null> {
     try {
       if (!this.id) {
         const job = this.schedulerRegistry.getCronJob('exchange rates');
@@ -40,7 +45,7 @@ export class ExchangeRatesService {
     }
   }
 
-  private async createExchangeRates(data: ExchangeRates | null): Promise<ExchangeRatesSchema | null> {
+  private async createExchangeRates(data: CreateExchangeRate | null): Promise<ExchangeRatesSchema | null> {
     try {
       if (!data) {
         throw new BadRequestException('Exchange rates data not found');
@@ -55,8 +60,8 @@ export class ExchangeRatesService {
     }
   }
 
-  private async findExchangeRates(): Promise<ExchangeRatesSchema | null> {
-    const data = await this.exchangeRatesModel.find();
+  public async findLatestExchangeRates(): Promise<ExchangeRatesSchema | null> {
+    const data = await this.exchangeRatesModel.find({ latest: true });
     return data.length > 0 ? data[0] : null;
   }
 
@@ -64,29 +69,54 @@ export class ExchangeRatesService {
     name: 'exchange rates',
     utcOffset: 2,
   })
-  private async updateExchangeRates() {
-    const data = await this.findExchangeRates();
-    const rates = await this.handleExchangeRates();
+  private async updateExchangeRates(): Promise<ExchangeRatesSchema | null> {
+    const data = await this.findLatestExchangeRates();
+    const ratesData = await this.getLatestExchangeRates();
+
+    console.log('Updating exchange rates...');
+
+    if (!ratesData) {
+      throw new BadRequestException('Failed to fetch exchange rates data');
+    }
 
     if (data) {
-      return await this.exchangeRatesModel.updateOne({ id: data.id }, { ...rates });
+      return await this.exchangeRatesModel.findByIdAndUpdate(
+        data.id,
+        { ...ratesData, latest: true },
+        { new: true, runValidators: true }
+      );
     } else {
-      return this.createExchangeRates(rates);
+      return this.createExchangeRates({ ...ratesData, latest: true });
     }
   }
 
   public async getExchangeRates(): Promise<ExchangeRatesSchema | null> {
-    try {
-      const data = await this.findExchangeRates();
-      if (data) return data;
+    const data = await this.findLatestExchangeRates();
 
-      const rates = await this.handleExchangeRates();
-      return this.createExchangeRates(rates);
-    } catch (error) {
-      if (error instanceof ConflictException) {
-        throw error;
+    if (data) {
+      if (isAfter(new Date(), addHours(new Date(data.updatedAt), 1))) {
+        const ratesData = await this.getLatestExchangeRates();
+
+        if (!ratesData) {
+          throw new BadRequestException('Failed to fetch exchange rates data');
+        }
+
+        return await this.exchangeRatesModel.findByIdAndUpdate(
+          data.id,
+          { ...ratesData, latest: true },
+          { new: true, runValidators: true }
+        );
+      } else {
+        return data;
       }
-      throw new BadRequestException(error);
     }
+
+    const ratesData = await this.getLatestExchangeRates();
+
+    if (!ratesData) {
+      throw new BadRequestException('Failed to fetch exchange rates data');
+    }
+
+    return this.createExchangeRates({ ...ratesData, latest: true });
   }
 }

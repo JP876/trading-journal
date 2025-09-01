@@ -12,8 +12,11 @@ export class ExchangeRates extends mongoose.Document {
   @Prop({ type: Object, required: true })
   rates: { [key: string]: number };
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  @Prop({ type: Boolean, required: true, default: false })
+  latest: boolean;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type ExchangeRatesDocument = mongoose.HydratedDocument<ExchangeRates>;
