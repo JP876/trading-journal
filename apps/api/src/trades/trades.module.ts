@@ -6,10 +6,11 @@ import { TradesService } from './providers/trades.service';
 import { Trade, TradeSchema } from './trade.schema';
 import { AccountsModule } from 'src/accounts/accounts.module';
 import { UploadsModule } from 'src/uploads/uploads.module';
+import { StatsService } from './providers/stats.service';
 
 @Module({
   controllers: [TradesController],
-  providers: [TradesService],
+  providers: [TradesService, StatsService],
   imports: [MongooseModule.forFeature([{ name: Trade.name, schema: TradeSchema }]), AccountsModule, UploadsModule],
 })
 export class TradesModule {}

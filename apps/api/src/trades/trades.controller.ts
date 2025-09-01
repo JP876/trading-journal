@@ -22,10 +22,14 @@ import ParamsWithId from 'src/utils/params-with-id';
 import { PaginationParams } from 'src/common/dtos/pagination-params.dto';
 import RequestWithUser from 'src/auth/interfaces/request-with-user.interface';
 import { TradeFilterFields } from './trade.schema';
+import { StatsService } from './providers/stats.service';
 
 @Controller('trades')
 export class TradesController {
-  constructor(private readonly tradesService: TradesService) {}
+  constructor(
+    private readonly tradesService: TradesService,
+    private readonly statsService: StatsService
+  ) {}
 
   @Get()
   public async findAll(
@@ -33,6 +37,11 @@ export class TradesController {
     @Query() query: PaginationParams & TradeFilterFields & { sort: string }
   ) {
     return this.tradesService.findAll(query, request.user);
+  }
+
+  @Get('stats')
+  public async getStatistics(@Req() request: RequestWithUser) {
+    return this.statsService.getStatistics(request.user);
   }
 
   @Get(':id')
@@ -81,14 +90,14 @@ export class TradesController {
     return this.tradesService.update(request.user, id, updateDto, files);
   }
 
+  @Delete('file/:trade_id/:file_name')
+  public async deleteFile(@Param() param: { trade_id: string; file_name: string }) {
+    return this.tradesService.deleteFile(param.trade_id, param.file_name);
+  }
+
   @Delete(':id')
   public async delete(@Param() { id }: ParamsWithId, @Req() request: RequestWithUser) {
     const userId = request.user.id as string;
     return this.tradesService.delete(userId, id);
-  }
-
-  @Delete('file/:trade_id/:file_name')
-  public async deleteFile(@Param() param: { trade_id: string; file_name: string }) {
-    return this.tradesService.deleteFile(param.trade_id, param.file_name);
   }
 }

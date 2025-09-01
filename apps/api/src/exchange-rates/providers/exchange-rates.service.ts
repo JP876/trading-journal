@@ -61,11 +61,10 @@ export class ExchangeRatesService {
   }
 
   public async findLatestExchangeRates(): Promise<ExchangeRatesSchema | null> {
-    const data = await this.exchangeRatesModel.find({ latest: true });
-    return data.length > 0 ? data[0] : null;
+    return await this.exchangeRatesModel.findOne({ latest: true });
   }
 
-  @Cron('0 * * * 1-5', {
+  @Cron('0 */4 * * 1-5', {
     name: 'exchange rates',
     utcOffset: 2,
   })

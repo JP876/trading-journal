@@ -34,6 +34,11 @@ export const getTrades = async ({
   return response.data;
 };
 
+export const getTradesStats = async () => {
+  const response = await client.get('trades/stats');
+  return response.data;
+};
+
 export const addTrade = async (trade: TradeFormSchemaType) => {
   const response = await client.post('trades', transformToFormData(trade));
   return response.data;
