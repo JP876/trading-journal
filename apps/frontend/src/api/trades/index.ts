@@ -8,6 +8,8 @@ import {
   type EditTradeFormSchemaType,
   type TradeFormSchemaType,
   type TradesResult,
+  type NumOfTradesPerDate,
+  type GroupedByResult,
 } from '@/types/trades';
 
 export const tradesLimit = 10;
@@ -34,8 +36,13 @@ export const getTrades = async ({
   return response.data;
 };
 
-export const getTradesStats = async () => {
-  const response = await client.get('trades/stats');
+export const getNumOfTradesPerDay = async (): Promise<NumOfTradesPerDate[]> => {
+  const response = await client.get('trades/stats/num-of-trades-per-day');
+  return response.data;
+};
+
+export const getGroupedTradesByResult = async (): Promise<GroupedByResult[]> => {
+  const response = await client.get('trades/stats/grouped-by-results');
   return response.data;
 };
 

@@ -15,8 +15,11 @@ const DeleteTradeDialog = ({ trade, closeModal }: { trade: TradeType; closeModal
 
   const mutation = useMutation({
     mutationFn: deleteTrade,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trades'] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['trades'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] }),
+      ]);
       openToast({ severity: 'success', message: 'Your trade have been deleted.' });
       closeModal();
     },

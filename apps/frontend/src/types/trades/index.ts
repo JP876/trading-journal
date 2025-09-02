@@ -60,3 +60,18 @@ export type TradeFilters = {
   tags?: string;
 };
 export type TradesResult = { results: TradeType[]; totalCount: number; count: number };
+
+export type NumOfTradesPerDate = {
+  _id: string;
+  count: number;
+  list: {
+    id: string;
+    result: TradeResult;
+    pair: string;
+    direction: TradeDirection;
+    closeDate: string;
+    openDate: string;
+  }[];
+};
+
+export type GroupedByResult = { _id: TradeResult; count: number };

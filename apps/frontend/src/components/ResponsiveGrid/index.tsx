@@ -1,6 +1,6 @@
 import { Box, BoxProps, styled } from '@mui/material';
 
-const getFieldMaxWidth = (columns: number, layoutGap: string): string => {
+const getFieldMaxWidth = (columns: number, layoutGap: string | number): string => {
   let gapCount = `calc(${columns} - 1)`;
   let totalGapWidth = `calc(${gapCount} * ${layoutGap})`;
   let maxWidth = `calc((100% - ${totalGapWidth}) / ${columns})`;
@@ -11,7 +11,7 @@ const getFieldMaxWidth = (columns: number, layoutGap: string): string => {
 interface IResponsiveGridProps extends BoxProps {
   maxItemsPerRow?: number;
   minWidthOfItem?: string;
-  gridGap?: string;
+  gridGap?: number | string;
 }
 
 const ResponsiveGrid = styled(Box, {

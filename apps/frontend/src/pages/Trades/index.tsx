@@ -26,6 +26,7 @@ import EditTagForm from './TradesSettings/Tags/forms/EditTag';
 import DeleteTagDialog from './TradesSettings/Tags/DeleteTag';
 import { getTags } from '@/api/tags';
 import { SelectOptionType } from '@/types';
+import StatsMain from './Stats';
 
 const TradesModalList = () => {
   const modalInfo = useAppStore((state) => state.modalInfo);
@@ -147,8 +148,8 @@ const TradesTableContainer = () => {
 const TradesMain = () => {
   return (
     <>
-      <Paper sx={{ p: 2 }}>
-        <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
+      <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h4" fontWeight="400">
               Trades
@@ -162,6 +163,8 @@ const TradesMain = () => {
             <VisibilityColumnSelect />
           </Stack>
         </Stack>
+
+        <StatsMain />
 
         <TradesTableContainer />
       </Paper>

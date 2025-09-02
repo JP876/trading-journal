@@ -19,8 +19,11 @@ const AddTradeForm = () => {
 
   const mutation = useMutation({
     mutationFn: addTrade,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['trades'] });
+    onSuccess: async () => {
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['trades'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] }),
+      ]);
       openToast({ severity: 'success', message: 'Your trade details have been saved.' });
       closeModal('addTrade');
     },

@@ -39,6 +39,16 @@ export class TradesController {
     return this.tradesService.findAll(query, request.user);
   }
 
+  @Get('stats/num-of-trades-per-day')
+  public async findNumOfTradesPerDay(@Req() request: RequestWithUser) {
+    return this.statsService.getNumOfTradesPerDay(request.user);
+  }
+
+  @Get('stats/grouped-by-results')
+  public async groupByResults(@Req() request: RequestWithUser) {
+    return this.statsService.groupTradesByResults(request.user);
+  }
+
   @Get('stats')
   public async getStatistics(@Req() request: RequestWithUser) {
     return this.statsService.getStatistics(request.user);
