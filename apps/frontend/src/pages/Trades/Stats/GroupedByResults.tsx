@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Box, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
 
