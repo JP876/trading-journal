@@ -109,7 +109,7 @@ const TradesSettingsBtn = () => {
 };
 
 const TradeTagsFilter = () => {
-  const { data, isLoading } = useQuery({ queryKey: ['tags'], queryFn: getTags });
+  const { data, isLoading } = useQuery({ queryKey: ['tags'], queryFn: getTags, refetchOnWindowFocus: false });
 
   const tagOptions: SelectOptionType[] = useMemo(() => {
     return (data || []).map((tag) => ({ id: tag._id, label: tag.name, chipBackground: tag?.color }));

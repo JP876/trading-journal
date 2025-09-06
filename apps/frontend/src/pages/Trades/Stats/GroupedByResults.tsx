@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { PieValueType } from '@mui/x-charts';
 
@@ -12,6 +12,7 @@ const GroupedByResults = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'grouped-by-result'],
     queryFn: getGroupedTradesByResult,
+    refetchOnWindowFocus: false,
   });
 
   const theme = useTheme();
@@ -41,13 +42,8 @@ const GroupedByResults = () => {
     });
   }, [data, theme]);
 
-  if (isLoading) return null;
-
   return (
-    <StatsContainer>
-      <Typography variant="h6" pl={2}>
-        Profitability
-      </Typography>
+    <StatsContainer isLoading={isLoading} title="Profitability">
       <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center' }}>
         <PieChart width={240} height={240} series={[{ data: formatedData, arcLabel: (item) => `${item.value}%` }]} />
       </Box>

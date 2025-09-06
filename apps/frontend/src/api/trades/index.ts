@@ -10,6 +10,9 @@ import {
   type TradesResult,
   type NumOfTradesPerDate,
   type GroupedByResult,
+  type GroupedByPair,
+  MostProfitablePair,
+  GeneralStatsInfo,
 } from '@/types/trades';
 
 export const tradesLimit = 10;
@@ -43,6 +46,21 @@ export const getNumOfTradesPerDay = async (): Promise<NumOfTradesPerDate[]> => {
 
 export const getGroupedTradesByResult = async (): Promise<GroupedByResult[]> => {
   const response = await client.get('trades/stats/grouped-by-results');
+  return response.data;
+};
+
+export const getGroupedTradesByPair = async (): Promise<GroupedByPair[]> => {
+  const response = await client.get('trades/stats/grouped-by-pairs');
+  return response.data;
+};
+
+export const getMostProfitablePairs = async (): Promise<MostProfitablePair[]> => {
+  const response = await client.get('trades/stats/most-profitable-pairs');
+  return response.data;
+};
+
+export const getGeneralStatsInfo = async (): Promise<GeneralStatsInfo> => {
+  const response = await client.get('trades/stats/general-info');
   return response.data;
 };
 

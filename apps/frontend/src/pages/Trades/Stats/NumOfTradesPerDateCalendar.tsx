@@ -82,6 +82,7 @@ const NumOfTradesPerDateCalendar = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'num-of-trades-per-day'],
     queryFn: getNumOfTradesPerDay,
+    refetchOnWindowFocus: false,
   });
 
   const minDate = useMemo(() => {
@@ -90,10 +91,7 @@ const NumOfTradesPerDateCalendar = () => {
   }, [data]);
 
   return (
-    <StatsContainer>
-      <Typography variant="h6" pl={2}>
-        Daily trade volume
-      </Typography>
+    <StatsContainer title="Daily trade volume">
       <Box sx={{ height: '20rem', '& .MuiBadge-root span': { top: '22%' } }}>
         <DateCalendar
           disableFuture

@@ -1,24 +1,46 @@
 import React from 'react';
-import { Stack } from '@mui/material';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
 
-const StatsContainer = ({ children }: { children: React.ReactNode }) => {
+type StatsContainerProps = {
+  children: React.ReactNode;
+  title?: string | React.ReactNode;
+  isLoading?: boolean;
+};
+
+const StatsContainer = ({ isLoading, title, children }: StatsContainerProps) => {
+  const renderChildren = () => {
+    if (isLoading === undefined) return children;
+    return isLoading ? (
+      <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <CircularProgress size={64} />
+      </Box>
+    ) : (
+      children
+    );
+  };
+
   return (
-    <Stack
+    <Paper
       id="num-of-trades-container"
       sx={[
         (theme) => ({
-          py: 1,
-          gap: 0.5,
+          pt: 1,
           width: '100%',
           height: '100%',
-          border: `1px solid ${theme.palette.grey[200]}`,
-          borderRadius: '.5rem',
+          overflowY: 'auto',
           boxShadow: theme.shadows[1],
+          border: `1px solid ${theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700]}`,
+          borderRadius: '.5rem',
         }),
       ]}
     >
-      {children}
-    </Stack>
+      {title ? (
+        <Typography variant="h6" pl={2} mb={0.5}>
+          {title}
+        </Typography>
+      ) : null}
+      <Box sx={{ height: 'calc(100% - 2.4rem)' }}>{renderChildren()}</Box>
+    </Paper>
   );
 };
 

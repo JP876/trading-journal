@@ -27,6 +27,7 @@ const TradesTableMain = () => {
     queryKey: ['trades', page, rowsPerPage, debouncedFilters, orderBy],
     queryFn: () => getTrades({ page, rowsPerPage, ...debouncedFilters, sort: orderBy }),
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   });
 
   const columns = useColumns();

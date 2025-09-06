@@ -23,6 +23,7 @@ import { PaginationParams } from 'src/common/dtos/pagination-params.dto';
 import RequestWithUser from 'src/auth/interfaces/request-with-user.interface';
 import { TradeFilterFields } from './trade.schema';
 import { StatsService } from './providers/stats.service';
+import { tradeResult } from './enums';
 
 @Controller('trades')
 export class TradesController {
@@ -49,9 +50,29 @@ export class TradesController {
     return this.statsService.groupTradesByResults(request.user);
   }
 
-  @Get('stats')
-  public async getStatistics(@Req() request: RequestWithUser) {
-    return this.statsService.getStatistics(request.user);
+  @Get('stats/grouped-by-pairs')
+  public async groupByPairs(@Req() request: RequestWithUser) {
+    return this.statsService.groupTradesByPairs(request.user);
+  }
+
+  @Get('stats/most-profitable-pairs')
+  public async findMostProfitablePairs(@Req() request: RequestWithUser) {
+    return this.statsService.findMostProfitablePairs(request.user);
+  }
+
+  @Get('stats/general-info')
+  public async findGeneralInfo(@Req() request: RequestWithUser) {
+    const consecutiveLosses = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.LOSS);
+    const consecutiveWins = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.WIN);
+    const generalInfo = await this.statsService.findGeneralInfo(request.user);
+
+    if ('_id' in generalInfo) delete generalInfo._id;
+
+    return {
+      consecutiveLosses: consecutiveLosses.count,
+      consecutiveWins: consecutiveWins.count,
+      ...(generalInfo || {}),
+    };
   }
 
   @Get(':id')

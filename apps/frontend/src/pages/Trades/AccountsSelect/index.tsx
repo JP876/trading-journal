@@ -8,7 +8,7 @@ const AccountsSelect = () => {
   const labelId = useId();
 
   const queryClient = useQueryClient();
-  const { data } = useQuery({ queryKey: ['accounts'], queryFn: getAccounts });
+  const { data } = useQuery({ queryKey: ['accounts'], queryFn: getAccounts, refetchOnWindowFocus: false });
 
   const mutation = useMutation({
     mutationFn: (id: string) => editAccount(id, { isMain: true }),
@@ -16,6 +16,7 @@ const AccountsSelect = () => {
       return Promise.all([
         queryClient.invalidateQueries({ queryKey: ['accounts'] }),
         queryClient.invalidateQueries({ queryKey: ['trades'] }),
+        queryClient.invalidateQueries({ queryKey: ['stats'] }),
       ]);
     },
   });
