@@ -6,6 +6,7 @@ import AuthMain from '@/pages/Auth';
 import TradesMain from '@/pages/Trades';
 import DashboardMain from '@/pages/Dashboard';
 import HomeMain from '@/pages/Home';
+import StrategiesMain from '@/pages/Strategies';
 
 const router = createBrowserRouter([
   { path: '/', Component: HomeMain },
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
         children: [
           { path: '/trades', Component: TradesMain },
           { path: '/dashboard', Component: DashboardMain },
+          { path: '/strategies', Component: StrategiesMain },
         ],
       },
     ],

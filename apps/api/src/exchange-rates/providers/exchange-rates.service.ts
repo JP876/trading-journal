@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -15,6 +15,7 @@ interface CreateExchangeRate extends ExchangeRates {
 @Injectable()
 export class ExchangeRatesService {
   private id: string | undefined;
+  private readonly logger = new Logger(ExchangeRatesService.name);
 
   constructor(
     private readonly configService: ConfigService,
@@ -72,7 +73,7 @@ export class ExchangeRatesService {
     const data = await this.findLatestExchangeRates();
     const ratesData = await this.getLatestExchangeRates();
 
-    console.log('Updating exchange rates...');
+    this.logger.log('Updating exchange rates...');
 
     if (!ratesData) {
       throw new BadRequestException('Failed to fetch exchange rates data');
@@ -93,7 +94,7 @@ export class ExchangeRatesService {
     const data = await this.findLatestExchangeRates();
 
     if (data) {
-      if (isAfter(new Date(), addHours(new Date(data.updatedAt), 1))) {
+      if (isAfter(new Date(), addHours(new Date(data.updatedAt), 2))) {
         const ratesData = await this.getLatestExchangeRates();
 
         if (!ratesData) {
