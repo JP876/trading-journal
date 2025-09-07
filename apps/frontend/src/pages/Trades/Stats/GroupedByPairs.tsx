@@ -13,6 +13,7 @@ const GroupedByPairs = () => {
     queryKey: ['stats', 'grouped-by-pair'],
     queryFn: getGroupedTradesByPair,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   const theme = useTheme();

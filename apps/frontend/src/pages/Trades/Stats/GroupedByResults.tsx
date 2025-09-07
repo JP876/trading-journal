@@ -13,6 +13,7 @@ const GroupedByResults = () => {
     queryKey: ['stats', 'grouped-by-result'],
     queryFn: getGroupedTradesByResult,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   const theme = useTheme();

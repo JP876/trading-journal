@@ -77,10 +77,12 @@ export type NumOfTradesPerDate = {
 export type GroupedByResult = { _id: TradeResult; count: number };
 export type GroupedByPair = { pair: string; results: { result: TradeResult; count: number }[] };
 export type MostProfitablePair = { _id: number; pairs: { pair: string; count: number }[] };
+export type WinRateByDirection = { _id: TradeDirection; win: number; loss: number; be: number };
 export type GeneralStatsInfo = {
   avgTakeProfit: number;
   avgStopLoss: number;
   avgTradeDuration: number;
   consecutiveLosses: number;
   consecutiveWins: number;
+  winRateByDirection: WinRateByDirection[];
 };

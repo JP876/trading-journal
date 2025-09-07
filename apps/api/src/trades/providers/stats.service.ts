@@ -25,6 +25,7 @@ type groupedByPair = { pair: string; results: { result: tradeResult; count: numb
 type mostProfitablePair = { _id: number; pairs: { pair: string; count: number }[] };
 type consecutiveResults = { _id: null; count: number; result: tradeResult };
 type generalInfoType = { _id?: null; avgTakeProfit: number; avgStopLoss: number; avgTradeDuration: number };
+type winRateByDirectionType = { _id: tradeDirection; win: number; loss: number; be: number };
 
 @Injectable()
 export class StatsService {
@@ -70,6 +71,7 @@ export class StatsService {
     const groupByResults: groupedByResult[] = await this.tradeModel.aggregate([
       { $match: { account: account._id } },
       { $group: { _id: '$result', count: { $sum: 1 } } },
+      { $sort: { _id: -1 } },
     ]);
     return groupByResults;
   }
@@ -93,6 +95,7 @@ export class StatsService {
         },
       },
       { $project: { _id: 0, pair: '$_id', results: 1 } },
+      { $sort: { pair: 1 } },
     ]);
     return pairTrades;
   }
@@ -181,5 +184,34 @@ export class StatsService {
       },
     ]);
     return mostConsecutiveResults[0];
+  }
+
+  public async findWinRateByDirection(user: User) {
+    const account = await this.getMainAccount(user);
+    const stats: winRateByDirectionType[] = await this.tradeModel.aggregate([
+      { $match: { account: account._id } },
+      {
+        $group: {
+          _id: '$direction',
+          win: {
+            $sum: {
+              $cond: [{ $eq: ['$result', 'win'] }, 1, 0],
+            },
+          },
+          loss: {
+            $sum: {
+              $cond: [{ $eq: ['$result', 'loss'] }, 1, 0],
+            },
+          },
+          be: {
+            $sum: {
+              $cond: [{ $eq: ['$result', 'be'] }, 1, 0],
+            },
+          },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]);
+    return stats;
   }
 }

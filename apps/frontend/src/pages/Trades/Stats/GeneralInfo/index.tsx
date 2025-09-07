@@ -3,7 +3,8 @@ import { Box, Divider, Stack, Typography } from '@mui/material';
 import { millisecondsToHours, millisecondsToMinutes } from 'date-fns';
 
 import { getGeneralStatsInfo } from '@/api/trades';
-import StatsContainer from './StatsContainer';
+import StatsContainer from '../StatsContainer';
+import WinRateByDirectionTable from './WinRateByDirectionTable';
 
 const formatTimeDiff = (ms?: number): string => {
   if (!ms) return '-';
@@ -20,15 +21,13 @@ const formatTimeDiff = (ms?: number): string => {
   return `${hours}h/${min}min`;
 };
 
-const GridInfoItem = ({
-  title,
-  value,
-  children,
-}: {
+type GridInfoItemProps = {
   title: string;
   value?: string | number;
   children?: React.ReactNode;
-}) => {
+};
+
+const GridInfoItem = ({ title, value, children }: GridInfoItemProps) => {
   return (
     <Box sx={{ display: 'grid', gridTemplateColumns: '1fr .5fr' }}>
       <Typography variant="subtitle1">{title}</Typography>
@@ -48,6 +47,7 @@ const GeneralInfo = () => {
     queryKey: ['stats', 'general-stats-info'],
     queryFn: getGeneralStatsInfo,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   return (
@@ -73,6 +73,8 @@ const GeneralInfo = () => {
         <GridInfoItem title="Average take profit" value={`${data?.avgTakeProfit?.toFixed(1)} pips`} />
         <GridInfoItem title="Average stop loss" value={`${data?.avgStopLoss?.toFixed(1)} pips`} />
         <GridInfoItem title="Average trade duration" value={formatTimeDiff(data?.avgTradeDuration)} />
+        <Divider />
+        <WinRateByDirectionTable data={data?.winRateByDirection || []} />
       </Stack>
     </StatsContainer>
   );

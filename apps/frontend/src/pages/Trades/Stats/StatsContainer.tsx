@@ -10,6 +10,7 @@ type StatsContainerProps = {
 const StatsContainer = ({ isLoading, title, children }: StatsContainerProps) => {
   const renderChildren = () => {
     if (isLoading === undefined) return children;
+
     return isLoading ? (
       <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <CircularProgress size={64} />

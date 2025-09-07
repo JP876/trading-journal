@@ -11,8 +11,8 @@ import {
   type NumOfTradesPerDate,
   type GroupedByResult,
   type GroupedByPair,
-  MostProfitablePair,
-  GeneralStatsInfo,
+  type MostProfitablePair,
+  type GeneralStatsInfo,
 } from '@/types/trades';
 
 export const tradesLimit = 10;

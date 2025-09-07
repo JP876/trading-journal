@@ -83,6 +83,7 @@ const NumOfTradesPerDateCalendar = () => {
     queryKey: ['stats', 'num-of-trades-per-day'],
     queryFn: getNumOfTradesPerDay,
     refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   const minDate = useMemo(() => {

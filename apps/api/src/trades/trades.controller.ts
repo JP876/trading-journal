@@ -65,6 +65,7 @@ export class TradesController {
     const consecutiveLosses = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.LOSS);
     const consecutiveWins = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.WIN);
     const generalInfo = await this.statsService.findGeneralInfo(request.user);
+    const winRateByDirection = await this.statsService.findWinRateByDirection(request.user);
 
     if ('_id' in generalInfo) delete generalInfo._id;
 
@@ -72,6 +73,7 @@ export class TradesController {
       consecutiveLosses: consecutiveLosses.count,
       consecutiveWins: consecutiveWins.count,
       ...(generalInfo || {}),
+      winRateByDirection,
     };
   }
 
