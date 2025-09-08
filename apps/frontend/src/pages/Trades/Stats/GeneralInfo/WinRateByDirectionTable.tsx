@@ -96,7 +96,7 @@ const WinRateByDirectionTable = ({ data }: WinRateByDirectionTableProps) => {
       },
       { win: 0, be: 0, loss: 0 }
     );
-  }, []);
+  }, [data]);
 
   return (
     <TableContainer>
