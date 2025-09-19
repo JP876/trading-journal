@@ -52,6 +52,7 @@ const GroupedByPairs = () => {
           dataset={formatedData}
           layout="horizontal"
           yAxis={[{ scaleType: 'band', dataKey: 'pair', width: 80 }]}
+          xAxis={[{ label: 'Number of trades', height: 44 }]}
           series={[
             {
               dataKey: 'win',

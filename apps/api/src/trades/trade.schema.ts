@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import mongoose from 'mongoose';
 
-import { tradeDirection, tradeResult } from './enums';
+import { orderType, tradeDirection, tradeResult } from './enums';
 import { Account } from 'src/accounts/account.schema';
 import { Upload, UploadSchema } from 'src/uploads/uploads.schema';
 import { Tag } from 'src/tags/tag.schema';
@@ -34,6 +34,9 @@ export class Trade extends mongoose.Document {
 
   @Prop({ type: String, isRequired: true, enum: tradeDirection })
   direction: tradeDirection;
+
+  @Prop({ type: String, isRequired: false, enum: orderType, default: orderType.MARKET })
+  orderType: orderType;
 
   @Prop({ type: mongoose.Types.Decimal128 })
   pl?: number;

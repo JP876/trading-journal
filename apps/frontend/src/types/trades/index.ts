@@ -24,14 +24,23 @@ export enum TradeResult {
   BE = 'be',
 }
 
+export enum OrderType {
+  MARKET = 'market_order',
+  BUY_LIMIT = 'buy_limit',
+  BUY_STOP = 'buy_stop',
+  SELL_LIMIT = 'sell_limit',
+  SELL_STOP = 'sell_stop',
+}
+
 export const tradeFormSchema = z.object({
   openDate: z.date().optional(),
   closeDate: z.date().optional(),
   pair: z.string(),
-  result: z.nativeEnum(TradeResult),
+  result: z.enum(TradeResult),
   stopLoss: z.number().positive(),
   takeProfit: z.number().positive(),
-  direction: z.nativeEnum(TradeDirection),
+  direction: z.enum(TradeDirection),
+  orderType: z.enum(OrderType),
   pl: z.number().optional(),
   comment: z.string().optional(),
   files: z.array(z.union([z.instanceof(File), filesObject])).optional(),

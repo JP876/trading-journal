@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { addTrade } from '@/api/trades';
 import useAppStore from '@/store';
-import { tradeFormSchema, TradeFormSchemaType } from '@/types/trades';
+import { OrderType, tradeFormSchema, TradeFormSchemaType } from '@/types/trades';
 import TradeForm from '../TradeForm';
 import { AccountType } from '@/types/accounts';
 
@@ -34,6 +34,7 @@ const AddTradeForm = () => {
     defaultValues: {
       takeProfit: mainAccount?.defaultTakeProfit || 0,
       stopLoss: mainAccount?.defaultStopLoss || 0,
+      orderType: OrderType.MARKET,
     },
   });
 

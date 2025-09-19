@@ -3,7 +3,7 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
 import { useQuery } from '@tanstack/react-query';
 
-import { directionItems, pairOptions, resultItems } from './consts';
+import { directionItems, orderTypeItems, pairOptions, resultItems } from './consts';
 import AutocompleteInput from '@/components/form/AutocompleteInput';
 import SelectInput, { SelectInputOptionType } from '@/components/form/SelectInput';
 import TextInput from '@/components/form/TextInput';
@@ -38,14 +38,22 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           render={({ field }) => <AutocompleteInput field={field} options={pairOptions} label="Pair *" />}
         />
         <Controller
+          name="result"
+          control={form.control}
+          render={({ field }) => <SelectInput options={resultItems} label="Result *" field={field} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
           name="direction"
           control={form.control}
           render={({ field }) => <SelectInput options={directionItems} label="Direction *" field={field} />}
         />
         <Controller
-          name="result"
+          name="orderType"
           control={form.control}
-          render={({ field }) => <SelectInput options={resultItems} label="Result *" field={field} />}
+          render={({ field }) => <SelectInput options={orderTypeItems} label="Order type" field={field} />}
         />
       </Stack>
 

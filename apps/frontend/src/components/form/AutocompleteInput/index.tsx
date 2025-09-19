@@ -2,10 +2,12 @@ import { Autocomplete, TextField } from '@mui/material';
 
 import { FormFieldType, SelectOptionType } from '@/types';
 
+export type AutocompleteOptions = SelectOptionType & { groupBy?: string };
+
 type AutocompleteInputType = {
   field: FormFieldType;
   label: string;
-  options: SelectOptionType[];
+  options: AutocompleteOptions[];
 };
 
 const AutocompleteInput = ({ field, label, options }: AutocompleteInputType) => {
@@ -13,9 +15,10 @@ const AutocompleteInput = ({ field, label, options }: AutocompleteInputType) => 
     <Autocomplete
       fullWidth
       options={options}
+      groupBy={(option) => option?.groupBy || ''}
       renderInput={(params) => <TextField inputRef={field.ref} {...params} size="small" label={label} />}
       value={field.value ? options.find((option) => option.id === field.value) : null}
-      onChange={(_: any, newValue: SelectOptionType | null) => {
+      onChange={(_: any, newValue: AutocompleteOptions | null) => {
         field.onChange(newValue?.id);
       }}
     />

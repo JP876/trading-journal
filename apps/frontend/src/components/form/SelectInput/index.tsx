@@ -1,15 +1,17 @@
 import { useId } from 'react';
-import { Chip, ChipProps, FormControl, InputLabel, Stack, Typography } from '@mui/material';
+import { Chip, ChipProps, FormControl, InputLabel, ListSubheader, Stack, Typography } from '@mui/material';
 import Select, { SelectProps } from '@mui/material/Select';
 import MenuItem, { MenuItemProps } from '@mui/material/MenuItem';
+import { FieldValues, useFormContext, UseFormWatch } from 'react-hook-form';
 
 import { FormFieldType, SelectOptionType } from '@/types';
 import checkBrightness from '@/lib/checkBrightness';
 
 export type SelectInputOptionType = SelectOptionType & {
-  menuItemProps?: MenuItemProps;
+  menuItemProps?: MenuItemProps | ((options: { value: any; watch: UseFormWatch<FieldValues> }) => MenuItemProps);
   chipProps?: ChipProps;
   chipBackgroundColor?: string;
+  renderSubheader?: boolean;
 };
 type SelectInputPropsType = {
   field: FormFieldType;
@@ -17,11 +19,12 @@ type SelectInputPropsType = {
   renderChips?: boolean;
 };
 
-const SelectInput = ({ field, options, renderChips, ...rest }: SelectInputPropsType & SelectProps) => {
+function SelectInput({ field, options, renderChips, ...rest }: SelectInputPropsType & SelectProps) {
   const labelId = useId();
   const { value, ...restField } = field;
 
   const selectValue = rest?.multiple ? value || [] : value || '';
+  const methods = useFormContext();
 
   const handleRenderValue = (selected: unknown) => {
     if (rest?.multiple && Array.isArray(selected)) {
@@ -48,7 +51,7 @@ const SelectInput = ({ field, options, renderChips, ...rest }: SelectInputPropsT
                 })}
               />
             ) : (
-              <Typography key={id} sx={{ lineHeight: 1.2 }}>
+              <Typography key={id} sx={{}}>
                 {label}
               </Typography>
             )
@@ -57,7 +60,7 @@ const SelectInput = ({ field, options, renderChips, ...rest }: SelectInputPropsT
       );
     } else {
       const value = options.find((o) => o?.id === selected);
-      return <Typography sx={{ lineHeight: 1.2 }}>{value?.label || ''}</Typography>;
+      return <Typography sx={{}}>{value?.label || ''}</Typography>;
     }
   };
 
@@ -72,14 +75,22 @@ const SelectInput = ({ field, options, renderChips, ...rest }: SelectInputPropsT
         value={selectValue}
         {...restField}
       >
-        {options.map(({ id, label, menuItemProps }) => (
-          <MenuItem key={id} {...(menuItemProps || {})} value={id}>
-            {label}
-          </MenuItem>
-        ))}
+        {options.map(({ id, label, menuItemProps, renderSubheader }) => {
+          const itemProps =
+            typeof menuItemProps === 'function' ? menuItemProps({ value, watch: methods.watch }) : menuItemProps;
+
+          if (renderSubheader) {
+            return <ListSubheader key={id}>{label}</ListSubheader>;
+          }
+          return (
+            <MenuItem key={id} {...(itemProps || {})} value={id}>
+              {label}
+            </MenuItem>
+          );
+        })}
       </Select>
     </FormControl>
   );
-};
+}
 
 export default SelectInput;
