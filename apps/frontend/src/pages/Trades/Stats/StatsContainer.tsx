@@ -35,13 +35,23 @@ const StatsContainer = ({ isLoading, title, children }: StatsContainerProps) => 
       ]}
     >
       {title ? (
-        <Box sx={[(theme) => ({ position: 'sticky', top: 0, background: theme.palette.background.default, py: 1 })]}>
+        <Box
+          sx={[
+            (theme) => ({
+              py: 1,
+              top: 0,
+              position: 'sticky',
+              background: theme.palette.background.default,
+              borderBottom: `1px solid ${theme.palette.grey[theme.palette.mode === 'light' ? 200 : 700]}`,
+            }),
+          ]}
+        >
           <Typography variant="h6" pl={2}>
             {title}
           </Typography>
         </Box>
       ) : null}
-      <Box sx={{ height: 'calc(100% - 3rem)' }}>{renderChildren()}</Box>
+      <Box sx={{ height: 'calc(100% - 3.2rem)' }}>{renderChildren()}</Box>
     </Paper>
   );
 };

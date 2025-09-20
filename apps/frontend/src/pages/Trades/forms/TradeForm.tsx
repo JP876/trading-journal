@@ -3,13 +3,13 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
 import { useQuery } from '@tanstack/react-query';
 
-import { directionItems, orderTypeItems, pairOptions, resultItems } from './consts';
+import { closedByOptions, directionItems, orderTypeItems, pairOptions, resultItems } from './consts';
 import AutocompleteInput from '@/components/form/AutocompleteInput';
 import SelectInput, { SelectInputOptionType } from '@/components/form/SelectInput';
 import TextInput from '@/components/form/TextInput';
 import DateTimeInput from '@/components/form/DateTimeInput';
 import FormMain from '@/components/form/FormMain';
-import { EditTradeFormSchemaType, TradeDirection, TradeFormSchemaType } from '@/types/trades';
+import { ClosedBy, EditTradeFormSchemaType, TradeDirection, TradeFormSchemaType } from '@/types/trades';
 import UploadFilesInput from '@/components/form/UploadFilesInput';
 import { getTags } from '@/api/tags';
 
@@ -30,7 +30,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
   }));
 
   return (
-    <FormMain onSubmit={onSubmit} form={form}>
+    <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
       <Stack direction="row" alignItems="center" gap={3}>
         <Controller
           name="pair"
@@ -41,6 +41,29 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           name="result"
           control={form.control}
           render={({ field }) => <SelectInput options={resultItems} label="Result *" field={field} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="closedBy"
+          control={form.control}
+          render={({ field }) => <SelectInput options={closedByOptions} label="Closed by" field={field} />}
+        />
+        <Controller
+          name="closedAt"
+          control={form.control}
+          render={({ field }) => (
+            <TextInput
+              label="Closed at"
+              field={field}
+              type="number"
+              inputProps={({ watch }) => {
+                const closedBy: ClosedBy = watch('closedBy');
+                return { disabled: closedBy === ClosedBy.TP_SL };
+              }}
+            />
+          )}
         />
       </Stack>
 
@@ -118,7 +141,9 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="comment"
           control={form.control}
-          render={({ field }) => <TextInput label="Comment" field={field} fullWidth multiline rows={6} />}
+          render={({ field }) => (
+            <TextInput label="Comment" field={field} inputProps={{ fullWidth: true, multiline: true, rows: 6 }} />
+          )}
         />
       </Stack>
 

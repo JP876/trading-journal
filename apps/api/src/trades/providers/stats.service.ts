@@ -15,6 +15,8 @@ type numOfTradesPerDate = {
     direction: tradeDirection;
     closeDate: string;
     openDate: string;
+    takeProfit: number;
+    stopLoss: number;
   }[];
 };
 
@@ -45,12 +47,15 @@ export class StatsService {
               direction: '$direction',
               closeDate: '$closeDate',
               openDate: '$openDate',
+              takeProfit: '$takeProfit',
+              stopLoss: '$stopLoss',
             },
           },
         },
       },
       { $sort: { _id: 1 } },
     ]);
+
     return numOfTradesPerDate;
   }
 

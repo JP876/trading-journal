@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Type } from 'class-transformer';
 import mongoose from 'mongoose';
 
-import { orderType, tradeDirection, tradeResult } from './enums';
+import { closedBy, orderType, tradeDirection, tradeResult } from './enums';
 import { Account } from 'src/accounts/account.schema';
 import { Upload, UploadSchema } from 'src/uploads/uploads.schema';
 import { Tag } from 'src/tags/tag.schema';
@@ -23,6 +23,12 @@ export class Trade extends mongoose.Document {
 
   @Prop({ type: String, isRequired: true, enum: tradeResult })
   result: tradeResult;
+
+  @Prop({ type: String, isRequired: false, enum: closedBy, default: closedBy.TP_SL })
+  closedBy: closedBy;
+
+  @Prop({ type: mongoose.Types.Decimal128, isRequired: false })
+  closedAt: number;
 
   @Prop({ type: mongoose.Types.Decimal128, isRequired: true })
   stopLoss: number;

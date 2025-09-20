@@ -19,36 +19,49 @@ const TradesDetailsTooltip = ({
 }) => {
   const renderDetails = useCallback((dayData: NumOfTradesPerDate | null) => {
     if (!dayData?._id) return '';
+
     return (
       <Stack p={0.5} gap={0.5}>
-        {dayData.list.map((trade) => (
-          <Box
-            key={trade.id}
-            sx={{ display: 'grid', gridTemplateColumns: '1fr 4rem 1rem', alignItems: 'center', gap: 1.5 }}
-          >
-            <Typography variant="subtitle2">{trade.pair}</Typography>
-            <Chip
-              label={trade.result}
-              size="small"
-              sx={[
-                (theme) => ({
-                  textTransform: 'uppercase',
-                  width: '3.6rem',
-                  height: '1.2rem',
-                  color: theme.palette.common.white,
-                }),
-                trade.result === TradeResult.WIN && ((theme) => ({ backgroundColor: theme.palette.success.light })),
-                trade.result === TradeResult.LOSS && ((theme) => ({ backgroundColor: theme.palette.error.main })),
-              ]}
-            />
-            <IconButton
-              size="small"
-              sx={[(theme) => ({ height: '.6rem', width: '.6rem', '& svg': { color: theme.palette.common.white } })]}
+        {dayData.list.map((trade) => {
+          const resultInPips = (() => {
+            switch (trade.result) {
+              case TradeResult.WIN:
+                return trade.takeProfit;
+              case TradeResult.LOSS:
+                return trade.stopLoss;
+              default:
+                return 0;
+            }
+          })();
+
+          return (
+            <Box
+              key={trade.id}
+              sx={{ display: 'grid', gridTemplateColumns: '1fr 5.4rem 1rem', alignItems: 'center', gap: 2 }}
             >
-              <InfoOutlineIcon />
-            </IconButton>
-          </Box>
-        ))}
+              <Typography variant="subtitle2">{trade.pair}</Typography>
+              <Chip
+                label={`${trade.result} / ${resultInPips}`}
+                size="small"
+                sx={[
+                  (theme) => ({
+                    textTransform: 'uppercase',
+                    height: '1.2rem',
+                    color: theme.palette.common.white,
+                  }),
+                  trade.result === TradeResult.WIN && ((theme) => ({ backgroundColor: theme.palette.success.light })),
+                  trade.result === TradeResult.LOSS && ((theme) => ({ backgroundColor: theme.palette.error.main })),
+                ]}
+              />
+              <IconButton
+                size="small"
+                sx={[(theme) => ({ height: '.6rem', width: '.6rem', '& svg': { color: theme.palette.common.white } })]}
+              >
+                <InfoOutlineIcon />
+              </IconButton>
+            </Box>
+          );
+        })}
       </Stack>
     );
   }, []);
@@ -97,7 +110,7 @@ const NumOfTradesPerDateCalendar = () => {
 
   return (
     <StatsContainer title="Daily trade volume">
-      <Box sx={{ height: '20rem', '& .MuiBadge-root span': { top: '22%' } }}>
+      <Box sx={{ height: '340px', '& .MuiBadge-root span': { top: '22%' } }}>
         <DateCalendar
           disableFuture
           displayWeekNumber

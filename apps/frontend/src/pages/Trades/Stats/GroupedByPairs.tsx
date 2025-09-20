@@ -50,9 +50,9 @@ const GroupedByPairs = () => {
 
   return (
     <StatsContainer title="Profitability per trading pair" isLoading={isLoading}>
-      <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', pt: 1 }}>
         <BarChart
-          height={320}
+          height={300}
           dataset={formatedData}
           layout="horizontal"
           yAxis={[{ scaleType: 'band', dataKey: 'pair', width: 80 }]}

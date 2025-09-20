@@ -1,6 +1,6 @@
 import { IsDate, IsEnum, IsMongoId, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
-import { orderType, tradeDirection, tradeResult } from '../enums';
+import { closedBy, orderType, tradeDirection, tradeResult } from '../enums';
 
 export class CreateTradeDto {
   @IsDate()
@@ -17,6 +17,14 @@ export class CreateTradeDto {
   @IsEnum(tradeResult)
   @IsNotEmpty()
   readonly result: tradeResult;
+
+  @IsEnum(closedBy)
+  @IsOptional()
+  readonly closedBy?: closedBy;
+
+  @IsNumber()
+  @IsOptional()
+  readonly closedAt?: number;
 
   @IsNumber()
   @IsNotEmpty()

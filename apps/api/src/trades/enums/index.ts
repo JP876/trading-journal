@@ -16,3 +16,8 @@ export enum orderType {
   SELL_LIMIT = 'sell_limit',
   SELL_STOP = 'sell_stop',
 }
+
+export enum closedBy {
+  TP_SL = 'TP/SL',
+  USER = 'user',
+}

@@ -32,6 +32,11 @@ export enum OrderType {
   SELL_STOP = 'sell_stop',
 }
 
+export enum ClosedBy {
+  TP_SL = 'TP/SL',
+  USER = 'user',
+}
+
 export const tradeFormSchema = z.object({
   openDate: z.date().optional(),
   closeDate: z.date().optional(),
@@ -40,7 +45,9 @@ export const tradeFormSchema = z.object({
   stopLoss: z.number().positive(),
   takeProfit: z.number().positive(),
   direction: z.enum(TradeDirection),
-  orderType: z.enum(OrderType),
+  orderType: z.enum(OrderType).default(OrderType.MARKET),
+  closedBy: z.enum(ClosedBy).default(ClosedBy.TP_SL),
+  closedAt: z.number().optional(),
   pl: z.number().optional(),
   comment: z.string().optional(),
   files: z.array(z.union([z.instanceof(File), filesObject])).optional(),
@@ -81,8 +88,11 @@ export type NumOfTradesPerDate = {
     direction: TradeDirection;
     closeDate: string;
     openDate: string;
+    takeProfit: number;
+    stopLoss: number;
   }[];
 };
+
 export type GroupedByResult = { _id: TradeResult; count: number };
 export type GroupedByPair = { pair: string; results: { result: TradeResult; count: number }[] };
 export type MostProfitablePair = { _id: number; pairs: { pair: string; count: number }[] };

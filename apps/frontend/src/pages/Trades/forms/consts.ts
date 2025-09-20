@@ -78,3 +78,8 @@ export const resultItems: SelectOptionType[] = [
   { label: 'BE', id: 'be' },
   { label: 'LOSS', id: 'loss' },
 ];
+
+export const closedByOptions: SelectOptionType[] = [
+  { label: 'TP/SL', id: 'TP/SL' },
+  { label: 'User', id: 'user' },
+];
