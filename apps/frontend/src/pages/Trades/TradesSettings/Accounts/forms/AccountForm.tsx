@@ -43,7 +43,9 @@ const AccountForm = ({ onSubmit, form, isLoading }: AccountFormProps) => {
         <Controller
           name="description"
           control={form.control}
-          render={({ field }) => <TextInput label="Description" field={field} multiline rows={6} />}
+          render={({ field }) => (
+            <TextInput label="Description" field={field} inputProps={{ multiline: true, rows: 6 }} />
+          )}
         />
       </Stack>
 
