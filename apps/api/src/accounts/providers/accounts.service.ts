@@ -21,9 +21,10 @@ export class AccountsService {
     return result;
   }
 
-  public async findMainAccount(user: User): Promise<Account[] | null> {
+  public async findMainAccount(user: User): Promise<Account | null> {
     const result = await this.accountModel.find({ user: user._id, isMain: true });
-    return result;
+    if (!Array.isArray(result)) throw new NotFoundException();
+    return result[0];
   }
 
   public async create(createAccountDto: CreateAccountDto, user: User) {

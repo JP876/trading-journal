@@ -65,7 +65,7 @@ export class ExchangeRatesService {
     return await this.exchangeRatesModel.findOne({ latest: true });
   }
 
-  @Cron('0 */4 * * 1-5', {
+  @Cron('0 */2 * * 1-5', {
     name: 'exchange rates',
     utcOffset: 2,
   })

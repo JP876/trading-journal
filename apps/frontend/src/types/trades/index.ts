@@ -94,4 +94,5 @@ export type GeneralStatsInfo = {
   consecutiveLosses: number;
   consecutiveWins: number;
   winRateByDirection: WinRateByDirection[];
+  avgTradesPerWeek: number;
 };

@@ -5,6 +5,7 @@ import { millisecondsToHours, millisecondsToMinutes } from 'date-fns';
 import { getGeneralStatsInfo } from '@/api/trades';
 import StatsContainer from '../StatsContainer';
 import WinRateByDirectionTable from './WinRateByDirectionTable';
+import useMainAccount from '../../hooks/useMainAccount';
 
 const formatTimeDiff = (ms?: number): string => {
   if (!ms) return '-';
@@ -12,13 +13,14 @@ const formatTimeDiff = (ms?: number): string => {
   let min = millisecondsToMinutes(ms);
   let hours = millisecondsToHours(ms);
 
-  if (min === 60) {
-    min = 0;
-    hours = hours + 1;
+  if (hours > 24) {
+    const days = Math.floor(hours / 24);
+    return `${days}d/${hours % 24}h/${min % 60}min`;
+  } else if (min > 60) {
+    return `${hours}h/${min % 60}min`;
+  } else {
+    return `${min}min`;
   }
-  if (!hours) return `${min}min`;
-
-  return `${hours}h/${min}min`;
 };
 
 type GridInfoItemProps = {
@@ -29,7 +31,7 @@ type GridInfoItemProps = {
 
 const GridInfoItem = ({ title, value, children }: GridInfoItemProps) => {
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr .5fr' }}>
+    <Box sx={{ display: 'grid', gridTemplateColumns: '1fr .6fr' }}>
       <Typography variant="subtitle1">{title}</Typography>
       {children ? (
         children
@@ -43,11 +45,14 @@ const GridInfoItem = ({ title, value, children }: GridInfoItemProps) => {
 };
 
 const GeneralInfo = () => {
+  const mainAccount = useMainAccount();
+
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'general-stats-info'],
-    queryFn: getGeneralStatsInfo,
+    queryFn: () => getGeneralStatsInfo(mainAccount?._id || ''),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!mainAccount,
   });
 
   return (
@@ -73,6 +78,7 @@ const GeneralInfo = () => {
         <GridInfoItem title="Average take profit" value={`${data?.avgTakeProfit?.toFixed(1)} pips`} />
         <GridInfoItem title="Average stop loss" value={`${data?.avgStopLoss?.toFixed(1)} pips`} />
         <GridInfoItem title="Average trade duration" value={formatTimeDiff(data?.avgTradeDuration)} />
+        <GridInfoItem title="Average trades per week" value={Math.round(data?.avgTradesPerWeek || 0)} />
         <Divider />
         <WinRateByDirectionTable data={data?.winRateByDirection || []} />
       </Stack>

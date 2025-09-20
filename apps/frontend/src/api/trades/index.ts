@@ -39,28 +39,28 @@ export const getTrades = async ({
   return response.data;
 };
 
-export const getNumOfTradesPerDay = async (): Promise<NumOfTradesPerDate[]> => {
-  const response = await client.get('trades/stats/num-of-trades-per-day');
+export const getNumOfTradesPerDay = async (accountId: string): Promise<NumOfTradesPerDate[]> => {
+  const response = await client.get(`trades/stats/num-of-trades-per-day/${accountId}`);
   return response.data;
 };
 
-export const getGroupedTradesByResult = async (): Promise<GroupedByResult[]> => {
-  const response = await client.get('trades/stats/grouped-by-results');
+export const getGroupedTradesByResult = async (accountId: string): Promise<GroupedByResult[]> => {
+  const response = await client.get(`trades/stats/grouped-by-results/${accountId}`);
   return response.data;
 };
 
-export const getGroupedTradesByPair = async (): Promise<GroupedByPair[]> => {
-  const response = await client.get('trades/stats/grouped-by-pairs');
+export const getGroupedTradesByPair = async (accountId: string): Promise<GroupedByPair[]> => {
+  const response = await client.get(`trades/stats/grouped-by-pairs/${accountId}`);
   return response.data;
 };
 
-export const getMostProfitablePairs = async (): Promise<MostProfitablePair[]> => {
-  const response = await client.get('trades/stats/most-profitable-pairs');
+export const getMostProfitablePairs = async (accountId: string): Promise<MostProfitablePair[]> => {
+  const response = await client.get(`trades/stats/most-profitable-pairs/${accountId}`);
   return response.data;
 };
 
-export const getGeneralStatsInfo = async (): Promise<GeneralStatsInfo> => {
-  const response = await client.get('trades/stats/general-info');
+export const getGeneralStatsInfo = async (accountId: string): Promise<GeneralStatsInfo> => {
+  const response = await client.get(`trades/stats/general-info/${accountId}`);
   return response.data;
 };
 

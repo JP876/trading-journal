@@ -1,10 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 import { Trade } from '../trade.schema';
-import { AccountsService } from 'src/accounts/providers/accounts.service';
-import { User } from 'src/user/user.schema';
 import { tradeDirection, tradeResult } from '../enums';
 
 type numOfTradesPerDate = {
@@ -26,25 +24,15 @@ type mostProfitablePair = { _id: number; pairs: { pair: string; count: number }[
 type consecutiveResults = { _id: null; count: number; result: tradeResult };
 type generalInfoType = { _id?: null; avgTakeProfit: number; avgStopLoss: number; avgTradeDuration: number };
 type winRateByDirectionType = { _id: tradeDirection; win: number; loss: number; be: number };
+type tradesPerWeekType = { avgTradesPerWeek: number };
 
 @Injectable()
 export class StatsService {
-  constructor(
-    @InjectModel(Trade.name) private readonly tradeModel: Model<Trade>,
-    private readonly accountsService: AccountsService
-  ) {}
+  constructor(@InjectModel(Trade.name) private readonly tradeModel: Model<Trade>) {}
 
-  private async getMainAccount(user: User) {
-    const accounts = await this.accountsService.findMainAccount(user);
-    if (!Array.isArray(accounts)) throw new NotFoundException();
-    return accounts[0];
-  }
-
-  public async getNumOfTradesPerDay(user: User) {
-    const account = await this.getMainAccount(user);
-
+  public async getNumOfTradesPerDay(id: Types.ObjectId) {
     const numOfTradesPerDate: numOfTradesPerDate[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id } },
+      { $match: { account: id } },
       {
         $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$closeDate' } },
@@ -66,20 +54,18 @@ export class StatsService {
     return numOfTradesPerDate;
   }
 
-  public async groupTradesByResults(user: User) {
-    const account = await this.getMainAccount(user);
+  public async groupTradesByResults(id: Types.ObjectId) {
     const groupByResults: groupedByResult[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id } },
+      { $match: { account: id } },
       { $group: { _id: '$result', count: { $sum: 1 } } },
       { $sort: { _id: -1 } },
     ]);
     return groupByResults;
   }
 
-  public async groupTradesByPairs(user: User) {
-    const account = await this.getMainAccount(user);
+  public async groupTradesByPairs(id: Types.ObjectId) {
     const pairTrades: groupedByPair[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id } },
+      { $match: { account: id } },
       {
         $group: {
           _id: { pair: '$pair', result: '$result' },
@@ -100,10 +86,9 @@ export class StatsService {
     return pairTrades;
   }
 
-  public async findMostProfitablePairs(user: User) {
-    const account = await this.getMainAccount(user);
+  public async findMostProfitablePairs(id: Types.ObjectId) {
     const mostProfitablePairs: mostProfitablePair[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id, result: 'win' } },
+      { $match: { account: id, result: 'win' } },
       { $group: { _id: { pair: '$pair' }, count: { $sum: 1 } } },
       { $group: { _id: '$count', pairs: { $push: { pair: '$_id.pair', count: '$count' } } } },
       { $sort: { _id: -1 } },
@@ -111,12 +96,11 @@ export class StatsService {
     return mostProfitablePairs;
   }
 
-  public async findGeneralInfo(user: User) {
-    const account = await this.getMainAccount(user);
+  public async findGeneralInfo(id: Types.ObjectId) {
     const generalInfo: generalInfoType[] = await this.tradeModel.aggregate([
       {
         $match: {
-          account: account._id,
+          account: id,
           takeProfit: { $exists: true },
           stopLoss: { $exists: true },
           openDate: { $exists: true },
@@ -141,13 +125,13 @@ export class StatsService {
         },
       },
     ]);
-    return generalInfo[0];
+
+    return generalInfo?.[0];
   }
 
-  public async findMostConsecutiveResults(user: User, result: tradeResult) {
-    const account = await this.getMainAccount(user);
+  public async findMostConsecutiveResults(id: Types.ObjectId, result: tradeResult) {
     const mostConsecutiveResults: consecutiveResults[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id } },
+      { $match: { account: id } },
       { $group: { _id: null, results: { $push: '$result' } } },
       {
         $project: {
@@ -186,10 +170,9 @@ export class StatsService {
     return mostConsecutiveResults[0];
   }
 
-  public async findWinRateByDirection(user: User) {
-    const account = await this.getMainAccount(user);
+  public async findWinRateByDirection(id: Types.ObjectId) {
     const stats: winRateByDirectionType[] = await this.tradeModel.aggregate([
-      { $match: { account: account._id } },
+      { $match: { account: id } },
       {
         $group: {
           _id: '$direction',
@@ -213,5 +196,30 @@ export class StatsService {
       { $sort: { _id: 1 } },
     ]);
     return stats;
+  }
+
+  public async findAverageNumberOfTradesPerWeek(id: Types.ObjectId) {
+    const stats: tradesPerWeekType[] = await this.tradeModel.aggregate([
+      { $match: { account: id } },
+      {
+        $group: {
+          _id: { $dateTrunc: { date: '$closeDate', unit: 'week' } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          avgTradesPerWeek: { $avg: '$count' },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          avgTradesPerWeek: 1,
+        },
+      },
+    ]);
+    return stats?.[0];
   }
 }

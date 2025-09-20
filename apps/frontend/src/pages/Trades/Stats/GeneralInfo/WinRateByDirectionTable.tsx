@@ -58,7 +58,20 @@ const useColumns = () => {
           );
         },
       },
-      { accessorKey: 'be', header: 'BE' },
+      {
+        accessorKey: 'be',
+        header: 'BE',
+        cell: ({ row }) => {
+          const value: TradeDirection | undefined = row.getValue('be');
+          if (!value) return <NotFoundValue />;
+
+          return (
+            <Typography variant="body2" sx={[{ textTransform: 'uppercase' }]}>
+              {value}
+            </Typography>
+          );
+        },
+      },
       {
         accessorKey: 'loss',
         header: 'LOSS',

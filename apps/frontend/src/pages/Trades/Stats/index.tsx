@@ -6,7 +6,12 @@ import GeneralInfo from './GeneralInfo';
 
 const StatsMain = () => {
   return (
-    <ResponsiveGrid maxItemsPerRow={5} minWidthOfItem="22rem" gridGap="2rem">
+    <ResponsiveGrid
+      maxItemsPerRow={5}
+      minWidthOfItem="22rem"
+      gridGap="2rem"
+      sx={{ gridAutoRows: 'minmax(240px, 400px)' }}
+    >
       <NumOfTradesPerDateCalendar />
       <GroupedByResults />
       <GroupedByPairs />

@@ -8,6 +8,7 @@ import { DateCalendar, DayCalendarSkeleton, PickersDay, PickersDayProps } from '
 import { getNumOfTradesPerDay } from '@/api/trades';
 import { NumOfTradesPerDate, TradeResult } from '@/types/trades';
 import StatsContainer from './StatsContainer';
+import useMainAccount from '../hooks/useMainAccount';
 
 const TradesDetailsTooltip = ({
   dayData,
@@ -79,11 +80,14 @@ const NumOfTradesPickerDay = (props: PickersDayProps & { data?: NumOfTradesPerDa
 };
 
 const NumOfTradesPerDateCalendar = () => {
+  const mainAccount = useMainAccount();
+
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'num-of-trades-per-day'],
-    queryFn: getNumOfTradesPerDay,
+    queryFn: () => getNumOfTradesPerDay(mainAccount?._id || ''),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!mainAccount,
   });
 
   const minDate = useMemo(() => {

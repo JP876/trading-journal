@@ -7,13 +7,17 @@ import { PieValueType } from '@mui/x-charts';
 import { getGroupedTradesByResult } from '@/api/trades';
 import { TradeResult } from '@/types/trades';
 import StatsContainer from './StatsContainer';
+import useMainAccount from '../hooks/useMainAccount';
 
 const GroupedByResults = () => {
+  const mainAccount = useMainAccount();
+
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'grouped-by-result'],
-    queryFn: getGroupedTradesByResult,
+    queryFn: () => getGroupedTradesByResult(mainAccount?._id || ''),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!mainAccount,
   });
 
   const theme = useTheme();

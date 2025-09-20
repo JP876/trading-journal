@@ -25,7 +25,6 @@ const StatsContainer = ({ isLoading, title, children }: StatsContainerProps) => 
       id="num-of-trades-container"
       sx={[
         (theme) => ({
-          pt: 1,
           width: '100%',
           height: '100%',
           overflowY: 'auto',
@@ -36,11 +35,13 @@ const StatsContainer = ({ isLoading, title, children }: StatsContainerProps) => 
       ]}
     >
       {title ? (
-        <Typography variant="h6" pl={2} mb={0.5}>
-          {title}
-        </Typography>
+        <Box sx={[(theme) => ({ position: 'sticky', top: 0, background: theme.palette.background.default, py: 1 })]}>
+          <Typography variant="h6" pl={2}>
+            {title}
+          </Typography>
+        </Box>
       ) : null}
-      <Box sx={{ height: 'calc(100% - 2.4rem)' }}>{renderChildren()}</Box>
+      <Box sx={{ height: 'calc(100% - 3rem)' }}>{renderChildren()}</Box>
     </Paper>
   );
 };

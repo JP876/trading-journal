@@ -7,13 +7,17 @@ import { SeriesValueFormatterContext } from '@mui/x-charts/internals';
 import { getGroupedTradesByPair } from '@/api/trades';
 import StatsContainer from './StatsContainer';
 import { TradeResult } from '@/types/trades';
+import useMainAccount from '../hooks/useMainAccount';
 
 const GroupedByPairs = () => {
+  const mainAccount = useMainAccount();
+
   const { data, isLoading } = useQuery({
     queryKey: ['stats', 'grouped-by-pair'],
-    queryFn: getGroupedTradesByPair,
+    queryFn: () => getGroupedTradesByPair(mainAccount?._id || ''),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
+    enabled: !!mainAccount,
   });
 
   const theme = useTheme();

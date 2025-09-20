@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
+import mongoose from 'mongoose';
 
 import { TradesService } from './providers/trades.service';
 import { CreateTradeDto } from './dtos/create-tradet.dto';
@@ -40,40 +41,48 @@ export class TradesController {
     return this.tradesService.findAll(query, request.user);
   }
 
-  @Get('stats/num-of-trades-per-day')
-  public async findNumOfTradesPerDay(@Req() request: RequestWithUser) {
-    return this.statsService.getNumOfTradesPerDay(request.user);
+  @Get('stats/num-of-trades-per-day/:id')
+  public async findNumOfTradesPerDay(@Param() { id }: ParamsWithId) {
+    const accountId = new mongoose.Types.ObjectId(id);
+    return this.statsService.getNumOfTradesPerDay(accountId);
   }
 
-  @Get('stats/grouped-by-results')
-  public async groupByResults(@Req() request: RequestWithUser) {
-    return this.statsService.groupTradesByResults(request.user);
+  @Get('stats/grouped-by-results/:id')
+  public async groupByResults(@Param() { id }: ParamsWithId) {
+    const accountId = new mongoose.Types.ObjectId(id);
+    return this.statsService.groupTradesByResults(accountId);
   }
 
-  @Get('stats/grouped-by-pairs')
-  public async groupByPairs(@Req() request: RequestWithUser) {
-    return this.statsService.groupTradesByPairs(request.user);
+  @Get('stats/grouped-by-pairs/:id')
+  public async groupByPairs(@Param() { id }: ParamsWithId) {
+    const accountId = new mongoose.Types.ObjectId(id);
+    return this.statsService.groupTradesByPairs(accountId);
   }
 
-  @Get('stats/most-profitable-pairs')
-  public async findMostProfitablePairs(@Req() request: RequestWithUser) {
-    return this.statsService.findMostProfitablePairs(request.user);
+  @Get('stats/most-profitable-pairs/:id')
+  public async findMostProfitablePairs(@Param() { id }: ParamsWithId) {
+    const accountId = new mongoose.Types.ObjectId(id);
+    return this.statsService.findMostProfitablePairs(accountId);
   }
 
-  @Get('stats/general-info')
-  public async findGeneralInfo(@Req() request: RequestWithUser) {
-    const consecutiveLosses = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.LOSS);
-    const consecutiveWins = await this.statsService.findMostConsecutiveResults(request.user, tradeResult.WIN);
-    const generalInfo = await this.statsService.findGeneralInfo(request.user);
-    const winRateByDirection = await this.statsService.findWinRateByDirection(request.user);
+  @Get('stats/general-info/:id')
+  public async findGeneralInfo(@Param() { id }: ParamsWithId) {
+    const accountId = new mongoose.Types.ObjectId(id);
 
-    if ('_id' in generalInfo) delete generalInfo._id;
+    const consecutiveLosses = await this.statsService.findMostConsecutiveResults(accountId, tradeResult.LOSS);
+    const consecutiveWins = await this.statsService.findMostConsecutiveResults(accountId, tradeResult.WIN);
+    const generalInfo = await this.statsService.findGeneralInfo(accountId);
+    const winRateByDirection = await this.statsService.findWinRateByDirection(accountId);
+    const tradesPerWeek = await this.statsService.findAverageNumberOfTradesPerWeek(accountId);
+
+    if (generalInfo && '_id' in generalInfo) delete generalInfo._id;
 
     return {
-      consecutiveLosses: consecutiveLosses.count,
-      consecutiveWins: consecutiveWins.count,
+      consecutiveLosses: consecutiveLosses?.count || 0,
+      consecutiveWins: consecutiveWins?.count || 0,
       ...(generalInfo || {}),
       winRateByDirection,
+      ...(tradesPerWeek || {}),
     };
   }
 

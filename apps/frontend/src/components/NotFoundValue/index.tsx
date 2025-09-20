@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 
 const NotFoundValue = () => {
   return (
-    <Stack>
+    <Stack ml={-0.5}>
       <CloseIcon fontSize="small" />
     </Stack>
   );

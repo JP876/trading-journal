@@ -9,7 +9,7 @@ import SelectInput, { SelectInputOptionType } from '@/components/form/SelectInpu
 import TextInput from '@/components/form/TextInput';
 import DateTimeInput from '@/components/form/DateTimeInput';
 import FormMain from '@/components/form/FormMain';
-import { EditTradeFormSchemaType, TradeFormSchemaType } from '@/types/trades';
+import { EditTradeFormSchemaType, TradeDirection, TradeFormSchemaType } from '@/types/trades';
 import UploadFilesInput from '@/components/form/UploadFilesInput';
 import { getTags } from '@/api/tags';
 
@@ -53,7 +53,17 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="orderType"
           control={form.control}
-          render={({ field }) => <SelectInput options={orderTypeItems} label="Order type" field={field} />}
+          render={({ field }) => (
+            <SelectInput
+              options={orderTypeItems}
+              label="Order type"
+              field={field}
+              inputProps={({ watch }) => {
+                const direction: TradeDirection | undefined = watch('direction');
+                return { disabled: !direction };
+              }}
+            />
+          )}
         />
       </Stack>
 
@@ -84,8 +94,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
               field={field}
               renderChips
               label="Tags"
-              multiple
-              disabled={tagsQuery.isLoading || tagsQuery.isError}
+              inputProps={{ multiple: true, disabled: tagsQuery.isLoading || tagsQuery.isError }}
               options={tagOptions}
             />
           )}

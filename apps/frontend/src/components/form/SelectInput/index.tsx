@@ -17,17 +17,24 @@ type SelectInputPropsType = {
   field: FormFieldType;
   options: SelectInputOptionType[];
   renderChips?: boolean;
+  label: string;
+  inputProps?: ((options: { watch: UseFormWatch<FieldValues> }) => SelectProps) | SelectProps;
 };
 
-function SelectInput({ field, options, renderChips, ...rest }: SelectInputPropsType & SelectProps) {
+function SelectInput({ field, options, renderChips, label, inputProps }: SelectInputPropsType) {
   const labelId = useId();
-  const { value, ...restField } = field;
-
-  const selectValue = rest?.multiple ? value || [] : value || '';
   const methods = useFormContext();
 
+  const inputOptions = (() => {
+    if (typeof inputProps === 'function') return inputProps({ watch: methods.watch });
+    return inputProps;
+  })();
+
+  const { value, ...restField } = field;
+  const selectValue = inputOptions?.multiple ? value || [] : value || '';
+
   const handleRenderValue = (selected: unknown) => {
-    if (rest?.multiple && Array.isArray(selected)) {
+    if (inputOptions?.multiple && Array.isArray(selected)) {
       const formatedSelected: SelectInputOptionType[] = selected.reduce((acc, id) => {
         const option = options.find((option) => id === option.id);
         return option?.id ? [...acc, { ...option }] : acc;
@@ -66,12 +73,13 @@ function SelectInput({ field, options, renderChips, ...rest }: SelectInputPropsT
 
   return (
     <FormControl fullWidth size="small">
-      <InputLabel id={labelId}>{rest.label}</InputLabel>
+      <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         labelId={labelId}
         id="simple-select"
         renderValue={handleRenderValue}
-        {...rest}
+        label={label}
+        {...inputOptions}
         value={selectValue}
         {...restField}
       >

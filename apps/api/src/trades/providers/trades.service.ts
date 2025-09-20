@@ -38,10 +38,8 @@ export class TradesService {
       throw new NotFoundException();
     }
 
-    const accounts = await this.accountsService.findMainAccount(user);
-
-    if (!Array.isArray(accounts)) throw new NotFoundException();
-    if (accounts.length === 0) return { totalCount: 0, count: 0, results: [] };
+    const account = await this.accountsService.findMainAccount(user);
+    if (!account) return { totalCount: 0, count: 0, results: [] };
 
     const findBy: Omit<TradeFilterFields, 'openDate' | 'closeDate'> & {
       account: unknown;
@@ -49,7 +47,7 @@ export class TradesService {
       closeDate?: { $lte: Date };
       tags?: { $in: string[] };
     } = {
-      account: accounts[0]?._id,
+      account: account._id,
     };
 
     if (rest?.pair) findBy.pair = rest.pair;
@@ -68,7 +66,7 @@ export class TradesService {
       .populate(['tags']);
 
     const results = await tradesQuery;
-    const totalCount = await this.tradeModel.find({ account: accounts[0]?._id }).countDocuments();
+    const totalCount = await this.tradeModel.find({ account: account._id }).countDocuments();
     let count = totalCount;
 
     if (Object.keys(findBy).length > 1) {
@@ -93,11 +91,10 @@ export class TradesService {
         throw new NotFoundException();
       }
     } else {
-      const accounts = await this.accountsService.findMainAccount(user);
-      if (!Array.isArray(accounts)) {
+      account = await this.accountsService.findMainAccount(user);
+      if (!account) {
         throw new NotFoundException();
       }
-      account = accounts[0];
     }
 
     const trade = await this.tradeModel.create({ ...createTradeDto, user: userId, account, files: [], tags });
