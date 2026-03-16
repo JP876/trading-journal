@@ -1,10 +1,12 @@
 import { useEffect } from 'react';
+import { client } from './lib/client';
+import transformToFormData from './lib/transformToFormData';
 
 const App = () => {
   useEffect(() => {
-    fetch('/api/v1').then(async (res) => {
-      console.log(await res.text());
-    });
+    (async () => {
+      // await client.post('trades', transformToFormData({ takeProfit: 20 }));
+    })();
   }, []);
 
   return <></>;
