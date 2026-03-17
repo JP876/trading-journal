@@ -69,19 +69,4 @@ export class AuthService {
   public removeCookieFromResponse(res: Response, type: TokenType) {
     res.cookie(type, '', { httpOnly: true, expires: new Date(Date.now() + 1_000) });
   }
-
-  public async signIn(signInDto: SignInDto) {
-    const user = await this.usersService.findOneBy({ email: signInDto.email });
-    const [error, isEqual] = await withCatch(this.hashingProvider.comparePassword(signInDto.password, user.password));
-
-    if (error) {
-      throw new RequestTimeoutException(error, {
-        description: 'Could not compare passwords',
-      });
-    }
-    if (!isEqual) {
-      throw new UnauthorizedException('Incorrect password');
-    }
-    return user;
-  }
 }

@@ -3,7 +3,6 @@ import { FormDataRequest } from 'nestjs-form-data';
 
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/providers/users.service';
-import { RefreshTokenPayload } from './interfaces';
 import { Auth } from './decorators/auth.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserResultType } from 'src/users/types';
@@ -29,6 +28,7 @@ export class AuthController {
   @Auth('NONE')
   @UseGuards(LocalAuthGuard)
   @UseInterceptors(LoginInterceptor)
+  @HttpCode(HttpStatus.OK)
   @Post('login')
   public loginUser(@Req() request: RequestWithUser) {
     return request.user;
@@ -46,7 +46,7 @@ export class AuthController {
   @UseGuards(JwtRefreshAuthGuard)
   @UseInterceptors(RefreshInterceptor)
   @Post('refresh')
-  public refresh(@Req() request: RequestWithUser<RefreshTokenPayload>) {
+  public refresh(@Req() request: RequestWithUser) {
     return { id: request.user.id };
   }
 }

@@ -2,15 +2,16 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { NestjsFormDataModule } from 'nestjs-form-data';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { join } from 'path';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TradesModule } from './trades/trades.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { TradingSessionsModule } from './trading-sessions/trading-sessions.module';
 import appConfig from './config/app.config';
 import envValidation from './config/env.validation';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
@@ -54,6 +55,7 @@ const ENV = process.env.NODE_ENV;
     TradesModule,
     AuthModule,
     UsersModule,
+    TradingSessionsModule,
   ],
 })
 export class AppModule {}

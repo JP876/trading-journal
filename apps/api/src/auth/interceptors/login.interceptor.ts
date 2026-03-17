@@ -3,7 +3,6 @@ import { type Response as ExpressResponse } from 'express';
 
 import { AuthService } from '../providers/auth.service';
 import { RequestWithUser } from '../types';
-import { RefreshTokenPayload } from '../interfaces';
 
 @Injectable()
 export class LoginInterceptor implements NestInterceptor {
@@ -11,10 +10,12 @@ export class LoginInterceptor implements NestInterceptor {
 
   async intercept(context: ExecutionContext, next: CallHandler<any>) {
     const response: ExpressResponse = context.switchToHttp().getResponse();
-    const request: RequestWithUser<RefreshTokenPayload> = context.switchToHttp().getRequest();
+    const request: RequestWithUser = context.switchToHttp().getRequest();
 
-    await this.authService.attachCookieToResponse(response, request.user, 'ACCESS');
-    await this.authService.attachCookieToResponse(response, request.user, 'REFRESH');
+    await Promise.all([
+      this.authService.attachCookieToResponse(response, request.user, 'ACCESS'),
+      this.authService.attachCookieToResponse(response, request.user, 'REFRESH'),
+    ]);
 
     return next.handle();
   }
