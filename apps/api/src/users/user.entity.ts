@@ -19,9 +19,11 @@ export class User {
   @Column({ type: 'text', nullable: true })
   image: string | null;
 
+  @Exclude({ toPlainOnly: true })
   @CreateDateColumn({ type: 'text' })
   createdAt: Date;
 
+  @Exclude({ toPlainOnly: true })
   @UpdateDateColumn({ type: 'text' })
   updatedAt: Date;
 }

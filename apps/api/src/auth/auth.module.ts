@@ -8,10 +8,19 @@ import { AuthService } from './providers/auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { HashingProvider } from './providers/hashing.provider';
 import { BcryptProvider } from './providers/bcrypt.provider';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, { provide: HashingProvider, useClass: BcryptProvider }],
+  providers: [
+    AuthService,
+    { provide: HashingProvider, useClass: BcryptProvider },
+    LocalStrategy,
+    JwtStrategy,
+    JwtRefreshStrategy,
+  ],
   exports: [HashingProvider],
   imports: [
     forwardRef(() => UsersModule),

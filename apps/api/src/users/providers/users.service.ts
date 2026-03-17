@@ -1,6 +1,13 @@
-import { BadRequestException, forwardRef, Inject, Injectable, RequestTimeoutException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { User } from '../user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -16,7 +23,22 @@ export class UsersService {
     private readonly hashingProvider: HashingProvider
   ) {}
 
-  public async create(createUserDto: CreateUserDto) {
+  public async findOneBy(options: FindOptionsWhere<User>): Promise<User> {
+    const [findError, existingUser] = await withCatch(this.usersRepository.findOneBy(options));
+
+    if (findError) {
+      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
+        description: findError.message,
+      });
+    }
+    if (!existingUser) {
+      throw new NotFoundException(`User does not exist`);
+    }
+
+    return existingUser;
+  }
+
+  public async create(createUserDto: CreateUserDto): Promise<User> {
     const [findError, existingUser] = await withCatch(
       this.usersRepository.findOne({
         where: { email: createUserDto.email },
