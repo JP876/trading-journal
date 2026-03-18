@@ -1,0 +1,39 @@
+pair,asset_class,base_iso,base_name,base_country,quote_iso,quote_name,quote_country
+EUR/USD,FX_MAJOR,EUR,Euro,Eurozone,USD,US Dollar,United States
+USD/JPY,FX_MAJOR,USD,US Dollar,United States,JPY,Japanese Yen,Japan
+GBP/USD,FX_MAJOR,GBP,British Pound,United Kingdom,USD,US Dollar,United States
+USD/CHF,FX_MAJOR,USD,US Dollar,United States,CHF,Swiss Franc,Switzerland
+USD/CAD,FX_MAJOR,USD,US Dollar,United States,CAD,Canadian Dollar,Canada
+AUD/USD,FX_MAJOR,AUD,Australian Dollar,Australia,USD,US Dollar,United States
+NZD/USD,FX_MAJOR,NZD,New Zealand Dollar,New Zealand,USD,US Dollar,United States
+EUR/GBP,FX_MINOR,EUR,Euro,Eurozone,GBP,British Pound,United Kingdom
+EUR/JPY,FX_MINOR,EUR,Euro,Eurozone,JPY,Japanese Yen,Japan
+EUR/CHF,FX_MINOR,EUR,Euro,Eurozone,CHF,Swiss Franc,Switzerland
+EUR/AUD,FX_MINOR,EUR,Euro,Eurozone,AUD,Australian Dollar,Australia
+EUR/CAD,FX_MINOR,EUR,Euro,Eurozone,CAD,Canadian Dollar,Canada
+EUR/NZD,FX_MINOR,EUR,Euro,Eurozone,NZD,New Zealand Dollar,New Zealand
+GBP/JPY,FX_MINOR,GBP,British Pound,United Kingdom,JPY,Japanese Yen,Japan
+GBP/CHF,FX_MINOR,GBP,British Pound,United Kingdom,CHF,Swiss Franc,Switzerland
+GBP/AUD,FX_MINOR,GBP,British Pound,United Kingdom,AUD,Australian Dollar,Australia
+GBP/CAD,FX_MINOR,GBP,British Pound,United Kingdom,CAD,Canadian Dollar,Canada
+GBP/NZD,FX_MINOR,GBP,British Pound,United Kingdom,NZD,New Zealand Dollar,New Zealand
+AUD/JPY,FX_MINOR,AUD,Australian Dollar,Australia,JPY,Japanese Yen,Japan
+AUD/NZD,FX_MINOR,AUD,Australian Dollar,Australia,NZD,New Zealand Dollar,New Zealand
+AUD/CHF,FX_MINOR,AUD,Australian Dollar,Australia,CHF,Swiss Franc,Switzerland
+AUD/CAD,FX_MINOR,AUD,Australian Dollar,Australia,CAD,Canadian Dollar,Canada
+NZD/JPY,FX_MINOR,NZD,New Zealand Dollar,New Zealand,JPY,Japanese Yen,Japan
+NZD/CHF,FX_MINOR,NZD,New Zealand Dollar,New Zealand,CHF,Swiss Franc,Switzerland
+NZD/CAD,FX_MINOR,NZD,New Zealand Dollar,New Zealand,CAD,Canadian Dollar,Canada
+CHF/JPY,FX_MINOR,CHF,Swiss Franc,Switzerland,JPY,Japanese Yen,Japan
+CAD/JPY,FX_MINOR,CAD,Canadian Dollar,Canada,JPY,Japanese Yen,Japan
+CAD/CHF,FX_MINOR,CAD,Canadian Dollar,Canada,CHF,Swiss Franc,Switzerland
+USD/TRY,FX_EXOTIC,USD,US Dollar,United States,TRY,Turkish Lira,Turkey
+EUR/TRY,FX_EXOTIC,EUR,Euro,Eurozone,TRY,Turkish Lira,Turkey
+USD/ZAR,FX_EXOTIC,USD,US Dollar,United States,ZAR,South African Rand,South Africa
+USD/SEK,FX_EXOTIC,USD,US Dollar,United States,SEK,Swedish Krona,Sweden
+USD/NOK,FX_EXOTIC,USD,US Dollar,United States,NOK,Norwegian Krone,Norway
+USD/DKK,FX_EXOTIC,USD,US Dollar,United States,DKK,Danish Krone,Denmark
+USD/HKD,FX_EXOTIC,USD,US Dollar,United States,HKD,Hong Kong Dollar,Hong Kong
+USD/SGD,FX_EXOTIC,USD,US Dollar,United States,SGD,Singapore Dollar,Singapore
+USD/INR,FX_EXOTIC,USD,US Dollar,United States,INR,Indian Rupee,India
+USD/CNH,FX_EXOTIC,USD,US Dollar,United States,CNH,Chinese Yuan (Offshore),China

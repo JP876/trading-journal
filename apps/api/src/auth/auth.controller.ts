@@ -1,5 +1,4 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
-import { FormDataRequest } from 'nestjs-form-data';
 
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/providers/users.service';
@@ -17,9 +16,8 @@ export class AuthController {
   constructor(private readonly usersService: UsersService) {}
 
   @Auth('NONE')
-  @Post('register')
   @HttpCode(HttpStatus.OK)
-  @FormDataRequest()
+  @Post('register')
   public async registerUser(@Body() createUserDto: CreateUserDto): Promise<UserResultType> {
     const user = await this.usersService.create(createUserDto);
     return user;
@@ -34,9 +32,9 @@ export class AuthController {
     return request.user;
   }
 
-  @Post('logout')
   @HttpCode(HttpStatus.OK)
   @UseInterceptors(LogoutInterceptor)
+  @Post('logout')
   public logOut() {
     return { message: 'Success' };
   }
