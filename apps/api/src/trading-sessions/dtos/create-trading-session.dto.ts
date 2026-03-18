@@ -10,7 +10,7 @@ export class CreateTradingSession {
   @IsString()
   @IsOptional()
   @MinLength(2)
-  @MaxLength(96)
+  @MaxLength(200)
   description?: string;
 
   @IsInt()

@@ -1,4 +1,4 @@
-import { Injectable, RequestTimeoutException } from '@nestjs/common';
+import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -6,6 +6,7 @@ import { TradingSession } from '../trading-session.entity';
 import withCatch from 'src/utils/withCatch';
 import { User } from 'src/users/user.entity';
 import { CreateTradingSession } from '../dtos/create-trading-session.dto';
+import { UpdateTradingSession } from '../dtos/update-trading-session.dto';
 
 @Injectable()
 export class TradingSessionsService {
@@ -35,5 +36,34 @@ export class TradingSessionsService {
     }
 
     return created;
+  }
+
+  public async update(id: number, session: UpdateTradingSession) {
+    const [findError, existingSession] = await withCatch(this.tradingSessionsRepository.findOneBy({ id }));
+
+    if (findError) {
+      throw new RequestTimeoutException('Unable to process your request at the moment please try later');
+    }
+    if (!existingSession) {
+      throw new NotFoundException(`The trading session with ID: ${id} does not exist.`);
+    }
+
+    existingSession.title = session.title ?? existingSession.title;
+    existingSession.description = session.description ?? existingSession.description;
+    existingSession.isMain = session.isMain ?? existingSession.isMain;
+
+    const [saveError, savedSession] = await withCatch(this.tradingSessionsRepository.save(existingSession));
+    if (saveError) {
+      throw new RequestTimeoutException('Unable to process your request at the moment please try later');
+    }
+    return savedSession;
+  }
+
+  public async delete(id: number) {
+    const [err] = await withCatch(this.tradingSessionsRepository.delete(id));
+    if (err) {
+      throw new RequestTimeoutException('Unable to process your request at the moment please try later');
+    }
+    return { id, message: 'Success' };
   }
 }

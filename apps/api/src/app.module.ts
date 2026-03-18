@@ -12,6 +12,7 @@ import { TradesModule } from './trades/trades.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { TradingSessionsModule } from './trading-sessions/trading-sessions.module';
+import { PairsModule } from './pairs/pairs.module';
 import appConfig from './config/app.config';
 import envValidation from './config/env.validation';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
@@ -56,6 +57,7 @@ const ENV = process.env.NODE_ENV;
     AuthModule,
     UsersModule,
     TradingSessionsModule,
+    PairsModule,
   ],
 })
 export class AppModule {}
