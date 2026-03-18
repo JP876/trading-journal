@@ -1,5 +1,7 @@
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+import { Trade } from 'src/trades/trade.entity';
 import { User } from 'src/users/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('trading-sessions')
 export class TradingSession {
@@ -17,4 +19,7 @@ export class TradingSession {
 
   @ManyToOne(() => User, (user) => user.id)
   user: User;
+
+  @OneToMany(() => Trade, (trade) => trade.id)
+  trades?: Trade[];
 }

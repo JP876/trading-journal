@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { FormDataRequest } from 'nestjs-form-data';
 
 import { TradesService } from './providers/trades.service';
 import { CreateTradeDto } from './dtos/create-trade.dto';
-import { FormDataRequest } from 'nestjs-form-data';
 
 @Controller('trades')
 export class TradesController {
@@ -17,5 +17,10 @@ export class TradesController {
   @FormDataRequest()
   public createTrade(@Body() createTradeDto: CreateTradeDto) {
     return this.tradesService.create(createTradeDto);
+  }
+
+  @Delete(':id')
+  public deleteTradingSession(@Param('id') id: number) {
+    return this.tradesService.delete(id);
   }
 }

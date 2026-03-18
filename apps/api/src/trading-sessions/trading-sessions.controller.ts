@@ -28,7 +28,6 @@ export class TradingSessionsController {
   }
 
   @Delete(':id')
-  @FormDataRequest()
   public deleteTradingSession(@Param('id') id: number) {
     return this.tradingSessionService.delete(id);
   }

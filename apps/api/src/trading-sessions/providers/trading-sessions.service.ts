@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 
 import { TradingSession } from '../trading-session.entity';
 import withCatch from 'src/utils/withCatch';
@@ -14,6 +14,21 @@ export class TradingSessionsService {
     @InjectRepository(TradingSession)
     private readonly tradingSessionsRepository: Repository<TradingSession>
   ) {}
+
+  public async findOneBy(options: FindOptionsWhere<TradingSession>): Promise<TradingSession> {
+    const [findError, session] = await withCatch(this.tradingSessionsRepository.findOneBy(options));
+
+    if (findError) {
+      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
+        description: findError.message,
+      });
+    }
+    if (!session) {
+      throw new NotFoundException(`Trading session does not exist`);
+    }
+
+    return session;
+  }
 
   public async findAll(user: User) {
     const [error, sessions] = await withCatch(this.tradingSessionsRepository.find({ where: { user } }));

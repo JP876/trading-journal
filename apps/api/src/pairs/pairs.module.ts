@@ -9,5 +9,6 @@ import { Pair } from './pair.entitiy';
   controllers: [PairsController],
   providers: [PairsService],
   imports: [TypeOrmModule.forFeature([Pair])],
+  exports: [PairsService],
 })
 export class PairsModule {}

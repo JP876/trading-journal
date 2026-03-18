@@ -9,5 +9,6 @@ import { TradingSession } from './trading-session.entity';
   controllers: [TradingSessionsController],
   providers: [TradingSessionsService],
   imports: [TypeOrmModule.forFeature([TradingSession])],
+  exports: [TradingSessionsService],
 })
 export class TradingSessionsModule {}
