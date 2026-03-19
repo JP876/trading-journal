@@ -1,5 +1,5 @@
-import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { APP_GUARD, APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE, Reflector } from '@nestjs/core';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NestjsFormDataModule } from 'nestjs-form-data';
@@ -26,6 +26,19 @@ const ENV = process.env.NODE_ENV;
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: ThrottlerGuard },
+    {
+      provide: APP_PIPE,
+      useFactory: () => {
+        return new ValidationPipe({
+          whitelist: true,
+          forbidNonWhitelisted: true,
+          transform: true,
+          transformOptions: {
+            enableImplicitConversion: true,
+          },
+        });
+      },
+    },
     {
       provide: APP_INTERCEPTOR,
       inject: [Reflector],
