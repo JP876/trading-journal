@@ -15,7 +15,7 @@ export class TradingSessionsService {
     private readonly tradingSessionsRepository: Repository<TradingSession>
   ) {}
 
-  public async findOneBy(options: FindOptionsWhere<TradingSession>): Promise<TradingSession> {
+  public async findOneBy(options: FindOptionsWhere<TradingSession>) {
     const [findError, session] = await withCatch(this.tradingSessionsRepository.findOneBy(options));
 
     if (findError) {
@@ -53,14 +53,22 @@ export class TradingSessionsService {
     return created;
   }
 
-  public async update(id: number, session: UpdateTradingSessionDto) {
-    const existingSession = await this.findOneBy({ id });
+  public async update(id: number, updateSession: UpdateTradingSessionDto) {
+    const session = await this.findOneBy({ id });
 
-    existingSession.title = session.title ?? existingSession.title;
-    existingSession.description = session.description ?? existingSession.description;
-    existingSession.isMain = session.isMain ?? existingSession.isMain;
+    session.title = updateSession.title ?? session.title;
+    session.description = updateSession.description ?? session.description;
+    session.isMain = updateSession.isMain ?? session.isMain;
 
-    const [saveError, savedSession] = await withCatch(this.tradingSessionsRepository.save(existingSession));
+    if (updateSession.isMain) {
+      const [err, mainSessions] = await withCatch(this.tradingSessionsRepository.findBy({ isMain: 1 }));
+      if (err) {
+        throw new RequestTimeoutException('Unable to process your request at the moment please try later');
+      }
+      await this.tradingSessionsRepository.save(mainSessions.map((s) => ({ ...s, isMain: 0 })));
+    }
+
+    const [saveError, savedSession] = await withCatch(this.tradingSessionsRepository.save(session));
     if (saveError) {
       throw new RequestTimeoutException('Unable to process your request at the moment please try later');
     }

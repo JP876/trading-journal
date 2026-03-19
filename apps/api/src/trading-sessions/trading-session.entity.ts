@@ -15,9 +15,9 @@ export class TradingSession {
   description: string | null;
 
   @Column({ type: 'int', nullable: true, default: 0 })
-  isMain: number | null;
+  isMain: number;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => Trade, (trade) => trade.id)
