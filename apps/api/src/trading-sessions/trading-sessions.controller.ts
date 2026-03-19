@@ -3,8 +3,8 @@ import { FormDataRequest } from 'nestjs-form-data';
 
 import { TradingSessionsService } from './providers/trading-sessions.service';
 import { RequestWithUser } from 'src/auth/types';
-import { CreateTradingSession } from './dtos/create-trading-session.dto';
-import { UpdateTradingSession } from './dtos/update-trading-session.dto';
+import { CreateTradingSessionDto } from './dtos/create-trading-session.dto';
+import { UpdateTradingSessionDto } from './dtos/update-trading-session.dto';
 
 @Controller('trading-sessions')
 export class TradingSessionsController {
@@ -17,13 +17,13 @@ export class TradingSessionsController {
 
   @Post()
   @FormDataRequest()
-  public createTradingSession(@Req() requset: RequestWithUser, @Body() session: CreateTradingSession) {
+  public CreateTradingSessionDto(@Req() requset: RequestWithUser, @Body() session: CreateTradingSessionDto) {
     return this.tradingSessionService.create(requset.user, session);
   }
 
   @Patch(':id')
   @FormDataRequest()
-  public updateTradingSession(@Body() session: UpdateTradingSession, @Param('id') id: number) {
+  public UpdateTradingSessionDto(@Body() session: UpdateTradingSessionDto, @Param('id') id: number) {
     return this.tradingSessionService.update(id, session);
   }
 

@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 
-export class CreateTradingSession {
+export class CreateTradingSessionDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(2)

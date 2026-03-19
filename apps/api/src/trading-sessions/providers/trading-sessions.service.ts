@@ -5,8 +5,8 @@ import { FindOptionsWhere, Repository } from 'typeorm';
 import { TradingSession } from '../trading-session.entity';
 import withCatch from 'src/utils/withCatch';
 import { User } from 'src/users/user.entity';
-import { CreateTradingSession } from '../dtos/create-trading-session.dto';
-import { UpdateTradingSession } from '../dtos/update-trading-session.dto';
+import { CreateTradingSessionDto } from '../dtos/create-trading-session.dto';
+import { UpdateTradingSessionDto } from '../dtos/update-trading-session.dto';
 
 @Injectable()
 export class TradingSessionsService {
@@ -40,7 +40,7 @@ export class TradingSessionsService {
     return Array.isArray(sessions) ? sessions : [];
   }
 
-  public async create(user: User, session: CreateTradingSession) {
+  public async create(user: User, session: CreateTradingSessionDto) {
     const newSession = this.tradingSessionsRepository.create({ ...session, user });
     const [saveError, created] = await withCatch(this.tradingSessionsRepository.save(newSession));
 
@@ -53,15 +53,8 @@ export class TradingSessionsService {
     return created;
   }
 
-  public async update(id: number, session: UpdateTradingSession) {
-    const [findError, existingSession] = await withCatch(this.tradingSessionsRepository.findOneBy({ id }));
-
-    if (findError) {
-      throw new RequestTimeoutException('Unable to process your request at the moment please try later');
-    }
-    if (!existingSession) {
-      throw new NotFoundException(`The trading session with ID: ${id} does not exist.`);
-    }
+  public async update(id: number, session: UpdateTradingSessionDto) {
+    const existingSession = await this.findOneBy({ id });
 
     existingSession.title = session.title ?? existingSession.title;
     existingSession.description = session.description ?? existingSession.description;
@@ -75,10 +68,13 @@ export class TradingSessionsService {
   }
 
   public async delete(id: number) {
+    await this.findOneBy({ id });
     const [err] = await withCatch(this.tradingSessionsRepository.delete(id));
+
     if (err) {
       throw new RequestTimeoutException('Unable to process your request at the moment please try later');
     }
+
     return { id, message: 'Success' };
   }
 }

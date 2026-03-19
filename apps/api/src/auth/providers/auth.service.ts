@@ -22,7 +22,7 @@ export class AuthService {
   ) {}
 
   private async signToken(userInfo: TokenPayload, type: TokenType) {
-    return await this.jwtService.signAsync(
+    const sign = this.jwtService.signAsync(
       { id: userInfo.id, email: userInfo.email },
       {
         audience: this.appConfiguration.jwtTokenAudience,
@@ -34,6 +34,14 @@ export class AuthService {
             : this.appConfiguration.refreshExpirationTime * 1_000,
       }
     );
+    const [err, token] = await withCatch(sign);
+
+    if (err) {
+      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
+        description: err.message,
+      });
+    }
+    return token;
   }
 
   public async validateUser(signInDto: SignInDto) {
@@ -46,7 +54,7 @@ export class AuthService {
       });
     }
     if (!isEqual) {
-      throw new UnauthorizedException('Incorrect password');
+      throw new UnauthorizedException('Incorrect credentials');
     }
     return user;
   }
