@@ -2,8 +2,17 @@
 const Database = require('better-sqlite3');
 const csv = require('csv-parser');
 const fs = require('fs');
+const { join } = require('path');
+require('dotenv').config({ path: join(__dirname, '../../', '.env') });
+
+const DB_NAME = process.env.DB_NAME;
 
 ((db) => {
+  if (!db) {
+    console.log(`DB not found.`);
+    return;
+  }
+
   db.exec(`
     CREATE TABLE IF NOT EXISTS pairs (
       id INTEGER PRIMARY KEY,
@@ -31,7 +40,7 @@ const fs = require('fs');
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)  
   `);
 
-  fs.createReadStream('pairs.csv')
+  fs.createReadStream(join(__dirname, 'pairs.csv'))
     .pipe(csv({ separator: ',' }))
     .on('data', (row) => {
       insertRow.run(
@@ -49,9 +58,11 @@ const fs = require('fs');
     .on('end', () => {
       console.log('CSV file successfully imported and table updated.');
       db.close();
+      return;
     })
     .on('error', (err) => {
       console.error('Error processing CSV:', err);
       db.close();
+      return;
     });
-})(new Database('trading_journal.db.sqlite3'));
+})(new Database(DB_NAME));

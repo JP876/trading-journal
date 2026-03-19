@@ -3,6 +3,8 @@ import { registerAs } from '@nestjs/config';
 export default registerAs('appConfig', () => ({
   environment: process.env.NODE_ENV || 'production',
   port: process.env.PORT || 4000,
+  throttleTtl: process.env.THROTTLE_TTL,
+  throttleLimit: process.env.THROTTLE_LIMIT,
   dbName: process.env.DB_NAME,
   jwtSecret: process.env.JWT_SECRET,
   jwtSecretRefresh: process.env.JWT_SECRET_REFRESH,

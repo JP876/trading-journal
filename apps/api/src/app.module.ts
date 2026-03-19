@@ -4,6 +4,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NestjsFormDataModule } from 'nestjs-form-data';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
 
 import { AppController } from './app.controller';
@@ -24,6 +25,7 @@ const ENV = process.env.NODE_ENV;
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     {
       provide: APP_INTERCEPTOR,
       inject: [Reflector],
@@ -37,6 +39,15 @@ const ENV = process.env.NODE_ENV;
       rootPath: join(__dirname, '../..', 'client', 'dist'),
     }),
     NestjsFormDataModule.config({ isGlobal: true }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        throttlers: [
+          { ttl: +configService.get('appConfig.throttleTtl'), limit: +configService.get('appConfig.throttleLimit') },
+        ],
+      }),
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [appConfig],

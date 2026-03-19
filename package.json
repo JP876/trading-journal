@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "start": "node apps/api/dist/main"
+    "start": "node apps/api/importPairs.js && node apps/api/dist/main"
   },
   "workspaces": [
     "apps/*"
