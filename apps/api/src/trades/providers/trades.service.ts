@@ -8,6 +8,8 @@ import { PairsService } from 'src/pairs/providers/pairs.service';
 import { TradingSessionsService } from 'src/trading-sessions/providers/trading-sessions.service';
 import withCatch from 'src/utils/withCatch';
 import { UpdateTradeDto } from '../dtos/update-trade.dto';
+import { GetTradesDto } from '../dtos/get-trades.dto';
+import { Paginated } from 'src/common/pagination/types';
 
 @Injectable()
 export class TradesService {
@@ -28,14 +30,25 @@ export class TradesService {
     return saved;
   }
 
-  public async findAll() {
-    const [err, trades] = await withCatch(this.tradesRepository.find());
+  public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
+    const { limit, page } = tradesQuery;
+    const [err, trades] = await withCatch(
+      this.tradesRepository.find({
+        take: limit,
+        skip: (page - 1) * limit,
+      })
+    );
+
     if (err) {
       throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
         description: err.message,
       });
     }
-    return trades;
+
+    const totalItems = await this.tradesRepository.count();
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, data: trades };
   }
 
   public async findOneBy(options: FindOptionsWhere<Trade>) {

@@ -1,17 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 
 import { TradesService } from './providers/trades.service';
 import { CreateTradeDto } from './dtos/create-trade.dto';
 import { UpdateTradeDto } from './dtos/update-trade.dto';
+import { GetTradesDto } from './dtos/get-trades.dto';
 
 @Controller('trades')
 export class TradesController {
   constructor(private readonly tradesService: TradesService) {}
 
   @Get()
-  public getTrades() {
-    return this.tradesService.findAll();
+  public getTrades(@Query() tradesQuery: GetTradesDto) {
+    return this.tradesService.findAll(tradesQuery);
   }
 
   @Get(':id')
