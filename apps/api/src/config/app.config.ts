@@ -6,6 +6,8 @@ export default registerAs('appConfig', () => ({
   throttleTtl: process.env.THROTTLE_TTL,
   throttleLimit: process.env.THROTTLE_LIMIT,
   dbName: process.env.DB_NAME,
+  dbSynchronize: process.env.DB_SYNCHRONIZE,
+  dbEnableWal: process.env.DB_ENABLE_WAL,
   jwtSecret: process.env.JWT_SECRET,
   jwtSecretRefresh: process.env.JWT_SECRET_REFRESH,
   accessExpirationTime: parseInt(process.env.ACCESS_EXPIRATION_TIME || '600'), // in seconds

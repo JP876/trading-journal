@@ -5,6 +5,8 @@ export default Joi.object({
   THROTTLE_TTL: Joi.number().required().default(60_000),
   THROTTLE_LIMIT: Joi.number().required().default(100),
   DB_NAME: Joi.string().required(),
+  DB_SYNCHRONIZE: Joi.string().required(),
+  DB_ENABLE_WAL: Joi.string().required(),
   JWT_SECRET: Joi.string().required(),
   JWT_SECRET_REFRESH: Joi.string().required(),
   ACCESS_EXPIRATION_TIME: Joi.number().required(),

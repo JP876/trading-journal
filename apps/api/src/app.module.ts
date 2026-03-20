@@ -70,12 +70,19 @@ const ENV = process.env.NODE_ENV;
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'better-sqlite3',
-        database: configService.get('appConfig.dbName'),
-        synchronize: true,
-        autoLoadEntities: true,
-      }),
+      useFactory: (configService: ConfigService) => {
+        const dbName = configService.get<string>('appConfig.dbName') || '';
+        const dbSynchronize = configService.get<string>('appConfig.dbSynchronize') || '0';
+        const dbEnableWal = configService.get<string>('appConfig.dbEnableWal') || '0';
+
+        return {
+          type: 'better-sqlite3',
+          database: join(__dirname, '../', dbName),
+          synchronize: !!+dbSynchronize,
+          autoLoadEntities: true,
+          enableWAL: !!+dbEnableWal,
+        };
+      },
     }),
     TradesModule,
     AuthModule,

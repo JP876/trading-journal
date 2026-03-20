@@ -65,4 +65,4 @@ const DB_NAME = process.env.DB_NAME;
       db.close();
       return;
     });
-})(new Database(DB_NAME));
+})(new Database(join(__dirname, DB_NAME)));
