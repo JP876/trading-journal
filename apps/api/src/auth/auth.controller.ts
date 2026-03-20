@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards, UseInterceptors } from '@nestjs/common';
 
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/providers/users.service';
@@ -14,6 +14,11 @@ import { RequestWithUser } from './types';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get('me')
+  public getUser(@Req() request: RequestWithUser) {
+    return request.user;
+  }
 
   @Auth('NONE')
   @HttpCode(HttpStatus.OK)
