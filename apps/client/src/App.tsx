@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Box, CssBaseline } from '@mui/material';
 
 const App = () => {
   useEffect(() => {
@@ -7,7 +8,11 @@ const App = () => {
     })();
   }, []);
 
-  return <></>;
+  return (
+    <Box component="main">
+      <CssBaseline />
+    </Box>
+  );
 };
 
 export default App;
