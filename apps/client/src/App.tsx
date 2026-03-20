@@ -1,5 +1,17 @@
 import { useEffect } from 'react';
 import { Box, CssBaseline } from '@mui/material';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
+
+import SnackbarContainer from './components/SnackbarContainer';
+import { routeTree } from './routeTree.gen';
+
+const router = createRouter({ routeTree });
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 const App = () => {
   useEffect(() => {
@@ -11,6 +23,8 @@ const App = () => {
   return (
     <Box component="main">
       <CssBaseline />
+      <SnackbarContainer />
+      <RouterProvider router={router} />
     </Box>
   );
 };
