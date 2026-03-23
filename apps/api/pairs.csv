@@ -1,4 +1,4 @@
-pair,asset_class,base_iso,base_name,base_country,quote_iso,quote_name,quote_country
+pair,assetClass,baseIso,baseName,baseCountry,quoteIso,quoteName,quoteCountry
 EUR/USD,FX_MAJOR,EUR,Euro,Eurozone,USD,US Dollar,United States
 USD/JPY,FX_MAJOR,USD,US Dollar,United States,JPY,Japanese Yen,Japan
 GBP/USD,FX_MAJOR,GBP,British Pound,United Kingdom,USD,US Dollar,United States
