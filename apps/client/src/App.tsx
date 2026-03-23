@@ -4,8 +4,17 @@ import { createRouter, RouterProvider } from '@tanstack/react-router';
 
 import SnackbarContainer from './components/SnackbarContainer';
 import { routeTree } from './routeTree.gen';
+import { queryClient } from './lib/queryClient';
 
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreload: 'intent',
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
+});
 
 declare module '@tanstack/react-router' {
   interface Register {

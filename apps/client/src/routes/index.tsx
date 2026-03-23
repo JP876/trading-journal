@@ -4,10 +4,10 @@ import { createFileRoute, Link } from '@tanstack/react-router';
 import getIcon from '../components/getIcon';
 
 export const Route = createFileRoute('/')({
-  component: RouteComponent,
+  component: HomeComponent,
 });
 
-function RouteComponent() {
+function HomeComponent() {
   return (
     <Stack direction="row" alignItems="center" justifyContent="center" sx={{ height: '100vh', width: '100vw' }}>
       <Stack>

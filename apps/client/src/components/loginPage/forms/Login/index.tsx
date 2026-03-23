@@ -13,7 +13,7 @@ import { defaultMsg } from '../../../../consts';
 import type { User } from '../../../../types/user';
 
 const LoginForm = () => {
-  const navigate = useNavigate({ from: '/login/' });
+  const navigate = useNavigate({ from: '/login' });
   const mutation = useMutation({ mutationFn: loginUser });
 
   const { openSnackbar } = useSnackbar();
@@ -31,7 +31,7 @@ const LoginForm = () => {
         return;
       }
 
-      navigate({ to: '/journal' });
+      navigate({ to: '/dashboard' });
       setTimeout(() => {
         openSnackbar({ severity: 'success', message: `Welcome ${user.name}, you're now logged in.` });
       }, 200);

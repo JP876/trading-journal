@@ -3,10 +3,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import GoogleIcon from '@mui/icons-material/Google';
 
-import RegisterForm from '../../components/loginPage/forms/Register';
-import LoginForm from '../../components/loginPage/forms/Login';
+import LoginForm from '../components/loginPage/forms/Login';
+import RegisterForm from '../components/loginPage/forms/Register';
 
-export const Route = createFileRoute('/login/')({
+export const Route = createFileRoute('/login')({
   component: RouteComponent,
 });
 
