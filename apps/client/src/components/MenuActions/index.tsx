@@ -18,6 +18,7 @@ const MenuActionsItem = ({
   isLoading,
   label,
   icon,
+  id,
   onClick,
   badgeContent,
   badgeProps,
@@ -30,6 +31,7 @@ const MenuActionsItem = ({
 
   return (
     <MenuItem
+      id={id || `menu-item-${label}`}
       sx={{ width: '100%' }}
       disableRipple
       {...menuItemProps}

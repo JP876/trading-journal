@@ -8,6 +8,7 @@ import { navigationDrawer } from '../../atoms/navigationDrawer';
 import getIcon from '../getIcon';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
+import ColorModeMain from './ColorMode';
 
 const MainContainer = memo(() => {
   return (
@@ -43,6 +44,7 @@ const NavigationMain = () => {
             </Stack>
 
             <Stack direction="row" alignItems="center" gap={4}>
+              <ColorModeMain />
               <ProfileMain />
             </Stack>
           </Stack>

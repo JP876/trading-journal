@@ -19,8 +19,9 @@ export type MenuActionsItemProps = {
   label: string;
   icon: React.ReactNode;
   onClick: (event: React.MouseEvent<HTMLLIElement, MouseEvent>, handleClose: () => void) => void;
+  id?: string;
   isLoading?: boolean;
-  menuItemProps?: Omit<MenuItemProps, 'onClick'>;
+  menuItemProps?: Omit<MenuItemProps, 'onClick' | 'id'>;
   badgeContent?: number;
   badgeProps?: Omit<BadgeProps, 'badgeContent'>;
 };
