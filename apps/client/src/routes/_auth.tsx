@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import { Box } from '@mui/material';
-import { createFileRoute, Navigate, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Navigate } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 
 import { getLoggedInUser, refreshToken } from '../api/auth';
 import { userAtom } from '../atoms/user';
+import NavigationMain from '../components/Navigation';
 
 export const Route = createFileRoute('/_auth')({
   component: RouteComponent,
@@ -40,9 +40,5 @@ function RouteComponent() {
     return <Navigate to="/login" />;
   }
 
-  return (
-    <Box>
-      <Outlet />
-    </Box>
-  );
+  return <NavigationMain />;
 }
