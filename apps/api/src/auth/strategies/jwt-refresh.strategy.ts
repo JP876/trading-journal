@@ -6,14 +6,10 @@ import { Request } from 'express';
 
 import { AUTH_REFRESH } from '../consts';
 import { RefreshTokenPayload } from '../interfaces';
-import { UsersService } from 'src/users/providers/users.service';
 
 @Injectable()
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly userService: UsersService
-  ) {
+  constructor(private readonly configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
@@ -22,12 +18,12 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
           return token;
         },
       ]),
+      ignoreExpiration: false,
       secretOrKey: configService.getOrThrow('appConfig.jwtSecretRefresh'),
     });
   }
 
-  public async validate(payload: RefreshTokenPayload) {
-    const user = await this.userService.findOneBy({ id: payload.id });
-    return user;
+  public validate(payload: RefreshTokenPayload) {
+    return payload;
   }
 }
