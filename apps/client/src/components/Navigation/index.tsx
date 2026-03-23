@@ -7,6 +7,7 @@ import { AppBar, Drawer, DrawerHeader } from './styledComps';
 import { navigationDrawer } from '../../atoms/navigationDrawer';
 import getIcon from '../getIcon';
 import NavigationList from './NavigationList';
+import ProfileMain from './Profile';
 
 const MainContainer = memo(() => {
   return (
@@ -41,7 +42,9 @@ const NavigationMain = () => {
               <Typography variant="h6">LogMyTrades</Typography>
             </Stack>
 
-            <Stack direction="row" alignItems="center" gap={4}></Stack>
+            <Stack direction="row" alignItems="center" gap={4}>
+              <ProfileMain />
+            </Stack>
           </Stack>
         </Toolbar>
       </AppBar>

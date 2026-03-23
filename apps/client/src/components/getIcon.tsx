@@ -10,6 +10,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import NotesIcon from '@mui/icons-material/Notes';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 type IconVariants =
   | 'login'
@@ -22,7 +23,8 @@ type IconVariants =
   | 'dashboard'
   | 'notes'
   | 'appRegistration'
-  | 'candlestick';
+  | 'candlestick'
+  | 'moreVert';
 
 const getIcon = (variant: IconVariants, props?: SvgIconProps): React.ReactNode => {
   switch (variant) {
@@ -48,6 +50,8 @@ const getIcon = (variant: IconVariants, props?: SvgIconProps): React.ReactNode =
       return <MenuIcon {...props} />;
     case 'notes':
       return <NotesIcon {...props} />;
+    case 'moreVert':
+      return <MoreVertIcon {...props} />;
     default:
       console.warn('Not supported icon variant');
       return null;
