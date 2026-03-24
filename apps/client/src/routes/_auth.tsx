@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { queryOptions, useQuery } from '@tanstack/react-query';
-import { useSetAtom } from 'jotai';
 
-import { getLoggedInUser, refreshToken } from '../api/auth';
-import { userAtom } from '../atoms/user';
+import { refreshToken } from '../api/auth';
 import NavigationMain from '../components/Navigation';
 import withCatch from '../lib/withCatch';
+import { getPairs } from '../api/pairs';
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
 const refreshTokenQueryOptions = queryOptions({
@@ -26,28 +25,15 @@ export const Route = createFileRoute('/_auth')({
 });
 
 function RouteComponent() {
-  const setUser = useSetAtom(userAtom);
   const [enabled, setEnabled] = useState(false);
 
-  const refreshTokenQuery = useQuery({
+  useQuery({ queryKey: ['pairs'], queryFn: getPairs, staleTime: Infinity });
+  useQuery({
     ...refreshTokenQueryOptions,
     refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: true,
     enabled: enabled,
   });
-
-  const userDataQuery = useQuery({
-    queryKey: ['user'],
-    queryFn: getLoggedInUser,
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    if (userDataQuery.data?.id && refreshTokenQuery.data?.id) {
-      setUser(userDataQuery.data);
-    }
-  }, [userDataQuery.data?.id]);
 
   useEffect(() => {
     setTimeout(() => setEnabled(true), REFETCH_INTERVAL);

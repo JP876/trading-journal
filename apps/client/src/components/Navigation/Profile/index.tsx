@@ -3,25 +3,30 @@ import { Avatar, IconButton, Tooltip } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { useRouter } from '@tanstack/react-router';
-import { useAtomValue } from 'jotai';
+import { useQuery } from '@tanstack/react-query';
 
 import MenuActions from '../../MenuActions';
-import { userAtom } from '../../../atoms/user';
 import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
 import withCatch from '../../../lib/withCatch';
-import { logoutUser } from '../../../api/auth';
+import { getLoggedInUser, logoutUser } from '../../../api/auth';
 import { Route } from '../../../routes/_auth';
 import useSnackbar from '../../../hooks/useSnackbar';
 
 const MenuActionButton = () => {
-  const user = useAtomValue(userAtom);
   const { handleClick } = useMenuActionsContext();
+
+  const { data } = useQuery({
+    queryKey: ['user'],
+    queryFn: getLoggedInUser,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   return (
     <IconButton size="small" aria-label="settings" onClick={handleClick}>
-      <Tooltip arrow disableInteractive title={user?.name}>
-        {user?.image ? (
-          <Avatar src={user.image} />
+      <Tooltip arrow disableInteractive title={data?.name}>
+        {data?.image ? (
+          <Avatar src={data.image} />
         ) : (
           <Avatar>
             <PersonIcon />
