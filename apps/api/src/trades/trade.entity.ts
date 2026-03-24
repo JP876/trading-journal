@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Pair } from 'src/pairs/pair.entitiy';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
-import { DirectionOptions, ResultOptions } from './enums';
+import { ClosedBy, DirectionOptions, OrderType, ResultOptions } from './enums';
 
 @Entity('trades')
 export class Trade {
@@ -12,18 +12,6 @@ export class Trade {
   @ManyToOne(() => Pair, (pair) => pair.id, { eager: true })
   pair: Pair;
 
-  @Column({ type: 'date', nullable: true })
-  openDate?: Date;
-
-  @Column({ type: 'date', nullable: true })
-  closeDate?: Date;
-
-  @Column({ type: 'real', nullable: false })
-  stopLoss: number;
-
-  @Column({ type: 'real', nullable: false })
-  takeProfit: number;
-
   @ManyToOne(() => TradingSession, (session) => session.id, { onDelete: 'CASCADE', eager: true })
   tradingSession: TradingSession;
 
@@ -32,4 +20,31 @@ export class Trade {
 
   @Column({ type: 'text', nullable: false })
   direction: DirectionOptions;
+
+  @Column({ type: 'real', nullable: true })
+  stopLoss: number;
+
+  @Column({ type: 'real', nullable: true })
+  takeProfit: number;
+
+  @Column({ type: 'date', nullable: true })
+  openDate: Date | null;
+
+  @Column({ type: 'date', nullable: true })
+  closeDate: Date | null;
+
+  @Column({ type: 'text', nullable: true, default: ClosedBy.TP_SL })
+  closedBy: ClosedBy;
+
+  @Column({ type: 'real', nullable: true })
+  closedAt: number | null;
+
+  @Column({ type: 'text', nullable: true, default: OrderType.MARKET })
+  orderType: OrderType;
+
+  @Column({ type: 'text', nullable: true })
+  comment: string | null;
+
+  @Column({ type: 'real', nullable: true })
+  entryPrice: number | null;
 }

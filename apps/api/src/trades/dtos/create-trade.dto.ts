@@ -1,27 +1,11 @@
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
 
-import { DirectionOptions, ResultOptions } from '../enums';
+import { ClosedBy, DirectionOptions, OrderType, ResultOptions } from '../enums';
 
 export class CreateTradeDto {
   @IsNotEmpty()
   @IsNumber()
   pairId: number;
-
-  @IsDate()
-  @IsOptional()
-  openDate?: Date;
-
-  @IsDate()
-  @IsOptional()
-  closeDate?: Date;
-
-  @IsNumber()
-  @IsOptional()
-  stopLoss: number;
-
-  @IsNumber()
-  @IsOptional()
-  takeProfit: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -34,4 +18,41 @@ export class CreateTradeDto {
   @IsEnum(DirectionOptions)
   @IsNotEmpty()
   direction: DirectionOptions;
+
+  @IsNumber()
+  @IsOptional()
+  stopLoss?: number;
+
+  @IsNumber()
+  @IsOptional()
+  takeProfit?: number;
+
+  @IsDate()
+  @IsOptional()
+  openDate?: Date;
+
+  @IsDate()
+  @IsOptional()
+  closeDate?: Date;
+
+  @IsEnum(ClosedBy)
+  @IsOptional()
+  closedBy?: ClosedBy;
+
+  @ValidateIf((obj: CreateTradeDto) => obj.closedBy === ClosedBy.USER)
+  @IsNumber()
+  @IsNotEmpty()
+  closedAt?: number;
+
+  @IsEnum(OrderType)
+  @IsOptional()
+  orderType?: OrderType;
+
+  @IsString()
+  @IsOptional()
+  comment?: string;
+
+  @IsNumber()
+  @IsOptional()
+  entryPrice?: number;
 }
