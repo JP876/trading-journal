@@ -2,8 +2,8 @@ import { useId } from 'react';
 import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { editTradingSession, getTradingSessions } from '../../../../api/tradingSessions';
-import useSnackbar from '../../../../hooks/useSnackbar';
+import useSnackbar from '../../../hooks/useSnackbar';
+import { editTradingSession, getTradingSessions } from '../../../api/tradingSessions';
 
 const TradingSessionSelect = () => {
   const labelId = useId();

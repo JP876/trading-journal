@@ -3,14 +3,14 @@ import { useNavigate } from '@tanstack/react-router';
 import { Box, Divider } from '@mui/material';
 import type { AxiosError } from 'axios';
 
-import { loginUser } from '../../../../../api/auth';
-import useSnackbar from '../../../../../hooks/useSnackbar';
-import { useAppForm } from '../../../../Form';
-import { LoginFormSchema } from '../../../../../types/auth';
-import withCatch from '../../../../../lib/withCatch';
-import type { User } from '../../../../../types/user';
-import type { APIError } from '../../../../../types';
-import { defaultMsg } from '../../../../../consts';
+import { loginUser } from '../../../../api/auth';
+import useSnackbar from '../../../../hooks/useSnackbar';
+import { LoginFormSchema } from '../../../../types/auth';
+import withCatch from '../../../../lib/withCatch';
+import type { User } from '../../../../types/user';
+import type { APIError } from '../../../../types';
+import { defaultMsg } from '../../../../consts';
+import { useAppForm } from '../../../../components/Form';
 
 const LoginForm = () => {
   const navigate = useNavigate({ from: '/login' });
