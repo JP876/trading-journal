@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from '@tanstack/react-router';
 import { Box, Divider } from '@mui/material';
 import type { AxiosError } from 'axios';
+import { useNavigate } from 'react-router';
 
 import { loginUser } from '../../../../api/auth';
 import useSnackbar from '../../../../hooks/useSnackbar';
@@ -13,7 +13,7 @@ import { defaultMsg } from '../../../../consts';
 import { useAppForm } from '../../../../components/Form';
 
 const LoginForm = () => {
-  const navigate = useNavigate({ from: '/login' });
+  const navigate = useNavigate();
   const mutation = useMutation({ mutationFn: loginUser });
 
   const { openSnackbar } = useSnackbar();
@@ -31,7 +31,7 @@ const LoginForm = () => {
         return;
       }
 
-      navigate({ to: '/dashboard' });
+      navigate('/trades', { replace: true });
       setTimeout(() => {
         openSnackbar({ severity: 'success', message: `Welcome ${user.name}, you're now logged in.` });
       }, 200);

@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { createFileRoute, redirect } from '@tanstack/react-router';
 import { queryOptions, useQuery } from '@tanstack/react-query';
+import { Outlet } from 'react-router';
 
 import { refreshToken } from '../api/auth';
-import NavigationMain from '../components/Navigation';
-import withCatch from '../lib/withCatch';
 import { getPairs } from '../api/pairs';
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
@@ -14,17 +12,7 @@ const refreshTokenQueryOptions = queryOptions({
   retry: false,
 });
 
-export const Route = createFileRoute('/_auth')({
-  component: RouteComponent,
-  beforeLoad: async ({ context: { queryClient }, location }) => {
-    const [error] = await withCatch(queryClient.ensureQueryData(refreshTokenQueryOptions));
-    if (error) {
-      throw redirect({ to: '/login', search: { redirect: location.href } });
-    }
-  },
-});
-
-function RouteComponent() {
+const ProtectedRoutes = () => {
   const [enabled, setEnabled] = useState(false);
 
   useQuery({ queryKey: ['pairs'], queryFn: getPairs, staleTime: Infinity });
@@ -39,5 +27,7 @@ function RouteComponent() {
     setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
   }, []);
 
-  return <NavigationMain />;
-}
+  return <Outlet />;
+};
+
+export default ProtectedRoutes;

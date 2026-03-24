@@ -1,12 +1,12 @@
 export enum ResultOptions {
-  WIN = 'WIN',
-  LOSS = 'LOSS',
-  BE = 'BE',
+  WIN = 'win',
+  LOSS = 'loss',
+  BE = 'be',
 }
 
 export enum DirectionOptions {
-  LONG = 'LONG',
-  SHORT = 'SHORT',
+  LONG = 'long',
+  SHORT = 'short',
 }
 
 export enum OrderType {
@@ -18,6 +18,6 @@ export enum OrderType {
 }
 
 export enum ClosedBy {
-  TP_SL = 'TP/SL',
+  TP_SL = 'tp/sl',
   USER = 'user',
 }

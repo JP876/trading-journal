@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Box, Divider, IconButton, Stack, Toolbar, Typography, useTheme } from '@mui/material';
-import { Outlet } from '@tanstack/react-router';
 import { useAtom } from 'jotai';
+import { Outlet } from 'react-router';
 
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
 import { navigationDrawer } from '../../atoms/navigationDrawer';

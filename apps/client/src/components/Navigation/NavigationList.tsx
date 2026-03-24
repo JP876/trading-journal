@@ -1,5 +1,5 @@
-import { Link, useLocation } from '@tanstack/react-router';
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, Tooltip, Typography } from '@mui/material';
+import { Link, useLocation } from 'react-router';
 
 import getIcon from '../getIcon';
 

@@ -18,6 +18,7 @@ const FormTextField = ({ label, ...rest }: FormTextFieldProps) => {
 
   return (
     <TextField
+      fullWidth
       variant="outlined"
       size="small"
       label={label}
