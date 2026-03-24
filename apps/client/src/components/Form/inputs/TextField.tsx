@@ -1,6 +1,6 @@
 import { TextField, type TextFieldProps } from '@mui/material';
 import { useStore } from '@tanstack/react-form';
-import type { ValiError } from 'valibot';
+import { z } from 'zod';
 
 import { useFieldContext } from '../formContext';
 
@@ -12,7 +12,9 @@ const FormTextField = ({ label, ...rest }: FormTextFieldProps) => {
   const field = useFieldContext<string>();
   const errors = useStore(field.store, (state) => state.meta.errors);
 
-  const errText = errors.map((err: ValiError<any> | string) => (typeof err === 'string' ? err : err.message)).join(' ');
+  const errText = errors
+    .map((err: z.ZodError<any> | string) => (typeof err === 'string' ? err : err.message))
+    .join(' ');
 
   return (
     <TextField

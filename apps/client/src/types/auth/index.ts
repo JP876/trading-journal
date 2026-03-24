@@ -1,24 +1,16 @@
-import * as v from 'valibot';
+import { z } from 'zod';
 
-export const RegisterFormSchema = v.object({
-  name: v.pipe(v.string(), v.nonEmpty('Please enter your username.')),
-  email: v.pipe(v.string(), v.nonEmpty('Please enter your email.'), v.email('The email address is badly formatted.')),
-  password: v.pipe(
-    v.string(),
-    v.nonEmpty('Please enter your password.'),
-    v.minLength(8, 'Your password must have 8 characters or more.')
-  ),
+export const RegisterFormSchema = z.object({
+  name: z.string().nonempty('Please enter your username.'),
+  email: z.email('The email address is badly formatted.'),
+  password: z.string().min(8, 'Your password must have 8 characters or more.'),
 });
 
-export type RegisterFormData = v.InferOutput<typeof RegisterFormSchema>;
+export type RegisterFormData = z.infer<typeof RegisterFormSchema>;
 
-export const LoginFormSchema = v.object({
-  email: v.pipe(v.string(), v.nonEmpty('Please enter your email.'), v.email('The email address is badly formatted.')),
-  password: v.pipe(
-    v.string(),
-    v.nonEmpty('Please enter your password.'),
-    v.minLength(8, 'Your password must have 8 characters or more.')
-  ),
+export const LoginFormSchema = z.object({
+  email: z.email('The email address is badly formatted.'),
+  password: z.string().min(8, 'Your password must have 8 characters or more.'),
 });
 
-export type LoginFormData = v.InferOutput<typeof LoginFormSchema>;
+export type LoginFormData = z.infer<typeof LoginFormSchema>;

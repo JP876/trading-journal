@@ -1,9 +1,9 @@
 import { Box, Divider } from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 
-import { useAppForm } from '../../../Form';
-import { RegisterFormSchema } from '../../../../types/auth';
-import { registerUser } from '../../../../api/auth';
+import { registerUser } from '../../../../../api/auth';
+import { useAppForm } from '../../../../Form';
+import { RegisterFormSchema } from '../../../../../types/auth';
 
 const RegisterForm = () => {
   const mutation = useMutation({ mutationFn: registerUser });
