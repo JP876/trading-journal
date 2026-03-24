@@ -31,7 +31,7 @@ const LoginForm = () => {
         return;
       }
 
-      navigate('/trades', { replace: true });
+      navigate('/trades', { replace: true, viewTransition: true });
       setTimeout(() => {
         openSnackbar({ severity: 'success', message: `Welcome ${user.name}, you're now logged in.` });
       }, 200);

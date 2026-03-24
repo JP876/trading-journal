@@ -7,6 +7,7 @@ import LoginPage from '../pages/login';
 import TradesPage from '../pages/trades';
 import NavigationMain from '../components/Navigation';
 import ProtectedRoutes from './ProtectedRoutes';
+import DashboardMain from '../pages/dashboard';
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
@@ -25,7 +26,10 @@ const router = createBrowserRouter([
     children: [
       {
         Component: NavigationMain,
-        children: [{ path: '/trades', Component: TradesPage }],
+        children: [
+          { path: '/trades', Component: TradesPage },
+          { path: '/dashboard', Component: DashboardMain },
+        ],
       },
     ],
   },

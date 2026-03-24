@@ -24,7 +24,7 @@ const NavigationList = ({ open }: { open: boolean }) => {
           placement="right"
           title={open ? '' : <Typography variant="body1">{label}</Typography>}
         >
-          <ListItem component={Link} to={to} disablePadding sx={{ display: 'block' }}>
+          <ListItem component={Link} to={to} viewTransition disablePadding sx={{ display: 'block' }}>
             <ListItemButton
               disableRipple
               sx={[
