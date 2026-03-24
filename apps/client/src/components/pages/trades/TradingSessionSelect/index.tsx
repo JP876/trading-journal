@@ -3,7 +3,6 @@ import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { editTradingSession, getTradingSessions } from '../../../../api/tradingSessions';
-import withCatch from '../../../../lib/withCatch';
 import useSnackbar from '../../../../hooks/useSnackbar';
 
 const TradingSessionSelect = () => {
@@ -20,16 +19,13 @@ const TradingSessionSelect = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: async (id: number) => {
-      const [error] = await withCatch(editTradingSession(id, { isMain: 1 }));
-
-      if (error) {
-        openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
-        return;
-      }
-
+    mutationFn: (id: number) => editTradingSession(id, { isMain: 1 }),
+    onSuccess: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
-      await queryClient.invalidateQueries({ queryKey: ['trading-sessions'] });
+      await queryClient.refetchQueries({ queryKey: ['trading-sessions'] });
+    },
+    onError: () => {
+      openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
     },
   });
 
