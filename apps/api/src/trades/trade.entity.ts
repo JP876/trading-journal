@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Pair } from 'src/pairs/pair.entitiy';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
@@ -27,10 +27,10 @@ export class Trade {
   @Column({ type: 'real', nullable: true })
   takeProfit: number;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   openDate: Date | null;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   closeDate: Date | null;
 
   @Column({ type: 'text', nullable: true, default: ClosedBy.TP_SL })
@@ -47,4 +47,10 @@ export class Trade {
 
   @Column({ type: 'real', nullable: true })
   entryPrice: number | null;
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'datetime' })
+  updatedAt: Date;
 }
