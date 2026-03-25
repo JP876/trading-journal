@@ -11,15 +11,16 @@ const useModal = () => {
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
-      setTimeout(() => {
-        setModalInfo((prevState) => ({ ...prevState, [id]: { data } }));
-      }, 200);
+      setModalInfo((prevState) => ({ ...prevState, [id]: { data } }));
     },
     [setModalInfo]
   );
 
   const closeModal = useCallback(
     (id: string) => {
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       setModalInfo((prevState) => {
         const modalCopy = { ...prevState };
         delete modalCopy[id];

@@ -1,13 +1,15 @@
+import { lazy } from 'react';
 import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction } from 'react-router';
 
 import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
-import HomeMain from '../pages/home';
-import AuthPage from '../pages/auth';
-import TradesPage from '../pages/trades';
-import NavigationMain from '../components/Navigation';
 import ProtectedRoutes from './ProtectedRoutes';
-import DashboardMain from '../pages/dashboard';
+
+const NavigationMain = lazy(() => import('../components/Navigation'));
+const HomeMain = lazy(() => import('../pages/home'));
+const AuthPage = lazy(() => import('../pages/auth'));
+const TradesPage = lazy(() => import('../pages/trades'));
+const DashboardMain = lazy(() => import('../pages/dashboard'));
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
@@ -23,6 +25,7 @@ const router = createBrowserRouter([
   {
     Component: ProtectedRoutes,
     middleware: [authMiddleware],
+    HydrateFallback: () => null,
     children: [
       {
         Component: NavigationMain,
