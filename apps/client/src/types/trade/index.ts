@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import type { TradingSession } from '../tradingSessions';
+import type { Pair } from '../pair';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -31,8 +33,16 @@ export const TradeFormSchema = z.object({
 export type TradeFormSchemaType = z.infer<typeof TradeFormSchema>;
 export type Trade = {
   id: number;
-  pairId: number;
-  tradingSession: number;
+  pair: Pair;
+  tradingSession: TradingSession;
   result: Result;
   direction: Direction;
 } & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction'>;
+
+export type TradesResult = {
+  data: Trade[];
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+};

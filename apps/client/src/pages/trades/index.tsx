@@ -5,6 +5,7 @@ import TradingSessionSelect from './TradingSessionSelect';
 import DialogMain from '../../components/DialogMain';
 import AddTradeForm from './forms/AddTrade';
 import useModal from '../../hooks/useModal';
+import TradesTableMain from './TradesTable';
 
 const TradesModalList = () => {
   return (
@@ -32,6 +33,9 @@ const TradesPage = () => {
           <Stack direction="row" alignItems="center" gap={2}>
             <TradingSessionSelect />
           </Stack>
+        </Stack>
+        <Stack mt={2}>
+          <TradesTableMain />
         </Stack>
       </Box>
 

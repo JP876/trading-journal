@@ -1,9 +1,9 @@
 import { client } from '../../lib/client';
 import transformToFormData from '../../lib/transformToFormData';
-import type { TradeFormSchemaType } from '../../types/trade';
+import type { TradeFormSchemaType, TradesResult } from '../../types/trade';
 
 export const getTrades = async () => {
-  const response = await client.get('trades');
+  const response = await client.get<TradesResult>('trades');
   return response.data;
 };
 

@@ -31,11 +31,14 @@ export class TradesService {
   }
 
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
+    const session = await this.tradingSessionsService.findOneBy({ isMain: 1 });
+
     const { limit, page } = tradesQuery;
     const [err, trades] = await withCatch(
       this.tradesRepository.find({
         take: limit,
         skip: (page - 1) * limit,
+        where: { tradingSession: session },
       })
     );
 

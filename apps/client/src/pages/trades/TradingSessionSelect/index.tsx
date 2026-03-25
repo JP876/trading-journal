@@ -22,7 +22,10 @@ const TradingSessionSelect = () => {
     mutationFn: (id: number) => editTradingSession(id, { isMain: 1 }),
     onSuccess: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
-      await queryClient.refetchQueries({ queryKey: ['trading-sessions'] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ['trading-sessions'] }),
+        queryClient.refetchQueries({ queryKey: ['trades'] }),
+      ]);
     },
     onError: () => {
       openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
