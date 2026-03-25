@@ -1,4 +1,5 @@
 export type Pair = {
+  id: number;
   pair: string;
   assetClass: string;
   baseIso: string;

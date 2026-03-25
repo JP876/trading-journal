@@ -6,6 +6,9 @@ import { fieldContext, formContext, useFormContext } from './formContext';
 import getIcon from '../getIcon';
 
 const TextField = lazy(() => import('./inputs/TextField'));
+const Select = lazy(() => import('./inputs/SelectField'));
+const Autocomplete = lazy(() => import('./inputs/AutocompleteField'));
+const DateTimePicker = lazy(() => import('./inputs/DateTimeField'));
 
 const SubscribeButton = ({ ...rest }: ButtonProps) => {
   const form = useFormContext();
@@ -30,6 +33,9 @@ const SubscribeButton = ({ ...rest }: ButtonProps) => {
 export const { useAppForm, withForm, withFieldGroup } = createFormHook({
   fieldComponents: {
     TextField,
+    Select,
+    Autocomplete,
+    DateTimePicker,
   },
   formComponents: {
     SubscribeButton,

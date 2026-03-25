@@ -23,7 +23,7 @@ const FormTextField = ({ label, ...rest }: FormTextFieldProps) => {
       size="small"
       label={label}
       {...rest}
-      value={field.state.value}
+      value={field.state.value || ''}
       onChange={(e) => field.handleChange(e.target.value)}
       onBlur={field.handleBlur}
       error={!!errors.length || rest?.error}
