@@ -13,7 +13,7 @@ const GoogleButton = () => {
   );
 };
 
-const LoginPage = () => {
+const AuthPage = () => {
   const [show, setShow] = useState<'login' | 'register'>('login');
 
   const handleChangeForm = () => {
@@ -68,4 +68,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default AuthPage;

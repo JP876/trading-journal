@@ -3,14 +3,14 @@ import { Controller, type UseFormReturn } from 'react-hook-form';
 import CheckIcon from '@mui/icons-material/Check';
 import { useQueryClient } from '@tanstack/react-query';
 
-import type { TradeFormSchemaType } from '../../../types/trade';
+import type { ClosedBy, Direction, TradeFormSchemaType } from '../../../types/trade';
+import type { Pair } from '../../../types/pair';
 import FormMain from '../../../components/form/FormMain';
 import TextInput from '../../../components/form/TextInput';
 import SelectInput from '../../../components/form/SelectInput';
 import DateTimeInput from '../../../components/form/DateTimeInput';
 import AutocompleteInput, { type AutocompleteOption } from '../../../components/form/AutocompleteInput';
 import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from './consts';
-import type { Pair } from '../../../types/pair';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -25,7 +25,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
   const pairOptions: AutocompleteOption[] = (() => {
     if (!Array.isArray(pairs)) return [];
-    return pairs.map((pair) => ({ value: pair.id, label: pair.pair }));
+    return pairs.map((pair) => ({ value: pair.id, label: pair.pair, groupBy: pair.assetClass }));
   })();
 
   return (
@@ -52,7 +52,17 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="closedAt"
           control={form.control}
-          render={({ field }) => <TextInput label="Closed at" field={field} type="number" />}
+          render={({ field }) => (
+            <TextInput
+              label="Closed at"
+              field={field}
+              type="number"
+              inputProps={({ watch }) => {
+                const closedBy: ClosedBy = watch('closedBy');
+                return { disabled: closedBy === 'tp/sl' };
+              }}
+            />
+          )}
         />
       </Stack>
 
@@ -65,7 +75,17 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="orderType"
           control={form.control}
-          render={({ field }) => <SelectInput options={orderTypeOptions} label="Order type" field={field} />}
+          render={({ field }) => (
+            <SelectInput
+              options={orderTypeOptions}
+              label="Order type"
+              field={field}
+              inputProps={({ watch }) => {
+                const direction: Direction | undefined = watch('direction');
+                return { disabled: !direction };
+              }}
+            />
+          )}
         />
       </Stack>
 

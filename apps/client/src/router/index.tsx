@@ -3,7 +3,7 @@ import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction 
 import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
 import HomeMain from '../pages/home';
-import LoginPage from '../pages/login';
+import AuthPage from '../pages/auth';
 import TradesPage from '../pages/trades';
 import NavigationMain from '../components/Navigation';
 import ProtectedRoutes from './ProtectedRoutes';
@@ -19,7 +19,7 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
 
 const router = createBrowserRouter([
   { path: '/', Component: HomeMain },
-  { path: '/auth', Component: LoginPage },
+  { path: '/auth', Component: AuthPage },
   {
     Component: ProtectedRoutes,
     middleware: [authMiddleware],
