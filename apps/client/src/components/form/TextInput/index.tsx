@@ -20,6 +20,7 @@ const TextInput = ({ field, label, type, inputProps }: TextInputPropsType) => {
 
   return (
     <TextField
+      id={`${label}-form-text-field`}
       size="small"
       fullWidth
       label={label}

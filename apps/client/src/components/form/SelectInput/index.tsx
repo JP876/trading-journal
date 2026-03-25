@@ -78,13 +78,18 @@ function SelectInput({ field, options, renderChips, label, inputProps }: SelectI
 
   return (
     <FormControl fullWidth size="small">
-      <InputLabel id={labelId}>{label}</InputLabel>
+      <InputLabel htmlFor={`${label}-form-select`} id={labelId}>
+        {label}
+      </InputLabel>
       <Select
         labelId={labelId}
-        id="simple-select"
         renderValue={handleRenderValue}
         label={label}
         {...inputOptions}
+        slotProps={{
+          ...inputOptions?.slotProps,
+          input: { id: `${label}-form-select`, ...inputOptions?.slotProps?.input },
+        }}
         value={selectValue}
         {...restField}
       >

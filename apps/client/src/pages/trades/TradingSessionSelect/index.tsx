@@ -43,10 +43,14 @@ const TradingSessionSelect = () => {
   return (
     <Box sx={{ minWidth: '16rem' }}>
       <FormControl size="small" fullWidth>
-        <InputLabel id={labelId}>Main trading session</InputLabel>
+        <InputLabel htmlFor="trading-session-select" id={labelId}>
+          Main trading session
+        </InputLabel>
         <Select
           labelId={labelId}
-          id="trading-session-simple-select"
+          slotProps={{
+            input: { id: 'trading-session-select' },
+          }}
           value={(data || []).find((el) => el?.isMain)?.id.toString() || ''}
           label="Main trading session"
           onChange={handleChange}

@@ -45,7 +45,13 @@ const TradesPage = () => {
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h5">Trades</Typography>
-            <IconButton size="small" disableRipple onClick={() => openModal(TradesPageModalOptions.addTrade)}>
+            <IconButton
+              size="small"
+              disableRipple
+              title="Add trade button"
+              aria-label="add-trade-button"
+              onClick={() => openModal(TradesPageModalOptions.addTrade)}
+            >
               <AddIcon />
             </IconButton>
           </Stack>
