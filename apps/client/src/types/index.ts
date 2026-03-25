@@ -19,7 +19,7 @@ export type FormField<
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = ControllerRenderProps<TFieldValues, TName>;
 
-const filesObject = z.object({
+export const filesObject = z.object({
   _id: z.string(),
   path: z.string(),
   name: z.string(),
@@ -29,4 +29,5 @@ const filesObject = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
 });
+
 export type Files = z.infer<typeof filesObject>;

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import type { TradingSession } from '../tradingSessions';
 import type { Pair } from '../pair';
+import { filesObject } from '..';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -31,6 +32,12 @@ export const TradeFormSchema = z.object({
 });
 
 export type TradeFormSchemaType = z.infer<typeof TradeFormSchema>;
+
+export const EditTradeFormSchema = TradeFormSchema.extend({
+  deleteFiles: z.array(filesObject).optional(),
+});
+export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
+
 export type Trade = {
   id: number;
   pair: Pair;

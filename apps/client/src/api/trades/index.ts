@@ -12,7 +12,7 @@ export const addTrade = async (trade: TradeFormSchemaType & { tradingSessionId: 
   return response.data;
 };
 
-export const editTrade = async (id: string, trade: TradeFormSchemaType & { tradingSessionId: number }) => {
+export const editTrade = async (id: number, trade: TradeFormSchemaType & { tradingSessionId: number }) => {
   if (!id) {
     throw new Error(`Trade ID not found: ${id}`);
   }
@@ -20,7 +20,7 @@ export const editTrade = async (id: string, trade: TradeFormSchemaType & { tradi
   return response.data;
 };
 
-export const deleteTrade = async (id: string | undefined) => {
+export const deleteTrade = async (id: number | undefined) => {
   if (!id) {
     throw new Error(`Trade ID not found: ${id}`);
   }

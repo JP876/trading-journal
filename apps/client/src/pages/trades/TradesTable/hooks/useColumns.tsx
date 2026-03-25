@@ -24,12 +24,18 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
         <MenuActions.Item
           label="Edit trade"
           icon={<EditIcon fontSize="small" />}
-          onClick={() => openModal('editTrade', trade)}
+          onClick={(_, handleClose) => {
+            openModal('editTrade', trade);
+            handleClose();
+          }}
         />
         <MenuActions.Item
           label="Delete trade"
           icon={<DeleteIcon color="error" fontSize="small" />}
-          onClick={() => openModal('deleteTrade', trade)}
+          onClick={(_, handleClose) => {
+            openModal('deleteTrade', trade);
+            handleClose();
+          }}
         />
       </MenuActions>
     </Stack>

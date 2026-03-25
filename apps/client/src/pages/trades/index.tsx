@@ -1,17 +1,27 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import { useAtomValue } from 'jotai';
 
+import type { Trade } from '../../types/trade';
 import TradingSessionSelect from './TradingSessionSelect';
 import DialogMain from '../../components/DialogMain';
 import AddTradeForm from './forms/AddTrade';
 import useModal from '../../hooks/useModal';
 import TradesTableMain from './TradesTable';
+import EditTradeForm from './forms/EditTrade';
+import { modalAtom } from '../../atoms/modal';
 
 const TradesModalList = () => {
+  const modalInfo = useAtomValue(modalAtom);
+
   return (
     <>
       <DialogMain id="addTradeForm" title="Add trade">
         <AddTradeForm />
+      </DialogMain>
+
+      <DialogMain title="Edit Trade" id="editTrade">
+        <EditTradeForm trade={modalInfo?.editTrade?.data as Trade} />
       </DialogMain>
     </>
   );
