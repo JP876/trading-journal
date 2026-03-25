@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Raw, Repository } from 'typeorm';
 
 import { Trade } from '../trade.entity';
 import { CreateTradeDto } from '../dtos/create-trade.dto';
@@ -10,6 +10,8 @@ import withCatch from 'src/utils/withCatch';
 import { UpdateTradeDto } from '../dtos/update-trade.dto';
 import { GetTradesDto } from '../dtos/get-trades.dto';
 import { Paginated } from 'src/common/pagination/types';
+import { TradingSession } from 'src/trading-sessions/trading-session.entity';
+import { Pair } from 'src/pairs/pair.entitiy';
 
 @Injectable()
 export class TradesService {
@@ -31,14 +33,32 @@ export class TradesService {
   }
 
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
-    const session = await this.tradingSessionsService.findOneBy({ isMain: 1 });
+    const { limit, page, tradingSessionId, pairId, result, direction, openDate, closeDate } = tradesQuery;
+    let session: TradingSession | null = null;
+    let pair: Pair | null = null;
 
-    const { limit, page } = tradesQuery;
+    if (tradingSessionId) {
+      session = await this.tradingSessionsService.findOneBy({ id: tradingSessionId });
+    } else {
+      session = await this.tradingSessionsService.findOneBy({ isMain: 1 });
+    }
+
+    if (pairId) {
+      pair = await this.pairsService.findOneBy({ id: pairId });
+    }
+
     const [err, trades] = await withCatch(
       this.tradesRepository.find({
         take: limit,
         skip: (page - 1) * limit,
-        where: { tradingSession: session },
+        where: {
+          tradingSession: session,
+          result,
+          direction,
+          ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
+          ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
+          ...(pair ? { pair: pair } : {}),
+        },
       })
     );
 

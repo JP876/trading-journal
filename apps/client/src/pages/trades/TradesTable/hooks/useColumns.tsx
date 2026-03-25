@@ -25,7 +25,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Edit trade"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal('editTrade', trade);
+            openModal('editTradeForm', trade);
             handleClose();
           }}
         />
@@ -72,12 +72,14 @@ const useColumns = () => {
               label={
                 <Stack direction="row" alignItems="center" gap={0.5}>
                   {valueIcon}
-                  <Typography variant="caption">{value}</Typography>
+                  <Typography variant="caption" textAlign="center" lineHeight=".8rem">
+                    {value}
+                  </Typography>
                 </Stack>
               }
               size="small"
               sx={[
-                { textTransform: 'uppercase', width: '4.4rem' },
+                { textTransform: 'uppercase', width: '5.4rem' },
                 value === 'long' &&
                   ((theme) => ({
                     backgroundColor: theme.palette.success.light,

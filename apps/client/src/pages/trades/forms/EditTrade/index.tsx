@@ -33,7 +33,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
     onSuccess: async () => {
       await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been updated.' });
-      closeModal('editTrade');
+      closeModal('editTradeForm');
     },
   });
 

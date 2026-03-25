@@ -23,7 +23,7 @@ const AddTradeForm = () => {
     onSuccess: async () => {
       await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been saved.' });
-      closeModal('addTrade');
+      closeModal('addTradeForm');
     },
   });
 
@@ -45,6 +45,7 @@ const AddTradeForm = () => {
 
     if (!(formData?.openDate instanceof Date)) delete formData.openDate;
     if (!(formData?.closeDate instanceof Date)) delete formData.closeDate;
+    if (!formData?.closedAt) delete formData.closedAt;
 
     mutation.mutate({ ...formData, tradingSessionId: mainSession.id });
   };

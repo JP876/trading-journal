@@ -20,8 +20,8 @@ const TradesModalList = () => {
         <AddTradeForm />
       </DialogMain>
 
-      <DialogMain title="Edit Trade" id="editTrade">
-        <EditTradeForm trade={modalInfo?.editTrade?.data as Trade} />
+      <DialogMain title="Edit Trade" id="editTradeForm">
+        <EditTradeForm trade={modalInfo?.editTradeForm?.data as Trade} />
       </DialogMain>
     </>
   );
