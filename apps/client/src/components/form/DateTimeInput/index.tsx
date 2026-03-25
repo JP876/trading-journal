@@ -1,5 +1,5 @@
 import { renderTimeViewClock } from '@mui/x-date-pickers';
-import { DateTimePicker, type DateTimePickerProps } from '@mui/x-date-pickers';
+import { DateTimePicker, type DateTimePickerProps } from '@mui/x-date-pickers/DateTimePicker';
 
 import type { FormField } from '../../../types';
 

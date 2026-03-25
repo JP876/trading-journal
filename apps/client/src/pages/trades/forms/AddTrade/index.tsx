@@ -8,6 +8,7 @@ import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import TradeForm from '../TradeForm';
 import { addTrade } from '../../../../api/trades';
+import { TradesPageModalOptions } from '../../enums';
 
 const AddTradeForm = () => {
   const queryClient = useQueryClient();
@@ -23,7 +24,7 @@ const AddTradeForm = () => {
     onSuccess: async () => {
       await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been saved.' });
-      closeModal('addTradeForm');
+      closeModal(TradesPageModalOptions.addTrade);
     },
   });
 

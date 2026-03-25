@@ -1,5 +1,9 @@
 import { useId } from 'react';
-import { Box, FormControl, InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
+import Box from '@mui/material/Box';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import useSnackbar from '../../../hooks/useSnackbar';

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { Button, Divider } from '@mui/material';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import LoginIcon from '@mui/icons-material/Login';
 import type { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';

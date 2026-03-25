@@ -14,6 +14,7 @@ import type { Pair } from '../../../../types/pair';
 import MenuActions from '../../../../components/MenuActions';
 import useModal from '../../../../hooks/useModal';
 import NotFoundValue from '../../../../components/NotFoundValue';
+import { TradesPageModalOptions } from '../../enums';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -25,7 +26,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Edit trade"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal('editTradeForm', trade);
+            openModal(TradesPageModalOptions.editTrade, trade);
             handleClose();
           }}
         />
@@ -33,7 +34,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Delete trade"
           icon={<DeleteIcon color="error" fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal('deleteTrade', trade);
+            openModal(TradesPageModalOptions.deleteTrade, trade);
             handleClose();
           }}
         />

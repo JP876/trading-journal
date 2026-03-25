@@ -1,9 +1,14 @@
-import { useState } from 'react';
-import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import { lazy, useState } from 'react';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import GoogleIcon from '@mui/icons-material/Google';
 
 import LoginForm from './forms/Login';
-import RegisterForm from './forms/Register';
+
+const RegisterForm = lazy(() => import('./forms/Register'));
 
 const GoogleButton = () => {
   return (

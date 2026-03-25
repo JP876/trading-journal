@@ -1,7 +1,12 @@
 import { useId } from 'react';
-import { Chip, type ChipProps, FormControl, InputLabel, ListSubheader, Stack, Typography } from '@mui/material';
 import Select, { type SelectProps } from '@mui/material/Select';
 import MenuItem, { type MenuItemProps } from '@mui/material/MenuItem';
+import Chip, { type ChipProps } from '@mui/material/Chip';
+import InputLabel from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
 import { type FieldValues, useFormContext, type UseFormWatch } from 'react-hook-form';
 
 import type { FormField, SelectOption } from '../../../types';

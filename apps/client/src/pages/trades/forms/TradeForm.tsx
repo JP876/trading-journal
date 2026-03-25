@@ -1,6 +1,8 @@
-import { Button, Divider, Stack } from '@mui/material';
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import CheckIcon from '@mui/icons-material/Check';
+import { Controller, type UseFormReturn } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 
 import type { ClosedBy, Direction, TradeFormSchemaType } from '../../../types/trade';

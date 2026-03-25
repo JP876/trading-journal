@@ -1,13 +1,14 @@
-import { Button, Divider } from '@mui/material';
-import { useMutation } from '@tanstack/react-query';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
+import { useMutation } from '@tanstack/react-query';
+import { Controller, useForm } from 'react-hook-form';
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 
 import { registerUser } from '../../../../api/auth';
 import { RegisterFormSchema, type RegisterFormData } from '../../../../types/auth';
 import FormMain from '../../../../components/form/FormMain';
-import { Controller, useForm } from 'react-hook-form';
 import TextInput from '../../../../components/form/TextInput';
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 
 const RegisterForm = () => {
   const mutation = useMutation({ mutationFn: registerUser });
