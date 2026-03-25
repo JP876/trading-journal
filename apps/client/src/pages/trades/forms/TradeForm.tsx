@@ -1,87 +1,119 @@
-import { Box, Divider, Stack } from '@mui/material';
+import { Button, Divider, Stack } from '@mui/material';
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import CheckIcon from '@mui/icons-material/Check';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { TradeFormSchema } from '../../../types/trade';
-import { closedByOptions, defaultTradeValues, directonOptions, orderTypeOptions, resultOptions } from './consts';
-import { withForm } from '../../../components/Form';
+import type { TradeFormSchemaType } from '../../../types/trade';
+import FormMain from '../../../components/form/FormMain';
+import TextInput from '../../../components/form/TextInput';
+import SelectInput from '../../../components/form/SelectInput';
+import DateTimeInput from '../../../components/form/DateTimeInput';
+import AutocompleteInput, { type AutocompleteOption } from '../../../components/form/AutocompleteInput';
+import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from './consts';
 import type { Pair } from '../../../types/pair';
-import type { AutocompleteOptions } from '../../../components/Form/inputs/AutocompleteField';
 
-const TradeForm = withForm({
-  defaultValues: {},
-  validators: {
-    onSubmit: TradeFormSchema,
-  },
-  render: function Render({ form }) {
-    const queryClient = useQueryClient();
-    const pairs = queryClient.getQueryData<Pair[]>(['pairs']);
+type FormSchema = TradeFormSchemaType;
+type TradeFormProps = {
+  onSubmit: (data: FormSchema) => void;
+  form: UseFormReturn<FormSchema, any, FormSchema>;
+  isLoading?: boolean;
+};
 
-    const pairOptions: AutocompleteOptions[] = (() => {
-      if (!Array.isArray(pairs)) return [];
-      return pairs.map((el) => ({ value: el.id, label: el.pair, groupBy: el.assetClass }));
-    })();
+const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
+  const queryClient = useQueryClient();
+  const pairs = queryClient.getQueryData<Pair[]>(['pairs']);
 
-    const handleSubmit = (e: React.SubmitEvent) => {
-      e.preventDefault();
-      form.handleSubmit();
-    };
+  const pairOptions: AutocompleteOption[] = (() => {
+    if (!Array.isArray(pairs)) return [];
+    return pairs.map((pair) => ({ value: pair.id, label: pair.pair }));
+  })();
 
-    return (
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, m: 2 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="pairId">
-            {(field) => <field.Autocomplete label="Pair *" options={pairOptions} />}
-          </form.AppField>
-          <form.AppField name="result">
-            {(field) => <field.Select label="Result *" options={resultOptions} />}
-          </form.AppField>
-        </Stack>
+  return (
+    <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="pairId"
+          control={form.control}
+          render={({ field }) => <AutocompleteInput field={field} options={pairOptions} label="Pair *" />}
+        />
+        <Controller
+          name="result"
+          control={form.control}
+          render={({ field }) => <SelectInput options={resultOptions} label="Result *" field={field} />}
+        />
+      </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="closedBy">
-            {(field) => <field.Select label="Closed by" options={closedByOptions} />}
-          </form.AppField>
-          <form.AppField name="closedAt">
-            {(field) => <field.TextField label="Closed at" type="number" />}
-          </form.AppField>
-        </Stack>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="closedBy"
+          control={form.control}
+          render={({ field }) => <SelectInput options={closedByOptions} label="Closed by" field={field} />}
+        />
+        <Controller
+          name="closedAt"
+          control={form.control}
+          render={({ field }) => <TextInput label="Closed at" field={field} type="number" />}
+        />
+      </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="direction">
-            {(field) => <field.Select label="Direction *" options={directonOptions} />}
-          </form.AppField>
-          <form.AppField name="orderType">
-            {(field) => <field.Select label="Closed at" options={orderTypeOptions} />}
-          </form.AppField>
-        </Stack>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="direction"
+          control={form.control}
+          render={({ field }) => <SelectInput options={directonOptions} label="Direction *" field={field} />}
+        />
+        <Controller
+          name="orderType"
+          control={form.control}
+          render={({ field }) => <SelectInput options={orderTypeOptions} label="Order type" field={field} />}
+        />
+      </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="takeProfit">
-            {(field) => <field.TextField label="Take Profit" type="number" />}
-          </form.AppField>
-          <form.AppField name="stopLoss">
-            {(field) => <field.TextField label="Stop Loss" type="number" />}
-          </form.AppField>
-        </Stack>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="takeProfit"
+          control={form.control}
+          render={({ field }) => <TextInput label="Take Profit *" field={field} type="number" />}
+        />
+        <Controller
+          name="stopLoss"
+          control={form.control}
+          render={({ field }) => <TextInput label="Stop Loss *" field={field} type="number" />}
+        />
+      </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="openDate">{(field) => <field.DateTimePicker label="Take Profit" />}</form.AppField>
-          <form.AppField name="closeDate">{(field) => <field.DateTimePicker label="Stop Loss" />}</form.AppField>
-        </Stack>
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="openDate"
+          control={form.control}
+          render={({ field }) => <DateTimeInput label="Open Date" field={field} />}
+        />
+        <Controller
+          name="closeDate"
+          control={form.control}
+          render={({ field }) => <DateTimeInput label="Close Date" field={field} />}
+        />
+      </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2}>
-          <form.AppField name="comment">
-            {(field) => <field.TextField label="Comment" multiline rows={6} />}
-          </form.AppField>
-        </Stack>
+      <Stack direction="row" alignItems="center">
+        <Controller
+          name="comment"
+          control={form.control}
+          render={({ field }) => (
+            <TextInput label="Comment" field={field} inputProps={{ fullWidth: true, multiline: true, rows: 6 }} />
+          )}
+        />
+      </Stack>
 
-        <Divider />
-        <form.AppForm>
-          <form.SubscribeButton>Submit</form.SubscribeButton>
-        </form.AppForm>
-      </Box>
-    );
-  },
-});
+      <Divider />
+
+      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+        <Button loading={isLoading} startIcon={<CheckIcon />} size="small" variant="contained" type="submit">
+          Confirm
+        </Button>
+      </Stack>
+    </FormMain>
+  );
+};
 
 export default TradeForm;

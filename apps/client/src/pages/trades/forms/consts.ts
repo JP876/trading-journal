@@ -1,4 +1,4 @@
-import type { SelectInputOption } from '../../../components/Form/inputs/SelectField';
+import type { SelectInputOption } from '../../../components/form/SelectInput';
 import type { ClosedBy, Direction, OrderType, Result, TradeFormSchemaType } from '../../../types/trade';
 
 export const defaultTradeValues: Partial<TradeFormSchemaType> = {
@@ -19,7 +19,6 @@ export const resultOptions: SelectInputOption<Result>[] = [
 
 export const orderTypeOptions: SelectInputOption<OrderType>[] = [
   { label: 'Market', value: 'market_order' },
-  { label: 'Pending order' },
   { label: 'Sell limit', value: 'sell_limit' },
   { label: 'Sell stop', value: 'sell_stop' },
   { label: 'Buy limit', value: 'buy_limit' },

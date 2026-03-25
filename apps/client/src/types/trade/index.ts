@@ -9,12 +9,12 @@ export const TradeFormSchema = z.object({
   pairId: z.number().positive(),
   result: z.union([z.literal('win'), z.literal('loss'), z.literal('be')]),
   direction: z.union([z.literal('long'), z.literal('short')]),
-  stopLoss: z.number().positive().nullable(),
-  takeProfit: z.number().positive().nullable(),
-  openDate: z.date().nullable(),
-  closeDate: z.date().nullable(),
-  closedBy: z.union([z.literal('tp/sl'), z.literal('user')]).nullable(),
-  closedAt: z.number().positive().nullable(),
+  stopLoss: z.number().positive().optional(),
+  takeProfit: z.number().positive().optional(),
+  openDate: z.date().optional(),
+  closeDate: z.date().optional(),
+  closedBy: z.union([z.literal('tp/sl'), z.literal('user')]).optional(),
+  closedAt: z.number().positive().optional(),
   orderType: z
     .union([
       z.literal('market_order'),
@@ -23,9 +23,9 @@ export const TradeFormSchema = z.object({
       z.literal('sell_limit'),
       z.literal('sell_stop'),
     ])
-    .nullable(),
-  comment: z.string().nullable(),
-  entryPrice: z.number().nullable(),
+    .optional(),
+  comment: z.string().optional(),
+  entryPrice: z.number().optional(),
 });
 
 export type TradeFormSchemaType = z.infer<typeof TradeFormSchema>;

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { useForm } from 'react-hook-form';
 
-import { useAppForm } from '../../../../components/Form';
-import { TradeFormSchema } from '../../../../types/trade';
+import { TradeFormSchema, type TradeFormSchemaType } from '../../../../types/trade';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import TradeForm from '../TradeForm';
-import { defaultTradeValues } from '../consts';
 import { addTrade } from '../../../../api/trades';
 
 const AddTradeForm = () => {
@@ -27,19 +27,29 @@ const AddTradeForm = () => {
     },
   });
 
-  const form = useAppForm({
-    defaultValues: {},
-    validators: {
-      onSubmit: TradeFormSchema,
-    },
-    onSubmit: ({ value }) => {
-      if (!mainSession) {
-        return;
-      }
+  const form = useForm<TradeFormSchemaType>({
+    resolver: standardSchemaResolver(TradeFormSchema),
+    defaultValues: {
+      orderType: 'market_order',
+      closedBy: 'tp/sl',
     },
   });
 
-  return <TradeForm form={form} />;
+  const onSubmit = (data: TradeFormSchemaType) => {
+    if (!mainSession) {
+      console.warn('Main trading session not found');
+      return;
+    }
+
+    const formData = { ...data };
+
+    if (!(formData?.openDate instanceof Date)) delete formData.openDate;
+    if (!(formData?.closeDate instanceof Date)) delete formData.closeDate;
+
+    mutation.mutate({ ...formData, tradingSessionId: mainSession.id });
+  };
+
+  return <TradeForm form={form} onSubmit={onSubmit} isLoading={mutation.isPending} />;
 };
 
 export default AddTradeForm;
