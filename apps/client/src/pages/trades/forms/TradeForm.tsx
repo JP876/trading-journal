@@ -3,16 +3,15 @@ import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import CheckIcon from '@mui/icons-material/Check';
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import { useQueryClient } from '@tanstack/react-query';
 
 import type { ClosedBy, Direction, TradeFormSchemaType } from '../../../types/trade';
-import type { Pair } from '../../../types/pair';
 import FormMain from '../../../components/form/FormMain';
 import TextInput from '../../../components/form/TextInput';
 import SelectInput from '../../../components/form/SelectInput';
 import DateTimeInput from '../../../components/form/DateTimeInput';
-import AutocompleteInput, { type AutocompleteOption } from '../../../components/form/AutocompleteInput';
-import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from './consts';
+import AutocompleteInput from '../../../components/form/AutocompleteInput';
+import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
+import usePairOptions from '../hooks/usePairOptions';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -22,13 +21,7 @@ type TradeFormProps = {
 };
 
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
-  const queryClient = useQueryClient();
-  const pairs = queryClient.getQueryData<Pair[]>(['pairs']);
-
-  const pairOptions: AutocompleteOption[] = (() => {
-    if (!Array.isArray(pairs)) return [];
-    return pairs.map((pair) => ({ value: pair.id, label: pair.pair, groupBy: pair.assetClass }));
-  })();
+  const pairOptions = usePairOptions();
 
   return (
     <FormMain<FormSchema> onSubmit={onSubmit} form={form}>

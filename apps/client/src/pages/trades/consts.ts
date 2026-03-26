@@ -1,5 +1,5 @@
-import type { SelectInputOption } from '../../../components/form/SelectInput';
-import type { ClosedBy, Direction, OrderType, Result, TradeFormSchemaType } from '../../../types/trade';
+import type { SelectInputOption } from '../../components/form/SelectInput';
+import type { ClosedBy, Direction, OrderType, Result, TradeFormSchemaType } from '../../types/trade';
 
 export const defaultTradeValues: Partial<TradeFormSchemaType> = {
   closedBy: 'tp/sl',

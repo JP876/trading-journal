@@ -47,8 +47,8 @@ export class TradesService {
       pair = await this.pairsService.findOneBy({ id: pairId });
     }
 
-    const [err, trades] = await withCatch(
-      this.tradesRepository.find({
+    const [err, tradesAndCount] = await withCatch(
+      this.tradesRepository.findAndCount({
         take: limit,
         skip: (page - 1) * limit,
         where: {
@@ -68,7 +68,7 @@ export class TradesService {
       });
     }
 
-    const totalItems = await this.tradesRepository.count();
+    const [trades, totalItems] = tradesAndCount;
     const totalPages = Math.ceil(totalItems / limit);
 
     return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, results: trades };

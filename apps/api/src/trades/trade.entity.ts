@@ -12,7 +12,7 @@ export class Trade {
   @ManyToOne(() => Pair, (pair) => pair.id, { eager: true })
   pair: Pair;
 
-  @ManyToOne(() => TradingSession, (session) => session.id, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => TradingSession, (session) => session.id, { onDelete: 'CASCADE' })
   tradingSession: TradingSession;
 
   @Column({ type: 'text', nullable: false })

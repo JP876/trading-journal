@@ -15,6 +15,10 @@ import TradesTableMain from './TradesTable';
 import { modalAtom } from '../../atoms/modal';
 import { TradesPageModal } from './enums';
 import PaginationProvider from '../../components/table/providers/Pagination';
+import FiltersProvider from '../../components/table/providers/Filters';
+import usePairsOptions from './hooks/usePairOptions';
+import SelectFilter from '../../components/table/filters/SelectFilter';
+import { resultOptions } from './consts';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -38,13 +42,37 @@ const TradesModalList = () => {
   );
 };
 
+const TradesTableContainer = () => {
+  const pairOptions = usePairsOptions();
+
+  return (
+    <PaginationProvider>
+      <FiltersProvider>
+        <Stack gap={2}>
+          <Box
+            sx={{
+              gap: 2,
+              display: 'grid',
+              gridTemplateColumns: { lg: '1fr .8fr .8fr 1fr 1fr 1.5fr', md: '1fr 1fr 1fr' },
+            }}
+          >
+            <SelectFilter name="pair" label="Pair" options={pairOptions} />
+            <SelectFilter name="result" label="Result" options={resultOptions} />
+          </Box>
+          <TradesTableMain />
+        </Stack>
+      </FiltersProvider>
+    </PaginationProvider>
+  );
+};
+
 const TradesPage = () => {
   const { openModal } = useModal();
 
   return (
     <>
-      <Box>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Paper sx={{ p: 3 }}>
+        <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h5">Trades</Typography>
             <IconButton
@@ -61,12 +89,8 @@ const TradesPage = () => {
             <TradingSessionSelect />
           </Stack>
         </Stack>
-        <Paper sx={{ mt: 2, p: 2 }}>
-          <PaginationProvider>
-            <TradesTableMain />
-          </PaginationProvider>
-        </Paper>
-      </Box>
+        <TradesTableContainer />
+      </Paper>
 
       <TradesModalList />
     </>

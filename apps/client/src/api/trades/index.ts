@@ -1,10 +1,12 @@
 import { client } from '../../lib/client';
 import transformToFormData from '../../lib/transformToFormData';
-import type { TradeFormSchemaType, TradesResult } from '../../types/trade';
+import type { Result, TradeFormSchemaType, TradesResult } from '../../types/trade';
 
 type GetTradesOptions = {
   page?: number;
   rowsPerPage?: number;
+  pair?: number;
+  result?: Result;
 };
 
 export const getTrades = async (params: GetTradesOptions) => {
@@ -12,6 +14,8 @@ export const getTrades = async (params: GetTradesOptions) => {
     params: {
       page: params.page || 1,
       limit: params.rowsPerPage || 10,
+      pairId: params.pair || undefined,
+      result: params.result || undefined,
     },
   });
   return response.data;
