@@ -34,7 +34,6 @@ export class TradingSessionsService {
     const [error, sessions] = await withCatch(
       this.tradingSessionsRepository.find({
         where: { user },
-        order: { isMain: 'DESC' },
       })
     );
     if (error) {

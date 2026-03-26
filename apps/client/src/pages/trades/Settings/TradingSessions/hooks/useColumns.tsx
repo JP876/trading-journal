@@ -1,17 +1,20 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 import type { ColumnDef } from '@tanstack/react-table';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import type { TradingSession } from '../../../../../types/tradingSessions';
 import MenuActions from '../../../../../components/MenuActions';
 import useModal from '../../../../../hooks/useModal';
 import { TradesPageModal } from '../../../enums';
 import NotFoundValue from '../../../../../components/NotFoundValue';
+import { editTradingSession } from '../../../../../api/tradingSessions';
+import useSnackbar from '../../../../../hooks/useSnackbar';
+import { QueryKey } from '../../../../../enums';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -30,6 +33,7 @@ const TradingSessionActions = ({ session }: { session: TradingSession }) => {
         <MenuActions.Item
           label="Delete trading session"
           icon={<DeleteIcon color="error" fontSize="small" />}
+          menuItemProps={{ disabled: !!session.isMain }}
           onClick={(_, handleClose) => {
             openModal(TradesPageModal.DELETE_TRADING_SESSION, session);
             handleClose();
@@ -39,6 +43,27 @@ const TradingSessionActions = ({ session }: { session: TradingSession }) => {
     </Stack>
   );
 };
+
+const TradingSessionMainSwitch = memo(({ id, isMain }: { id: number; isMain: boolean }) => {
+  const { openSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: () => editTradingSession(id, { isMain: 1 }),
+    onSuccess: async () => {
+      openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
+        queryClient.refetchQueries({ queryKey: [QueryKey.TRADES] }),
+      ]);
+    },
+    onError: () => {
+      openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
+    },
+  });
+
+  return <Switch size="small" checked={!!isMain} onChange={() => mutation.mutate()} disabled={!!isMain} />;
+});
 
 const useColumns = () => {
   return useMemo<ColumnDef<TradingSession>[]>(() => {
@@ -55,10 +80,7 @@ const useColumns = () => {
         accessorKey: 'isMain',
         header: 'Main',
         size: 80,
-        cell: ({ row }) => {
-          const value = row.original.isMain;
-          return value ? <CheckIcon fontSize="small" color="success" /> : <CloseIcon fontSize="small" />;
-        },
+        cell: ({ row }) => <TradingSessionMainSwitch id={row.original.id} isMain={!!row.original.isMain} />,
       },
       {
         accessorKey: 'description',

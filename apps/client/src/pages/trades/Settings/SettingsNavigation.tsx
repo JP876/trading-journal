@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+
 import TradingSessionsMain from './TradingSessions';
 
 type TabPanelProps = {
@@ -24,12 +25,12 @@ const TabPanel = ({ children, index, value }: TabPanelProps) => {
   );
 };
 
-function a11yProps(index: number) {
+const a11yProps = (index: number) => {
   return {
     id: `vertical-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
   };
-}
+};
 
 const SettingsNavigation = () => {
   const [value, setValue] = useState(0);
