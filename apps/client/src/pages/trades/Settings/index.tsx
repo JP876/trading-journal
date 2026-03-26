@@ -4,7 +4,7 @@ import SettingsNavigation from './SettingsNavigation';
 
 const TradesSettingsMain = () => {
   return (
-    <Box>
+    <Box sx={{ width: '100%' }}>
       <SettingsNavigation />
     </Box>
   );

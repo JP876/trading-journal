@@ -2,7 +2,7 @@ import { forwardRef, memo } from 'react';
 import Dialog, { type DialogProps } from '@mui/material/Dialog';
 import DialogContent, { type DialogContentProps } from '@mui/material/DialogContent';
 import DialogTitle, { type DialogTitleProps } from '@mui/material/DialogTitle';
-import { IconButton, Slide, Stack } from '@mui/material';
+import { IconButton, Slide, Stack, type Breakpoint } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import type { TransitionProps } from '@mui/material/transitions';
 import { useAtomValue } from 'jotai';
@@ -18,6 +18,7 @@ type DialogMainPropsType = {
   dialogContentProps?: DialogContentProps;
   dialogTitleProps?: DialogTitleProps;
   hideCloseBtn?: boolean;
+  size?: Breakpoint;
 };
 
 const Transition = forwardRef(function Transition(
@@ -37,6 +38,7 @@ function DialogMain({
   title,
   hideCloseBtn,
   children,
+  size,
 }: DialogMainPropsType) {
   const modalInfo = useAtomValue(modalAtom)?.[id];
   const { closeModal } = useModal();
@@ -45,7 +47,7 @@ function DialogMain({
 
   return (
     <Dialog
-      maxWidth="sm"
+      maxWidth={size || 'sm'}
       keepMounted={false}
       closeAfterTransition={true}
       disableRestoreFocus={true}

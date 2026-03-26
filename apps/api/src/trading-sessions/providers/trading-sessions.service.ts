@@ -31,7 +31,12 @@ export class TradingSessionsService {
   }
 
   public async findAll(user: User) {
-    const [error, sessions] = await withCatch(this.tradingSessionsRepository.find({ where: { user } }));
+    const [error, sessions] = await withCatch(
+      this.tradingSessionsRepository.find({
+        where: { user },
+        order: { isMain: 'DESC' },
+      })
+    );
     if (error) {
       throw new RequestTimeoutException('Unable to process your request at the moment please try later', {
         description: error.message,
