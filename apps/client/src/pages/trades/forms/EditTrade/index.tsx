@@ -9,6 +9,7 @@ import useSnackbar from '../../../../hooks/useSnackbar';
 import { editTrade } from '../../../../api/trades';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
+import { QueryKey } from '../../../../enums';
 
 type EditTradeFormProps = {
   trade: Trade;
@@ -20,7 +21,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
-  const sessions = queryClient.getQueryData<TradingSession[]>(['trading-sessions']);
+  const sessions = queryClient.getQueryData<TradingSession[]>([QueryKey.TRADING_SESSIONS]);
   const mainSession = sessions?.find((el) => el?.isMain);
 
   const mutation = useMutation({
@@ -32,9 +33,9 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       return editTrade(trade.id, { ...data, tradingSessionId: session });
     },
     onSuccess: async () => {
-      await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
+      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been updated.' });
-      closeModal(TradesPageModal.editTrade);
+      closeModal(TradesPageModal.EDIT_TRADE);
     },
   });
 

@@ -31,6 +31,9 @@ const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPa
         variant="standard"
         value={itemsPerPage}
         onChange={(event) => dispatch({ type: 'updateRowsPerPage', value: event.target.value })}
+        slotProps={{
+          input: { id: `rows-per-page-select` },
+        }}
       >
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>

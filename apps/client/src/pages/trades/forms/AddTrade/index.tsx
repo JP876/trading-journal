@@ -9,6 +9,7 @@ import useSnackbar from '../../../../hooks/useSnackbar';
 import TradeForm from '../TradeForm';
 import { addTrade } from '../../../../api/trades';
 import { TradesPageModal } from '../../enums';
+import { QueryKey } from '../../../../enums';
 
 const AddTradeForm = () => {
   const queryClient = useQueryClient();
@@ -16,15 +17,15 @@ const AddTradeForm = () => {
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
-  const sessions = queryClient.getQueryData<TradingSession[]>(['trading-sessions']);
+  const sessions = queryClient.getQueryData<TradingSession[]>([QueryKey.TRADING_SESSIONS]);
   const mainSession = sessions?.find((el) => el?.isMain);
 
   const mutation = useMutation({
     mutationFn: addTrade,
     onSuccess: async () => {
-      await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
+      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been saved.' });
-      closeModal(TradesPageModal.addTrade);
+      closeModal(TradesPageModal.ADD_TRADE);
     },
   });
 

@@ -37,10 +37,15 @@ const reducer = (state: PaginationState, action: PaginationAction) => {
 
 type PaginationProviderProps = {
   children: React.ReactNode;
+  page?: number;
+  rowsPerPage?: number;
 };
 
-const PaginationProvider = ({ children }: PaginationProviderProps) => {
-  const [state, dispatch] = useReducer(reducer, { page: 1, rowsPerPage: 10 });
+const PaginationProvider = ({ page, rowsPerPage, children }: PaginationProviderProps) => {
+  const [state, dispatch] = useReducer(reducer, {
+    page: page || 1,
+    rowsPerPage: rowsPerPage || 10,
+  });
 
   return (
     <PaginationState.Provider value={state}>

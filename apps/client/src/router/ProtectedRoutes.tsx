@@ -4,10 +4,11 @@ import { Outlet } from 'react-router';
 
 import { refreshToken } from '../api/auth';
 import { getPairs } from '../api/pairs';
+import { QueryKey } from '../enums';
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
 const refreshTokenQueryOptions = queryOptions({
-  queryKey: ['refresh-token'],
+  queryKey: [QueryKey.REFRESH_TOKEN],
   queryFn: refreshToken,
   retry: false,
 });
@@ -15,7 +16,7 @@ const refreshTokenQueryOptions = queryOptions({
 const ProtectedRoutes = () => {
   const [enabled, setEnabled] = useState(false);
 
-  useQuery({ queryKey: ['pairs'], queryFn: getPairs, staleTime: Infinity });
+  useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
   useQuery({
     ...refreshTokenQueryOptions,
     refetchInterval: REFETCH_INTERVAL,

@@ -26,7 +26,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Edit trade"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.editTrade, trade);
+            openModal(TradesPageModal.EDIT_TRADE, trade);
             handleClose();
           }}
         />
@@ -34,7 +34,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Delete trade"
           icon={<DeleteIcon color="error" fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.deleteTrade, trade);
+            openModal(TradesPageModal.DELETE_TRADE, trade);
             handleClose();
           }}
         />

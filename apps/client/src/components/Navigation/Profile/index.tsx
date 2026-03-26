@@ -10,12 +10,13 @@ import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
 import withCatch from '../../../lib/withCatch';
 import { getLoggedInUser, logoutUser } from '../../../api/auth';
 import useSnackbar from '../../../hooks/useSnackbar';
+import { QueryKey } from '../../../enums';
 
 const MenuActionButton = () => {
   const { handleClick } = useMenuActionsContext();
 
   const { data } = useQuery({
-    queryKey: ['user'],
+    queryKey: [QueryKey.USER],
     queryFn: getLoggedInUser,
     refetchOnWindowFocus: false,
     staleTime: Infinity,

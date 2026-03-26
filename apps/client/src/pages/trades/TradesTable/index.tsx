@@ -18,13 +18,14 @@ import RowsPerPageSelect from '../../../components/table/RowsPerPageSelect';
 import ResultsMain from '../../../components/table/Results';
 import { useFiltersState } from '../../../components/table/providers/Filters';
 import type { Result } from '../../../types/trade';
+import { QueryKey } from '../../../enums';
 
 const TradesTableMain = () => {
   const { page, rowsPerPage } = usePaginationState();
   const filters = useFiltersState() as { pair?: number; result?: Result };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['trades', page, rowsPerPage, filters.pair, filters.result],
+    queryKey: [QueryKey.TRADES, page, rowsPerPage, filters.pair, filters.result],
     queryFn: () => getTrades({ page, rowsPerPage, ...filters }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,

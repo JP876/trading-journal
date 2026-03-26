@@ -4,10 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import type { Pair } from '../../../types/pair';
 import type { AutocompleteOption } from '../../../components/form/AutocompleteInput';
 import { getPairs } from '../../../api/pairs';
+import { QueryKey } from '../../../enums';
 
 const usePairsOptions = () => {
   const pairsQuery = useQuery<Pair[]>({
-    queryKey: ['pairs'],
+    queryKey: [QueryKey.PAIRS],
     queryFn: () => getPairs(),
     staleTime: Infinity,
   });

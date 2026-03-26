@@ -5,13 +5,13 @@ import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useAtomValue } from 'jotai';
 
 import type { Trade } from '../../types/trade';
 import TradingSessionSelect from './TradingSessionSelect';
 import DialogMain from '../../components/DialogMain';
 import useModal from '../../hooks/useModal';
-import TradesTableMain from './TradesTable';
 import { modalAtom } from '../../atoms/modal';
 import { TradesPageModal } from './enums';
 import PaginationProvider from '../../components/table/providers/Pagination';
@@ -23,21 +23,30 @@ import { resultOptions } from './consts';
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
 const DeleteTradeDialog = lazy(() => import('./DeleteTrade'));
+const TradesSettingsMain = lazy(() => import('./Settings'));
+
+const TradesTableMain = lazy(() => import('./TradesTable'));
 
 const TradesModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
 
   return (
     <>
-      <DialogMain id={TradesPageModal.addTrade} title="Add trade">
-        <AddTradeForm />
-      </DialogMain>
+      <>
+        <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
+          <AddTradeForm />
+        </DialogMain>
 
-      <DialogMain title={TradesPageModal.editTrade} id="editTradeForm">
-        <EditTradeForm trade={modalInfo?.[TradesPageModal.editTrade]?.data as Trade} />
-      </DialogMain>
+        <DialogMain title={TradesPageModal.EDIT_TRADE} id="editTradeForm">
+          <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
+        </DialogMain>
 
-      <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.deleteTrade]?.data as Trade} />
+        <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
+      </>
+
+      <DialogMain id={TradesPageModal.SETTINGS} title="Trades Settings">
+        <TradesSettingsMain />
+      </DialogMain>
     </>
   );
 };
@@ -75,17 +84,18 @@ const TradesPage = () => {
         <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
             <Typography variant="h5">Trades</Typography>
-            <IconButton
-              size="small"
-              disableRipple
-              title="Add trade button"
-              aria-label="add-trade-button"
-              onClick={() => openModal(TradesPageModal.addTrade)}
-            >
+            <IconButton size="small" aria-label="add-trade-button" onClick={() => openModal(TradesPageModal.ADD_TRADE)}>
               <AddIcon />
             </IconButton>
           </Stack>
           <Stack direction="row" alignItems="center" gap={2}>
+            <IconButton
+              size="small"
+              aria-label="trades-settings-button"
+              onClick={() => openModal(TradesPageModal.SETTINGS)}
+            >
+              <SettingsIcon />
+            </IconButton>
             <TradingSessionSelect />
           </Stack>
         </Stack>

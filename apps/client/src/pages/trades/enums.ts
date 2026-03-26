@@ -1,6 +1,6 @@
 export enum TradesPageModal {
-  addTrade = 'addTradeForm',
-  editTrade = 'editTradeForm',
-  deleteTrade = 'deleteTradeForm',
-  settings = 'tradeSettings',
+  ADD_TRADE = 'addTradeForm',
+  EDIT_TRADE = 'editTradeForm',
+  DELETE_TRADE = 'deleteTradeForm',
+  SETTINGS = 'tradeSettings',
 }

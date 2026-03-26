@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import useSnackbar from '../../../hooks/useSnackbar';
 import { editTradingSession, getTradingSessions } from '../../../api/tradingSessions';
+import { QueryKey } from '../../../enums';
 
 const TradingSessionSelect = () => {
   const labelId = useId();
@@ -16,7 +17,7 @@ const TradingSessionSelect = () => {
   const { openSnackbar } = useSnackbar();
 
   const { data } = useQuery({
-    queryKey: ['trading-sessions'],
+    queryKey: [QueryKey.TRADING_SESSIONS],
     queryFn: getTradingSessions,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -27,8 +28,8 @@ const TradingSessionSelect = () => {
     onSuccess: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
       await Promise.all([
-        queryClient.refetchQueries({ queryKey: ['trading-sessions'] }),
-        queryClient.refetchQueries({ queryKey: ['trades'] }),
+        queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
+        queryClient.refetchQueries({ queryKey: [QueryKey.TRADES] }),
       ]);
     },
     onError: () => {

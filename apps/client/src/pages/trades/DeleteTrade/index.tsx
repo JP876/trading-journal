@@ -11,6 +11,7 @@ import useSnackbar from '../../../hooks/useSnackbar';
 import { deleteTrade } from '../../../api/trades';
 import DialogMain from '../../../components/DialogMain';
 import { TradesPageModal } from '../enums';
+import { QueryKey } from '../../../enums';
 
 type DeleteTradeDialogProps = {
   trade: Trade;
@@ -25,12 +26,9 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
   const mutation = useMutation({
     mutationFn: deleteTrade,
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['trades'] }),
-        queryClient.invalidateQueries({ queryKey: ['stats'] }),
-      ]);
+      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
       openSnackbar({ severity: 'success', message: 'Your trade have been deleted.' });
-      closeModal(TradesPageModal.deleteTrade);
+      closeModal(TradesPageModal.DELETE_TRADE);
     },
   });
 
@@ -45,7 +43,7 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
 
   return (
     <DialogMain
-      id={TradesPageModal.deleteTrade}
+      id={TradesPageModal.DELETE_TRADE}
       title="Are you absolutely sure?"
       hideCloseBtn
       dialogContentProps={{ dividers: false }}
@@ -59,7 +57,7 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
             startIcon={<ClearIcon />}
             size="small"
             variant="outlined"
-            onClick={() => closeModal(TradesPageModal.deleteTrade)}
+            onClick={() => closeModal(TradesPageModal.DELETE_TRADE)}
           >
             Cancel
           </Button>
