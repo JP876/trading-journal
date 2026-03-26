@@ -8,14 +8,20 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
 import { getTrades } from '../../../api/trades';
 import useColumns from './hooks/useColumns';
+import { usePaginationState } from '../../../components/table/providers/Pagination';
+import PaginationMain from '../../../components/table/PaginationMain';
+import RowsPerPageSelect from '../../../components/table/RowsPerPageSelect';
 
 const TradesTableMain = () => {
-  const tradesQuery = useQuery({
-    queryKey: ['trades'],
-    queryFn: () => getTrades(),
+  const { page, rowsPerPage } = usePaginationState();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['trades', page, rowsPerPage],
+    queryFn: () => getTrades({ page, rowsPerPage }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
   });
@@ -23,19 +29,20 @@ const TradesTableMain = () => {
   const columns = useColumns();
 
   const table = useReactTable({
-    data: tradesQuery.data?.data || [],
+    data: data?.results || [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     state: { columnVisibility: {} },
   });
 
-  if (tradesQuery.isLoading) {
+  if (isLoading) {
     return (
       <Stack direction="row" alignItems="center" justifyContent="center" my={8}>
         <CircularProgress />
       </Stack>
     );
   }
+  console.log(data);
 
   return (
     <Stack gap={2}>
@@ -77,15 +84,25 @@ const TradesTableMain = () => {
                 </TableRow>
               ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+              <TableRow sx={{ height: '3rem' }}>
+                <TableCell colSpan={columns.length} sx={{ width: '100%', textAlign: 'center' }}>
+                  <Typography variant="body1">No results.</Typography>
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack />
+        {data?.currentPage ? (
+          <Stack direction="row" alignItems="center" gap={2}>
+            <RowsPerPageSelect itemsPerPage={data.itemsPerPage} />
+            <PaginationMain currentPage={data.currentPage} totalPages={data.totalPages} />
+          </Stack>
+        ) : null}
+      </Stack>
     </Stack>
   );
 };

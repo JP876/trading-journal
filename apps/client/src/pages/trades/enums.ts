@@ -1,4 +1,4 @@
-export enum TradesPageModalOptions {
+export enum TradesPageModal {
   addTrade = 'addTradeForm',
   editTrade = 'editTradeForm',
   deleteTrade = 'deleteTradeForm',

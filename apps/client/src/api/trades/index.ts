@@ -2,8 +2,18 @@ import { client } from '../../lib/client';
 import transformToFormData from '../../lib/transformToFormData';
 import type { TradeFormSchemaType, TradesResult } from '../../types/trade';
 
-export const getTrades = async () => {
-  const response = await client.get<TradesResult>('trades');
+type GetTradesOptions = {
+  page?: number;
+  rowsPerPage?: number;
+};
+
+export const getTrades = async (params: GetTradesOptions) => {
+  const response = await client.get<TradesResult>('trades', {
+    params: {
+      page: params.page || 1,
+      limit: params.rowsPerPage || 10,
+    },
+  });
   return response.data;
 };
 

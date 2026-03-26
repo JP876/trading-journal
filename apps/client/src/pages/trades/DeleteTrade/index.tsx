@@ -10,7 +10,7 @@ import useModal from '../../../hooks/useModal';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { deleteTrade } from '../../../api/trades';
 import DialogMain from '../../../components/DialogMain';
-import { TradesPageModalOptions } from '../enums';
+import { TradesPageModal } from '../enums';
 
 type DeleteTradeDialogProps = {
   trade: Trade;
@@ -30,7 +30,7 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
         queryClient.invalidateQueries({ queryKey: ['stats'] }),
       ]);
       openSnackbar({ severity: 'success', message: 'Your trade have been deleted.' });
-      closeModal(TradesPageModalOptions.deleteTrade);
+      closeModal(TradesPageModal.deleteTrade);
     },
   });
 
@@ -45,7 +45,7 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
 
   return (
     <DialogMain
-      id={TradesPageModalOptions.deleteTrade}
+      id={TradesPageModal.deleteTrade}
       title="Are you absolutely sure?"
       hideCloseBtn
       dialogContentProps={{ dividers: false }}
@@ -59,7 +59,7 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
             startIcon={<ClearIcon />}
             size="small"
             variant="outlined"
-            onClick={() => closeModal(TradesPageModalOptions.deleteTrade)}
+            onClick={() => closeModal(TradesPageModal.deleteTrade)}
           >
             Cancel
           </Button>

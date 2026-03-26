@@ -8,7 +8,7 @@ import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import { editTrade } from '../../../../api/trades';
 import type { TradingSession } from '../../../../types/tradingSessions';
-import { TradesPageModalOptions } from '../../enums';
+import { TradesPageModal } from '../../enums';
 
 type EditTradeFormProps = {
   trade: Trade;
@@ -34,7 +34,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
     onSuccess: async () => {
       await Promise.all([queryClient.invalidateQueries({ queryKey: ['trades'] })]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been updated.' });
-      closeModal(TradesPageModalOptions.editTrade);
+      closeModal(TradesPageModal.editTrade);
     },
   });
 

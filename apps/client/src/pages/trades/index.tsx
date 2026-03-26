@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import AddIcon from '@mui/icons-material/Add';
 import { useAtomValue } from 'jotai';
 
@@ -12,7 +13,8 @@ import DialogMain from '../../components/DialogMain';
 import useModal from '../../hooks/useModal';
 import TradesTableMain from './TradesTable';
 import { modalAtom } from '../../atoms/modal';
-import { TradesPageModalOptions } from './enums';
+import { TradesPageModal } from './enums';
+import PaginationProvider from '../../components/table/providers/Pagination';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -23,15 +25,15 @@ const TradesModalList = () => {
 
   return (
     <>
-      <DialogMain id={TradesPageModalOptions.addTrade} title="Add trade">
+      <DialogMain id={TradesPageModal.addTrade} title="Add trade">
         <AddTradeForm />
       </DialogMain>
 
-      <DialogMain title={TradesPageModalOptions.editTrade} id="editTradeForm">
-        <EditTradeForm trade={modalInfo?.[TradesPageModalOptions.editTrade]?.data as Trade} />
+      <DialogMain title={TradesPageModal.editTrade} id="editTradeForm">
+        <EditTradeForm trade={modalInfo?.[TradesPageModal.editTrade]?.data as Trade} />
       </DialogMain>
 
-      <DeleteTradeDialog trade={modalInfo?.[TradesPageModalOptions.deleteTrade]?.data as Trade} />
+      <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.deleteTrade]?.data as Trade} />
     </>
   );
 };
@@ -50,7 +52,7 @@ const TradesPage = () => {
               disableRipple
               title="Add trade button"
               aria-label="add-trade-button"
-              onClick={() => openModal(TradesPageModalOptions.addTrade)}
+              onClick={() => openModal(TradesPageModal.addTrade)}
             >
               <AddIcon />
             </IconButton>
@@ -59,9 +61,11 @@ const TradesPage = () => {
             <TradingSessionSelect />
           </Stack>
         </Stack>
-        <Stack mt={2}>
-          <TradesTableMain />
-        </Stack>
+        <Paper sx={{ mt: 2, p: 2 }}>
+          <PaginationProvider>
+            <TradesTableMain />
+          </PaginationProvider>
+        </Paper>
       </Box>
 
       <TradesModalList />

@@ -1,5 +1,5 @@
 export type Paginated<T> = {
-  data: T;
+  results: T;
   itemsPerPage: number;
   currentPage: number;
   totalItems: number;

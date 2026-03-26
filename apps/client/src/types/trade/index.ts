@@ -47,7 +47,7 @@ export type Trade = {
 } & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction'>;
 
 export type TradesResult = {
-  data: Trade[];
+  results: Trade[];
   totalPages: number;
   totalItems: number;
   itemsPerPage: number;

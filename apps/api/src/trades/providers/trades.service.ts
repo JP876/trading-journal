@@ -71,7 +71,7 @@ export class TradesService {
     const totalItems = await this.tradesRepository.count();
     const totalPages = Math.ceil(totalItems / limit);
 
-    return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, data: trades };
+    return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, results: trades };
   }
 
   public async findOneBy(options: FindOptionsWhere<Trade>) {
