@@ -9,15 +9,14 @@ import type { Trade } from '../../../types/trade';
 import useModal from '../../../hooks/useModal';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { deleteTrade } from '../../../api/trades';
-import DialogMain from '../../../components/DialogMain';
 import { TradesPageModal } from '../enums';
 import { QueryKey } from '../../../enums';
 
-type DeleteTradeDialogProps = {
+type DeleteTradeProps = {
   trade: Trade;
 };
 
-const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
+const DeleteTrade = ({ trade }: DeleteTradeProps) => {
   const queryClient = useQueryClient();
 
   const { closeModal } = useModal();
@@ -42,39 +41,32 @@ const DeleteTradeDialog = ({ trade }: DeleteTradeDialogProps) => {
   };
 
   return (
-    <DialogMain
-      id={TradesPageModal.DELETE_TRADE}
-      title="Are you absolutely sure?"
-      hideCloseBtn
-      dialogContentProps={{ dividers: false }}
-    >
-      <Stack mt={-2} gap={2}>
-        <Typography>This action cannot be undone. This will permanently delete trade.</Typography>
-        <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
-          <Button
-            disabled={mutation.isPending}
-            color="inherit"
-            startIcon={<ClearIcon />}
-            size="small"
-            variant="outlined"
-            onClick={() => closeModal(TradesPageModal.DELETE_TRADE)}
-          >
-            Cancel
-          </Button>
-          <Button
-            loading={mutation.isPending}
-            startIcon={<DeleteIcon />}
-            size="small"
-            variant="contained"
-            color="error"
-            onClick={handleDeleteTrade}
-          >
-            Delete
-          </Button>
-        </Stack>
+    <Stack mt={-2} gap={2}>
+      <Typography>This action cannot be undone. This will permanently delete trade.</Typography>
+      <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
+        <Button
+          disabled={mutation.isPending}
+          color="inherit"
+          startIcon={<ClearIcon />}
+          size="small"
+          variant="outlined"
+          onClick={() => closeModal(TradesPageModal.DELETE_TRADE)}
+        >
+          Cancel
+        </Button>
+        <Button
+          loading={mutation.isPending}
+          startIcon={<DeleteIcon />}
+          size="small"
+          variant="contained"
+          color="error"
+          onClick={handleDeleteTrade}
+        >
+          Delete
+        </Button>
       </Stack>
-    </DialogMain>
+    </Stack>
   );
 };
 
-export default DeleteTradeDialog;
+export default DeleteTrade;

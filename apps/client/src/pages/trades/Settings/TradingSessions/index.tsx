@@ -13,12 +13,22 @@ import type { TradingSession } from '../../../../types/tradingSessions';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
+const DeleteTradingSession = lazy(() => import('./DeleteTradingSession'));
 
 const TradingSessionModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
 
   return (
     <>
+      <DialogMain
+        id={TradesPageModal.DELETE_TRADING_SESSION}
+        title="Are you absolutely sure?"
+        hideCloseBtn
+        dialogContentProps={{ dividers: false }}
+      >
+        <DeleteTradingSession session={modalInfo?.[TradesPageModal.DELETE_TRADING_SESSION]?.data as TradingSession} />
+      </DialogMain>
+
       <DialogMain id={TradesPageModal.ADD_TRADING_SESSION} title="Add trading session">
         <AddTradingSessionForm />
       </DialogMain>

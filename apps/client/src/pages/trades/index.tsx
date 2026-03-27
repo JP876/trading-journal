@@ -22,7 +22,7 @@ import { resultOptions } from './consts';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
-const DeleteTradeDialog = lazy(() => import('./DeleteTrade'));
+const DeleteTrade = lazy(() => import('./DeleteTrade'));
 const TradesSettingsMain = lazy(() => import('./Settings'));
 
 const TradesTableMain = lazy(() => import('./TradesTable'));
@@ -40,7 +40,14 @@ const TradesModalList = () => {
         <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
       </DialogMain>
 
-      <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
+      <DialogMain
+        id={TradesPageModal.DELETE_TRADE}
+        title="Are you absolutely sure?"
+        hideCloseBtn
+        dialogContentProps={{ dividers: false }}
+      >
+        <DeleteTrade trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
+      </DialogMain>
 
       <DialogMain id={TradesPageModal.SETTINGS} title="Trades Settings" size="md">
         <TradesSettingsMain />
