@@ -35,12 +35,13 @@ const reducer = (state: FiltersStateType, action: FiltersAction) => {
   }
 };
 
-type FiltersProviderProps = {
+export type FiltersProviderProps = {
   children: React.ReactNode;
+  initialValues?: FiltersStateType;
 };
 
-function FiltersProvider({ children }: FiltersProviderProps) {
-  const [state, dispatch] = useReducer(reducer, {});
+function FiltersProvider({ children, initialValues }: FiltersProviderProps) {
+  const [state, dispatch] = useReducer(reducer, initialValues || {});
 
   return (
     <FiltersState.Provider value={state}>

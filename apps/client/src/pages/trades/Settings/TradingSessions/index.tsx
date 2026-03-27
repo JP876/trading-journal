@@ -10,6 +10,7 @@ import { TradesPageModal } from '../../enums';
 import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
 import type { TradingSession } from '../../../../types/tradingSessions';
+import TableProviders from '../../../../components/table/providers';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
@@ -44,7 +45,7 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <>
+    <TableProviders>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Stack></Stack>
@@ -63,7 +64,7 @@ const TradingSessionsMain = () => {
       </Stack>
 
       <TradingSessionModalList />
-    </>
+    </TableProviders>
   );
 };
 

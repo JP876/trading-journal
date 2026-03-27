@@ -29,6 +29,9 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
       openSnackbar({ severity: 'success', message: 'Your trading session have been deleted.' });
       closeModal(TradesPageModal.DELETE_TRADING_SESSION);
     },
+    onError: () => {
+      openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
+    },
   });
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
