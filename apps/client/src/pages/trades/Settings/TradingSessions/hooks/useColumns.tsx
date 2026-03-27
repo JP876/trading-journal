@@ -15,6 +15,7 @@ import NotFoundValue from '../../../../../components/NotFoundValue';
 import { editTradingSession } from '../../../../../api/tradingSessions';
 import useSnackbar from '../../../../../hooks/useSnackbar';
 import { QueryKey } from '../../../../../enums';
+import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -23,7 +24,7 @@ const TradingSessionActions = ({ session }: { session: TradingSession }) => {
     <Stack direction="row" alignItems="center" justifyContent="center">
       <MenuActions>
         <MenuActions.Item
-          label="Edit trading session"
+          label="Edit session"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
             openModal(TradesPageModal.EDIT_TRADING_SESSION, session);
@@ -31,7 +32,7 @@ const TradingSessionActions = ({ session }: { session: TradingSession }) => {
           }}
         />
         <MenuActions.Item
-          label="Delete trading session"
+          label="Delete session"
           icon={<DeleteIcon color="error" fontSize="small" />}
           menuItemProps={{ disabled: !!session.isMain }}
           onClick={(_, handleClose) => {
@@ -49,10 +50,10 @@ const TradingSessionMainSwitch = memo(({ id, isMain }: { id: number; isMain: boo
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: () => editTradingSession(id, { isMain: 1 }),
-    onSuccess: async () => {
+    mutationFn: () => editTradingSession(id, { isMain: true }),
+    onSettled: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
-      await Promise.all([
+      return await Promise.all([
         queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
         queryClient.refetchQueries({ queryKey: [QueryKey.TRADES] }),
       ]);
@@ -62,7 +63,15 @@ const TradingSessionMainSwitch = memo(({ id, isMain }: { id: number; isMain: boo
     },
   });
 
-  return <Switch size="small" checked={!!isMain} onChange={() => mutation.mutate()} disabled={!!isMain} />;
+  return (
+    <Switch
+      size="small"
+      checked={!!isMain}
+      onChange={() => mutation.mutate()}
+      disabled={!!isMain}
+      sx={{ opacity: mutation.isPending ? 0.4 : 1 }}
+    />
+  );
 });
 
 const useColumns = () => {
@@ -88,7 +97,7 @@ const useColumns = () => {
         minSize: 300,
         cell: ({ row }) => {
           const value = row.original.description;
-          return value ? <Typography>{value}</Typography> : <NotFoundValue />;
+          return value ? <ClampedTextContainer maxRows={2}>{value}</ClampedTextContainer> : <NotFoundValue />;
         },
       },
       {

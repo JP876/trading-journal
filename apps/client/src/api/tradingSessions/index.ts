@@ -7,7 +7,7 @@ export const getTradingSessions = async (): Promise<TradingSession[]> => {
 };
 
 export const addTradingSession = async (data: TradingSessionFormSchemaType): Promise<TradingSession | null> => {
-  const response = await client.post('trading-sessions', data);
+  const response = await client.post('trading-sessions', { ...data, isMain: +!!data.isMain });
   return response.data;
 };
 
@@ -15,7 +15,7 @@ export const editTradingSession = async (
   id: number,
   data: Partial<TradingSessionFormSchemaType>
 ): Promise<TradingSession | null> => {
-  const response = await client.patch(`trading-sessions/${id}`, data);
+  const response = await client.patch(`trading-sessions/${id}`, { ...data, isMain: +!!data.isMain });
   return response.data;
 };
 

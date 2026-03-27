@@ -24,7 +24,7 @@ const TradingSessionSelect = () => {
   });
 
   const mutation = useMutation({
-    mutationFn: (id: number) => editTradingSession(id, { isMain: 1 }),
+    mutationFn: (id: number) => editTradingSession(id, { isMain: true }),
     onSuccess: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
       await Promise.all([

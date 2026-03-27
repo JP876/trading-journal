@@ -32,17 +32,15 @@ const TradesModalList = () => {
 
   return (
     <>
-      <>
-        <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
-          <AddTradeForm />
-        </DialogMain>
+      <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
+        <AddTradeForm />
+      </DialogMain>
 
-        <DialogMain title={TradesPageModal.EDIT_TRADE} id="editTradeForm">
-          <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
-        </DialogMain>
+      <DialogMain title={TradesPageModal.EDIT_TRADE} id="editTradeForm">
+        <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
+      </DialogMain>
 
-        <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
-      </>
+      <DeleteTradeDialog trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
 
       <DialogMain id={TradesPageModal.SETTINGS} title="Trades Settings" size="md">
         <TradesSettingsMain />

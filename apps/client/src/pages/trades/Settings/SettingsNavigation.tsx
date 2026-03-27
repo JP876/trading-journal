@@ -20,7 +20,7 @@ const TabPanel = ({ children, index, value }: TabPanelProps) => {
       aria-labelledby={`vertical-tab-${index}`}
       sx={{ width: '100%' }}
     >
-      {value === index && <Box sx={{ pl: 2, width: 'inherit' }}>{children}</Box>}
+      {value === index && <Box sx={{ p: 2, width: 'inherit' }}>{children}</Box>}
     </Box>
   );
 };

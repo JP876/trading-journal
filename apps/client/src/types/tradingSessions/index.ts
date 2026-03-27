@@ -3,8 +3,8 @@ import { z } from 'zod';
 export const TradingSessionFormSchema = z.object({
   title: z.string(),
   description: z.string().optional(),
-  isMain: z.number().min(0).max(1).optional(),
+  isMain: z.boolean().optional(),
 });
 
 export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSchema>;
-export type TradingSession = { id: number } & TradingSessionFormSchemaType;
+export type TradingSession = { id: number; isMain: number } & Omit<TradingSessionFormSchemaType, 'isMain'>;

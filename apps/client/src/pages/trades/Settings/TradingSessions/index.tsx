@@ -1,84 +1,59 @@
-import { useQuery } from '@tanstack/react-query';
-import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
-import CircularProgress from '@mui/material/CircularProgress';
+import { lazy } from 'react';
 import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import { useAtomValue } from 'jotai';
 
-import { QueryKey } from '../../../../enums';
-import { getTradingSessions } from '../../../../api/tradingSessions';
-import useColumns from './hooks/useColumns';
-import { Box } from '@mui/material';
+import TradingSessionsTable from './TableMain';
+import useModal from '../../../../hooks/useModal';
+import { TradesPageModal } from '../../enums';
+import { modalAtom } from '../../../../atoms/modal';
+import DialogMain from '../../../../components/DialogMain';
+import type { TradingSession } from '../../../../types/tradingSessions';
 
-const TradingSessionsMain = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: [QueryKey.TRADING_SESSIONS],
-    queryFn: getTradingSessions,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
+const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
+const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
 
-  const columns = useColumns();
-
-  const table = useReactTable({
-    data: data || [],
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  if (isLoading) {
-    return (
-      <Stack direction="row" alignItems="center" justifyContent="center" my={8}>
-        <CircularProgress />
-      </Stack>
-    );
-  }
+const TradingSessionModalList = () => {
+  const modalInfo = useAtomValue(modalAtom);
 
   return (
-    <TableContainer sx={{ width: '100%' }}>
-      <Table size="small" stickyHeader>
-        <TableHead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableCell colSpan={header.colSpan} key={header.id} sx={{ width: header.getSize() }}>
-                    {header.isPlaceholder ? null : (
-                      <Box>{flexRender(header.column.columnDef.header, header.getContext())}</Box>
-                    )}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHead>
+    <>
+      <DialogMain id={TradesPageModal.ADD_TRADING_SESSION} title="Add trading session">
+        <AddTradingSessionForm />
+      </DialogMain>
 
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} sx={{ width: cell.column.getSize() }}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
-          ) : (
-            <TableRow sx={{ height: '3rem' }}>
-              <TableCell colSpan={columns.length} sx={{ width: '100%', textAlign: 'center' }}>
-                <Typography variant="body1">No results.</Typography>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <DialogMain id={TradesPageModal.EDIT_TRADING_SESSION} title="Edit trading session">
+        <EditTradingSessionForm session={modalInfo?.[TradesPageModal.EDIT_TRADING_SESSION]?.data as TradingSession} />
+      </DialogMain>
+    </>
+  );
+};
+
+const TradingSessionsMain = () => {
+  const { openModal } = useModal();
+
+  return (
+    <>
+      <Stack gap={2}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack></Stack>
+          <Stack direction="row" alignItems="center" gap={2}>
+            <Button
+              size="small"
+              variant="contained"
+              startIcon={<AddIcon fontSize="small" />}
+              onClick={() => openModal(TradesPageModal.ADD_TRADING_SESSION)}
+            >
+              Add session
+            </Button>
+          </Stack>
+        </Stack>
+        <TradingSessionsTable />
+      </Stack>
+
+      <TradingSessionModalList />
+    </>
   );
 };
 
