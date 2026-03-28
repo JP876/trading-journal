@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import Autocomplete, {
   type AutocompleteProps,
   type AutocompleteRenderValueGetItemProps,
@@ -6,32 +6,40 @@ import Autocomplete, {
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useDebouncer } from '@tanstack/react-pacer';
 
-import type { SelectOption } from '../../../types';
-import { useFiltersDispatch, useFiltersState } from '../providers/Filters';
+import type { AutocompleteOption } from '../../../types';
+import { useFiltersDispatch } from '../providers/Filters';
 import { usePaginationDispatch } from '../providers/Pagination';
 import checkBrightness from '../../../lib/checkBrighness';
 
 type SelectFilterProps = {
   label: string;
   name: string;
+  initialValue?: string | number;
 };
 
-type RenderValueType = NonNullable<string | SelectOption> | (string | SelectOption)[] | null;
+type RenderValueType = NonNullable<string | AutocompleteOption> | (string | AutocompleteOption)[] | null;
 type GetTagPropsType = AutocompleteRenderValueGetItemProps<boolean>;
 
 type CustomAutocompleteProps = Omit<
-  AutocompleteProps<SelectOption, boolean | undefined, boolean | undefined, boolean | undefined>,
+  AutocompleteProps<AutocompleteOption, boolean | undefined, boolean | undefined, boolean | undefined>,
   'renderInput' | 'onChange' | 'value'
 >;
 
-const SelectFilter = ({ label, name, ...rest }: SelectFilterProps & CustomAutocompleteProps) => {
-  const filters = useFiltersState();
+const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps & CustomAutocompleteProps) => {
   const filtersDispatch = useFiltersDispatch();
-
   const paginationDispatch = usePaginationDispatch();
 
-  const filterValue = useMemo(() => filters?.[name], [filters?.[name]]);
+  const [filterValue, setFilterValue] = useState(initialValue);
+
+  const debouncer = useDebouncer(
+    (value) => {
+      filtersDispatch({ type: 'updateFilter', value: { id: name, value } });
+      paginationDispatch({ type: 'updatePage', value: 1 });
+    },
+    { wait: 600 }
+  );
 
   const value = useMemo(() => {
     if (!filterValue) return rest?.multiple ? [] : null;
@@ -47,7 +55,7 @@ const SelectFilter = ({ label, name, ...rest }: SelectFilterProps & CustomAutoco
 
   const handleChange = (
     _: React.SyntheticEvent,
-    newValue: NonNullable<string | SelectOption> | (string | SelectOption)[] | null
+    newValue: NonNullable<string | AutocompleteOption> | (string | AutocompleteOption)[] | null
   ) => {
     let value: string | number | null = null;
 
@@ -57,13 +65,13 @@ const SelectFilter = ({ label, name, ...rest }: SelectFilterProps & CustomAutoco
       value = typeof newValue === 'string' ? newValue : newValue?.value || '';
     }
 
-    filtersDispatch({ type: 'updateFilter', value: { id: name, value } });
-    paginationDispatch({ type: 'updatePage', value: 1 });
+    setFilterValue(value);
+    debouncer.maybeExecute(value);
   };
 
   const handleRenderValue = useCallback((value: RenderValueType, getTagProps: GetTagPropsType) => {
     if (Array.isArray(value)) {
-      return value.map((option: SelectOption | string, index: number) => {
+      return value.map((option: AutocompleteOption | string, index: number) => {
         const tagProps = getTagProps({ index });
         const { className, disabled, tabIndex, onDelete } = tagProps;
 
@@ -93,19 +101,20 @@ const SelectFilter = ({ label, name, ...rest }: SelectFilterProps & CustomAutoco
           />
         );
       });
-    } else {
-      return (
-        <Typography ml={1} sx={{ lineHeight: 0 }}>
-          {typeof value === 'string' ? value : value?.label}
-        </Typography>
-      );
     }
+
+    return (
+      <Typography ml={1} sx={{ lineHeight: 0 }}>
+        {typeof value === 'string' ? value : value?.label}
+      </Typography>
+    );
   }, []);
 
   return (
     <Autocomplete
       size="small"
       fullWidth
+      groupBy={(option) => option?.groupBy || ''}
       renderValue={handleRenderValue}
       renderInput={(params) => <TextField {...params} size="small" label={label} />}
       {...rest}
@@ -115,4 +124,4 @@ const SelectFilter = ({ label, name, ...rest }: SelectFilterProps & CustomAutoco
   );
 };
 
-export default SelectFilter;
+export default memo(SelectFilter);

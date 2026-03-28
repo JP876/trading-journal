@@ -2,7 +2,7 @@ import { lazy } from 'react';
 import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction } from 'react-router';
 
 import withCatch from '../lib/withCatch';
-import { refreshToken } from '../api/auth';
+import { getLoggedInUser, refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
@@ -11,7 +11,7 @@ const AuthPage = lazy(() => import('../pages/auth'));
 const TradesPage = lazy(() => import('../pages/trades'));
 const DashboardMain = lazy(() => import('../pages/dashboard'));
 
-const authMiddleware: MiddlewareFunction = async (_, next) => {
+const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
   if (error) {
     throw redirect('/auth');
@@ -19,19 +19,27 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
   return await next();
 };
 
+const authMiddleware: MiddlewareFunction = async (_, next) => {
+  const [error] = await withCatch(getLoggedInUser());
+  if (error) {
+    return await next();
+  }
+  return redirect('/dashboard');
+};
+
 const router = createBrowserRouter([
   { path: '/', Component: HomeMain },
-  { path: '/auth', Component: AuthPage },
+  { path: '/auth', Component: AuthPage, middleware: [authMiddleware] },
   {
     Component: ProtectedRoutes,
-    middleware: [authMiddleware],
+    middleware: [protectedRouteMiddleware],
     HydrateFallback: () => null,
     children: [
       {
         Component: NavigationMain,
         children: [
-          { path: '/trades', Component: TradesPage },
           { path: '/dashboard', Component: DashboardMain },
+          { path: '/trades', Component: TradesPage },
         ],
       },
     ],

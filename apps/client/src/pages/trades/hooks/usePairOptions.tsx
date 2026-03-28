@@ -2,9 +2,9 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import type { Pair } from '../../../types/pair';
-import type { AutocompleteOption } from '../../../components/form/AutocompleteInput';
 import { getPairs } from '../../../api/pairs';
 import { QueryKey } from '../../../enums';
+import type { AutocompleteOption } from '../../../types';
 
 const usePairsOptions = () => {
   const pairsQuery = useQuery<Pair[]>({

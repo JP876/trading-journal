@@ -1,5 +1,11 @@
 import { z } from 'zod';
-import { type ControllerRenderProps, type FieldPath, type FieldValues } from 'react-hook-form';
+import {
+  type ControllerFieldState,
+  type ControllerRenderProps,
+  type FieldPath,
+  type FieldValues,
+  type UseFormStateReturn,
+} from 'react-hook-form';
 
 export type APIError = { error: string; message: string; statusCode: number };
 
@@ -13,11 +19,18 @@ export type SelectOption<T = string | number> = {
   label: string;
   chipBackground?: string;
 };
+export type AutocompleteOption = SelectOption & { groupBy?: string };
 
 export type FormField<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 > = ControllerRenderProps<TFieldValues, TName>;
+
+export type ControllerRenderOptions = {
+  field: FormField;
+  fieldState: ControllerFieldState;
+  formState: UseFormStateReturn<FieldValues>;
+};
 
 export const filesObject = z.object({
   _id: z.string(),

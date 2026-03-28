@@ -2,9 +2,9 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import CheckIcon from '@mui/icons-material/Check';
-import { Controller, type UseFormReturn } from 'react-hook-form';
+import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
 
-import type { ClosedBy, Direction, TradeFormSchemaType } from '../../../types/trade';
+import type { TradeFormSchemaType } from '../../../types/trade';
 import FormMain from '../../../components/form/FormMain';
 import TextInput from '../../../components/form/TextInput';
 import SelectInput from '../../../components/form/SelectInput';
@@ -29,35 +29,12 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="pairId"
           control={form.control}
-          render={({ field }) => <AutocompleteInput field={field} options={pairOptions} label="Pair *" />}
+          render={(props) => <AutocompleteInput {...props} options={pairOptions} label="Pair *" />}
         />
         <Controller
           name="result"
           control={form.control}
-          render={({ field }) => <SelectInput options={resultOptions} label="Result *" field={field} />}
-        />
-      </Stack>
-
-      <Stack direction="row" alignItems="center" gap={3}>
-        <Controller
-          name="closedBy"
-          control={form.control}
-          render={({ field }) => <SelectInput options={closedByOptions} label="Closed by" field={field} />}
-        />
-        <Controller
-          name="closedAt"
-          control={form.control}
-          render={({ field }) => (
-            <TextInput
-              label="Closed at"
-              field={field}
-              type="number"
-              inputProps={({ watch }) => {
-                const closedBy: ClosedBy = watch('closedBy');
-                return { disabled: closedBy === 'tp/sl' };
-              }}
-            />
-          )}
+          render={(props) => <SelectInput options={resultOptions} label="Result *" {...props} />}
         />
       </Stack>
 
@@ -65,20 +42,31 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="direction"
           control={form.control}
-          render={({ field }) => <SelectInput options={directonOptions} label="Direction *" field={field} />}
+          render={(props) => <SelectInput options={directonOptions} label="Direction *" {...props} />}
         />
         <Controller
           name="orderType"
           control={form.control}
-          render={({ field }) => (
-            <SelectInput
-              options={orderTypeOptions}
-              label="Order type"
-              field={field}
-              inputProps={({ watch }) => {
-                const direction: Direction | undefined = watch('direction');
-                return { disabled: !direction };
-              }}
+          render={(props) => <SelectInput options={orderTypeOptions} label="Order type" {...props} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={3}>
+        <Controller
+          name="closedBy"
+          control={form.control}
+          render={(props) => <SelectInput options={closedByOptions} label="Closed by" {...props} />}
+        />
+        <Controller
+          name="closedAt"
+          control={form.control}
+          render={(props) => (
+            <Watch
+              control={form.control}
+              name={['closedBy']}
+              render={([closedBy]) => (
+                <TextInput label="Closed at" {...props} type="number" inputProps={{ disabled: closedBy === 'tp/sl' }} />
+              )}
             />
           )}
         />
@@ -88,12 +76,12 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="takeProfit"
           control={form.control}
-          render={({ field }) => <TextInput label="Take Profit *" field={field} type="number" />}
+          render={(props) => <TextInput label="Take Profit *" {...props} inputProps={{ type: 'number' }} />}
         />
         <Controller
           name="stopLoss"
           control={form.control}
-          render={({ field }) => <TextInput label="Stop Loss *" field={field} type="number" />}
+          render={(props) => <TextInput label="Stop Loss *" {...props} inputProps={{ type: 'number' }} />}
         />
       </Stack>
 
@@ -101,12 +89,12 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="openDate"
           control={form.control}
-          render={({ field }) => <DateTimeInput label="Open Date" field={field} />}
+          render={(props) => <DateTimeInput label="Open Date" {...props} />}
         />
         <Controller
           name="closeDate"
           control={form.control}
-          render={({ field }) => <DateTimeInput label="Close Date" field={field} />}
+          render={(props) => <DateTimeInput label="Close Date" {...props} />}
         />
       </Stack>
 
@@ -114,8 +102,8 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="comment"
           control={form.control}
-          render={({ field }) => (
-            <TextInput label="Comment" field={field} inputProps={{ fullWidth: true, multiline: true, rows: 6 }} />
+          render={(props) => (
+            <TextInput label="Comment" {...props} inputProps={{ fullWidth: true, multiline: true, rows: 6 }} />
           )}
         />
       </Stack>
