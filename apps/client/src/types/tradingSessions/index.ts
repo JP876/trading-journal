@@ -7,4 +7,7 @@ export const TradingSessionFormSchema = z.object({
 });
 
 export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSchema>;
-export type TradingSession = { id: number; isMain: number } & Omit<TradingSessionFormSchemaType, 'isMain'>;
+export type TradingSession = { id: number; isMain: number; tradesCount: number } & Omit<
+  TradingSessionFormSchemaType,
+  'isMain'
+>;

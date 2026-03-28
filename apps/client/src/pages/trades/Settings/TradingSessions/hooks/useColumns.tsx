@@ -80,9 +80,18 @@ const useColumns = () => {
       {
         accessorKey: 'title',
         header: 'Title',
-        minSize: 100,
+        size: 140,
         cell: ({ row }) => {
-          return <Typography>{row.original.title}</Typography>;
+          const value = row.original.title;
+          return value ? <ClampedTextContainer maxRows={1}>{value}</ClampedTextContainer> : <NotFoundValue />;
+        },
+      },
+      {
+        accessorKey: 'tradesCount',
+        header: 'Trades count',
+        size: 120,
+        cell: ({ row }) => {
+          return <Typography>{row.original.tradesCount}</Typography>;
         },
       },
       {
@@ -97,7 +106,7 @@ const useColumns = () => {
         minSize: 300,
         cell: ({ row }) => {
           const value = row.original.description;
-          return value ? <ClampedTextContainer maxRows={2}>{value}</ClampedTextContainer> : <NotFoundValue />;
+          return value ? <ClampedTextContainer maxRows={1}>{value}</ClampedTextContainer> : <NotFoundValue />;
         },
       },
       {

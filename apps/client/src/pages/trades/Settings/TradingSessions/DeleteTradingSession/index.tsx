@@ -1,7 +1,10 @@
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 
@@ -18,6 +21,8 @@ type DeleteTradingSessionProps = {
 
 const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
   const queryClient = useQueryClient();
+
+  const [title, setTitle] = useState('');
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
@@ -46,9 +51,28 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
   return (
     <Stack mt={-2} gap={2}>
       <Typography>
-        This action cannot be undone. This will permanently delete trading session and trades that are added to that
-        trading session.
+        This action{' '}
+        <Box component="span" sx={(theme) => ({ color: theme.palette.error.main, textTransform: 'uppercase' })}>
+          cannot
+        </Box>{' '}
+        be undone. This will permanently delete{' '}
+        <Box component="span" sx={{ fontWeight: 'bold' }}>
+          {session?.title || ''}
+        </Box>{' '}
+        trading session{session?.tradesCount ? ' and trades that are added to that trading session.' : '.'}
       </Typography>
+
+      <Box>
+        <Typography mb={1}>Please type in the title of the trading session to confirm.</Typography>
+        <TextField
+          fullWidth
+          label="Trading session title"
+          size="small"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
+      </Box>
+
       <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
         <Button
           disabled={mutation.isPending}
@@ -67,6 +91,7 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
           variant="contained"
           color="error"
           onClick={handleClick}
+          disabled={title !== session?.title}
         >
           Delete
         </Button>
