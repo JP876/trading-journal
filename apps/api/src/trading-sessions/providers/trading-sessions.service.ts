@@ -15,6 +15,14 @@ export class TradingSessionsService {
     private readonly tradingSessionsRepository: Repository<TradingSession>
   ) {}
 
+  private async updateMainSession() {
+    const [err, mainSessions] = await withCatch(this.tradingSessionsRepository.findBy({ isMain: 1 }));
+    if (err) {
+      throw new RequestTimeoutException('Unable to process your request at the moment please try later');
+    }
+    await this.tradingSessionsRepository.save(mainSessions.map((s) => ({ ...s, isMain: 0 })));
+  }
+
   public async findOneBy(options: FindOptionsWhere<TradingSession>) {
     const [findError, session] = await withCatch(this.tradingSessionsRepository.findOneBy(options));
 
@@ -34,17 +42,28 @@ export class TradingSessionsService {
     const [error, sessions] = await withCatch(
       this.tradingSessionsRepository.find({
         where: { user },
+        relations: ['trades'],
       })
     );
+
     if (error) {
       throw new RequestTimeoutException('Unable to process your request at the moment please try later', {
         description: error.message,
       });
     }
-    return Array.isArray(sessions) ? sessions : [];
+
+    return sessions.map((session) => {
+      const copy = { ...session };
+      delete copy.trades;
+      return { ...copy, tradesCount: session.trades?.length };
+    });
   }
 
   public async create(user: User, session: CreateTradingSessionDto) {
+    if (session.isMain) {
+      await this.updateMainSession();
+    }
+
     const newSession = this.tradingSessionsRepository.create({ ...session, user });
     const [saveError, created] = await withCatch(this.tradingSessionsRepository.save(newSession));
 
@@ -65,11 +84,7 @@ export class TradingSessionsService {
     session.isMain = updateSession.isMain ?? session.isMain;
 
     if (updateSession.isMain) {
-      const [err, mainSessions] = await withCatch(this.tradingSessionsRepository.findBy({ isMain: 1 }));
-      if (err) {
-        throw new RequestTimeoutException('Unable to process your request at the moment please try later');
-      }
-      await this.tradingSessionsRepository.save(mainSessions.map((s) => ({ ...s, isMain: 0 })));
+      await this.updateMainSession();
     }
 
     const [saveError, savedSession] = await withCatch(this.tradingSessionsRepository.save(session));

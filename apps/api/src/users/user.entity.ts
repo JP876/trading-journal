@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { TradingSession } from 'src/trading-sessions/trading-session.entity';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -18,6 +19,9 @@ export class User {
 
   @Column({ type: 'text', nullable: true })
   image: string | null;
+
+  @OneToMany(() => TradingSession, (session) => session.user)
+  tradingSessions?: TradingSession[];
 
   @Exclude({ toPlainOnly: true })
   @CreateDateColumn({ type: 'text' })

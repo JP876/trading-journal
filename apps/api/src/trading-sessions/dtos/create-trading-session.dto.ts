@@ -9,7 +9,6 @@ export class CreateTradingSessionDto {
 
   @IsString()
   @IsOptional()
-  @MinLength(2)
   @MaxLength(200)
   description?: string;
 
