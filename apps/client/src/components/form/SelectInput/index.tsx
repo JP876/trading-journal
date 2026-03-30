@@ -109,7 +109,7 @@ function SelectInput({ field, fieldState, options, renderChips, label, inputProp
           );
         })}
       </Select>
-      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText}</FormHelperText>
+      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText || ' '}</FormHelperText>
     </FormControl>
   );
 }

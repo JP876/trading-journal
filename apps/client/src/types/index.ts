@@ -44,3 +44,11 @@ export const filesObject = z.object({
 });
 
 export type Files = z.infer<typeof filesObject>;
+
+export type PaginationInfo<T> = {
+  results: T;
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  currentPage: number;
+};

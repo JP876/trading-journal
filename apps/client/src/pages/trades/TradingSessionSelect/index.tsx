@@ -18,7 +18,7 @@ const TradingSessionSelect = () => {
 
   const { data } = useQuery({
     queryKey: [QueryKey.TRADING_SESSIONS],
-    queryFn: getTradingSessions,
+    queryFn: () => getTradingSessions({ page: 1, rowsPerPage: 20 }),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
@@ -52,12 +52,12 @@ const TradingSessionSelect = () => {
           slotProps={{
             input: { id: 'trading-session-select' },
           }}
-          value={(data || []).find((el) => el?.isMain)?.id.toString() || ''}
+          value={(data?.results || []).find((el) => el?.isMain)?.id.toString() || ''}
           label="Main trading session"
           onChange={handleChange}
-          disabled={!Array.isArray(data) || data?.length === 0}
+          disabled={!Array.isArray(data?.results) || data?.results?.length === 0}
         >
-          {(data || []).map((el) => (
+          {(data?.results || []).map((el) => (
             <MenuItem key={el?.id} value={el.id}>
               {el?.title}
             </MenuItem>

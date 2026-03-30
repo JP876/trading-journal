@@ -12,7 +12,7 @@ const FormMain = <T extends FieldValues>({ form, onSubmit, boxProps, children }:
   return (
     <FormProvider {...form}>
       <Box
-        sx={{ display: 'flex', flexDirection: 'column', gap: 3, ...(boxProps?.sx || {}) }}
+        sx={{ display: 'flex', flexDirection: 'column', gap: 2, ...(boxProps?.sx || {}) }}
         {...(boxProps || {})}
         component="form"
         onSubmit={form.handleSubmit(onSubmit)}

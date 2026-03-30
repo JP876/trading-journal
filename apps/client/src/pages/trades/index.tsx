@@ -67,7 +67,7 @@ const TradesTableContainer = () => {
             sx={{
               gap: 2,
               display: 'grid',
-              gridTemplateColumns: { lg: '1fr .8fr .8fr 1fr 1fr 1.5fr', md: '1fr 1fr 1fr' },
+              gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
             }}
           >
             <SelectFilter name="pair" label="Pair" options={pairOptions} />

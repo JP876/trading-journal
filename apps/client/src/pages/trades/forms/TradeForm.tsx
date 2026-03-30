@@ -25,7 +25,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
   return (
     <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="pairId"
           control={form.control}
@@ -38,7 +38,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="direction"
           control={form.control}
@@ -51,7 +51,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="closedBy"
           control={form.control}
@@ -72,7 +72,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="takeProfit"
           control={form.control}
@@ -85,7 +85,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={3}>
+      <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="openDate"
           control={form.control}

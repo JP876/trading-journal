@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import Autocomplete, {
   type AutocompleteProps,
   type AutocompleteRenderValueGetItemProps,
@@ -6,17 +6,15 @@ import Autocomplete, {
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useDebouncer } from '@tanstack/react-pacer';
 
 import type { AutocompleteOption } from '../../../types';
-import { useFiltersDispatch } from '../providers/Filters';
-import { usePaginationDispatch } from '../providers/Pagination';
 import checkBrightness from '../../../lib/checkBrighness';
+import useFilter from '../hooks/useFilter';
 
 type SelectFilterProps = {
   label: string;
   name: string;
-  initialValue?: string | number;
+  initialValue?: string | number | null;
 };
 
 type RenderValueType = NonNullable<string | AutocompleteOption> | (string | AutocompleteOption)[] | null;
@@ -28,18 +26,7 @@ type CustomAutocompleteProps = Omit<
 >;
 
 const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps & CustomAutocompleteProps) => {
-  const filtersDispatch = useFiltersDispatch();
-  const paginationDispatch = usePaginationDispatch();
-
-  const [filterValue, setFilterValue] = useState(initialValue);
-
-  const debouncer = useDebouncer(
-    (value) => {
-      filtersDispatch({ type: 'updateFilter', value: { id: name, value } });
-      paginationDispatch({ type: 'updatePage', value: 1 });
-    },
-    { wait: 600 }
-  );
+  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: initialValue || '' });
 
   const value = useMemo(() => {
     if (!filterValue) return rest?.multiple ? [] : null;
@@ -65,8 +52,7 @@ const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps 
       value = typeof newValue === 'string' ? newValue : newValue?.value || '';
     }
 
-    setFilterValue(value);
-    debouncer.maybeExecute(value);
+    handleFilterChange(value);
   };
 
   const handleRenderValue = useCallback((value: RenderValueType, getTagProps: GetTagPropsType) => {
@@ -116,7 +102,18 @@ const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps 
       fullWidth
       groupBy={(option) => option?.groupBy || ''}
       renderValue={handleRenderValue}
-      renderInput={(params) => <TextField {...params} size="small" label={label} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          size="small"
+          label={label}
+          /* slotProps={{
+            input: {
+              endAdornment: <LoadingAdornment isLoading={!isPending} />,
+            },
+          }} */
+        />
+      )}
       {...rest}
       onChange={handleChange}
       value={value}

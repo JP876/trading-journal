@@ -1,31 +1,45 @@
-import { useQuery } from '@tanstack/react-query';
-import CircularProgress from '@mui/material/CircularProgress';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
 
 import { QueryKey } from '../../../../enums';
 import { getTradingSessions } from '../../../../api/tradingSessions';
 import useColumns from './hooks/useColumns';
 import TableMain from '../../../../components/table/TableMain';
+import ResultsMain from '../../../../components/table/Results';
+import RowsPerPageSelect from '../../../../components/table/RowsPerPageSelect';
+import PaginationMain from '../../../../components/table/PaginationMain';
+import { usePaginationState } from '../../../../components/table/providers/Pagination';
+import { useFiltersState } from '../../../../components/table/providers/Filters';
 
 const TradingSessionsTable = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: [QueryKey.TRADING_SESSIONS],
-    queryFn: getTradingSessions,
+  const { page, rowsPerPage } = usePaginationState();
+  const filters = useFiltersState() as { title: string };
+
+  const { data } = useQuery({
+    queryKey: [QueryKey.TRADING_SESSIONS, page, rowsPerPage, filters.title],
+    queryFn: () => getTradingSessions({ page, rowsPerPage, ...filters }),
     refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
     staleTime: Infinity,
   });
 
   const columns = useColumns();
 
-  if (isLoading) {
-    return (
-      <Stack direction="row" alignItems="center" justifyContent="center" my={8}>
-        <CircularProgress />
-      </Stack>
-    );
-  }
+  return (
+    <Stack gap={2}>
+      <TableMain data={data?.results || []} columns={columns} />
 
-  return <TableMain data={data || []} columns={columns} />;
+      {data?.currentPage ? (
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
+          <Stack direction="row" alignItems="center" gap={2}>
+            <RowsPerPageSelect itemsPerPage={data.itemsPerPage} />
+            <PaginationMain currentPage={data.currentPage} totalPages={data.totalPages} />
+          </Stack>
+        </Stack>
+      ) : null}
+    </Stack>
+  );
 };
 
 export default TradingSessionsTable;

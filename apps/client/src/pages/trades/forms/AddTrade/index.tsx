@@ -3,7 +3,7 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
 
 import { TradeFormSchema, type TradeFormSchemaType } from '../../../../types/trade';
-import type { TradingSession } from '../../../../types/tradingSessions';
+import type { TradingSessionsResult } from '../../../../types/tradingSessions';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import TradeForm from '../TradeForm';
@@ -17,8 +17,8 @@ const AddTradeForm = () => {
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
-  const sessions = queryClient.getQueryData<TradingSession[]>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.find((el) => el?.isMain);
+  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
+  const mainSession = sessions?.results?.find((el) => el?.isMain);
 
   const mutation = useMutation({
     mutationFn: addTrade,

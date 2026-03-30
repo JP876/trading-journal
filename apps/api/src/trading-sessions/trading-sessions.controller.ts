@@ -1,18 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 
 import { TradingSessionsService } from './providers/trading-sessions.service';
 import { RequestWithUser } from 'src/auth/types';
 import { CreateTradingSessionDto } from './dtos/create-trading-session.dto';
 import { UpdateTradingSessionDto } from './dtos/update-trading-session.dto';
+import { GetTradingSessions } from './dtos/get-trading-sessions.dto';
 
 @Controller('trading-sessions')
 export class TradingSessionsController {
   constructor(private readonly tradingSessionService: TradingSessionsService) {}
 
   @Get()
-  public getTradingSessions(@Req() requset: RequestWithUser) {
-    return this.tradingSessionService.findAll(requset.user);
+  public getTradingSessions(@Req() requset: RequestWithUser, @Query() query: GetTradingSessions) {
+    return this.tradingSessionService.findAll(requset.user, query);
   }
 
   @Post()

@@ -7,7 +7,7 @@ import TradeForm from '../TradeForm';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import { editTrade } from '../../../../api/trades';
-import type { TradingSession } from '../../../../types/tradingSessions';
+import type { TradingSessionsResult } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
 import { QueryKey } from '../../../../enums';
 
@@ -21,8 +21,8 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
-  const sessions = queryClient.getQueryData<TradingSession[]>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.find((el) => el?.isMain);
+  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
+  const mainSession = sessions?.results?.find((el) => el?.isMain);
 
   const mutation = useMutation({
     mutationFn: (data: EditTradeFormSchemaType) => {

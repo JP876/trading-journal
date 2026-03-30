@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Raw, Repository } from 'typeorm';
 
 import { TradingSession } from '../trading-session.entity';
 import withCatch from 'src/utils/withCatch';
 import { User } from 'src/users/user.entity';
 import { CreateTradingSessionDto } from '../dtos/create-trading-session.dto';
 import { UpdateTradingSessionDto } from '../dtos/update-trading-session.dto';
+import { GetTradingSessions } from '../dtos/get-trading-sessions.dto';
+import { Paginated } from 'src/common/pagination/types';
 
 @Injectable()
 export class TradingSessionsService {
@@ -38,10 +40,17 @@ export class TradingSessionsService {
     return session;
   }
 
-  public async findAll(user: User) {
-    const [error, sessions] = await withCatch(
-      this.tradingSessionsRepository.find({
-        where: { user },
+  public async findAll(user: User, query: GetTradingSessions): Promise<Paginated<TradingSession[]>> {
+    const { page, limit, title } = query;
+
+    const [error, sessionsAndCount] = await withCatch(
+      this.tradingSessionsRepository.findAndCount({
+        take: limit,
+        skip: (page - 1) * limit,
+        where: {
+          user,
+          ...(title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${title}%` }) } : {}),
+        },
         relations: ['trades'],
       })
     );
@@ -52,11 +61,16 @@ export class TradingSessionsService {
       });
     }
 
-    return sessions.map((session) => {
+    const [sessions, totalItems] = sessionsAndCount;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const results = sessions.map((session) => {
       const copy = { ...session };
       delete copy.trades;
       return { ...copy, tradesCount: session.trades?.length };
     });
+
+    return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, results };
   }
 
   public async create(user: User, session: CreateTradingSessionDto) {

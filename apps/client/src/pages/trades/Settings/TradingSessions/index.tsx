@@ -11,6 +11,8 @@ import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import TableProviders from '../../../../components/table/providers';
+import { Box } from '@mui/material';
+import TextFilter from '../../../../components/table/filters/TextFilter';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
@@ -48,7 +50,9 @@ const TradingSessionsMain = () => {
     <TableProviders>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Stack></Stack>
+          <Box>
+            <TextFilter name="title" label="Title" />
+          </Box>
           <Stack direction="row" alignItems="center" gap={2}>
             <Button
               size="small"

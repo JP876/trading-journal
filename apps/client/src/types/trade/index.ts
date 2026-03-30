@@ -1,7 +1,8 @@
 import { z } from 'zod';
+
 import type { TradingSession } from '../tradingSessions';
 import type { Pair } from '../pair';
-import { filesObject } from '..';
+import { filesObject, type PaginationInfo } from '..';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -46,10 +47,4 @@ export type Trade = {
   direction: Direction;
 } & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction'>;
 
-export type TradesResult = {
-  results: Trade[];
-  totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  currentPage: number;
-};
+export type TradesResult = PaginationInfo<Trade[]>;

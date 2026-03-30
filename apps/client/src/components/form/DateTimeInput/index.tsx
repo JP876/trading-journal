@@ -39,7 +39,7 @@ const DateTimeInput = ({ label, field, fieldState, helperText, inputProps }: Dat
         onChange={handleChange}
         {...restField}
       />
-      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText}</FormHelperText>
+      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText || ' '}</FormHelperText>
     </FormControl>
   );
 };

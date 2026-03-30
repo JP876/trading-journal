@@ -1,8 +1,21 @@
 import { client } from '../../lib/client';
+import type { PaginationInfo } from '../../types';
 import type { TradingSession, TradingSessionFormSchemaType } from '../../types/tradingSessions';
 
-export const getTradingSessions = async (): Promise<TradingSession[]> => {
-  const response = await client.get('trading-sessions');
+type GetTradesOptions = {
+  page?: number;
+  rowsPerPage?: number;
+  title?: string;
+};
+
+export const getTradingSessions = async (params?: GetTradesOptions) => {
+  const response = await client.get<PaginationInfo<TradingSession[]>>('trading-sessions', {
+    params: {
+      page: params?.page || 1,
+      limit: params?.rowsPerPage || 10,
+      title: params?.title || undefined,
+    },
+  });
   return response.data;
 };
 
