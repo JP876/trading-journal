@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useId } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
@@ -20,6 +20,7 @@ type RowsPerPageSelectProps = {
 };
 
 const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPageSelectProps) => {
+  const inputId = useId();
   const dispatch = usePaginationDispatch();
 
   return (
@@ -32,7 +33,7 @@ const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPa
         value={itemsPerPage}
         onChange={(event) => dispatch({ type: 'updateRowsPerPage', value: event.target.value })}
         slotProps={{
-          input: { id: `rows-per-page-select` },
+          input: { id: `rows-per-page-select-${inputId}` },
         }}
       >
         {options.map((option) => (
