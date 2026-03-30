@@ -47,12 +47,12 @@ const LoginForm = () => {
       <Controller
         name="email"
         control={form.control}
-        render={({ field }) => <TextInput label="Email" type="email" field={field} />}
+        render={(props) => <TextInput label="Email" type="email" {...props} />}
       />
       <Controller
         name="password"
         control={form.control}
-        render={({ field }) => <TextInput label="Password" type="password" field={field} />}
+        render={(props) => <TextInput label="Password" type="password" {...props} />}
       />
       <Divider />
       <Button loading={mutation.isPending} startIcon={<LoginIcon />} size="small" variant="contained" type="submit">

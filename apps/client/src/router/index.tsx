@@ -6,7 +6,6 @@ import { getLoggedInUser, refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
-const HomeMain = lazy(() => import('../pages/home'));
 const AuthPage = lazy(() => import('../pages/auth'));
 const TradesPage = lazy(() => import('../pages/trades'));
 const DashboardMain = lazy(() => import('../pages/dashboard'));
@@ -28,8 +27,7 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
 };
 
 const router = createBrowserRouter([
-  { path: '/', Component: HomeMain },
-  { path: '/auth', Component: AuthPage, middleware: [authMiddleware] },
+  { path: '/', Component: AuthPage, middleware: [authMiddleware] },
   {
     Component: ProtectedRoutes,
     middleware: [protectedRouteMiddleware],

@@ -25,21 +25,13 @@ const RegisterForm = () => {
 
   return (
     <FormMain form={form} onSubmit={onSubmit}>
-      <Controller
-        name="email"
-        control={form.control}
-        render={({ field }) => <TextInput field={field} label="Email *" />}
-      />
+      <Controller name="email" control={form.control} render={(props) => <TextInput {...props} label="Email *" />} />
       <Controller
         name="password"
         control={form.control}
-        render={({ field }) => <TextInput field={field} type="password" label="Password *" />}
+        render={(props) => <TextInput {...props} type="password" label="Password *" />}
       />
-      <Controller
-        name="name"
-        control={form.control}
-        render={({ field }) => <TextInput field={field} label="Username *" />}
-      />
+      <Controller name="name" control={form.control} render={(props) => <TextInput {...props} label="Username *" />} />
       <Divider />
       <Button
         loading={mutation.isPending}

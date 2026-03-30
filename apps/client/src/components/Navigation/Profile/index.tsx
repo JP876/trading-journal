@@ -46,7 +46,7 @@ const ProfileMain = () => {
     handleClose();
 
     openSnackbar({ severity: 'success', message: 'You have successfully logged out.' });
-    navigate('/auth', { replace: true, viewTransition: true });
+    navigate('/', { replace: true, viewTransition: true });
   };
 
   return (
