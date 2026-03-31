@@ -15,6 +15,7 @@ import MenuActions from '../../../../components/MenuActions';
 import useModal from '../../../../hooks/useModal';
 import NotFoundValue from '../../../../components/NotFoundValue';
 import { TradesPageModal } from '../../enums';
+import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -199,7 +200,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('comment');
           if (!value) return <NotFoundValue />;
-          return value;
+          return <ClampedTextContainer>{value}</ClampedTextContainer>;
         },
       },
       {

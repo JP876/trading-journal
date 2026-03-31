@@ -20,7 +20,6 @@ const TradingSessionsTable = () => {
     queryFn: () => getTradingSessions({ page, rowsPerPage, ...filters }),
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
-    staleTime: Infinity,
   });
 
   const columns = useColumns();
