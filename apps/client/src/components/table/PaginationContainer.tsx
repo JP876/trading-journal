@@ -3,13 +3,13 @@ import Pagination, { type PaginationProps } from '@mui/material/Pagination';
 
 import { usePaginationDispatch } from './providers/Pagination';
 
-type PaginationMainProps = {
+type PaginationContainerProps = {
   currentPage: number;
   totalPages: number;
   paginationProps?: Omit<PaginationProps, 'count' | 'page' | 'onChange'>;
 };
 
-const PaginationMain = ({ currentPage, totalPages, paginationProps }: PaginationMainProps) => {
+const PaginationContainer = ({ currentPage, totalPages, paginationProps }: PaginationContainerProps) => {
   const dispatch = usePaginationDispatch();
 
   const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
@@ -31,4 +31,4 @@ const PaginationMain = ({ currentPage, totalPages, paginationProps }: Pagination
   );
 };
 
-export default memo(PaginationMain);
+export default memo(PaginationContainer);

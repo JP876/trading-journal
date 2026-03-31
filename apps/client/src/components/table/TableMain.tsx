@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import {
   flexRender,
   getCoreRowModel,
@@ -85,4 +85,4 @@ function TableMain<TData = any>({ data, columns, tableOptions }: TableMainProps<
   );
 }
 
-export default TableMain;
+export default memo(TableMain) as typeof TableMain;

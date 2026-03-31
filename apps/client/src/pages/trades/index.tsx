@@ -14,11 +14,10 @@ import DialogMain from '../../components/DialogMain';
 import useModal from '../../hooks/useModal';
 import { modalAtom } from '../../atoms/modal';
 import { TradesPageModal } from './enums';
-import PaginationProvider from '../../components/table/providers/Pagination';
-import FiltersProvider from '../../components/table/providers/Filters';
 import usePairsOptions from './hooks/usePairOptions';
-import SelectFilter from '../../components/table/filters/SelectFilter';
+import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import { resultOptions } from './consts';
+import TableProviders from '../../components/table/providers';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -36,7 +35,7 @@ const TradesModalList = () => {
         <AddTradeForm />
       </DialogMain>
 
-      <DialogMain title={TradesPageModal.EDIT_TRADE} id="editTradeForm">
+      <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
         <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
       </DialogMain>
 
@@ -60,23 +59,23 @@ const TradesTableContainer = () => {
   const pairOptions = usePairsOptions();
 
   return (
-    <PaginationProvider>
-      <FiltersProvider>
-        <Stack gap={2}>
-          <Box
-            sx={{
-              gap: 2,
-              display: 'grid',
-              gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
-            }}
-          >
-            <SelectFilter name="pair" label="Pair" options={pairOptions} />
-            <SelectFilter name="result" label="Result" options={resultOptions} />
-          </Box>
-          <TradesTableMain />
-        </Stack>
-      </FiltersProvider>
-    </PaginationProvider>
+    <TableProviders>
+      <Stack gap={2}>
+        <Box
+          sx={{
+            width: '100%',
+            gap: 2,
+            display: 'grid',
+            gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
+          }}
+        >
+          <AutocompleteFilter name="pair" label="Pair" options={pairOptions} />
+          <AutocompleteFilter name="result" label="Result" options={resultOptions} />
+        </Box>
+
+        <TradesTableMain />
+      </Stack>
+    </TableProviders>
   );
 };
 

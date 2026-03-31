@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import InputAdornment from '@mui/material/InputAdornment';
 
@@ -15,4 +16,4 @@ const LoadingAdornment = ({ isLoading }: { isLoading: boolean }) => {
   );
 };
 
-export default LoadingAdornment;
+export default memo(LoadingAdornment);

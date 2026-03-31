@@ -18,7 +18,7 @@ const TradingSessionSelect = () => {
 
   const { data } = useQuery({
     queryKey: [QueryKey.TRADING_SESSIONS],
-    queryFn: () => getTradingSessions({ page: 1, rowsPerPage: 20 }),
+    queryFn: () => getTradingSessions(),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });

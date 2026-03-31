@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -22,4 +23,4 @@ const ResultsMain = ({ currentPage, itemsPerPage, totalItems }: ResultsMainProps
   );
 };
 
-export default ResultsMain;
+export default memo(ResultsMain);

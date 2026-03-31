@@ -1,4 +1,3 @@
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
 
@@ -106,8 +105,6 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           )}
         />
       </Stack>
-
-      <Divider />
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
         <SubmitButton loading={isLoading} />

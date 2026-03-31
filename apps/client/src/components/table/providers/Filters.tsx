@@ -19,19 +19,17 @@ export const useFiltersDispatch = () => {
   return ctx;
 };
 
-type FilterValue = string | number | null;
+export type FilterValue = string | number | null;
 type FiltersStateType = Record<string, FilterValue>;
 
-type FiltersAction =
-  | { type: 'updateFilter'; value: { id: string; value: string | number } }
-  | { type: 'clearFilter'; value: { id: string } };
+type FiltersAction = { type: 'updateFilter'; value: { id: string; value: FilterValue } } | { type: 'resetFilters' };
 
 const reducer = (state: FiltersStateType, action: FiltersAction) => {
   switch (action.type) {
     case 'updateFilter':
       return { ...state, [action.value.id]: action.value.value };
-    case 'clearFilter':
-      return { ...state, [action.value.id]: null };
+    case 'resetFilters':
+      return {};
   }
 };
 

@@ -1,31 +1,19 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 
-import { getTrades } from '../../../api/trades';
 import useColumns from './hooks/useColumns';
-import { usePaginationState } from '../../../components/table/providers/Pagination';
-import PaginationMain from '../../../components/table/PaginationMain';
+import PaginationContainer from '../../../components/table/PaginationContainer';
 import RowsPerPageSelect from '../../../components/table/RowsPerPageSelect';
 import ResultsMain from '../../../components/table/Results';
-import { useFiltersState } from '../../../components/table/providers/Filters';
-import type { Result } from '../../../types/trade';
-import { QueryKey } from '../../../enums';
 import TableMain from '../../../components/table/TableMain';
+import useTradesQueryOptions from './hooks/useTradesQueryOptions';
 
 const TradesTableMain = () => {
-  const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { pair?: number; result?: Result };
-
-  const { data, isLoading } = useQuery({
-    queryKey: [QueryKey.TRADES, page, rowsPerPage, filters.pair, filters.result],
-    queryFn: () => getTrades({ page, rowsPerPage, ...filters }),
-    placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
-
+  const options = useTradesQueryOptions();
   const columns = useColumns();
+
+  const { data, isLoading } = useQuery({ ...options });
 
   if (isLoading) {
     return (
@@ -44,7 +32,7 @@ const TradesTableMain = () => {
           <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
           <Stack direction="row" alignItems="center" gap={2}>
             <RowsPerPageSelect itemsPerPage={data.itemsPerPage} />
-            <PaginationMain currentPage={data.currentPage} totalPages={data.totalPages} />
+            <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
           </Stack>
         </Stack>
       ) : null}

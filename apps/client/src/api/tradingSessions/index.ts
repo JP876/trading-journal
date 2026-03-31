@@ -11,8 +11,8 @@ type GetTradesOptions = {
 export const getTradingSessions = async (params?: GetTradesOptions) => {
   const response = await client.get<PaginationInfo<TradingSession[]>>('trading-sessions', {
     params: {
-      page: params?.page || 1,
-      limit: params?.rowsPerPage || 10,
+      page: params?.page || undefined,
+      limit: params?.rowsPerPage || undefined,
       title: params?.title || undefined,
     },
   });

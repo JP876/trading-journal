@@ -10,11 +10,12 @@ import Typography from '@mui/material/Typography';
 import type { AutocompleteOption } from '../../../types';
 import checkBrightness from '../../../lib/checkBrighness';
 import useFilter from '../hooks/useFilter';
+import type { FilterValue } from '../providers/Filters';
 
-type SelectFilterProps = {
+type AutocompleteFilterProps = {
   label: string;
   name: string;
-  initialValue?: string | number | null;
+  initialValue?: FilterValue;
 };
 
 type RenderValueType = NonNullable<string | AutocompleteOption> | (string | AutocompleteOption)[] | null;
@@ -25,7 +26,12 @@ type CustomAutocompleteProps = Omit<
   'renderInput' | 'onChange' | 'value'
 >;
 
-const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps & CustomAutocompleteProps) => {
+const AutocompleteFilter = ({
+  initialValue,
+  label,
+  name,
+  ...rest
+}: AutocompleteFilterProps & CustomAutocompleteProps) => {
   const [filterValue, handleFilterChange] = useFilter({ name, initialValue: initialValue || '' });
 
   const value = useMemo(() => {
@@ -121,4 +127,4 @@ const SelectFilter = ({ initialValue, label, name, ...rest }: SelectFilterProps 
   );
 };
 
-export default memo(SelectFilter);
+export default memo(AutocompleteFilter);
