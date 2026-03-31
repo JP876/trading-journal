@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
@@ -32,7 +31,6 @@ const RegisterForm = () => {
         render={(props) => <TextInput {...props} type="password" label="Password *" />}
       />
       <Controller name="name" control={form.control} render={(props) => <TextInput {...props} label="Username *" />} />
-      <Divider />
       <Button
         loading={mutation.isPending}
         startIcon={<AssignmentAddIcon />}

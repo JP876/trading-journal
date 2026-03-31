@@ -1,8 +1,8 @@
 import { lazy } from 'react';
-import { createBrowserRouter, redirect, RouterProvider, type MiddlewareFunction } from 'react-router';
+import { createBrowserRouter, redirect, type MiddlewareFunction } from 'react-router';
 
 import withCatch from '../lib/withCatch';
-import { getLoggedInUser, refreshToken } from '../api/auth';
+import { refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
@@ -13,20 +13,20 @@ const DashboardMain = lazy(() => import('../pages/dashboard'));
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
   if (error) {
-    throw redirect('/auth');
+    throw redirect('/');
   }
   return await next();
 };
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
-  const [error] = await withCatch(getLoggedInUser());
+  const [error] = await withCatch(refreshToken());
   if (error) {
     return await next();
   }
   return redirect('/dashboard');
 };
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   { path: '/', Component: AuthPage, middleware: [authMiddleware] },
   {
     Component: ProtectedRoutes,
@@ -43,9 +43,3 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
-const RouterMain = () => {
-  return <RouterProvider router={router} />;
-};
-
-export default RouterMain;

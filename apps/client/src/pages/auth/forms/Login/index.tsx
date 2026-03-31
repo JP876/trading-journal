@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import LoginIcon from '@mui/icons-material/Login';
 import type { AxiosError } from 'axios';
 import { useNavigate } from 'react-router';
@@ -54,7 +53,6 @@ const LoginForm = () => {
         control={form.control}
         render={(props) => <TextInput label="Password" type="password" {...props} />}
       />
-      <Divider />
       <Button loading={mutation.isPending} startIcon={<LoginIcon />} size="small" variant="contained" type="submit">
         Login
       </Button>

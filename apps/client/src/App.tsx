@@ -1,14 +1,16 @@
-import { Box, CssBaseline } from '@mui/material';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import { RouterProvider } from 'react-router';
 
 import SnackbarContainer from './components/SnackbarContainer';
-import RouterMain from './router';
+import { router } from './router';
 
 const App = () => {
   return (
     <Box component="main">
       <CssBaseline />
       <SnackbarContainer />
-      <RouterMain />
+      <RouterProvider router={router} />
     </Box>
   );
 };

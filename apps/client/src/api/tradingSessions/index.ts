@@ -1,4 +1,4 @@
-import { client } from '../../lib/client';
+import { axiosInstance } from '../../lib/axiosInstance';
 import type { PaginationInfo } from '../../types';
 import type { TradingSession, TradingSessionFormSchemaType } from '../../types/tradingSessions';
 
@@ -9,7 +9,7 @@ type GetTradesOptions = {
 };
 
 export const getTradingSessions = async (params?: GetTradesOptions) => {
-  const response = await client.get<PaginationInfo<TradingSession[]>>('trading-sessions', {
+  const response = await axiosInstance.get<PaginationInfo<TradingSession[]>>('trading-sessions', {
     params: {
       page: params?.page || undefined,
       limit: params?.rowsPerPage || undefined,
@@ -20,7 +20,7 @@ export const getTradingSessions = async (params?: GetTradesOptions) => {
 };
 
 export const addTradingSession = async (data: TradingSessionFormSchemaType): Promise<TradingSession | null> => {
-  const response = await client.post('trading-sessions', { ...data, isMain: +!!data.isMain });
+  const response = await axiosInstance.post('trading-sessions', { ...data, isMain: +!!data.isMain });
   return response.data;
 };
 
@@ -28,7 +28,7 @@ export const editTradingSession = async (
   id: number,
   data: Partial<TradingSessionFormSchemaType>
 ): Promise<TradingSession | null> => {
-  const response = await client.patch(`trading-sessions/${id}`, { ...data, isMain: +!!data.isMain });
+  const response = await axiosInstance.patch(`trading-sessions/${id}`, { ...data, isMain: +!!data.isMain });
   return response.data;
 };
 
@@ -36,6 +36,6 @@ export const deleteTradingSession = async (id: number | undefined) => {
   if (!id) {
     throw new Error(`TradingSession ID not found: ${id}`);
   }
-  const response = await client.delete(`trading-sessions/${id}`);
+  const response = await axiosInstance.delete(`trading-sessions/${id}`);
   return response.data;
 };
