@@ -29,8 +29,11 @@ const ProtectedRoutes = () => {
   });
 
   useEffect(() => {
-    const controller = new AbortController();
     setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
 
     const handleEvent = (event: CustomEventInit<boolean>) => {
       if (!event.detail) {

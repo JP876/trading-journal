@@ -13,6 +13,7 @@ const DashboardMain = lazy(() => import('../pages/dashboard'));
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
   if (error) {
+    document.dispatchEvent(new CustomEvent('is-authenticated', { detail: false }));
     throw redirect('/');
   }
   return await next();
