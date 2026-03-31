@@ -1,7 +1,5 @@
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
-import CheckIcon from '@mui/icons-material/Check';
 import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
 
 import type { TradeFormSchemaType } from '../../../types/trade';
@@ -12,6 +10,7 @@ import DateTimeInput from '../../../components/form/DateTimeInput';
 import AutocompleteInput from '../../../components/form/AutocompleteInput';
 import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
 import usePairOptions from '../hooks/usePairOptions';
+import SubmitButton from '../../../components/form/SubmitButton';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -111,9 +110,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
       <Divider />
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
-        <Button loading={isLoading} startIcon={<CheckIcon />} size="small" variant="contained" type="submit">
-          Confirm
-        </Button>
+        <SubmitButton loading={isLoading} />
       </Stack>
     </FormMain>
   );

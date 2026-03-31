@@ -3,8 +3,8 @@ import { z } from 'zod';
 import type { PaginationInfo } from '..';
 
 export const TradingSessionFormSchema = z.object({
-  title: z.string(),
-  description: z.string().optional(),
+  title: z.string().nonempty('This field is required'),
+  description: z.string().max(400).optional(),
   isMain: z.boolean().optional(),
 });
 

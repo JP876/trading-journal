@@ -1,12 +1,11 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
-import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import CheckIcon from '@mui/icons-material/Check';
 
 import type { TradingSessionFormSchemaType } from '../../../../../types/tradingSessions';
 import FormMain from '../../../../../components/form/FormMain';
 import TextInput from '../../../../../components/form/TextInput';
 import CheckboxInput from '../../../../../components/form/CheckboxInput';
+import SubmitButton from '../../../../../components/form/SubmitButton';
 
 type FormSchema = TradingSessionFormSchemaType;
 type TradingSessionFormProps = {
@@ -18,22 +17,23 @@ type TradingSessionFormProps = {
 const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormProps) => {
   return (
     <FormMain onSubmit={onSubmit} form={form}>
-      <Stack direction="row" alignItems="center" gap={3}>
-        <Controller
-          name="title"
-          control={form.control}
-          render={({ field }) => <TextInput label="Title" field={field} />}
-        />
+      <Stack direction="row" alignItems="center" gap={2}>
+        <Controller name="title" control={form.control} render={(props) => <TextInput label="Title *" {...props} />} />
         <Controller
           name="isMain"
           control={form.control}
-          render={({ field, formState }) => {
+          render={({ field, fieldState, formState }) => {
             return (
               <CheckboxInput
-                formControlLabelProps={{ sx: { flex: '0 0 30%' } }}
-                disabled={!!formState.defaultValues?.isMain}
+                formControlProps={{
+                  sx: { flex: '0 0 30%' },
+                }}
+                checkboxProps={{
+                  disabled: !!formState.defaultValues?.isMain,
+                }}
                 label="Main Account"
                 field={field}
+                fieldState={fieldState}
               />
             );
           }}
@@ -44,16 +44,12 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
         <Controller
           name="description"
           control={form.control}
-          render={({ field }) => (
-            <TextInput label="Description" field={field} inputProps={{ multiline: true, rows: 6 }} />
-          )}
+          render={(props) => <TextInput label="Description" inputProps={{ multiline: true, rows: 6 }} {...props} />}
         />
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
-        <Button loading={isLoading} startIcon={<CheckIcon />} size="small" variant="contained" type="submit">
-          Confirm
-        </Button>
+        <SubmitButton loading={isLoading} />
       </Stack>
     </FormMain>
   );

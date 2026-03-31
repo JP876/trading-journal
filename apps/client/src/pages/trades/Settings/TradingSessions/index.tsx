@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,7 +12,6 @@ import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import TableProviders from '../../../../components/table/providers';
-import { Box } from '@mui/material';
 import TextFilter from '../../../../components/table/filters/TextFilter';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));

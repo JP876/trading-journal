@@ -29,7 +29,7 @@ const AutocompleteInput = ({ field, fieldState, label, options, helperText }: Au
           field.onChange(newValue?.value);
         }}
       />
-      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText}</FormHelperText>
+      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText || ' '}</FormHelperText>
     </FormControl>
   );
 };

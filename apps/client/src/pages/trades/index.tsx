@@ -49,7 +49,7 @@ const TradesModalList = () => {
         <DeleteTrade trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
       </DialogMain>
 
-      <DialogMain id={TradesPageModal.SETTINGS} title="Trades Settings" size="md">
+      <DialogMain id={TradesPageModal.SETTINGS} title="Settings" size="md">
         <TradesSettingsMain />
       </DialogMain>
     </>
