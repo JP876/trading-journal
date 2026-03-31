@@ -6,10 +6,11 @@ import { TradesController } from './trades.controller';
 import { Trade } from './trade.entity';
 import { PairsModule } from 'src/pairs/pairs.module';
 import { TradingSessionsModule } from 'src/trading-sessions/trading-sessions.module';
+import { PaginationModule } from 'src/common/pagination/pagination.module';
 
 @Module({
   controllers: [TradesController],
   providers: [TradesService],
-  imports: [TypeOrmModule.forFeature([Trade]), PairsModule, TradingSessionsModule],
+  imports: [TypeOrmModule.forFeature([Trade]), PaginationModule, PairsModule, TradingSessionsModule],
 })
 export class TradesModule {}

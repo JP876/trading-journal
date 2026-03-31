@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsPositive } from 'class-validator';
+import { IsOptional, IsPositive } from 'class-validator';
 
 export class PaginationDto {
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
-  limit: number = 10;
+  limit?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsPositive()
-  page: number = 1;
+  page?: number;
 }

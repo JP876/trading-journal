@@ -12,6 +12,7 @@ import { GetTradesDto } from '../dtos/get-trades.dto';
 import { Paginated } from 'src/common/pagination/types';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 import { Pair } from 'src/pairs/pair.entitiy';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
 
 @Injectable()
 export class TradesService {
@@ -19,7 +20,8 @@ export class TradesService {
     @InjectRepository(Trade)
     private readonly tradesRepository: Repository<Trade>,
     private readonly pairsService: PairsService,
-    private readonly tradingSessionsService: TradingSessionsService
+    private readonly tradingSessionsService: TradingSessionsService,
+    private readonly paginationProvider: PaginationProvider
   ) {}
 
   private async saveTrade(trade: Trade) {
@@ -33,7 +35,7 @@ export class TradesService {
   }
 
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
-    const { limit, page, tradingSessionId, pairId, result, direction, openDate, closeDate } = tradesQuery;
+    const { tradingSessionId, pairId, result, direction, openDate, closeDate } = tradesQuery;
     let session: TradingSession | null = null;
     let pair: Pair | null = null;
 
@@ -47,31 +49,18 @@ export class TradesService {
       pair = await this.pairsService.findOneBy({ id: pairId });
     }
 
-    const [err, tradesAndCount] = await withCatch(
-      this.tradesRepository.findAndCount({
-        take: limit,
-        skip: (page - 1) * limit,
-        where: {
-          tradingSession: session,
-          result,
-          direction,
-          ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
-          ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
-          ...(pair ? { pair: pair } : {}),
-        },
-      })
-    );
+    const data = await this.paginationProvider.paginateQuery(this.tradesRepository, tradesQuery, {
+      where: {
+        tradingSession: session,
+        result,
+        direction,
+        ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
+        ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
+        ...(pair ? { pair: pair } : {}),
+      },
+    });
 
-    if (err) {
-      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
-        description: err.message,
-      });
-    }
-
-    const [trades, totalItems] = tradesAndCount;
-    const totalPages = Math.ceil(totalItems / limit);
-
-    return { totalItems, totalPages, itemsPerPage: limit, currentPage: page, results: trades };
+    return { ...data };
   }
 
   public async findOneBy(options: FindOptionsWhere<Trade>) {

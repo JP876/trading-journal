@@ -17,6 +17,7 @@ import { PairsModule } from './pairs/pairs.module';
 import appConfig from './config/app.config';
 import envValidation from './config/env.validation';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
+import { PaginationModule } from './common/pagination/pagination.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -84,6 +85,7 @@ const ENV = process.env.NODE_ENV;
         };
       },
     }),
+    PaginationModule,
     TradesModule,
     AuthModule,
     UsersModule,
