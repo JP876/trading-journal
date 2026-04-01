@@ -50,6 +50,7 @@ export class TradesService {
     }
 
     const data = await this.paginationProvider.paginateQuery(this.tradesRepository, tradesQuery, {
+      order: { id: -1 },
       where: {
         tradingSession: session,
         result,

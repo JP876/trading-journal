@@ -44,6 +44,7 @@ export class TradingSessionsService {
 
   public async findAll(user: User, query?: GetTradingSessions): Promise<Paginated<TradingSession[]>> {
     const data = await this.paginationProvider.paginateQuery(this.tradingSessionsRepository, query, {
+      order: { id: -1 },
       where: {
         user,
         ...(query?.title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${query?.title}%` }) } : {}),
