@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import { Alert, Snackbar } from '@mui/material';
-import { useAtomValue } from 'jotai';
+import { getDefaultStore, useAtomValue } from 'jotai';
 
 import { snackbarAtom } from '../../atoms/snackbar';
 import useSnackbar from '../../hooks/useSnackbar';
 
 const SnackbarContainer = () => {
-  const info = useAtomValue(snackbarAtom);
+  const info = useAtomValue(snackbarAtom, { store: getDefaultStore() });
   const { closeSnackbar } = useSnackbar();
 
   return (

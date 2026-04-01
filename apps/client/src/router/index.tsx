@@ -1,9 +1,11 @@
 import { lazy } from 'react';
 import { createBrowserRouter, redirect, type MiddlewareFunction } from 'react-router';
+import { getDefaultStore } from 'jotai';
 
 import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
+import { snackbarAtom } from '../atoms/snackbar';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));
@@ -12,11 +14,17 @@ const DashboardMain = lazy(() => import('../pages/dashboard'));
 
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
+
   if (error) {
-    document.dispatchEvent(new CustomEvent('is-authenticated', { detail: false }));
+    getDefaultStore().set(snackbarAtom, {
+      open: true,
+      severity: 'error',
+      message: "Looks like you're not logged in. Please sign in.",
+    });
     throw redirect('/');
+  } else {
+    return await next();
   }
-  return await next();
 };
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {

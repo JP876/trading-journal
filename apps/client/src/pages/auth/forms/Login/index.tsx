@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import Button from '@mui/material/Button';
 import LoginIcon from '@mui/icons-material/Login';
 import type { AxiosError } from 'axios';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { Controller, useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 
@@ -18,9 +18,12 @@ import FormMain from '../../../../components/form/FormMain';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const mutation = useMutation({ mutationFn: loginUser });
 
   const { openSnackbar } = useSnackbar();
+  console.log(location.state);
 
   const form = useForm<LoginFormData>({
     resolver: standardSchemaResolver(LoginFormSchema),
@@ -35,7 +38,11 @@ const LoginForm = () => {
       return;
     }
 
-    navigate('/trades', { replace: true, viewTransition: true });
+    navigate(location.state?.prevLocation || '/trades', {
+      replace: true,
+      viewTransition: true,
+      state: null,
+    });
     setTimeout(() => {
       openSnackbar({ severity: 'success', message: `Welcome ${user.name}, you're now logged in.` });
     }, 200);

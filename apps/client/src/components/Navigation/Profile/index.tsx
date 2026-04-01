@@ -3,7 +3,6 @@ import { Avatar, IconButton, Tooltip } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate } from 'react-router';
 
 import MenuActions from '../../MenuActions';
 import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
@@ -11,6 +10,7 @@ import withCatch from '../../../lib/withCatch';
 import { getLoggedInUser, logoutUser } from '../../../api/auth';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { QueryKey } from '../../../enums';
+import useLogout from '../../../hooks/useLogout';
 
 const MenuActionButton = () => {
   const { handleClick } = useMenuActionsContext();
@@ -38,15 +38,15 @@ const MenuActionButton = () => {
 };
 
 const ProfileMain = () => {
-  const navigate = useNavigate();
   const { openSnackbar } = useSnackbar();
+  const [logout] = useLogout();
 
   const handleLogout = async (_: any, handleClose: () => void) => {
     await withCatch(logoutUser());
     handleClose();
 
     openSnackbar({ severity: 'success', message: 'You have successfully logged out.' });
-    navigate('/', { replace: true, viewTransition: true });
+    logout();
   };
 
   return (
