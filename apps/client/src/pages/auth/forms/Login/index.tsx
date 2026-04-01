@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import Button from '@mui/material/Button';
+import InputAdornment from '@mui/material/InputAdornment';
 import LoginIcon from '@mui/icons-material/Login';
+import EmailIcon from '@mui/icons-material/Email';
 import type { AxiosError } from 'axios';
 import { useLocation, useNavigate } from 'react-router';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,6 +17,7 @@ import type { APIError } from '../../../../types';
 import { defaultMsg } from '../../../../consts';
 import TextInput from '../../../../components/form/TextInput';
 import FormMain from '../../../../components/form/FormMain';
+import PasswordInput from '../../../../components/form/PasswordInput';
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -23,7 +26,6 @@ const LoginForm = () => {
   const mutation = useMutation({ mutationFn: loginUser });
 
   const { openSnackbar } = useSnackbar();
-  console.log(location.state);
 
   const form = useForm<LoginFormData>({
     resolver: standardSchemaResolver(LoginFormSchema),
@@ -53,12 +55,29 @@ const LoginForm = () => {
       <Controller
         name="email"
         control={form.control}
-        render={(props) => <TextInput label="Email" type="email" {...props} />}
+        render={(props) => (
+          <TextInput
+            label="Email *"
+            type="email"
+            inputProps={{
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                },
+              },
+            }}
+            {...props}
+          />
+        )}
       />
       <Controller
         name="password"
         control={form.control}
-        render={(props) => <TextInput label="Password" type="password" {...props} />}
+        render={(props) => <PasswordInput label="Password *" {...props} />}
       />
       <Button loading={mutation.isPending} startIcon={<LoginIcon />} size="small" variant="contained" type="submit">
         Login

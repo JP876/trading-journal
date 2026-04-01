@@ -55,7 +55,7 @@ const AuthPage = () => {
         ) : (
           <>
             <Divider sx={{ span: { fontSize: '0.875rem' } }} textAlign="center">
-              Or with email and password
+              Or with username, email and password
             </Divider>
             <RegisterForm />
             <Stack mt={-2} direction="row" alignItems="center" justifyContent="center" gap={1}>

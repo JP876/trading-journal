@@ -3,17 +3,17 @@ import TextField, { type TextFieldProps } from '@mui/material/TextField';
 
 import type { FormField } from '../../../types';
 
-type TextInputPropsType = {
+export type TextInputProps = {
   field: FormField;
   fieldState: ControllerFieldState;
   formState: UseFormStateReturn<FieldValues>;
   label: string;
   type?: React.InputHTMLAttributes<unknown>['type'];
   helperText?: string;
-  inputProps?: TextFieldProps;
+  inputProps?: Omit<TextFieldProps, 'label' | 'value' | 'onChange' | 'helperText'>;
 };
 
-const TextInput = ({ field, fieldState, label, helperText, type, inputProps }: TextInputPropsType) => {
+const TextInput = ({ field, fieldState, label, helperText, type, inputProps }: TextInputProps) => {
   return (
     <TextField
       id={`${label}-form-text-field`}
