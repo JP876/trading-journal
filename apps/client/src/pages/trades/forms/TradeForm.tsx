@@ -87,12 +87,12 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="openDate"
           control={form.control}
-          render={(props) => <DateTimeInput label="Open Date" {...props} />}
+          render={(props) => <DateTimeInput label="Open Date" inputProps={{ disableFuture: true }} {...props} />}
         />
         <Controller
           name="closeDate"
           control={form.control}
-          render={(props) => <DateTimeInput label="Close Date" {...props} />}
+          render={(props) => <DateTimeInput label="Close Date" inputProps={{ disableFuture: true }} {...props} />}
         />
       </Stack>
 
