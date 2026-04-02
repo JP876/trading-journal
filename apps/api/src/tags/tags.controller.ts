@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 
 import { TagsService } from './providers/tags.service';
 import { CreateTagDto } from './dtos/create-tag.dto';
 import { UpdateTagDto } from './dtos/update-tag.dto';
+import { RequestWithUser } from 'src/auth/types';
 
 @Controller('tags')
 export class TagsController {
@@ -16,8 +17,8 @@ export class TagsController {
 
   @Post()
   @FormDataRequest()
-  public createTag(@Body() createTagDto: CreateTagDto) {
-    return this.tagsService.create(createTagDto);
+  public createTag(@Req() requset: RequestWithUser, @Body() createTagDto: CreateTagDto) {
+    return this.tagsService.create(requset.user, createTagDto);
   }
 
   @Patch(':id')

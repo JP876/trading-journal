@@ -1,4 +1,5 @@
 import { Exclude } from 'class-transformer';
+import { Tag } from 'src/tags/tag.entity';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
@@ -22,6 +23,9 @@ export class User {
 
   @OneToMany(() => TradingSession, (session) => session.user)
   tradingSessions?: TradingSession[];
+
+  @OneToMany(() => Tag, (tag) => tag.user)
+  tags?: Tag[];
 
   @Exclude({ toPlainOnly: true })
   @CreateDateColumn({ type: 'text' })

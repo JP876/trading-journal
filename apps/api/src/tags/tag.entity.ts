@@ -1,5 +1,14 @@
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Trade } from 'src/trades/trade.entity';
+import { User } from 'src/users/user.entity';
 
 @Entity('tags')
 export class Tag {
@@ -14,6 +23,9 @@ export class Tag {
 
   @ManyToMany(() => Trade, (trade) => trade.tags, { onDelete: 'CASCADE' })
   trades?: Trade[];
+
+  @ManyToOne(() => User, (user) => user.tags, { onDelete: 'CASCADE' })
+  user: User;
 
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;

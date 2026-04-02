@@ -6,6 +6,7 @@ import { Tag } from '../tag.entity';
 import { CreateTagDto } from '../dtos/create-tag.dto';
 import withCatch from 'src/utils/withCatch';
 import { UpdateTagDto } from '../dtos/update-tag.dto';
+import { User } from 'src/users/user.entity';
 
 @Injectable()
 export class TagsService {
@@ -60,8 +61,8 @@ export class TagsService {
     return result;
   }
 
-  public async create(createTagDto: CreateTagDto) {
-    const newTag = this.tagsRepository.create({ ...createTagDto });
+  public async create(user: User, createTagDto: CreateTagDto) {
+    const newTag = this.tagsRepository.create({ ...createTagDto, user });
     return await this.saveTag(newTag);
   }
 

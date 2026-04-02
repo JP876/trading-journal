@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { TradingSession } from '../tradingSessions';
 import type { Pair } from '../pair';
 import { filesObject, type PaginationInfo } from '..';
+import type { Tag } from '../tag';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -19,6 +20,7 @@ export const TradeFormSchema = z.object({
   closeDate: z.date().optional(),
   closedBy: z.union([z.literal('tp/sl'), z.literal('user')]).optional(),
   closedAt: z.number().optional(),
+  tags: z.array(z.number().max(10)).optional(),
   orderType: z
     .union([
       z.literal('market_order'),
@@ -45,6 +47,7 @@ export type Trade = {
   tradingSession: TradingSession;
   result: Result;
   direction: Direction;
-} & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction'>;
+  tags: Tag[];
+} & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction' | 'tags'>;
 
 export type TradesResult = PaginationInfo<Trade[]>;
