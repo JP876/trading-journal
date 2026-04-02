@@ -1,8 +1,18 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { Pair } from 'src/pairs/pair.entitiy';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 import { ClosedBy, DirectionOptions, OrderType, ResultOptions } from './enums';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity('trades')
 export class Trade {
@@ -14,6 +24,10 @@ export class Trade {
 
   @ManyToOne(() => TradingSession, (session) => session.trades, { onDelete: 'CASCADE' })
   tradingSession: TradingSession;
+
+  @ManyToMany(() => Tag, (tag) => tag.trades, { eager: true })
+  @JoinTable()
+  tags?: Tag[];
 
   @Column({ type: 'text', nullable: false })
   result: ResultOptions;

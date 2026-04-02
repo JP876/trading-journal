@@ -1,4 +1,14 @@
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateIf } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  ValidateIf,
+} from 'class-validator';
 
 import { ClosedBy, DirectionOptions, OrderType, ResultOptions } from '../enums';
 
@@ -38,6 +48,11 @@ export class CreateTradeDto {
   @IsEnum(ClosedBy)
   @IsOptional()
   closedBy?: ClosedBy;
+
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  tags?: number[];
 
   @ValidateIf((obj: CreateTradeDto) => obj.closedBy === ClosedBy.USER)
   @IsNumber()

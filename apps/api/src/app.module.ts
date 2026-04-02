@@ -18,6 +18,7 @@ import appConfig from './config/app.config';
 import envValidation from './config/env.validation';
 import JwtAuthGuard from './auth/guards/jwt-auth.guard';
 import { PaginationModule } from './common/pagination/pagination.module';
+import { TagsModule } from './tags/tags.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -91,6 +92,7 @@ const ENV = process.env.NODE_ENV;
     UsersModule,
     TradingSessionsModule,
     PairsModule,
+    TagsModule,
   ],
 })
 export class AppModule {}

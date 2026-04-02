@@ -14,6 +14,8 @@ import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 import { Pair } from 'src/pairs/pair.entitiy';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
 import { DirectionOptions, ResultOptions } from '../enums';
+import { TagsService } from 'src/tags/providers/tags.service';
+import { Tag } from 'src/tags/tag.entity';
 
 type CountsResultType = {
   direction: DirectionOptions | null;
@@ -30,7 +32,8 @@ export class TradesService {
     private readonly pairsService: PairsService,
     private readonly tradingSessionsService: TradingSessionsService,
     private readonly paginationProvider: PaginationProvider,
-    private readonly dataSource: DataSource
+    private readonly dataSource: DataSource,
+    private readonly tagsService: TagsService
   ) {}
 
   private async saveTrade(trade: Trade) {
@@ -141,12 +144,17 @@ export class TradesService {
   }
 
   public async create(createTradeDto: CreateTradeDto) {
+    let tags: Tag[] = [];
     const [pair, session] = await Promise.all([
       this.pairsService.findOneBy({ id: createTradeDto.pairId }),
       this.tradingSessionsService.findOneBy({ id: createTradeDto.tradingSessionId }),
     ]);
 
-    const trade = this.tradesRepository.create({ ...createTradeDto, pair, tradingSession: session });
+    if (Array.isArray(createTradeDto.tags) && createTradeDto.tags.length > 0) {
+      tags = await this.tagsService.findMultipleTags(createTradeDto.tags);
+    }
+
+    const trade = this.tradesRepository.create({ ...createTradeDto, pair, tradingSession: session, tags });
     return this.saveTrade(trade);
   }
 
@@ -165,6 +173,9 @@ export class TradesService {
     }
     if (updateTradeDto.tradingSessionId) {
       trade.tradingSession = await this.tradingSessionsService.findOneBy({ id: updateTradeDto.tradingSessionId });
+    }
+    if (Array.isArray(updateTradeDto.tags) && updateTradeDto.tags.length > 0) {
+      trade.tags = await this.tagsService.findMultipleTags(updateTradeDto.tags);
     }
 
     return this.saveTrade(trade);
