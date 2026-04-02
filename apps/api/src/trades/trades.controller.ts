@@ -15,6 +15,11 @@ export class TradesController {
     return this.tradesService.findAll(tradesQuery);
   }
 
+  @Get('stats')
+  public getStatsTrades() {
+    return this.tradesService.findStats();
+  }
+
   @Get(':id')
   public getTradeById(@Param('id') id: number) {
     return this.tradesService.findOneBy({ id });

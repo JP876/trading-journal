@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Raw, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Raw, Repository } from 'typeorm';
 
 import { Trade } from '../trade.entity';
 import { CreateTradeDto } from '../dtos/create-trade.dto';
@@ -13,6 +13,14 @@ import { Paginated } from 'src/common/pagination/types';
 import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 import { Pair } from 'src/pairs/pair.entitiy';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
+import { DirectionOptions, ResultOptions } from '../enums';
+
+type CountsResultType = {
+  direction: DirectionOptions | null;
+  pairId: number | null;
+  result: ResultOptions | null;
+  count: number;
+};
 
 @Injectable()
 export class TradesService {
@@ -21,7 +29,8 @@ export class TradesService {
     private readonly tradesRepository: Repository<Trade>,
     private readonly pairsService: PairsService,
     private readonly tradingSessionsService: TradingSessionsService,
-    private readonly paginationProvider: PaginationProvider
+    private readonly paginationProvider: PaginationProvider,
+    private readonly dataSource: DataSource
   ) {}
 
   private async saveTrade(trade: Trade) {
@@ -32,6 +41,57 @@ export class TradesService {
       });
     }
     return saved;
+  }
+
+  public async findStats() {
+    const countsQuery: Promise<CountsResultType[]> = this.dataSource.query(`
+      SELECT direction, NULL as pairId, NULL as result, COUNT(*) as count
+      FROM trades
+      GROUP BY direction
+
+      UNION ALL
+
+      SELECT NULL as direction, pairId, NULL as result, COUNT(*) as count
+      FROM trades
+      GROUP BY pairId
+
+      UNION ALL
+
+      SELECT NULL as direction, NULL as pairId, result, COUNT(*) as count
+      FROM trades
+      GROUP BY result
+    `);
+
+    const [error, result] = await withCatch(Promise.all([countsQuery]));
+    if (error) {
+      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
+        description: error.message,
+      });
+    }
+
+    const [counts] = result;
+
+    const directionCounts = {};
+    const pairCounts = {};
+    const resultCounts = {};
+
+    for (const row of counts) {
+      if (row.direction !== null) {
+        directionCounts[row.direction] = Number(row.count);
+      }
+      if (row.pairId !== null) {
+        pairCounts[row.pairId] = Number(row.count);
+      }
+      if (row.result !== null) {
+        resultCounts[row.result] = Number(row.count);
+      }
+    }
+
+    return {
+      direction: directionCounts,
+      pairs: pairCounts,
+      result: resultCounts,
+    };
   }
 
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
