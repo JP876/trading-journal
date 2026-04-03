@@ -48,6 +48,11 @@ export type Trade = {
   result: Result;
   direction: Direction;
   tags: Tag[];
-} & Omit<TradeFormSchemaType, 'pairId' | 'tradingSessionId' | 'result' | 'direction' | 'tags'>;
+  openDate?: string;
+  closeDate?: string;
+} & Omit<
+  TradeFormSchemaType,
+  'pairId' | 'tradingSessionId' | 'result' | 'direction' | 'tags' | 'openDate' | 'closeDate'
+>;
 
 export type TradesResult = PaginationInfo<Trade[]>;

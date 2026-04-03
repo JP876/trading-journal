@@ -1,4 +1,3 @@
-import { renderTimeViewClock } from '@mui/x-date-pickers';
 import { DateTimePicker, type DateTimePickerProps } from '@mui/x-date-pickers/DateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
 import FormControl from '@mui/material/FormControl';
@@ -29,13 +28,12 @@ const DateTimeInput = ({ label, field, fieldState, helperText, inputProps }: Dat
         views={['year', 'month', 'day', 'hours', 'minutes']}
         format="dd/MM/yyyy HH:mm"
         ampm={false}
-        viewRenderers={{ hours: renderTimeViewClock, minutes: renderTimeViewClock }}
         {...inputProps}
         slotProps={{
           textField: { size: 'small', fullWidth: true, ...inputProps?.slotProps?.textField },
           ...inputProps?.slotProps,
         }}
-        value={value || null}
+        value={value || inputProps?.defaultValue || null}
         onChange={handleChange}
         {...restField}
       />

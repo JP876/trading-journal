@@ -30,13 +30,18 @@ export class TagsService {
   }
 
   public async findTags(user: User, query: GetTagsDto): Promise<Paginated<Tag[]>> {
-    const result = await this.paginationProvider.paginateQuery(this.tagsRepository, query, {
-      order: { id: -1 },
-      where: {
-        user,
-        ...(query?.title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${query?.title}%` }) } : {}),
+    const result = await this.paginationProvider.paginateQuery(
+      this.tagsRepository,
+      query,
+      {
+        order: { id: -1 },
+        where: {
+          user,
+          ...(query?.title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${query?.title}%` }) } : {}),
+        },
       },
-    });
+      { where: { user } }
+    );
     return { ...result };
   }
 

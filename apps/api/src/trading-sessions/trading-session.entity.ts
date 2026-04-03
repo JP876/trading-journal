@@ -35,4 +35,20 @@ export class TradingSession {
 
   @Column({ type: 'datetime', nullable: true })
   defaultOpenDate: Date | null;
+
+  /* 
+  trades.service -> findAll -> returns empty trades array
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'datetime' })
+  updatedAt: Date;
+  */
+
+  @Column({ type: 'datetime', nullable: true })
+  createdAt: Date | null;
+
+  @Column({ type: 'datetime', nullable: true })
+  updatedAt: Date | null;
 }

@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import NewLabelIcon from '@mui/icons-material/NewLabel';
 import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
+import { addHours } from 'date-fns';
 
 import type { TradeFormSchemaType } from '../../../types/trade';
 import FormMain from '../../../components/form/FormMain';
@@ -129,7 +130,23 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="closeDate"
           control={form.control}
-          render={(props) => <DateTimeInput label="Close Date" inputProps={{ disableFuture: true }} {...props} />}
+          render={(props) => (
+            <Watch
+              control={form.control}
+              name={['openDate', 'closeDate']}
+              render={([openDate, closeDate]) => (
+                <DateTimeInput
+                  label="Close Date"
+                  inputProps={{
+                    disableFuture: true,
+                    defaultValue: !closeDate && openDate ? addHours(new Date(openDate), 1) : undefined,
+                    minDate: openDate,
+                  }}
+                  {...props}
+                />
+              )}
+            />
+          )}
         />
       </Stack>
 

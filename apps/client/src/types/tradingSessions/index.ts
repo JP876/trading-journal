@@ -14,9 +14,13 @@ export const TradingSessionFormSchema = z.object({
 });
 
 export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSchema>;
-export type TradingSession = { id: number; isMain: number; tradesCount: number; defaultPair: Pair } & Omit<
-  TradingSessionFormSchemaType,
-  'isMain' | 'defaultPairId'
->;
+export type TradingSession = {
+  id: number;
+  isMain: number;
+  tradesCount: number;
+  defaultPair: Pair;
+  createdAt: string;
+  updatedAt: string;
+} & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId'>;
 
 export type TradingSessionsResult = PaginationInfo<TradingSession[]>;

@@ -22,7 +22,7 @@ export class Trade {
   @ManyToOne(() => Pair, (pair) => pair.trades, { eager: true })
   pair: Pair;
 
-  @ManyToOne(() => TradingSession, (session) => session.trades, { onDelete: 'CASCADE' })
+  @ManyToOne(() => TradingSession, (session) => session.id, { onDelete: 'CASCADE' })
   tradingSession: TradingSession;
 
   @ManyToMany(() => Tag, (tag) => tag.trades, { eager: true })

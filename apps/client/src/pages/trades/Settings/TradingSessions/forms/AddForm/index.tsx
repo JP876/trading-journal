@@ -18,8 +18,11 @@ const AddTradingSessionForm = () => {
 
   const mutation = useMutation({
     mutationFn: addTradingSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.TRADING_SESSIONS] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [QueryKey.TRADING_SESSIONS] });
+      if (form.getValues('isMain')) {
+        await queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] });
+      }
       closeModal(TradesPageModal.ADD_TRADING_SESSION);
       openSnackbar({ severity: 'success', message: 'Your trading session details have been saved.' });
     },

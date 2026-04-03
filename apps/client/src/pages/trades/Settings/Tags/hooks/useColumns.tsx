@@ -12,6 +12,7 @@ import useModal from '../../../../../hooks/useModal';
 import MenuActions from '../../../../../components/MenuActions';
 import { TradesPageModal } from '../../../enums';
 import checkBrightness from '../../../../../lib/checkBrighness';
+import { format } from 'date-fns';
 
 const TagActions = ({ tag }: { tag: Tag }) => {
   const { openModal } = useModal();
@@ -43,7 +44,6 @@ const TagActions = ({ tag }: { tag: Tag }) => {
 const useColumns = () => {
   return useMemo<ColumnDef<Tag>[]>(() => {
     return [
-      { accessorKey: 'id', header: 'ID', size: 20, cell: ({ row }) => <Typography>{row.original.id}</Typography> },
       {
         accessorKey: 'title',
         header: 'Title',
@@ -71,6 +71,12 @@ const useColumns = () => {
             />
           );
         },
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created',
+        size: 80,
+        cell: ({ row }) => <Typography>{format(row.original.createdAt, 'dd/MM/yyyy')}</Typography>,
       },
       {
         accessorKey: 'actions',

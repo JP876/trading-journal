@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import NumbersIcon from '@mui/icons-material/Numbers';
 import type { ColumnDef } from '@tanstack/react-table';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -16,6 +17,7 @@ import { editTradingSession } from '../../../../../api/tradingSessions';
 import useSnackbar from '../../../../../hooks/useSnackbar';
 import { QueryKey } from '../../../../../enums';
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
+import { format } from 'date-fns';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -88,8 +90,13 @@ const useColumns = () => {
       },
       {
         accessorKey: 'tradesCount',
-        header: 'Trades count',
-        size: 120,
+        header: () => (
+          <Stack direction="row" alignItems="center">
+            <NumbersIcon fontSize="small" />
+            Trades
+          </Stack>
+        ),
+        size: 60,
         cell: ({ row }) => {
           return <Typography>{row.original.tradesCount}</Typography>;
         },
@@ -107,6 +114,16 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value = row.original.description;
           return value ? <ClampedTextContainer maxRows={1}>{value}</ClampedTextContainer> : <NotFoundValue />;
+        },
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created',
+        size: 60,
+        cell: ({ row }) => {
+          const value = row.original.createdAt;
+          if (!value) return <NotFoundValue />;
+          return <Typography>{format(row.original?.createdAt, 'dd/MM/yyyy')}</Typography>;
         },
       },
       {

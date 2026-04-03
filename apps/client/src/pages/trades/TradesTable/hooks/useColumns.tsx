@@ -157,8 +157,8 @@ const useColumns = () => {
         header: 'SL',
         size: 80,
         cell: ({ row }) => {
-          const value: string | undefined = row.getValue('stopLoss');
-          const result: Result | undefined = row.getValue('result');
+          const value: number | undefined = row.original.stopLoss;
+          const result: Result | undefined = row.original.result;
 
           if (!value) return <NotFoundValue />;
 
@@ -180,18 +180,18 @@ const useColumns = () => {
       },
       {
         accessorKey: 'openDate',
-        header: 'Open Date',
+        header: 'Open',
         cell: ({ row }) => {
-          const value: string | undefined = row.getValue('openDate');
+          const value: string | undefined = row.original.openDate;
           if (!value) return <NotFoundValue />;
           return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
         },
       },
       {
         accessorKey: 'closeDate',
-        header: 'End date',
+        header: 'Close',
         cell: ({ row }) => {
-          const value: string | undefined = row.getValue('closeDate');
+          const value: string | undefined = row.original.closeDate;
           if (!value) return <NotFoundValue />;
           return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
         },
@@ -200,7 +200,7 @@ const useColumns = () => {
         accessorKey: 'comment',
         header: 'Comment',
         cell: ({ row }) => {
-          const value: string | undefined = row.getValue('comment');
+          const value: string | undefined = row.original.comment;
           if (!value) return <NotFoundValue />;
           return <ClampedTextContainer variant="body2">{value}</ClampedTextContainer>;
         },

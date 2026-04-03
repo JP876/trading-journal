@@ -112,17 +112,22 @@ export class TradesService {
       pair = await this.pairsService.findOneBy({ id: pairId });
     }
 
-    const data = await this.paginationProvider.paginateQuery(this.tradesRepository, tradesQuery, {
-      order: { id: -1 },
-      where: {
-        tradingSession: session,
-        result,
-        direction,
-        ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
-        ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
-        ...(pair ? { pair: pair } : {}),
+    const data = await this.paginationProvider.paginateQuery(
+      this.tradesRepository,
+      tradesQuery,
+      {
+        order: { id: -1 },
+        where: {
+          tradingSession: session,
+          result,
+          direction,
+          ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
+          ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
+          ...(pair ? { pair: pair } : {}),
+        },
       },
-    });
+      { where: { tradingSession: session } }
+    );
 
     return { ...data };
   }

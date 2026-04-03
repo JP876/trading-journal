@@ -12,7 +12,8 @@ export class PaginationProvider {
   public async paginateQuery<T extends ObjectLiteral>(
     repository: Repository<T>,
     query?: PaginationDto,
-    options?: FindManyOptions<T>
+    options?: FindManyOptions<T>,
+    countOptions?: FindManyOptions<T>
   ) {
     const [error, resultsAndCount] = await withCatch(
       Promise.all([
@@ -21,7 +22,7 @@ export class PaginationProvider {
           skip: query?.limit ? ((query?.page || 1) - 1) * query?.limit : undefined,
           ...options,
         }),
-        repository.count(),
+        repository.count({ ...countOptions }),
       ])
     );
 
