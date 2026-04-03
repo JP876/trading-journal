@@ -5,14 +5,14 @@ import { TradingSessionsService } from './providers/trading-sessions.service';
 import { RequestWithUser } from 'src/auth/types';
 import { CreateTradingSessionDto } from './dtos/create-trading-session.dto';
 import { UpdateTradingSessionDto } from './dtos/update-trading-session.dto';
-import { GetTradingSessions } from './dtos/get-trading-sessions.dto';
+import { GetTradingSessionsDto } from './dtos/get-trading-sessions.dto';
 
 @Controller('trading-sessions')
 export class TradingSessionsController {
   constructor(private readonly tradingSessionService: TradingSessionsService) {}
 
   @Get()
-  public getTradingSessions(@Req() requset: RequestWithUser, @Query() query: GetTradingSessions) {
+  public getTradingSessions(@Req() requset: RequestWithUser, @Query() query: GetTradingSessionsDto) {
     return this.tradingSessionService.findAll(requset.user, query);
   }
 

@@ -1,18 +1,22 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Raw, Repository } from 'typeorm';
 
 import { Tag } from '../tag.entity';
 import { CreateTagDto } from '../dtos/create-tag.dto';
 import withCatch from 'src/utils/withCatch';
 import { UpdateTagDto } from '../dtos/update-tag.dto';
 import { User } from 'src/users/user.entity';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
+import { Paginated } from 'src/common/pagination/types';
+import { GetTagsDto } from '../dtos/get-tag.dto';
 
 @Injectable()
 export class TagsService {
   constructor(
     @InjectRepository(Tag)
-    private readonly tagsRepository: Repository<Tag>
+    private readonly tagsRepository: Repository<Tag>,
+    private readonly paginationProvider: PaginationProvider
   ) {}
 
   private async saveTag(tag: Tag) {
@@ -25,14 +29,15 @@ export class TagsService {
     return saved;
   }
 
-  public async findTags() {
-    const [error, result] = await withCatch(this.tagsRepository.find());
-    if (error) {
-      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
-        description: error.message,
-      });
-    }
-    return result;
+  public async findTags(user: User, query: GetTagsDto): Promise<Paginated<Tag[]>> {
+    const result = await this.paginationProvider.paginateQuery(this.tagsRepository, query, {
+      order: { id: -1 },
+      where: {
+        user,
+        ...(query?.title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${query?.title}%` }) } : {}),
+      },
+    });
+    return { ...result };
   }
 
   public async findOneBy(options: FindOptionsWhere<Tag>) {

@@ -7,7 +7,7 @@ import withCatch from 'src/utils/withCatch';
 import { User } from 'src/users/user.entity';
 import { CreateTradingSessionDto } from '../dtos/create-trading-session.dto';
 import { UpdateTradingSessionDto } from '../dtos/update-trading-session.dto';
-import { GetTradingSessions } from '../dtos/get-trading-sessions.dto';
+import { GetTradingSessionsDto } from '../dtos/get-trading-sessions.dto';
 import { Paginated } from 'src/common/pagination/types';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
 
@@ -42,7 +42,7 @@ export class TradingSessionsService {
     return session;
   }
 
-  public async findAll(user: User, query?: GetTradingSessions): Promise<Paginated<TradingSession[]>> {
+  public async findAll(user: User, query?: GetTradingSessionsDto): Promise<Paginated<TradingSession[]>> {
     const data = await this.paginationProvider.paginateQuery(this.tradingSessionsRepository, query, {
       order: { id: -1 },
       where: {

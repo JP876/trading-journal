@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 import { PaginationDto } from 'src/common/pagination/dtos/pagination.dto';
 import { DirectionOptions, ResultOptions } from '../enums';
