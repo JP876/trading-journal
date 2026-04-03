@@ -29,10 +29,14 @@ const TradesTableMain = () => {
 
       {data?.currentPage ? (
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
+          {data?.itemsPerPage ? (
+            <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
+          ) : null}
           <Stack direction="row" alignItems="center" gap={2}>
-            <RowsPerPageSelect itemsPerPage={data.itemsPerPage} />
-            <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
+            {data?.itemsPerPage ? <RowsPerPageSelect itemsPerPage={data.itemsPerPage} /> : null}
+            {data.totalPages ? (
+              <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
+            ) : null}
           </Stack>
         </Stack>
       ) : null}

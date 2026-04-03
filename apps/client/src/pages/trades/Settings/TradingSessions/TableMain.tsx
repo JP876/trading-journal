@@ -29,9 +29,13 @@ const TradingSessionsTable = () => {
 
       {data?.currentPage ? (
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
+          {data?.itemsPerPage ? (
+            <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
+          ) : null}
           <Stack direction="row" alignItems="center" gap={2}>
-            <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
+            {data.totalPages ? (
+              <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
+            ) : null}
           </Stack>
         </Stack>
       ) : null}

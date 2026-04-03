@@ -15,11 +15,14 @@ export class PaginationProvider {
     options?: FindManyOptions<T>
   ) {
     const [error, resultsAndCount] = await withCatch(
-      repository.findAndCount({
-        take: query?.limit,
-        skip: query?.limit ? ((query?.page || 1) - 1) * query?.limit : undefined,
-        ...options,
-      })
+      Promise.all([
+        repository.findAndCount({
+          take: query?.limit,
+          skip: query?.limit ? ((query?.page || 1) - 1) * query?.limit : undefined,
+          ...options,
+        }),
+        repository.count(),
+      ])
     );
 
     if (error) {
@@ -28,11 +31,12 @@ export class PaginationProvider {
       });
     }
 
-    const [results, count] = resultsAndCount;
+    const [[results, count], totalCount] = resultsAndCount;
 
     const finalData: Paginated<T[]> = {
       results: results,
       totalItems: count,
+      totalItemsExcludingQuery: totalCount,
     };
 
     if (query?.limit) {
