@@ -1,4 +1,4 @@
-import { IsHexColor, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsHSL, IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateTagDto {
   @IsString()
@@ -8,6 +8,6 @@ export class CreateTagDto {
   title: string;
 
   @IsString()
-  @IsHexColor()
+  @IsHSL()
   color: string;
 }

@@ -19,7 +19,7 @@ export type SelectOption<T = string | number> = {
   label: string;
   chipBackground?: string;
 };
-export type AutocompleteOption = SelectOption & { groupBy?: string };
+export type AutocompleteOption<T = string | number> = SelectOption<T> & { groupBy?: string };
 
 export type FormField<
   TFieldValues extends FieldValues = FieldValues,

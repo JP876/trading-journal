@@ -1,9 +1,15 @@
 export enum TradesPageModal {
   ADD_TRADE = 'addTradeForm',
   EDIT_TRADE = 'editTradeForm',
-  DELETE_TRADE = 'deleteTradeForm',
+  DELETE_TRADE = 'deleteTradeDialog',
+
   SETTINGS = 'tradeSettings',
-  ADD_TRADING_SESSION = 'addTradingSession',
-  EDIT_TRADING_SESSION = 'editTradingSession',
-  DELETE_TRADING_SESSION = 'deleteTradingSession',
+
+  ADD_TRADING_SESSION = 'addTradingSessionForm',
+  EDIT_TRADING_SESSION = 'editTradingSessionForm',
+  DELETE_TRADING_SESSION = 'deleteTradingSessionDialog',
+
+  ADD_TAG = 'addTagForm',
+  EDIT_TAG = 'editTagForm',
+  DELETE_TAG = 'deleteTagDialog',
 }

@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 
 import TradingSessionsMain from './TradingSessions';
+
+const TagsMain = lazy(() => import('./Tags'));
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -56,7 +58,7 @@ const SettingsNavigation = () => {
         <TradingSessionsMain />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Tags
+        <TagsMain />
       </TabPanel>
     </Box>
   );

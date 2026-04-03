@@ -3,8 +3,8 @@ import z from 'zod';
 import type { User } from '../user';
 
 export const TagFormSchema = z.object({
-  title: z.string(),
-  color: z.string(),
+  title: z.string().min(2, 'This field is required.'),
+  color: z.string().min(2, 'This field is required.'),
 });
 
 export type TagFormSchemaType = z.infer<typeof TagFormSchema>;

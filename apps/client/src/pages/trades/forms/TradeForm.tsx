@@ -8,8 +8,9 @@ import SelectInput from '../../../components/form/SelectInput';
 import DateTimeInput from '../../../components/form/DateTimeInput';
 import AutocompleteInput from '../../../components/form/AutocompleteInput';
 import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
-import usePairOptions from '../hooks/usePairOptions';
+import usepairsOptions from '../hooks/usePairsOptions';
 import SubmitButton from '../../../components/form/SubmitButton';
+import useTagsOptions from '../hooks/useTagsOptions';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -19,7 +20,8 @@ type TradeFormProps = {
 };
 
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
-  const pairOptions = usePairOptions();
+  const pairsOptions = usepairsOptions();
+  const tagsOptions = useTagsOptions();
 
   return (
     <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
@@ -27,7 +29,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="pairId"
           control={form.control}
-          render={(props) => <AutocompleteInput {...props} options={pairOptions} label="Pair *" />}
+          render={(props) => <AutocompleteInput {...props} options={pairsOptions} label="Pair *" />}
         />
         <Controller
           name="result"
@@ -46,6 +48,22 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           name="orderType"
           control={form.control}
           render={(props) => <SelectInput options={orderTypeOptions} label="Order type" {...props} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={4}>
+        <Controller
+          name="tags"
+          control={form.control}
+          render={(props) => (
+            <SelectInput
+              {...props}
+              options={tagsOptions}
+              label="Tags"
+              renderChips
+              inputProps={{ multiple: true, disabled: !tagsOptions.length }}
+            />
+          )}
         />
       </Stack>
 

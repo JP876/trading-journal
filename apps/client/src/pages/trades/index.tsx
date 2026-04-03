@@ -14,7 +14,7 @@ import DialogMain from '../../components/DialogMain';
 import useModal from '../../hooks/useModal';
 import { modalAtom } from '../../atoms/modal';
 import { TradesPageModal } from './enums';
-import usePairsOptions from './hooks/usePairOptions';
+import usePairsOptions from './hooks/usePairsOptions';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import { resultOptions } from './consts';
 import TableProviders from '../../components/table/providers';
@@ -56,7 +56,7 @@ const TradesModalList = () => {
 };
 
 const TradesTableContainer = () => {
-  const pairOptions = usePairsOptions();
+  const pairsOptions = usePairsOptions();
 
   return (
     <TableProviders>
@@ -69,7 +69,7 @@ const TradesTableContainer = () => {
             gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
           }}
         >
-          <AutocompleteFilter name="pair" label="Pair" options={pairOptions} />
+          <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
           <AutocompleteFilter name="result" label="Result" options={resultOptions} />
         </Box>
 
