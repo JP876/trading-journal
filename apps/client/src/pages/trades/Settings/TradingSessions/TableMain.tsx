@@ -12,7 +12,7 @@ import { useFiltersState } from '../../../../components/table/providers/Filters'
 
 const TradingSessionsTable = () => {
   const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { title: string };
+  const filters = useFiltersState() as { title?: string };
 
   const { data } = useQuery({
     queryKey: [QueryKey.TRADING_SESSIONS, page, rowsPerPage, filters.title],

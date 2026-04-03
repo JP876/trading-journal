@@ -1,4 +1,5 @@
 import { axiosInstance } from '../../lib/axiosInstance';
+import withDelay from '../../lib/withDelay';
 import type { LoginFormData, RegisterFormData } from '../../types/auth';
 import type { User } from '../../types/user';
 
@@ -10,7 +11,7 @@ export const registerUser = async (data: RegisterFormData) => {
 };
 
 export const loginUser = async (data: LoginFormData) => {
-  const response = await axiosInstance.post('auth/login', data);
+  const response = await withDelay(axiosInstance.post('auth/login', data));
   return response.data;
 };
 

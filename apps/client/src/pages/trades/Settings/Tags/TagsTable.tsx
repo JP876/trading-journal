@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
 
 import { QueryKey } from '../../../../enums';
@@ -12,12 +12,13 @@ import ResultsMain from '../../../../components/table/Results';
 
 const TagsTableMain = () => {
   const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { title: string };
+  const filters = useFiltersState() as { title?: string };
 
   const { data } = useQuery({
     queryKey: [QueryKey.TAGS, page, rowsPerPage, filters.title],
     queryFn: () => getTags({ page, rowsPerPage, title: filters.title }),
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
   });
 
   const columns = useColumns();

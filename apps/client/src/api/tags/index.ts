@@ -1,5 +1,6 @@
 import { axiosInstance } from '../../lib/axiosInstance';
 import transformToFormData from '../../lib/transformToFormData';
+import withDelay from '../../lib/withDelay';
 import type { PaginationInfo } from '../../types';
 import type { Tag, TagFormSchemaType } from '../../types/tag';
 
@@ -10,13 +11,16 @@ type GetTagsOptions = {
 };
 
 export const getTags = async (params?: GetTagsOptions) => {
-  const response = await axiosInstance.get<PaginationInfo<Tag[]>>('tags', {
-    params: {
-      page: params?.page || undefined,
-      limit: params?.rowsPerPage || undefined,
-      title: params?.title || undefined,
-    },
-  });
+  const response = await withDelay(
+    axiosInstance.get<PaginationInfo<Tag[]>>('tags', {
+      params: {
+        page: params?.page || undefined,
+        limit: params?.rowsPerPage || undefined,
+        title: params?.title || undefined,
+      },
+    }),
+    0
+  );
   return response.data;
 };
 
