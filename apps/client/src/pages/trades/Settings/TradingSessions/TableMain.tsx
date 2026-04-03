@@ -6,7 +6,6 @@ import { getTradingSessions } from '../../../../api/tradingSessions';
 import useColumns from './hooks/useColumns';
 import TableMain from '../../../../components/table/TableMain';
 import ResultsMain from '../../../../components/table/Results';
-import RowsPerPageSelect from '../../../../components/table/RowsPerPageSelect';
 import PaginationContainer from '../../../../components/table/PaginationContainer';
 import { usePaginationState } from '../../../../components/table/providers/Pagination';
 import { useFiltersState } from '../../../../components/table/providers/Filters';
@@ -32,7 +31,6 @@ const TradingSessionsTable = () => {
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
           <Stack direction="row" alignItems="center" gap={2}>
-            <RowsPerPageSelect itemsPerPage={data.itemsPerPage} />
             <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
           </Stack>
         </Stack>

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -42,6 +43,7 @@ const TagActions = ({ tag }: { tag: Tag }) => {
 const useColumns = () => {
   return useMemo<ColumnDef<Tag>[]>(() => {
     return [
+      { accessorKey: 'id', header: 'ID', size: 20, cell: ({ row }) => <Typography>{row.original.id}</Typography> },
       {
         accessorKey: 'title',
         header: 'Title',

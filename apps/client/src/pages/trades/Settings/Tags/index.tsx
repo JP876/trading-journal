@@ -12,6 +12,8 @@ import { modalAtom } from '../../../../atoms/modal';
 import EditTagForm from './forms/EditForm';
 import type { Tag } from '../../../../types/tag';
 import DeleteTag from './DeleteTag';
+import TableProviders from '../../../../components/table/providers';
+import TextFilter from '../../../../components/table/filters/TextFilter';
 
 const TagModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
@@ -38,10 +40,12 @@ const TagsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <>
+    <TableProviders>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Box></Box>
+          <Box>
+            <TextFilter name="title" label="Title" />
+          </Box>
           <Stack direction="row" alignItems="center" gap={2}>
             <Button
               size="small"
@@ -57,7 +61,7 @@ const TagsMain = () => {
       </Stack>
 
       <TagModalList />
-    </>
+    </TableProviders>
   );
 };
 

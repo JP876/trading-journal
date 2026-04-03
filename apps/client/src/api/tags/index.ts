@@ -1,9 +1,22 @@
 import { axiosInstance } from '../../lib/axiosInstance';
 import transformToFormData from '../../lib/transformToFormData';
+import type { PaginationInfo } from '../../types';
 import type { Tag, TagFormSchemaType } from '../../types/tag';
 
-export const getTags = async () => {
-  const response = await axiosInstance.get<Tag[]>('tags');
+type GetTagsOptions = {
+  page?: number;
+  rowsPerPage?: number;
+  title?: string;
+};
+
+export const getTags = async (params?: GetTagsOptions) => {
+  const response = await axiosInstance.get<PaginationInfo<Tag[]>>('tags', {
+    params: {
+      page: params?.page || undefined,
+      limit: params?.rowsPerPage || undefined,
+      title: params?.title || undefined,
+    },
+  });
   return response.data;
 };
 
