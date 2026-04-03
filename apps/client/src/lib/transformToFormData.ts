@@ -7,7 +7,7 @@ const transformToFormData = (data: any): FormData | null => {
 
       if (Array.isArray(value)) {
         value.forEach((val) => {
-          formData.append(`${name}`, val);
+          formData.append(`${name}[]`, val);
         });
       } else {
         value === null || value === undefined ? formData.append(name, '') : formData.append(name, value);

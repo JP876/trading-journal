@@ -9,6 +9,7 @@ import {
   IsString,
   ValidateIf,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 import { ClosedBy, DirectionOptions, OrderType, ResultOptions } from '../enums';
 
@@ -52,6 +53,11 @@ export class CreateTradeDto {
   @IsOptional()
   @IsArray()
   @IsInt({ each: true })
+  @Transform(({ value }) => {
+    return String(value)
+      .split(',')
+      .map((item) => Number(item));
+  })
   tags?: number[];
 
   @ValidateIf((obj: CreateTradeDto) => obj.closedBy === ClosedBy.USER)

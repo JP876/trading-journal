@@ -49,6 +49,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       pairId: trade?.pair?.id,
       closedAt: trade?.closedAt || undefined,
       entryPrice: trade?.entryPrice || undefined,
+      tags: (trade?.tags || []).map((tag) => tag.id),
     },
   });
 

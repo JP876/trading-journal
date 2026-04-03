@@ -60,6 +60,8 @@ const useColumns = () => {
               label={value}
               size="small"
               sx={(theme) => ({
+                minWidth: '10rem',
+                textAlign: 'center',
                 backgroundColor: value,
                 color: checkBrightness(value) ? theme.palette.common.white : theme.palette.common.black,
                 paddingInline: theme.spacing(1),
