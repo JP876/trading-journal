@@ -25,6 +25,7 @@ const DeleteTrade = lazy(() => import('./DeleteTrade'));
 const TradesSettingsMain = lazy(() => import('./Settings'));
 
 const TradesTableMain = lazy(() => import('./TradesTable'));
+const AddTagForm = lazy(() => import('./Settings/Tags/forms/AddForm'));
 
 const TradesModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
@@ -50,6 +51,10 @@ const TradesModalList = () => {
 
       <DialogMain id={TradesPageModal.SETTINGS} title="Settings" size="md">
         <TradesSettingsMain />
+      </DialogMain>
+
+      <DialogMain size="xs" id={TradesPageModal.ADD_TAG} title="Add tag">
+        <AddTagForm />
       </DialogMain>
     </>
   );

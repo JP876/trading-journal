@@ -55,7 +55,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: Pair | null = row.getValue('pair');
           if (!value) return <NotFoundValue />;
-          return <Typography>{value.pair}</Typography>;
+          return <Typography variant="body2">{value.pair}</Typography>;
         },
       },
       {
@@ -138,6 +138,7 @@ const useColumns = () => {
 
           return (
             <Typography
+              variant="body2"
               sx={[
                 result === 'win' &&
                   ((theme) => ({
@@ -163,6 +164,7 @@ const useColumns = () => {
 
           return (
             <Typography
+              variant="body2"
               sx={[
                 result === 'loss' &&
                   ((theme) => ({
@@ -182,7 +184,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('openDate');
           if (!value) return <NotFoundValue />;
-          return format(new Date(value), 'dd/MM/yy HH:mm');
+          return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
         },
       },
       {
@@ -191,7 +193,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('closeDate');
           if (!value) return <NotFoundValue />;
-          return format(new Date(value), 'dd/MM/yy HH:mm');
+          return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
         },
       },
       {
@@ -200,7 +202,7 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value: string | undefined = row.getValue('comment');
           if (!value) return <NotFoundValue />;
-          return <ClampedTextContainer>{value}</ClampedTextContainer>;
+          return <ClampedTextContainer variant="body2">{value}</ClampedTextContainer>;
         },
       },
       {

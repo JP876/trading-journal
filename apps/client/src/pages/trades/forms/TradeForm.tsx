@@ -1,4 +1,8 @@
+import { memo } from 'react';
 import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import NewLabelIcon from '@mui/icons-material/NewLabel';
 import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
 
 import type { TradeFormSchemaType } from '../../../types/trade';
@@ -11,6 +15,8 @@ import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } fro
 import usepairsOptions from '../hooks/usePairsOptions';
 import SubmitButton from '../../../components/form/SubmitButton';
 import useTagsOptions from '../hooks/useTagsOptions';
+import useModal from '../../../hooks/useModal';
+import { TradesPageModal } from '../enums';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -18,6 +24,18 @@ type TradeFormProps = {
   form: UseFormReturn<FormSchema, any, FormSchema>;
   isLoading?: boolean;
 };
+
+const AddTagButton = memo(() => {
+  const { openModal } = useModal();
+
+  return (
+    <Tooltip arrow disableInteractive title="Add tag">
+      <IconButton sx={{ mb: 3.2 }} onClick={() => openModal(TradesPageModal.ADD_TAG)}>
+        <NewLabelIcon />
+      </IconButton>
+    </Tooltip>
+  );
+});
 
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
   const pairsOptions = usepairsOptions();
@@ -51,7 +69,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={4}>
+      <Stack direction="row" gap={4}>
         <Controller
           name="tags"
           control={form.control}
@@ -65,6 +83,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
             />
           )}
         />
+        <AddTagButton />
       </Stack>
 
       <Stack direction="row" alignItems="center" gap={4}>

@@ -7,7 +7,6 @@ import { useAtomValue } from 'jotai';
 import useModal from '../../../../hooks/useModal';
 import { TradesPageModal } from '../../enums';
 import TagsTableMain from './TagsTable';
-import AddTagForm from './forms/AddForm';
 import DialogMain from '../../../../components/DialogMain';
 import { modalAtom } from '../../../../atoms/modal';
 import EditTagForm from './forms/EditForm';
@@ -19,10 +18,6 @@ const TagModalList = () => {
 
   return (
     <>
-      <DialogMain id={TradesPageModal.ADD_TAG} title="Add tag">
-        <AddTagForm />
-      </DialogMain>
-
       <DialogMain id={TradesPageModal.EDIT_TAG} title="Edit tag">
         <EditTagForm tag={modalInfo?.[TradesPageModal.EDIT_TAG]?.data as Tag} />
       </DialogMain>
