@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 import { Trade } from 'src/trades/trade.entity';
+import { TradingSession } from 'src/trading-sessions/trading-session.entity';
 
 @Entity('pairs')
 export class Pair {
@@ -31,6 +32,9 @@ export class Pair {
   @Column({ type: 'text', nullable: false })
   quoteCountry: string;
 
-  @OneToMany(() => Trade, (trade) => trade.id)
-  trade: Trade[];
+  @OneToMany(() => Trade, (trade) => trade.pair)
+  trades?: Trade[];
+
+  @OneToMany(() => TradingSession, (tradingSession) => tradingSession.defaultPair)
+  tradingSessions?: TradingSession[];
 }

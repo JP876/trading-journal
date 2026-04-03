@@ -5,11 +5,12 @@ import { TradingSessionsController } from './trading-sessions.controller';
 import { TradingSessionsService } from './providers/trading-sessions.service';
 import { TradingSession } from './trading-session.entity';
 import { PaginationModule } from 'src/common/pagination/pagination.module';
+import { PairsModule } from 'src/pairs/pairs.module';
 
 @Module({
   controllers: [TradingSessionsController],
   providers: [TradingSessionsService],
-  imports: [TypeOrmModule.forFeature([TradingSession]), PaginationModule],
+  imports: [TypeOrmModule.forFeature([TradingSession]), PaginationModule, PairsModule],
   exports: [TradingSessionsService],
 })
 export class TradingSessionsModule {}

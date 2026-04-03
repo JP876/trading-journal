@@ -1,4 +1,15 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import {
+  IsDate,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 
 export class CreateTradingSessionDto {
   @IsString()
@@ -17,4 +28,21 @@ export class CreateTradingSessionDto {
   @Min(0)
   @Max(1)
   isMain?: number;
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsNumber()
+  defaultPairId: number;
+
+  @IsNumber()
+  @IsOptional()
+  defaultStopLoss?: number;
+
+  @IsNumber()
+  @IsOptional()
+  defaultTakeProfit?: number;
+
+  @IsDate()
+  @IsOptional()
+  defaultOpenDate?: Date;
 }

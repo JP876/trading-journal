@@ -1,11 +1,15 @@
 import { Controller, type UseFormReturn } from 'react-hook-form';
 import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 
 import type { TradingSessionFormSchemaType } from '../../../../../types/tradingSessions';
 import FormMain from '../../../../../components/form/FormMain';
 import TextInput from '../../../../../components/form/TextInput';
 import CheckboxInput from '../../../../../components/form/CheckboxInput';
 import SubmitButton from '../../../../../components/form/SubmitButton';
+import AutocompleteInput from '../../../../../components/form/AutocompleteInput';
+import usePairsOptions from '../../../hooks/usePairsOptions';
+import DateTimeInput from '../../../../../components/form/DateTimeInput';
 
 type FormSchema = TradingSessionFormSchemaType;
 type TradingSessionFormProps = {
@@ -15,6 +19,8 @@ type TradingSessionFormProps = {
 };
 
 const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormProps) => {
+  const pairsOptions = usePairsOptions();
+
   return (
     <FormMain onSubmit={onSubmit} form={form}>
       <Stack direction="row" alignItems="center" gap={2}>
@@ -45,6 +51,34 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
           name="description"
           control={form.control}
           render={(props) => <TextInput label="Description" inputProps={{ multiline: true, rows: 6 }} {...props} />}
+        />
+      </Stack>
+
+      <Divider sx={{ my: 2 }}>Default trade values</Divider>
+
+      <Stack direction="row" alignItems="center" gap={4}>
+        <Controller
+          name="defaultPairId"
+          control={form.control}
+          render={(props) => <AutocompleteInput {...props} options={pairsOptions} label="Pair" />}
+        />
+        <Controller
+          name="defaultOpenDate"
+          control={form.control}
+          render={(props) => <DateTimeInput label="Open Date" inputProps={{ disableFuture: true }} {...props} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignContent="center" gap={4}>
+        <Controller
+          name="defaultTakeProfit"
+          control={form.control}
+          render={(props) => <TextInput label="Take Profit" {...props} inputProps={{ type: 'number' }} />}
+        />
+        <Controller
+          name="defaultStopLoss"
+          control={form.control}
+          render={(props) => <TextInput label="Stop Loss" {...props} inputProps={{ type: 'number' }} />}
         />
       </Stack>
 

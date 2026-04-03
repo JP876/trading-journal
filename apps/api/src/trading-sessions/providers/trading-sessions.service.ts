@@ -10,13 +10,16 @@ import { UpdateTradingSessionDto } from '../dtos/update-trading-session.dto';
 import { GetTradingSessionsDto } from '../dtos/get-trading-sessions.dto';
 import { Paginated } from 'src/common/pagination/types';
 import { PaginationProvider } from 'src/common/pagination/providers/pagination.provder';
+import { PairsService } from 'src/pairs/providers/pairs.service';
+import { Pair } from 'src/pairs/pair.entitiy';
 
 @Injectable()
 export class TradingSessionsService {
   constructor(
     @InjectRepository(TradingSession)
     private readonly tradingSessionsRepository: Repository<TradingSession>,
-    private readonly paginationProvider: PaginationProvider
+    private readonly paginationProvider: PaginationProvider,
+    private readonly pairsProvider: PairsService
   ) {}
 
   private async updateMainSession() {
@@ -66,7 +69,12 @@ export class TradingSessionsService {
       await this.updateMainSession();
     }
 
-    const newSession = this.tradingSessionsRepository.create({ ...session, user });
+    let defaultPair: Pair | undefined = undefined;
+    if (session.defaultPairId) {
+      defaultPair = await this.pairsProvider.findOneBy({ id: session.defaultPairId });
+    }
+
+    const newSession = this.tradingSessionsRepository.create({ ...session, user, defaultPair });
     const [saveError, created] = await withCatch(this.tradingSessionsRepository.save(newSession));
 
     if (saveError) {
@@ -84,6 +92,13 @@ export class TradingSessionsService {
     session.title = updateSession.title ?? session.title;
     session.description = updateSession.description ?? session.description;
     session.isMain = updateSession.isMain ?? session.isMain;
+    session.defaultStopLoss = updateSession.defaultStopLoss ?? session.defaultStopLoss;
+    session.defaultTakeProfit = updateSession.defaultTakeProfit ?? session.defaultTakeProfit;
+    session.defaultOpenDate = updateSession.defaultOpenDate ?? session.defaultOpenDate;
+
+    if (updateSession.defaultPairId) {
+      session.defaultPair = await this.pairsProvider.findOneBy({ id: updateSession.defaultPairId });
+    }
 
     if (updateSession.isMain) {
       await this.updateMainSession();

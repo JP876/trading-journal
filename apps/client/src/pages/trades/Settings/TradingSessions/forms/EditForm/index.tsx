@@ -41,7 +41,12 @@ const EditTradingSessionForm = ({ session }: EditTradingSessionFormProps) => {
 
   const form = useForm<TradingSessionFormSchemaType>({
     resolver: standardSchemaResolver(TradingSessionFormSchema),
-    defaultValues: { ...session, isMain: !!session?.isMain },
+    defaultValues: {
+      ...session,
+      isMain: !!session?.isMain,
+      defaultPairId: session?.defaultPair?.id,
+      defaultOpenDate: session?.defaultOpenDate ? new Date(session.defaultOpenDate) : undefined,
+    },
   });
 
   const onSubmit = (data: TradingSessionFormSchemaType) => {

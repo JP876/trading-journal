@@ -19,7 +19,7 @@ export class Trade {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Pair, (pair) => pair.id, { eager: true })
+  @ManyToOne(() => Pair, (pair) => pair.trades, { eager: true })
   pair: Pair;
 
   @ManyToOne(() => TradingSession, (session) => session.trades, { onDelete: 'CASCADE' })
