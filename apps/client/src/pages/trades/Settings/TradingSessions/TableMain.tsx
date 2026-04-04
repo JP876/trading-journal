@@ -5,10 +5,9 @@ import { QueryKey } from '../../../../enums';
 import { getTradingSessions } from '../../../../api/tradingSessions';
 import useColumns from './hooks/useColumns';
 import TableMain from '../../../../components/table/TableMain';
-import ResultsMain from '../../../../components/table/Results';
-import PaginationContainer from '../../../../components/table/PaginationContainer';
 import { usePaginationState } from '../../../../components/table/providers/Pagination';
 import { useFiltersState } from '../../../../components/table/providers/Filters';
+import TableMainFooter from '../../../../components/table/TableFooter';
 
 const TradingSessionsTable = () => {
   const { page, rowsPerPage } = usePaginationState();
@@ -19,6 +18,7 @@ const TradingSessionsTable = () => {
     queryFn: () => getTradingSessions({ page, rowsPerPage, ...filters }),
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
+    staleTime: Infinity,
   });
 
   const columns = useColumns();
@@ -26,19 +26,13 @@ const TradingSessionsTable = () => {
   return (
     <Stack gap={2}>
       <TableMain data={data?.results || []} columns={columns} />
-
-      {data?.currentPage ? (
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {data?.itemsPerPage ? (
-            <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
-          ) : null}
-          <Stack direction="row" alignItems="center" gap={2}>
-            {data.totalPages ? (
-              <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
-            ) : null}
-          </Stack>
-        </Stack>
-      ) : null}
+      <TableMainFooter
+        totalItems={data?.totalItems}
+        totalPages={data?.totalPages}
+        itemsPerPage={data?.itemsPerPage}
+        currentPage={data?.currentPage}
+        hideRowPerPage
+      />
     </Stack>
   );
 };

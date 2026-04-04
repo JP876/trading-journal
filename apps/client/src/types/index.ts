@@ -45,10 +45,10 @@ export const filesObject = z.object({
 
 export type Files = z.infer<typeof filesObject>;
 
-export type PaginationInfo<T> = {
+export type PaginationInfo<T = any> = {
   results: T;
   totalItems: number;
-  totalItemsExcludingQuery: number;
+  totalItemsExcludingFilter: number;
   itemsPerPage?: number;
   currentPage?: number;
   totalPages?: number;

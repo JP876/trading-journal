@@ -1,4 +1,13 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { Trade } from 'src/trades/trade.entity';
 import { User } from 'src/users/user.entity';
@@ -36,19 +45,23 @@ export class TradingSession {
   @Column({ type: 'datetime', nullable: true })
   defaultOpenDate: Date | null;
 
-  /* 
-  trades.service -> findAll -> returns empty trades array
+  // trades.service -> findAll -> returns empty trades array
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'datetime', nullable: true })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'datetime', nullable: true })
   updatedAt: Date;
-  */
 
-  @Column({ type: 'datetime', nullable: true })
+  /* @Column({ type: 'datetime', nullable: true })
   createdAt: Date | null;
 
   @Column({ type: 'datetime', nullable: true })
   updatedAt: Date | null;
+
+  @BeforeInsert()
+  updateDates() {
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+  } */
 }

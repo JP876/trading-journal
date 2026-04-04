@@ -1,6 +1,6 @@
 import { axiosInstance } from '../../lib/axiosInstance';
 import transformToFormData from '../../lib/transformToFormData';
-import type { Result, TradeFormSchemaType, TradesResult } from '../../types/trade';
+import type { Result, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
 type GetTradesOptions = {
   page?: number;
@@ -18,6 +18,11 @@ export const getTrades = async (params: GetTradesOptions) => {
       result: params.result || undefined,
     },
   });
+  return response.data;
+};
+
+export const getTradesCountPerTradingSession = async () => {
+  const response = await axiosInstance.get<TradesCount[]>('trades/count-per-session');
   return response.data;
 };
 

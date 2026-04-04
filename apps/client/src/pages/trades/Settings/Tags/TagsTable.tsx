@@ -7,8 +7,7 @@ import useColumns from './hooks/useColumns';
 import TableMain from '../../../../components/table/TableMain';
 import { usePaginationState } from '../../../../components/table/providers/Pagination';
 import { useFiltersState } from '../../../../components/table/providers/Filters';
-import PaginationContainer from '../../../../components/table/PaginationContainer';
-import ResultsMain from '../../../../components/table/Results';
+import TableMainFooter from '../../../../components/table/TableFooter';
 
 const TagsTableMain = () => {
   const { page, rowsPerPage } = usePaginationState();
@@ -25,22 +24,14 @@ const TagsTableMain = () => {
 
   return (
     <Stack gap={2}>
-      <Stack direction="row" alignItems="center">
-        <TableMain columns={columns} data={data?.results || []} />
-      </Stack>
-
-      {data?.currentPage ? (
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
-          {data?.itemsPerPage ? (
-            <ResultsMain currentPage={data.currentPage} itemsPerPage={data.itemsPerPage} totalItems={data.totalItems} />
-          ) : null}
-          <Stack direction="row" alignItems="center" gap={2}>
-            {data.totalPages ? (
-              <PaginationContainer currentPage={data.currentPage} totalPages={data.totalPages} />
-            ) : null}
-          </Stack>
-        </Stack>
-      ) : null}
+      <TableMain columns={columns} data={data?.results || []} />
+      <TableMainFooter
+        totalItems={data?.totalItems}
+        totalPages={data?.totalPages}
+        itemsPerPage={data?.itemsPerPage}
+        currentPage={data?.currentPage}
+        hideRowPerPage
+      />
     </Stack>
   );
 };

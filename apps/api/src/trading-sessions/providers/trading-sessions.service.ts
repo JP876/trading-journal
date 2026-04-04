@@ -55,18 +55,10 @@ export class TradingSessionsService {
           user,
           ...(query?.title ? { title: Raw((alias) => `${alias} LIKE :title`, { title: `%${query?.title}%` }) } : {}),
         },
-        relations: ['trades'],
       },
       { where: { user } }
     );
-
-    const results = data.results.map((session) => {
-      const copy = { ...session };
-      delete copy.trades;
-      return { ...copy, tradesCount: session.trades?.length };
-    });
-
-    return { ...data, results };
+    return { ...data };
   }
 
   public async create(user: User, session: CreateTradingSessionDto) {

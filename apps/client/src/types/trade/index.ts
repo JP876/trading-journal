@@ -56,3 +56,8 @@ export type Trade = {
 >;
 
 export type TradesResult = PaginationInfo<Trade[]>;
+
+export type TradesCount = {
+  tradingSession: number;
+  count: number;
+};

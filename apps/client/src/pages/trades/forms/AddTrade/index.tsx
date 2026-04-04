@@ -23,7 +23,10 @@ const AddTradeForm = () => {
   const mutation = useMutation({
     mutationFn: addTrade,
     onSuccess: async () => {
-      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
+      ]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been saved.' });
       closeModal(TradesPageModal.ADD_TRADE);
     },

@@ -17,7 +17,6 @@ export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSche
 export type TradingSession = {
   id: number;
   isMain: number;
-  tradesCount: number;
   defaultPair: Pair;
   createdAt: string;
   updatedAt: string;

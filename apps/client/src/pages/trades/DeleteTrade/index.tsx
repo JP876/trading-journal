@@ -25,7 +25,10 @@ const DeleteTrade = ({ trade }: DeleteTradeProps) => {
   const mutation = useMutation({
     mutationFn: deleteTrade,
     onSuccess: async () => {
-      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
+      ]);
       openSnackbar({ severity: 'success', message: 'Your trade have been deleted.' });
       closeModal(TradesPageModal.DELETE_TRADE);
     },

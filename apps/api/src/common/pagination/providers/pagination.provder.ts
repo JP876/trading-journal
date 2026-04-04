@@ -37,7 +37,7 @@ export class PaginationProvider {
     const finalData: Paginated<T[]> = {
       results: results,
       totalItems: count,
-      totalItemsExcludingQuery: totalCount,
+      totalItemsExcludingFilter: totalCount,
     };
 
     if (query?.limit) {

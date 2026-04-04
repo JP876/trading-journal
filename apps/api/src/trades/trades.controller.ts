@@ -20,6 +20,11 @@ export class TradesController {
     return this.tradesService.findStats();
   }
 
+  @Get('count-per-session')
+  public getCountPerSession() {
+    return this.tradesService.findTradesCount();
+  }
+
   @Get(':id')
   public getTradeById(@Param('id') id: number) {
     return this.tradesService.findOneBy({ id });

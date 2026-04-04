@@ -97,6 +97,24 @@ export class TradesService {
     };
   }
 
+  public async findTradesCount() {
+    const countsQuery: Promise<{ tradingSession: number; count: number }[]> = this.tradesRepository
+      .createQueryBuilder('t')
+      .select('t.tradingSession', 'tradingSession')
+      .addSelect('COUNT(*)', 'count')
+      .groupBy('t.tradingSession')
+      .getRawMany();
+    const [error, result] = await withCatch(countsQuery);
+
+    if (error) {
+      throw new RequestTimeoutException('Unable to proccess your request at the moment. Please try later', {
+        description: error.message,
+        cause: error.cause,
+      });
+    }
+    return result;
+  }
+
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
     const { tradingSessionId, pairId, result, direction, openDate, closeDate } = tradesQuery;
     let session: TradingSession | null = null;

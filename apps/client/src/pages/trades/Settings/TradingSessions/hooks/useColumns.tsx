@@ -6,7 +6,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import NumbersIcon from '@mui/icons-material/Numbers';
 import type { ColumnDef } from '@tanstack/react-table';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 import type { TradingSession } from '../../../../../types/tradingSessions';
 import MenuActions from '../../../../../components/MenuActions';
@@ -17,7 +18,7 @@ import { editTradingSession } from '../../../../../api/tradingSessions';
 import useSnackbar from '../../../../../hooks/useSnackbar';
 import { QueryKey } from '../../../../../enums';
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
-import { format } from 'date-fns';
+import { getTradesCountPerTradingSession } from '../../../../../api/trades';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -76,6 +77,17 @@ const TradingSessionMainSwitch = memo(({ id, isMain }: { id: number; isMain: boo
   );
 });
 
+const TradesCount = memo(({ id }: { id: number }) => {
+  const { data } = useQuery({
+    queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION],
+    queryFn: getTradesCountPerTradingSession,
+    staleTime: Infinity,
+  });
+  const count = (data || []).find((el) => el.tradingSession === id)?.count || 0;
+
+  return <Typography>{count}</Typography>;
+});
+
 const useColumns = () => {
   return useMemo<ColumnDef<TradingSession>[]>(() => {
     return [
@@ -89,7 +101,7 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'tradesCount',
+        accessorKey: 'id',
         header: () => (
           <Stack direction="row" alignItems="center">
             <NumbersIcon fontSize="small" />
@@ -97,9 +109,7 @@ const useColumns = () => {
           </Stack>
         ),
         size: 60,
-        cell: ({ row }) => {
-          return <Typography>{row.original.tradesCount}</Typography>;
-        },
+        cell: ({ row }) => <TradesCount id={row.original.id} />,
       },
       {
         accessorKey: 'isMain',
