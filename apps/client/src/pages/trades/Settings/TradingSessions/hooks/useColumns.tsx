@@ -18,7 +18,7 @@ import { editTradingSession } from '../../../../../api/tradingSessions';
 import useSnackbar from '../../../../../hooks/useSnackbar';
 import { QueryKey } from '../../../../../enums';
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
-import { getTradesCountPerTradingSession } from '../../../../../api/trades';
+import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -78,11 +78,7 @@ const TradingSessionMainSwitch = memo(({ id, isMain }: { id: number; isMain: boo
 });
 
 const TradesCount = memo(({ id }: { id: number }) => {
-  const { data } = useQuery({
-    queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION],
-    queryFn: getTradesCountPerTradingSession,
-    staleTime: Infinity,
-  });
+  const { data } = useQuery(getTradesPerTradingSessionQuery());
   const count = (data || []).find((el) => el.tradingSession === id)?.count || 0;
 
   return <Typography>{count}</Typography>;

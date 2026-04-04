@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -14,9 +14,10 @@ import { deleteTradingSession } from '../../../../../api/tradingSessions';
 import { QueryKey } from '../../../../../enums';
 import { TradesPageModal } from '../../../enums';
 import type { TradingSession } from '../../../../../types/tradingSessions';
+import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
 
 type DeleteTradingSessionProps = {
-  session: TradingSession;
+  session?: TradingSession;
 };
 
 const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
@@ -26,6 +27,9 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
+
+  const { data } = useQuery(getTradesPerTradingSessionQuery());
+  const count = (data || []).find((el) => el.tradingSession === session?.id)?.count || 0;
 
   const mutation = useMutation({
     mutationFn: deleteTradingSession,
@@ -59,7 +63,7 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
         <Box component="span" sx={{ fontWeight: 'bold' }}>
           {session?.title || ''}
         </Box>{' '}
-        trading session{session?.tradesCount ? ' and trades that are added to that trading session.' : '.'}
+        trading session{count ? ` and trades(${count}) that are added to that trading session.` : '.'}
       </Typography>
 
       <Box>
