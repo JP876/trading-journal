@@ -18,19 +18,19 @@ export class Pair {
   baseIso: string;
 
   @Column({ type: 'text', nullable: false })
-  baseName: string;
+  quoteIso: string;
 
   @Column({ type: 'text', nullable: false })
   baseCountry: string;
 
   @Column({ type: 'text', nullable: false })
-  quoteIso: string;
-
-  @Column({ type: 'text', nullable: false })
-  quoteName: string;
-
-  @Column({ type: 'text', nullable: false })
   quoteCountry: string;
+
+  @Column({ type: 'text', nullable: false })
+  baseCurrencyName: string;
+
+  @Column({ type: 'text', nullable: false })
+  quoteCurrencyName: string;
 
   @OneToMany(() => Trade, (trade) => trade.pair)
   trades?: Trade[];

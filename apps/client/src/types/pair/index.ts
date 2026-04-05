@@ -1,11 +1,11 @@
 export type Pair = {
   id: number;
   pair: string;
-  assetClass: string;
+  assetClass: 'forex_major' | 'forex_minor' | 'forex_exotic' | 'commodity' | 'crypto';
   baseIso: string;
-  baseName: string;
-  baseCountry: string;
   quoteIso: string;
-  quoteName: string;
+  baseCountry: string;
   quoteCountry: string;
+  baseCurrencyName: string;
+  quoteCurrencyName: string;
 };
