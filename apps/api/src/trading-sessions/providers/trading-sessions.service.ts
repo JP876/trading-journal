@@ -71,13 +71,7 @@ export class TradingSessionsService {
       defaultPair = await this.pairsProvider.findOneBy({ id: session.defaultPairId });
     }
 
-    const newSession = this.tradingSessionsRepository.create({
-      ...session,
-      user,
-      defaultPair,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
+    const newSession = this.tradingSessionsRepository.create({ ...session, user, defaultPair });
     const [saveError, created] = await withCatch(this.tradingSessionsRepository.save(newSession));
 
     if (saveError) {
@@ -98,7 +92,6 @@ export class TradingSessionsService {
     session.defaultStopLoss = updateSession.defaultStopLoss ?? session.defaultStopLoss;
     session.defaultTakeProfit = updateSession.defaultTakeProfit ?? session.defaultTakeProfit;
     session.defaultOpenDate = updateSession.defaultOpenDate ?? session.defaultOpenDate;
-    session.updatedAt = new Date();
 
     if (updateSession.defaultPairId) {
       session.defaultPair = await this.pairsProvider.findOneBy({ id: updateSession.defaultPairId });

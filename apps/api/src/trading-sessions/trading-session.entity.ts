@@ -1,5 +1,4 @@
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -45,23 +44,9 @@ export class TradingSession {
   @Column({ type: 'datetime', nullable: true })
   defaultOpenDate: Date | null;
 
-  // trades.service -> findAll -> returns empty trades array
-
   @CreateDateColumn({ type: 'datetime', nullable: true })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'datetime', nullable: true })
   updatedAt: Date;
-
-  /* @Column({ type: 'datetime', nullable: true })
-  createdAt: Date | null;
-
-  @Column({ type: 'datetime', nullable: true })
-  updatedAt: Date | null;
-
-  @BeforeInsert()
-  updateDates() {
-    this.createdAt = new Date();
-    this.updatedAt = new Date();
-  } */
 }
