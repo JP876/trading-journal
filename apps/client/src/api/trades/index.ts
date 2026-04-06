@@ -7,6 +7,8 @@ type GetTradesOptions = {
   rowsPerPage?: number;
   pair?: number;
   result?: Result;
+  openDate?: string;
+  closeDate?: string;
 };
 
 export const getTrades = async (params: GetTradesOptions) => {
@@ -16,6 +18,8 @@ export const getTrades = async (params: GetTradesOptions) => {
       limit: params.rowsPerPage || 10,
       pairId: params.pair || undefined,
       result: params.result || undefined,
+      openDate: params.openDate || undefined,
+      closeDate: params.closeDate || undefined,
     },
   });
   return response.data;

@@ -18,6 +18,7 @@ import usePairsOptions from './hooks/usePairsOptions';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import { resultOptions } from './consts';
 import TableProviders from '../../components/table/providers';
+import DateFilter from '../../components/table/filters/DateFilter';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -76,6 +77,8 @@ const TradesTableContainer = () => {
         >
           <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
           <AutocompleteFilter name="result" label="Result" options={resultOptions} />
+          <DateFilter name="openDate" label="Open" disableFuture />
+          <DateFilter name="closeDate" label="Close" disableFuture />
         </Box>
 
         <TradesTableMain />

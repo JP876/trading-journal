@@ -8,10 +8,10 @@ import type { Result } from '../../../../types/trade';
 
 const useTradesQueryOptions = () => {
   const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { pair?: number; result?: Result };
+  const filters = useFiltersState() as { pair?: number; result?: Result; openDate?: string; closeDate?: string };
 
   return queryOptions({
-    queryKey: [QueryKey.TRADES, page, rowsPerPage, filters.pair, filters.result],
+    queryKey: [QueryKey.TRADES, page, rowsPerPage, filters.pair, filters.result, filters.openDate, filters.closeDate],
     queryFn: () => getTrades({ page, rowsPerPage, ...filters }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,

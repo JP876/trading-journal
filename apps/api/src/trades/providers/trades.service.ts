@@ -140,7 +140,7 @@ export class TradesService {
           result,
           direction,
           ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
-          ...(closeDate ? { closeDate: Raw((alias) => `${alias} > :date`, { date: closeDate }) } : {}),
+          ...(closeDate ? { closeDate: Raw((alias) => `${alias} < :date`, { date: closeDate }) } : {}),
           ...(pair ? { pair: pair } : {}),
         },
       },
