@@ -13,7 +13,7 @@ const DateFilter = ({ name, ...rest }: DateFilterProps) => {
   const dateRef = useRef<PickerValue | null>(null);
   const [date, setDate] = useState<PickerValue | null>(null);
 
-  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: null });
+  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: null, wait: 0 });
 
   const handleOnChange = (newValue: PickerValue) => {
     dateRef.current = newValue;

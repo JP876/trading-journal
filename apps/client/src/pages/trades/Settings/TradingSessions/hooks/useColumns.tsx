@@ -81,7 +81,7 @@ const TradesCount = memo(({ id }: { id: number }) => {
   const { data } = useQuery(getTradesPerTradingSessionQuery());
   const count = (data || []).find((el) => el.tradingSession === id)?.count || 0;
 
-  return <Typography>{count}</Typography>;
+  return <Typography textAlign="center">{count}</Typography>;
 });
 
 const useColumns = () => {
@@ -94,6 +94,16 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value = row.original.title;
           return value ? <ClampedTextContainer maxRows={1}>{value}</ClampedTextContainer> : <NotFoundValue />;
+        },
+      },
+      {
+        accessorKey: 'createdAt',
+        header: 'Created',
+        size: 60,
+        cell: ({ row }) => {
+          const value = row.original.createdAt;
+          if (!value) return <NotFoundValue />;
+          return <Typography>{format(row.original?.createdAt, 'dd/MM/yyyy')}</Typography>;
         },
       },
       {
@@ -120,16 +130,6 @@ const useColumns = () => {
         cell: ({ row }) => {
           const value = row.original.description;
           return value ? <ClampedTextContainer maxRows={1}>{value}</ClampedTextContainer> : <NotFoundValue />;
-        },
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created',
-        size: 60,
-        cell: ({ row }) => {
-          const value = row.original.createdAt;
-          if (!value) return <NotFoundValue />;
-          return <Typography>{format(row.original?.createdAt, 'dd/MM/yyyy')}</Typography>;
         },
       },
       {

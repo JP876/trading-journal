@@ -125,6 +125,7 @@ export class TradesService {
     } else {
       session = await this.tradingSessionsService.findOneBy({ isMain: 1 });
     }
+    console.log(session);
 
     if (pairId) {
       pair = await this.pairsService.findOneBy({ id: pairId });

@@ -1,8 +1,9 @@
 import { memo } from 'react';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 import useClearFilters from './hooks/useClearFilters';
-import { IconButton, Tooltip } from '@mui/material';
 
 const ResetFilters = () => {
   const [handleClick, { isPending }] = useClearFilters({});

@@ -36,10 +36,10 @@ export class Trade {
   direction: DirectionOptions;
 
   @Column({ type: 'real', nullable: true })
-  stopLoss: number;
+  stopLoss: number | null;
 
   @Column({ type: 'real', nullable: true })
-  takeProfit: number;
+  takeProfit: number | null;
 
   @Column({ type: 'datetime', nullable: true })
   openDate: Date | null;

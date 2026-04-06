@@ -1,16 +1,16 @@
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import NewLabelIcon from '@mui/icons-material/NewLabel';
-import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
+import { Controller, useFormContext, useWatch, Watch, type UseFormReturn } from 'react-hook-form';
 import { addHours } from 'date-fns';
 
 import type { TradeFormSchemaType } from '../../../types/trade';
 import FormMain from '../../../components/form/FormMain';
 import TextInput from '../../../components/form/TextInput';
 import SelectInput from '../../../components/form/SelectInput';
-import DateTimeInput from '../../../components/form/DateTimeInput';
+import DateTimeInput, { type DateTimeInputProps } from '../../../components/form/DateTimeInput';
 import AutocompleteInput from '../../../components/form/AutocompleteInput';
 import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
 import usepairsOptions from '../hooks/usePairsOptions';
@@ -37,6 +37,30 @@ const AddTagButton = memo(() => {
     </Tooltip>
   );
 });
+
+type CloseDateInputProps = Pick<DateTimeInputProps, 'field' | 'fieldState' | 'formState'> & {};
+
+const CloseDateInput = ({ ...props }: CloseDateInputProps) => {
+  const [openDate] = useWatch({ name: ['openDate'] });
+  const methods = useFormContext();
+
+  useEffect(() => {
+    if (!props.field.value && openDate) {
+      methods.setValue('closeDate', addHours(new Date(openDate), 1));
+    }
+  }, [props.field.value, openDate]);
+
+  return (
+    <DateTimeInput
+      label="Close Date"
+      inputProps={{
+        disableFuture: true,
+        minDate: openDate,
+      }}
+      {...props}
+    />
+  );
+};
 
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
   const pairsOptions = usepairsOptions();
@@ -127,27 +151,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           control={form.control}
           render={(props) => <DateTimeInput label="Open Date" inputProps={{ disableFuture: true }} {...props} />}
         />
-        <Controller
-          name="closeDate"
-          control={form.control}
-          render={(props) => (
-            <Watch
-              control={form.control}
-              name={['openDate', 'closeDate']}
-              render={([openDate, closeDate]) => (
-                <DateTimeInput
-                  label="Close Date"
-                  inputProps={{
-                    disableFuture: true,
-                    defaultValue: !closeDate && openDate ? addHours(new Date(openDate), 1) : undefined,
-                    minDate: openDate,
-                  }}
-                  {...props}
-                />
-              )}
-            />
-          )}
-        />
+        <Controller name="closeDate" control={form.control} render={(props) => <CloseDateInput {...props} />} />
       </Stack>
 
       <Stack direction="row" alignItems="center">

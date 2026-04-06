@@ -2,13 +2,14 @@ import { DateTimePicker, type DateTimePickerProps } from '@mui/x-date-pickers/Da
 import type { PickerValue } from '@mui/x-date-pickers/internals';
 import FormControl from '@mui/material/FormControl';
 import FormHelperText from '@mui/material/FormHelperText';
-import type { ControllerFieldState } from 'react-hook-form';
+import type { ControllerFieldState, FieldValues, UseFormStateReturn } from 'react-hook-form';
 
 import type { FormField } from '../../../types';
 
-type DateTimeInputProps = {
+export type DateTimeInputProps = {
   field: FormField;
   fieldState: ControllerFieldState;
+  formState: UseFormStateReturn<FieldValues>;
   label: string;
   helperText?: string;
   inputProps?: Omit<DateTimePickerProps, 'label' | 'value' | 'onChange' | 'onBlur' | 'name'>;

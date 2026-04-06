@@ -4,6 +4,7 @@ import type { PaginationInfo } from '../../types';
 import RowsPerPageSelect from './RowsPerPageSelect';
 import PaginationContainer from './PaginationContainer';
 import ResultsMain from './Results';
+import { memo } from 'react';
 
 type TableMainFooterProps = {
   hideResults?: boolean;
@@ -37,4 +38,4 @@ const TableMainFooter = ({
   );
 };
 
-export default TableMainFooter;
+export default memo(TableMainFooter);

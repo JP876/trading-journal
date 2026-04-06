@@ -53,6 +53,12 @@ const useColumns = () => {
         },
       },
       {
+        accessorKey: 'createdAt',
+        header: 'Created',
+        size: 80,
+        cell: ({ row }) => <Typography>{format(row.original.createdAt, 'dd/MM/yyyy')}</Typography>,
+      },
+      {
         accessorKey: 'color',
         header: 'Color',
         cell: ({ row }) => {
@@ -71,12 +77,6 @@ const useColumns = () => {
             />
           );
         },
-      },
-      {
-        accessorKey: 'createdAt',
-        header: 'Created',
-        size: 80,
-        cell: ({ row }) => <Typography>{format(row.original.createdAt, 'dd/MM/yyyy')}</Typography>,
       },
       {
         accessorKey: 'actions',

@@ -16,6 +16,7 @@ import useModal from '../../../../hooks/useModal';
 import NotFoundValue from '../../../../components/NotFoundValue';
 import { TradesPageModal } from '../../enums';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
+import checkBrightness from '../../../../lib/checkBrighness';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -175,6 +176,32 @@ const useColumns = () => {
             >
               {value}
             </Typography>
+          );
+        },
+      },
+      {
+        accessorKey: 'tags',
+        header: 'Tags',
+        cell: ({ row }) => {
+          const value = row.original.tags;
+          if (!Array.isArray(value) || value.length === 0) {
+            return <NotFoundValue />;
+          }
+
+          return (
+            <Stack direction="row" alignItems="center" gap={1}>
+              {value.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  label={tag.title}
+                  sx={(theme) => ({
+                    backgroundColor: tag.color,
+                    height: '1.6rem',
+                    color: checkBrightness(tag.color) ? theme.palette.common.white : theme.palette.common.black,
+                  })}
+                />
+              ))}
+            </Stack>
           );
         },
       },
