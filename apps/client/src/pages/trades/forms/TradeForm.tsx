@@ -40,24 +40,23 @@ const AddTagButton = memo(() => {
 
 type CloseDateInputProps = Pick<DateTimeInputProps, 'field' | 'fieldState' | 'formState'> & {};
 
-const CloseDateInput = ({ ...props }: CloseDateInputProps) => {
+const CloseDateInput = ({ field, fieldState, formState }: CloseDateInputProps) => {
   const [openDate] = useWatch({ name: ['openDate'] });
   const methods = useFormContext();
 
   useEffect(() => {
-    if (!props.field.value && openDate) {
+    if (!fieldState.isDirty && openDate) {
       methods.setValue('closeDate', addHours(new Date(openDate), 1));
     }
-  }, [props.field.value, openDate]);
+  }, [fieldState.isDirty, openDate]);
 
   return (
     <DateTimeInput
       label="Close Date"
-      inputProps={{
-        disableFuture: true,
-        minDate: openDate,
-      }}
-      {...props}
+      inputProps={{ disableFuture: true, minDate: openDate }}
+      field={field}
+      fieldState={fieldState}
+      formState={formState}
     />
   );
 };

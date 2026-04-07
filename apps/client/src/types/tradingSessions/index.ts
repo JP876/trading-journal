@@ -8,7 +8,7 @@ export const TradingSessionFormSchema = z.object({
   description: z.string().max(400).optional(),
   isMain: z.boolean().optional(),
   defaultPairId: z.number().positive().optional(),
-  defaultTakeProfit: z.number().positive().optional(),
+  defaultTakeProfit: z.number().int().positive().optional(),
   defaultStopLoss: z.number().positive().optional(),
   defaultOpenDate: z.date().optional(),
 });

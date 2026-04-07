@@ -46,6 +46,8 @@ const EditTradingSessionForm = ({ session }: EditTradingSessionFormProps) => {
       isMain: !!session?.isMain,
       defaultPairId: session?.defaultPair?.id,
       defaultOpenDate: session?.defaultOpenDate ? new Date(session.defaultOpenDate) : undefined,
+      defaultStopLoss: session?.defaultStopLoss || undefined,
+      defaultTakeProfit: session?.defaultTakeProfit || undefined,
     },
   });
 
