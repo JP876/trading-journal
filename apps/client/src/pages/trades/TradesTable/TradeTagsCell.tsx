@@ -82,7 +82,14 @@ const TradeTagsCell = ({ tags }: { tags: Tag[] }) => {
         direction="row"
         alignItems="center"
         gap={1}
-        sx={{ flexWrap: 'wrap', height: '1.5rem', overflow: 'hidden', width: '90%' }}
+        sx={(theme) => ({
+          flexWrap: 'wrap',
+          height: '1.5rem',
+          overflow: 'hidden',
+          width: '90%',
+          opacity: +!!visibleTagsCount,
+          transition: theme.transitions.create(['opacity']),
+        })}
       >
         {tags.map((tag) => (
           <Chip
