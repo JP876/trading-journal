@@ -14,7 +14,6 @@ const DashboardMain = lazy(() => import('../pages/dashboard'));
 
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
-
   if (error) {
     getDefaultStore().set(snackbarAtom, {
       open: true,
@@ -22,9 +21,8 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
       message: "Looks like you're not logged in. Please sign in.",
     });
     throw redirect('/');
-  } else {
-    return await next();
   }
+  return await next();
 };
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
