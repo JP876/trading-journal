@@ -9,14 +9,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 
-import type { Direction, Result, Trade } from '../../../../types/trade';
-import type { Pair } from '../../../../types/pair';
+import type { Trade } from '../../../../types/trade';
 import MenuActions from '../../../../components/MenuActions';
 import useModal from '../../../../hooks/useModal';
 import NotFoundValue from '../../../../components/NotFoundValue';
 import { TradesPageModal } from '../../enums';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
-import checkBrightness from '../../../../lib/checkBrighness';
+import TradeTagsCell from '../TradeTagsCell';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -54,9 +53,9 @@ const useColumns = () => {
         enableHiding: false,
         size: 140,
         cell: ({ row }) => {
-          const value: Pair | null = row.getValue('pair');
-          if (!value) return <NotFoundValue />;
-          return <Typography variant="body2">{value.pair}</Typography>;
+          const { pair } = row.original;
+          if (!pair) return <NotFoundValue />;
+          return <Typography variant="body2">{pair.pair}</Typography>;
         },
       },
       {
@@ -64,11 +63,11 @@ const useColumns = () => {
         size: 120,
         header: () => <div>Direction</div>,
         cell: ({ row }) => {
-          const value: Direction | undefined = row.getValue('direction');
-          if (!value) return <NotFoundValue />;
+          const { direction } = row.original;
+          if (!direction) return <NotFoundValue />;
 
           const valueIcon =
-            value === 'long' ? <TrendingUpIcon fontSize="small" /> : <TrendingDownIcon fontSize="small" />;
+            direction === 'long' ? <TrendingUpIcon fontSize="small" /> : <TrendingDownIcon fontSize="small" />;
 
           return (
             <Chip
@@ -76,19 +75,19 @@ const useColumns = () => {
                 <Stack direction="row" alignItems="center" gap={0.5}>
                   {valueIcon}
                   <Typography variant="caption" textAlign="center" lineHeight=".8rem">
-                    {value}
+                    {direction}
                   </Typography>
                 </Stack>
               }
               size="small"
               sx={[
                 { textTransform: 'uppercase', width: '5.4rem' },
-                value === 'long' &&
+                direction === 'long' &&
                   ((theme) => ({
                     backgroundColor: theme.palette.success.light,
                     color: theme.palette.background.default,
                   })),
-                value === 'short' &&
+                direction === 'short' &&
                   ((theme) => ({
                     backgroundColor: theme.palette.error.main,
                     color: theme.palette.background.default,
@@ -103,21 +102,38 @@ const useColumns = () => {
         header: 'Result',
         size: 120,
         cell: ({ row }) => {
-          const value: Result | undefined = row.getValue('result');
-          if (!value) return <NotFoundValue />;
+          const { result, closedBy, closedAt, takeProfit, stopLoss } = row.original;
+
+          if (!result) return <NotFoundValue />;
+
+          const info = (() => {
+            let by, amount;
+            switch (result) {
+              case 'be':
+                return { label: result };
+              case 'loss':
+                by = closedBy === 'tp/sl' ? 'SL' : 'U';
+                amount = closedBy === 'tp/sl' ? stopLoss : closedAt;
+                return { label: `${result} ${by}/${amount}` };
+              case 'win':
+                by = closedBy === 'tp/sl' ? 'TP' : 'U';
+                amount = closedBy === 'tp/sl' ? takeProfit : closedAt;
+                return { label: `${result} ${by}/${amount}` };
+            }
+          })();
 
           return (
             <Chip
-              label={value}
+              label={info.label}
               size="small"
               sx={[
-                (_) => ({ textTransform: 'uppercase', width: '3.6rem' }),
-                value === 'win' &&
+                (_) => ({ textTransform: 'uppercase', minWidth: '5.4rem' }),
+                result === 'win' &&
                   ((theme) => ({
                     backgroundColor: theme.palette.success.light,
                     color: theme.palette.background.default,
                   })),
-                value === 'loss' &&
+                result === 'loss' &&
                   ((theme) => ({
                     backgroundColor: theme.palette.error.main,
                     color: theme.palette.background.default,
@@ -129,26 +145,26 @@ const useColumns = () => {
       },
       {
         accessorKey: 'takeProfit',
-        size: 80,
+        size: 60,
         header: 'TP',
         cell: ({ row }) => {
-          const value: string | undefined = row.getValue('takeProfit');
-          const result: Result | undefined = row.getValue('result');
+          const { takeProfit, result, closedBy } = row.original;
 
-          if (!value) return <NotFoundValue />;
+          if (!takeProfit) return <NotFoundValue />;
 
           return (
             <Typography
               variant="body2"
               sx={[
                 result === 'win' &&
+                  closedBy === 'tp/sl' &&
                   ((theme) => ({
                     color: theme.palette.success.light,
                     fontWeight: 600,
                   })),
               ]}
             >
-              {value}
+              {takeProfit}
             </Typography>
           );
         },
@@ -156,78 +172,68 @@ const useColumns = () => {
       {
         accessorKey: 'stopLoss',
         header: 'SL',
-        size: 80,
+        size: 60,
         cell: ({ row }) => {
-          const value: number | undefined = row.original.stopLoss;
-          const result: Result | undefined = row.original.result;
+          const { stopLoss, result, closedBy } = row.original;
 
-          if (!value) return <NotFoundValue />;
+          if (!stopLoss) return <NotFoundValue />;
 
           return (
             <Typography
               variant="body2"
               sx={[
                 result === 'loss' &&
+                  closedBy === 'tp/sl' &&
                   ((theme) => ({
                     color: theme.palette.error.light,
                     fontWeight: 600,
                   })),
               ]}
             >
-              {value}
+              {stopLoss}
             </Typography>
           );
         },
       },
       {
         accessorKey: 'tags',
+        size: 200,
         header: 'Tags',
         cell: ({ row }) => {
           const value = row.original.tags;
           if (!Array.isArray(value) || value.length === 0) {
             return <NotFoundValue />;
           }
-
-          return (
-            <Stack direction="row" alignItems="center" gap={1}>
-              {value.map((tag) => (
-                <Chip
-                  key={tag.id}
-                  label={tag.title}
-                  sx={(theme) => ({
-                    backgroundColor: tag.color,
-                    height: '1.6rem',
-                    color: checkBrightness(tag.color) ? theme.palette.common.white : theme.palette.common.black,
-                  })}
-                />
-              ))}
-            </Stack>
-          );
+          return <TradeTagsCell tags={value} />;
         },
       },
       {
         accessorKey: 'openDate',
         header: 'Open',
         cell: ({ row }) => {
-          const value: string | undefined = row.original.openDate;
+          const value = row.original.openDate;
           if (!value) return <NotFoundValue />;
-          return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
+          return (
+            <ClampedTextContainer variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</ClampedTextContainer>
+          );
         },
       },
       {
         accessorKey: 'closeDate',
         header: 'Close',
         cell: ({ row }) => {
-          const value: string | undefined = row.original.closeDate;
+          const value = row.original.closeDate;
           if (!value) return <NotFoundValue />;
-          return <Typography variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</Typography>;
+          return (
+            <ClampedTextContainer variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</ClampedTextContainer>
+          );
         },
       },
       {
         accessorKey: 'comment',
         header: 'Comment',
         cell: ({ row }) => {
-          const value: string | undefined = row.original.comment;
+          const value = row.original.comment;
           if (!value) return <NotFoundValue />;
           return <ClampedTextContainer variant="body2">{value}</ClampedTextContainer>;
         },
