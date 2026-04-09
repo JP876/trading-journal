@@ -1,4 +1,5 @@
 import { axiosInstance } from '../../lib/axiosInstance';
+import { db, getCurrentUser } from '../../lib/db';
 import transformToFormData from '../../lib/transformToFormData';
 import type { Result, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
@@ -12,6 +13,11 @@ type GetTradesOptions = {
 };
 
 export const getTrades = async (params: GetTradesOptions) => {
+  const user = await getCurrentUser();
+  if (user?.isLoggedIn) {
+    return await db.trades.toArray();
+  }
+
   const response = await axiosInstance.get<TradesResult>('trades', {
     params: {
       page: params.page || 1,
@@ -25,7 +31,12 @@ export const getTrades = async (params: GetTradesOptions) => {
   return response.data;
 };
 
-export const getTradesCountPerTradingSession = async () => {
+export const getTradesCountPerTradingSession = async (): Promise<TradesCount[]> => {
+  const user = await getCurrentUser();
+  if (user?.isLoggedIn) {
+    const sessions = await db.tradingSessions.toArray();
+    return sessions.map((s) => ({ tradingSession: s.id, count: 2 }));
+  }
   const response = await axiosInstance.get<TradesCount[]>('trades/count-per-session');
   return response.data;
 };

@@ -15,9 +15,9 @@ export const TradingSessionFormSchema = z.object({
 
 export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSchema>;
 export type TradingSession = {
-  id: number;
+  id: number | string;
   isMain: number;
-  defaultPair: Pair;
+  defaultPair: Pair | null;
   createdAt: string;
   updatedAt: string;
 } & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId'>;

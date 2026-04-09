@@ -6,6 +6,7 @@ import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
 import { snackbarAtom } from '../atoms/snackbar';
+import { getCurrentUser } from '../lib/db';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));
@@ -13,7 +14,13 @@ const TradesPage = lazy(() => import('../pages/trades'));
 const DashboardMain = lazy(() => import('../pages/dashboard'));
 
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
+  const user = await getCurrentUser();
+  if (user?.isLoggedIn) {
+    return await next();
+  }
+
   const [error] = await withCatch(refreshToken());
+
   if (error) {
     getDefaultStore().set(snackbarAtom, {
       open: true,
@@ -22,6 +29,7 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
     });
     throw redirect('/');
   }
+
   return await next();
 };
 

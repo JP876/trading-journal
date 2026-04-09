@@ -42,7 +42,7 @@ export const EditTradeFormSchema = TradeFormSchema.extend({
 export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 
 export type Trade = {
-  id: number;
+  id: number | string;
   pair: Pair;
   tradingSession: TradingSession;
   result: Result;
@@ -58,6 +58,6 @@ export type Trade = {
 export type TradesResult = PaginationInfo<Trade[]>;
 
 export type TradesCount = {
-  tradingSession: number;
+  tradingSession: number | string;
   count: number;
 };

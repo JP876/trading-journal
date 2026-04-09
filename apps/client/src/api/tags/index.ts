@@ -1,4 +1,5 @@
 import { axiosInstance } from '../../lib/axiosInstance';
+import { db, getCurrentUser } from '../../lib/db';
 import transformToFormData from '../../lib/transformToFormData';
 import withDelay from '../../lib/withDelay';
 import type { PaginationInfo } from '../../types';
@@ -11,6 +12,10 @@ type GetTagsOptions = {
 };
 
 export const getTags = async (params?: GetTagsOptions) => {
+  const user = await getCurrentUser();
+  if (user?.isLoggedIn) {
+    return await db.tags.toArray();
+  }
   const response = await withDelay(
     axiosInstance.get<PaginationInfo<Tag[]>>('tags', {
       params: {

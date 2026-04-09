@@ -8,6 +8,7 @@ import { QueryKey } from '../enums';
 import useSnackbar from '../hooks/useSnackbar';
 import useLogout from '../hooks/useLogout';
 import { AUTH_EVENT_TYPE, type authDetailType } from '../lib/authEvent';
+import { getCurrentUser } from '../lib/db';
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
 const refreshTokenQueryOptions = queryOptions({
@@ -31,7 +32,12 @@ const ProtectedRoutes = () => {
   });
 
   useEffect(() => {
-    setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
+    (async () => {
+      const user = await getCurrentUser();
+      if (!user || !user.isLoggedIn) {
+        setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
+      }
+    })();
   }, []);
 
   useEffect(() => {

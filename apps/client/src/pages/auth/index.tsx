@@ -3,10 +3,12 @@ import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import GoogleIcon from '@mui/icons-material/Google';
 
 import LoginForm from './forms/Login';
+import GuestLogin from './GuestLogin';
 
 const RegisterForm = lazy(() => import('./forms/Register'));
 
@@ -32,10 +34,12 @@ const AuthPage = () => {
           <Typography variant="h5" fontWeight="bold">
             Welcome back
           </Typography>
-          <Typography variant="body2">Login with your Google account</Typography>
         </Stack>
 
-        <GoogleButton />
+        <Box sx={() => ({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 })}>
+          <GuestLogin />
+          <GoogleButton />
+        </Box>
 
         {show === 'login' ? (
           <>
@@ -47,7 +51,7 @@ const AuthPage = () => {
               <Typography sx={{ fontWeight: 'medium' }} variant="body2">
                 Don&apos;t have an account?
               </Typography>
-              <Button size="small" onClick={handleChangeForm}>
+              <Button size="small" disableRipple variant="text" onClick={handleChangeForm}>
                 Sign Up
               </Button>
             </Stack>
@@ -62,7 +66,7 @@ const AuthPage = () => {
               <Typography sx={{ fontWeight: 'medium' }} variant="body2">
                 Have an account?
               </Typography>
-              <Button size="small" onClick={handleChangeForm}>
+              <Button disableRipple size="small" onClick={handleChangeForm}>
                 Log in
               </Button>
             </Stack>
