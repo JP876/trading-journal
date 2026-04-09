@@ -13,6 +13,8 @@ import { User } from '../user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import withCatch from 'src/utils/withCatch';
 import { HashingProvider } from 'src/auth/providers/hashing.provider';
+import { TradingSessionsService } from 'src/trading-sessions/providers/trading-sessions.service';
+import { format } from 'date-fns';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +22,8 @@ export class UsersService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     @Inject(forwardRef(() => HashingProvider))
-    private readonly hashingProvider: HashingProvider
+    private readonly hashingProvider: HashingProvider,
+    private readonly tradingSessionsService: TradingSessionsService
   ) {}
 
   public async findOneBy(options: FindOptionsWhere<User>): Promise<User> {
@@ -65,6 +68,11 @@ export class UsersService {
         description: saveError.message,
       });
     }
+
+    await this.tradingSessionsService.create(user, {
+      title: `Initial session ${format(new Date(), 'MM/yy')}`,
+      isMain: 1,
+    });
 
     return user;
   }

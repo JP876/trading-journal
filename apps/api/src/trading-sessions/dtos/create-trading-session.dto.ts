@@ -32,7 +32,7 @@ export class CreateTradingSessionDto {
   @IsNotEmpty()
   @IsOptional()
   @IsNumber()
-  defaultPairId: number;
+  defaultPairId?: number;
 
   @IsNumber()
   @IsOptional()
