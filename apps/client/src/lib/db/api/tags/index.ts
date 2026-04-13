@@ -22,8 +22,8 @@ export const addTagDB = async (tagData: TagFormSchemaType, user: UserDB) => {
   return db.tags.add({
     ...tagData,
     user: { ...rest, email: '' },
-    createdAt: format(new Date(), 'dd/MM/yyyy HH:mm'),
-    updatedAt: format(new Date(), 'dd/MM/yyyy HH:mm'),
+    createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
   });
 };
 
@@ -31,7 +31,7 @@ export const editTagDB = async (id: number, tagData: TagFormSchemaType) => {
   const tag = await findTagById(id);
   tag.title = tagData.title ?? tag.title;
   tag.color = tagData.color ?? tag.color;
-  tag.updatedAt = format(new Date(), 'dd/MM/yyyy HH:mm');
+  tag.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm');
   return db.tags.update(id, tag);
 };
 

@@ -19,13 +19,13 @@ export class Trade {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Pair, (pair) => pair.trades, { eager: true })
+  @ManyToOne(() => Pair, (pair) => pair.trades)
   pair: Pair;
 
   @ManyToOne(() => TradingSession, (session) => session.id, { onDelete: 'CASCADE' })
   tradingSession: TradingSession;
 
-  @ManyToMany(() => Tag, (tag) => tag.trades, { eager: true })
+  @ManyToMany(() => Tag, (tag) => tag.trades)
   @JoinTable()
   tags?: Tag[];
 

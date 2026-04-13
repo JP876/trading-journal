@@ -26,7 +26,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
 
   const mutation = useMutation({
     mutationFn: (data: EditTradeFormSchemaType) => {
-      const session = trade?.tradingSession?.id || mainSession?.id;
+      const session = trade?.tradingSession || mainSession?.id;
       if (!session) {
         throw new Error('Main trading session not found');
       }
@@ -46,10 +46,10 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       ...trade,
       openDate: trade?.openDate ? new Date(trade.openDate) : undefined,
       closeDate: trade?.closeDate ? new Date(trade.closeDate) : undefined,
-      pairId: trade?.pair?.id,
+      pairId: trade?.pair,
       closedAt: trade?.closedAt || undefined,
       entryPrice: trade?.entryPrice || undefined,
-      tags: (trade?.tags || []).map((tag) => tag.id),
+      tags: trade?.tags || [],
     },
   });
 

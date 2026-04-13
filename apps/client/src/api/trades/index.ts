@@ -1,5 +1,5 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { getCurrentUser } from '../../lib/db';
+import { getCurrentUser } from '../../lib/db/api/auth';
 import {
   addTradeDB,
   deleteTradeDB,

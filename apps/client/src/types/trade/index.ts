@@ -1,9 +1,6 @@
 import { z } from 'zod';
 
-import type { TradingSession } from '../tradingSessions';
-import type { Pair } from '../pair';
 import { filesObject, type PaginationInfo } from '..';
-import type { Tag } from '../tag';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -43,11 +40,11 @@ export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 
 export type Trade = {
   id: number;
-  pair: Pair;
-  tradingSession: TradingSession;
+  pair: number;
+  tradingSession: number;
   result: Result;
   direction: Direction;
-  tags: Tag[];
+  tags: number[];
   openDate?: string;
   closeDate?: string;
   createdAt: string;

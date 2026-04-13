@@ -1,5 +1,5 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { getCurrentUser } from '../../lib/db';
+import { getCurrentUser } from '../../lib/db/api/auth';
 import { addTagDB, deleteTagDB, editTagDB, getTagsDB } from '../../lib/db/api/tags';
 import transformToFormData from '../../lib/transformToFormData';
 import withDelay from '../../lib/withDelay';

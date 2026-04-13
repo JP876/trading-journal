@@ -1,5 +1,6 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { db, getCurrentUser } from '../../lib/db';
+import { db } from '../../lib/db';
+import { getCurrentUser } from '../../lib/db/api/auth';
 import type { Pair } from '../../types/pair';
 
 export const getPairs = async (): Promise<Pair[]> => {

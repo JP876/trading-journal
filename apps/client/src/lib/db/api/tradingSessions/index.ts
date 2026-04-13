@@ -44,8 +44,8 @@ export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) =>
 
   const id = await db.tradingSessions.add({
     ...session,
-    createdAt: format(new Date(), 'yyyy-MM-dd'),
-    updatedAt: format(new Date(), 'yyyy-MM-dd'),
+    createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     defaultOpenDate: session.defaultOpenDate && format(session.defaultOpenDate, 'dd/MM/yyyy HH:mm'),
     defaultPair: pair,
     isMain: +!!data.isMain,
@@ -72,11 +72,11 @@ export const editTradingSessionDB = async (id: number, data: Partial<TradingSess
   session.isMain = +!!rest.isMain;
   session.defaultPair = pair || session.defaultPair;
   session.defaultOpenDate = rest.defaultOpenDate
-    ? format(rest.defaultOpenDate, 'dd/MM/yyyy HH:mm')
+    ? format(rest.defaultOpenDate, 'yyyy-MM-dd HH:mm')
     : session.defaultOpenDate;
   session.defaultTakeProfit = rest.defaultTakeProfit ?? session.defaultTakeProfit;
   session.defaultStopLoss = rest.defaultStopLoss ?? session.defaultStopLoss;
-  session.updatedAt = format(new Date(), 'yyyy-MM-dd');
+  session.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm');
 
   if (session.isMain) {
     await updateMainTradingSession(id);

@@ -134,6 +134,7 @@ export class TradesService {
       this.tradesRepository,
       tradesQuery,
       {
+        loadRelationIds: { relations: ['tags', 'pair', 'tradingSession'] },
         order: { id: -1 },
         where: {
           tradingSession: session,

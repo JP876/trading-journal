@@ -16,6 +16,9 @@ import NotFoundValue from '../../../../components/NotFoundValue';
 import { TradesPageModal } from '../../enums';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 import TradeTagsCell from '../TradeTagsCell';
+import { useQuery } from '@tanstack/react-query';
+import { QueryKey } from '../../../../enums';
+import { getPairs } from '../../../../api/pairs';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -44,6 +47,14 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
   );
 };
 
+const TradePairCell = ({ pair }: { pair: number }) => {
+  const pairsQuery = useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
+  const pairData = (pairsQuery.data || []).find((el) => el.id === pair);
+
+  if (!pairData) return <NotFoundValue />;
+  return <Typography variant="body2">{pairData.pair}</Typography>;
+};
+
 const useColumns = () => {
   return useMemo<ColumnDef<Trade>[]>(() => {
     return [
@@ -52,11 +63,7 @@ const useColumns = () => {
         header: 'Pair',
         enableHiding: false,
         size: 140,
-        cell: ({ row }) => {
-          const { pair } = row.original;
-          if (!pair) return <NotFoundValue />;
-          return <Typography variant="body2">{pair.pair}</Typography>;
-        },
+        cell: ({ row }) => <TradePairCell pair={row.original.pair} />,
       },
       {
         accessorKey: 'direction',

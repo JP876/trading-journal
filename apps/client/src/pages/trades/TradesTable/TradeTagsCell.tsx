@@ -3,15 +3,28 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
+import { useQuery } from '@tanstack/react-query';
 
 import checkBrightness from '../../../lib/checkBrighness';
+import { QueryKey } from '../../../enums';
+import { getTags } from '../../../api/tags';
 import type { Tag } from '../../../types/tag';
 
-const TradeTagsCell = ({ tags }: { tags: Tag[] }) => {
+const TradeTagsCell = ({ tags }: { tags: number[] }) => {
   const [visibleTagsCount, setVisibleTagsCount] = useState(tags.length);
   const [tagsWidth, setTagsWidth] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const tagsQuery = useQuery({ queryKey: [QueryKey.TAGS], queryFn: () => getTags(), staleTime: Infinity });
+
+  const tagsData: Tag[] = (() => {
+    if (!tagsQuery.data?.results || tags.length === 0) return [];
+    return tags.reduce((acc: Tag[], tagId) => {
+      const tag = tagsQuery.data.results.find((el) => el.id === tagId);
+      return tag?.id ? [...acc, { ...tag }] : acc;
+    }, []);
+  })();
 
   const chipPositionInfo = (() => {
     if (!tagsWidth) return { left: 0 };
@@ -25,7 +38,7 @@ const TradeTagsCell = ({ tags }: { tags: Tag[] }) => {
   const renderHiddenTags = () => {
     return (
       <Stack gap={1} my={0.4}>
-        {tags.slice(visibleTagsCount, tags.length).map((tag) => (
+        {tagsData.slice(visibleTagsCount, tagsData.length).map((tag) => (
           <Chip
             key={tag.id}
             label={tag.title}
@@ -91,7 +104,7 @@ const TradeTagsCell = ({ tags }: { tags: Tag[] }) => {
           transition: theme.transitions.create(['opacity']),
         })}
       >
-        {tags.map((tag) => (
+        {tagsData.map((tag) => (
           <Chip
             key={tag.id}
             label={tag.title}

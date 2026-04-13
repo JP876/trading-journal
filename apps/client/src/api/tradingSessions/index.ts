@@ -1,8 +1,8 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { getCurrentUser } from '../../lib/db';
 import type { PaginationInfo } from '../../types';
 import type { TradingSession, TradingSessionFormSchemaType } from '../../types/tradingSessions';
 import { addTradingSessionDB, editTradingSessionDB, getTradingSessionsDB } from '../../lib/db/api/tradingSessions';
+import { getCurrentUser } from '../../lib/db/api/auth';
 
 type GetTradesOptions = {
   page?: number;

@@ -1,5 +1,6 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { db, getCurrentUser } from '../../lib/db';
+import { db } from '../../lib/db';
+import { getCurrentUser } from '../../lib/db/api/auth';
 import withDelay from '../../lib/withDelay';
 import type { LoginFormData, RegisterFormData } from '../../types/auth';
 import type { User } from '../../types/user';

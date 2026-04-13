@@ -23,10 +23,7 @@ const EditTagForm = ({ tag }: EditTagFormProps) => {
   const mutation = useMutation({
     mutationFn: (data: TagFormSchemaType) => editTag(tag.id, data),
     onSuccess: async () => {
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [QueryKey.TAGS] }),
-        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
-      ]);
+      await queryClient.invalidateQueries({ queryKey: [QueryKey.TAGS] });
       closeModal(TradesPageModal.EDIT_TAG);
       openSnackbar({ severity: 'success', message: 'Your tag details have been saved.' });
     },

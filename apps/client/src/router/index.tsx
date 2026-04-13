@@ -6,7 +6,7 @@ import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
 import { snackbarAtom } from '../atoms/snackbar';
-import { getCurrentUser } from '../lib/db';
+import { getCurrentUser } from '../lib/db/api/auth';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));

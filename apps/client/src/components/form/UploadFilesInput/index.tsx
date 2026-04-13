@@ -89,7 +89,7 @@ const UploadFilesInput = ({ field, ...rest }: UploadFilesInputProps & React.Inpu
     const nextValue = (value || []).filter((_: File, fielIndex: number) => fielIndex !== index);
     onChange(nextValue);
 
-    if (existingFile?._id) {
+    if (existingFile?.id) {
       const deleteFiles: Files[] = methods.getValues('deleteFiles') || [];
       methods.setValue('deleteFiles', [...deleteFiles, existingFile]);
     }
