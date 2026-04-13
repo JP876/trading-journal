@@ -21,9 +21,7 @@ const GuestLogin = () => {
         return;
       }
     } else {
-      const [error] = await withCatch(
-        db.users.add({ id: crypto.randomUUID(), name: '', image: null, isLoggedIn: true })
-      );
+      const [error] = await withCatch(db.users.add({ name: '', image: null, isLoggedIn: true }));
       if (error) {
         openSnackbar({ severity: 'error', message: "We couldn't create the user. Try again or refresh." });
         return;

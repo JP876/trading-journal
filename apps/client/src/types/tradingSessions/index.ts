@@ -15,11 +15,12 @@ export const TradingSessionFormSchema = z.object({
 
 export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSchema>;
 export type TradingSession = {
-  id: number | string;
+  id: number;
   isMain: number;
   defaultPair: Pair | null;
   createdAt: string;
   updatedAt: string;
-} & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId'>;
+  defaultOpenDate?: string;
+} & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId' | 'defaultOpenDate'>;
 
 export type TradingSessionsResult = PaginationInfo<TradingSession[]>;

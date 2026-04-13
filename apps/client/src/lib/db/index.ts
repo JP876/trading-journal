@@ -5,6 +5,7 @@ import type { User } from '../../types/user';
 import type { TradingSession } from '../../types/tradingSessions';
 import type { Trade } from '../../types/trade';
 import type { Tag } from '../../types/tag';
+import type { Pair } from '../../types/pair';
 
 export type UserDB = Omit<User, 'email'> & { isLoggedIn: boolean };
 
@@ -13,6 +14,7 @@ export const db = new Dexie('LogMyTradesDB') as Dexie & {
   tradingSessions: EntityTable<TradingSession, 'id'>;
   trades: EntityTable<Trade, 'id'>;
   tags: EntityTable<Tag, 'id'>;
+  pairs: EntityTable<Pair, 'id'>;
 };
 
 export const getCurrentUser = async () => {
@@ -21,10 +23,9 @@ export const getCurrentUser = async () => {
 };
 
 db.version(2).stores({
-  users: '++id, name, email, image',
-  tradingSessions: `++id, title, description, isMain, defaultPair, defaultTakeProfit, defaultStopLoss, 
-                    defaultOpenDate, createdAt, updatedAt`,
-  trades: `++id, pair, result, direction, stopLoss, takeProfit, openDate, closeDate, closedBy, 
-            closedAt, tags, orderType, comment, entryPrice`,
-  tags: '++id, user, createdAt, updatedAt, title, color',
+  users: '++id, name, email',
+  tradingSessions: `++id, title, isMain`,
+  trades: `++id, pair, result, direction, openDate, closeDate, tags`,
+  tags: '++id, user, title',
+  pairs: '++id, pair',
 });

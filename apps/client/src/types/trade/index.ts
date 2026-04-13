@@ -42,7 +42,7 @@ export const EditTradeFormSchema = TradeFormSchema.extend({
 export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 
 export type Trade = {
-  id: number | string;
+  id: number;
   pair: Pair;
   tradingSession: TradingSession;
   result: Result;
@@ -50,6 +50,8 @@ export type Trade = {
   tags: Tag[];
   openDate?: string;
   closeDate?: string;
+  createdAt: string;
+  updatedAt: string;
 } & Omit<
   TradeFormSchemaType,
   'pairId' | 'tradingSessionId' | 'result' | 'direction' | 'tags' | 'openDate' | 'closeDate'

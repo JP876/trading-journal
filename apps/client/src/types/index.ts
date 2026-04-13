@@ -33,7 +33,7 @@ export type ControllerRenderOptions = {
 };
 
 export const filesObject = z.object({
-  _id: z.string(),
+  id: z.number(),
   path: z.string(),
   name: z.string(),
   mime: z.string(),

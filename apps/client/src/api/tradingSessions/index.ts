@@ -2,7 +2,7 @@ import { axiosInstance } from '../../lib/axiosInstance';
 import { getCurrentUser } from '../../lib/db';
 import type { PaginationInfo } from '../../types';
 import type { TradingSession, TradingSessionFormSchemaType } from '../../types/tradingSessions';
-import { addTradingSessionDB, getTradingSessionsDB } from '../../lib/db/api/tradingSessions';
+import { addTradingSessionDB, editTradingSessionDB, getTradingSessionsDB } from '../../lib/db/api/tradingSessions';
 
 type GetTradesOptions = {
   page?: number;
@@ -38,10 +38,13 @@ export const addTradingSession = async (data: TradingSessionFormSchemaType) => {
   return response.data;
 };
 
-export const editTradingSession = async (
-  id: number,
-  data: Partial<TradingSessionFormSchemaType>
-): Promise<TradingSession | null> => {
+export const editTradingSession = async (id: number, data: Partial<TradingSessionFormSchemaType>) => {
+  const user = await getCurrentUser();
+
+  if (user?.isLoggedIn) {
+    return await editTradingSessionDB(id, data);
+  }
+
   const response = await axiosInstance.patch(`trading-sessions/${id}`, { ...data, isMain: +!!data.isMain });
   return response.data;
 };
