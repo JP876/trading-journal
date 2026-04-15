@@ -24,3 +24,9 @@ export type TradingSession = {
 } & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId' | 'defaultOpenDate'>;
 
 export type TradingSessionsResult = PaginationInfo<TradingSession[]>;
+
+export type GetTradingSessionsOptions = {
+  page?: number;
+  rowsPerPage?: number;
+  title?: string;
+};

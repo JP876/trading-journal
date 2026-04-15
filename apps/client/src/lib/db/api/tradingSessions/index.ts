@@ -2,9 +2,14 @@ import { format } from 'date-fns';
 
 import { db } from '../..';
 import type { PaginationInfo } from '../../../../types';
-import type { TradingSession, TradingSessionFormSchemaType } from '../../../../types/tradingSessions';
+import type {
+  GetTradingSessionsOptions,
+  TradingSession,
+  TradingSessionFormSchemaType,
+} from '../../../../types/tradingSessions';
 import type { Pair } from '../../../../types/pair';
 import { findPairById } from '../pairs';
+import handlePagination from '../../pagination';
 
 const updateMainTradingSession = async (id: number) => {
   const sessions = await db.tradingSessions.toArray();
@@ -29,9 +34,20 @@ export const findTradingSessionById = async (id: number) => {
   return session;
 };
 
-export const getTradingSessionsDB = async (): Promise<PaginationInfo<TradingSession[]>> => {
-  const results = await db.tradingSessions.reverse().toArray();
-  return { results, totalItems: results.length, totalItemsExcludingFilter: results.length };
+export const getTradingSessionsDB = async (
+  params?: GetTradingSessionsOptions
+): Promise<PaginationInfo<TradingSession[]>> => {
+  let query = db.tradingSessions.reverse();
+  const totalCount = await db.tradingSessions.count();
+
+  if (params?.title) {
+    const filter = (el: TradingSession) => {
+      return el.title.toLowerCase().includes(params.title?.toLowerCase() || '');
+    };
+    query = query.filter(filter);
+  }
+
+  return { ...(await handlePagination(query, params)), totalItemsExcludingFilter: totalCount };
 };
 
 export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) => {
@@ -83,4 +99,8 @@ export const editTradingSessionDB = async (id: number, data: Partial<TradingSess
   }
 
   return await db.tradingSessions.update(id, session);
+};
+
+export const deleteTradingSessionDB = async (id: number) => {
+  return db.tradingSessions.delete(id);
 };

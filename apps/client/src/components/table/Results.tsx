@@ -16,7 +16,7 @@ const ResultsMain = ({ currentPage, itemsPerPage, totalItems }: ResultsMainProps
   return (
     <Stack direction="row" alignItems="center" gap={2}>
       <Typography>
-        Results {currentPage === 1 ? 1 : currentPage - 1 + itemsPerPage} -{' '}
+        Results {((currentPage || 1) - 1) * itemsPerPage + 1} -{' '}
         {currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage} out of {totalItems}
       </Typography>
     </Stack>
