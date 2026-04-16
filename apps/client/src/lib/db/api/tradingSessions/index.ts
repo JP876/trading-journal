@@ -12,10 +12,12 @@ import { findPairById } from '../pairs';
 import handlePagination from '../../pagination';
 
 const updateMainTradingSession = async (id: number) => {
-  const sessions = await db.tradingSessions.toArray();
-  await db.tradingSessions.bulkUpdate(
-    sessions.filter((s) => s.id !== id).map((s) => ({ key: s.id, changes: { isMain: 0 } }))
-  );
+  return await db.tradingSessions
+    .where('id')
+    .notEqual(id)
+    .modify((value) => {
+      value.isMain = 0;
+    });
 };
 
 export const findMainTradingSession = async () => {
@@ -102,5 +104,8 @@ export const editTradingSessionDB = async (id: number, data: Partial<TradingSess
 };
 
 export const deleteTradingSessionDB = async (id: number) => {
-  return db.tradingSessions.delete(id);
+  return db.transaction('rw', db.tradingSessions, db.trades, async function () {
+    await db.tradingSessions.delete(id);
+    await db.trades.where('tradingSession').equals(id).delete();
+  });
 };

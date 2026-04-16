@@ -36,5 +36,13 @@ export const editTagDB = async (id: number, tagData: TagFormSchemaType) => {
 };
 
 export const deleteTagDB = async (id: number) => {
-  return db.tags.delete(id);
+  return db.transaction('rw', db.tags, db.trades, async function () {
+    await db.tags.delete(id);
+    await db.trades
+      .where('tags')
+      .equals(id)
+      .modify((trade) => {
+        trade.tags = trade.tags.filter((tagId) => tagId !== id);
+      });
+  });
 };
