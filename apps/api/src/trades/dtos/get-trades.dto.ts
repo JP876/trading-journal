@@ -1,7 +1,8 @@
-import { IsDate, IsEnum, IsNumber, IsOptional } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 import { PaginationDto } from 'src/common/pagination/dtos/pagination.dto';
 import { DirectionOptions, ResultOptions } from '../enums';
+import { IsCommaSeparatedNumbers } from 'src/common/validators/IsCommaSeparatedNumbers';
 
 export class GetTradesDto extends PaginationDto {
   @IsOptional()
@@ -27,4 +28,9 @@ export class GetTradesDto extends PaginationDto {
   @IsDate()
   @IsOptional()
   closeDate?: Date;
+
+  @IsString()
+  @IsOptional()
+  @IsCommaSeparatedNumbers()
+  tags?: string;
 }

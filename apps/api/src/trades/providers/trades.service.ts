@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, FindOptionsWhere, Raw, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, In, Raw, Repository } from 'typeorm';
 
 import { Trade } from '../trade.entity';
 import { CreateTradeDto } from '../dtos/create-trade.dto';
@@ -116,7 +116,7 @@ export class TradesService {
   }
 
   public async findAll(tradesQuery: GetTradesDto): Promise<Paginated<Trade[]>> {
-    const { tradingSessionId, pairId, result, direction, openDate, closeDate } = tradesQuery;
+    const { tradingSessionId, pairId, result, direction, openDate, closeDate, tags } = tradesQuery;
     let session: TradingSession | null = null;
     let pair: Pair | null = null;
 
@@ -143,6 +143,7 @@ export class TradesService {
           ...(openDate ? { openDate: Raw((alias) => `${alias} > :date`, { date: openDate }) } : {}),
           ...(closeDate ? { closeDate: Raw((alias) => `${alias} < :date`, { date: closeDate }) } : {}),
           ...(pair ? { pair: pair } : {}),
+          ...(tags ? { tags: { id: In(tags?.split(',')) } } : {}),
         },
       },
       { where: { tradingSession: session } }

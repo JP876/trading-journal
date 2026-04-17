@@ -8,10 +8,25 @@ import type { Result } from '../../../../types/trade';
 
 const useTradesQueryOptions = () => {
   const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { pair?: number; result?: Result; openDate?: string; closeDate?: string };
+  const filters = useFiltersState() as {
+    pair?: number;
+    result?: Result;
+    openDate?: string;
+    closeDate?: string;
+    tags?: string;
+  };
 
   return queryOptions({
-    queryKey: [QueryKey.TRADES, page, rowsPerPage, filters.pair, filters.result, filters.openDate, filters.closeDate],
+    queryKey: [
+      QueryKey.TRADES,
+      page,
+      rowsPerPage,
+      filters.pair,
+      filters.result,
+      filters.openDate,
+      filters.closeDate,
+      filters.tags,
+    ],
     queryFn: () => getTrades({ page, rowsPerPage, ...filters }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,

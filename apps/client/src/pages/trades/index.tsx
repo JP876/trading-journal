@@ -24,6 +24,7 @@ import TableProviders from '../../components/table/providers';
 import DateFilter from '../../components/table/filters/DateFilter';
 import { tradesFiltersAtom } from '../../atoms/trades';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
+import useTagsOptions from './hooks/useTagsOptions';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -79,6 +80,7 @@ const TradesFiltersContainer = ({ children }: { children: React.ReactNode }) => 
 
 const TradesFilters = () => {
   const pairsOptions = usePairsOptions();
+  const tagsOptions = useTagsOptions();
 
   return (
     <Box
@@ -87,13 +89,14 @@ const TradesFilters = () => {
         width: '100%',
         gap: 2,
         display: 'grid',
-        gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
+        gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: '12rem 12rem repeat(3, 1fr)', md: 'repeat(3, 1fr)' },
       }}
     >
       <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
       <AutocompleteFilter name="result" label="Result" options={resultOptions} />
       <DateFilter name="openDate" label="Open" disableFuture />
       <DateFilter name="closeDate" label="Close" disableFuture />
+      <AutocompleteFilter name="tags" label="Tags" options={tagsOptions} multiple limitTags={1} />
     </Box>
   );
 };

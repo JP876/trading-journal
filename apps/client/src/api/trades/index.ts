@@ -25,6 +25,7 @@ export const getTrades = async (params: GetTradesOptions): Promise<PaginationInf
       result: params.result || undefined,
       openDate: params.openDate || undefined,
       closeDate: params.closeDate || undefined,
+      tags: params.tags || undefined,
     },
   });
   return response.data;

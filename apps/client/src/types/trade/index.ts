@@ -68,4 +68,5 @@ export type GetTradesOptions = {
   result?: Result;
   openDate?: string;
   closeDate?: string;
+  tags?: string;
 };
