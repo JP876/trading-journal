@@ -2,10 +2,15 @@ import type { Collection } from 'dexie';
 
 import type { PaginationInfo } from '../../types';
 
+type PaginationResultType<T> = Omit<
+  Pick<PaginationInfo, 'results' | 'totalItems'> | PaginationInfo<T>,
+  'totalItemsExcludingFilter'
+>;
+
 export default async function handlePagination<T>(
   collection: Collection<T>,
   params?: { page?: number; rowsPerPage?: number }
-) {
+): Promise<PaginationResultType<T>> {
   let query = collection.clone();
   let countQuery = collection.clone();
 

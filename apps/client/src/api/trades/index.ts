@@ -9,21 +9,12 @@ import {
 } from '../../lib/db/api/trades';
 import transformToFormData from '../../lib/transformToFormData';
 import type { PaginationInfo } from '../../types';
-import type { Result, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
-
-type GetTradesOptions = {
-  page?: number;
-  rowsPerPage?: number;
-  pair?: number;
-  result?: Result;
-  openDate?: string;
-  closeDate?: string;
-};
+import type { GetTradesOptions, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
 export const getTrades = async (params: GetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
   const user = await getCurrentUser();
   if (user?.isLoggedIn) {
-    return getTradesDB();
+    return getTradesDB(params);
   }
 
   const response = await axiosInstance.get<TradesResult>('trades', {

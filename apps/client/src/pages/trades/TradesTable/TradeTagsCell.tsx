@@ -36,6 +36,7 @@ const TradeTagsCell = ({ tags }: { tags: number[] }) => {
   })();
 
   const renderHiddenTags = () => {
+    if (!Array.isArray(tags) || visibleTagsCount === tags.length) return '';
     return (
       <Stack gap={1} my={0.4}>
         {tagsData.slice(visibleTagsCount, tagsData.length).map((tag) => (

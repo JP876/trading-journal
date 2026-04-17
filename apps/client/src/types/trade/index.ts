@@ -60,3 +60,12 @@ export type TradesCount = {
   tradingSession: number | string;
   count: number;
 };
+
+export type GetTradesOptions = {
+  page?: number;
+  rowsPerPage?: number;
+  pair?: number;
+  result?: Result;
+  openDate?: string;
+  closeDate?: string;
+};
