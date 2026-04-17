@@ -25,6 +25,17 @@ export const getTradesDB = async (params: GetTradesOptions): Promise<PaginationI
   const query = db.trades.where({ tradingSession: session.id }).filter((trade) => {
     const pair = params.pair ? params.pair === trade.pair : true;
     const result = params.result ? params.result === trade.result : true;
+
+    let tags = true;
+
+    if (params.tags) {
+      const t = params.tags
+        .split(',')
+        .filter((t) => !isNaN(+t) && Number.isInteger(+t))
+        .map((t) => +t);
+      tags = trade.tags.some((tagId) => t.some((tId) => tId === tagId));
+    }
+
     const openDate =
       params?.openDate && trade.openDate
         ? isBefore(new Date(params.openDate), new Date(trade.openDate))
@@ -38,7 +49,7 @@ export const getTradesDB = async (params: GetTradesOptions): Promise<PaginationI
           ? !!trade.closeDate
           : true;
 
-    return pair && result && openDate && closeDate;
+    return pair && result && openDate && closeDate && tags;
   });
 
   const finalData = await handlePagination(query, params);
