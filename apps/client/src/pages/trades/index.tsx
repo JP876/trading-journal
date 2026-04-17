@@ -23,6 +23,7 @@ import { resultOptions } from './consts';
 import TableProviders from '../../components/table/providers';
 import DateFilter from '../../components/table/filters/DateFilter';
 import { tradesFiltersAtom } from '../../atoms/trades';
+import useClearFilters from '../../components/table/hooks/useClearFilters';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -65,42 +66,46 @@ const TradesModalList = () => {
   );
 };
 
+const COLLAPSE_TIMEOUT = 200;
+
 const TradesFiltersContainer = ({ children }: { children: React.ReactNode }) => {
   const tradesFilters = useAtomValue(tradesFiltersAtom);
-  return <Collapse in={tradesFilters}>{children}</Collapse>;
+  return (
+    <Collapse in={tradesFilters} timeout={COLLAPSE_TIMEOUT}>
+      {children}
+    </Collapse>
+  );
 };
 
-const TradesTableContainer = () => {
+const TradesFilters = () => {
   const pairsOptions = usePairsOptions();
 
   return (
-    <TableProviders>
-      <Stack>
-        <TradesFiltersContainer>
-          <Box
-            sx={{
-              mb: 2,
-              width: '100%',
-              gap: 2,
-              display: 'grid',
-              gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
-            }}
-          >
-            <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
-            <AutocompleteFilter name="result" label="Result" options={resultOptions} />
-            <DateFilter name="openDate" label="Open" disableFuture />
-            <DateFilter name="closeDate" label="Close" disableFuture />
-          </Box>
-        </TradesFiltersContainer>
-
-        <TradesTableMain />
-      </Stack>
-    </TableProviders>
+    <Box
+      sx={{
+        mb: 2,
+        width: '100%',
+        gap: 2,
+        display: 'grid',
+        gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: 'repeat(4, 1fr)', md: 'repeat(3, 1fr)' },
+      }}
+    >
+      <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
+      <AutocompleteFilter name="result" label="Result" options={resultOptions} />
+      <DateFilter name="openDate" label="Open" disableFuture />
+      <DateFilter name="closeDate" label="Close" disableFuture />
+    </Box>
   );
 };
 
 const TradesFiltersButton = () => {
   const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom);
+  const [clearFilters] = useClearFilters({ wait: COLLAPSE_TIMEOUT + 20 });
+
+  const handleClick = () => {
+    setTradesFilters((prevValue) => !prevValue);
+    clearFilters();
+  };
 
   return (
     <Box
@@ -120,7 +125,7 @@ const TradesFiltersButton = () => {
       <IconButton
         size="small"
         aria-label={`${tradesFilters ? 'close' : 'open'}-filters-button`}
-        onClick={() => setTradesFilters((prevValue) => !prevValue)}
+        onClick={handleClick}
         sx={{
           width: 'inherit',
           height: 'inherit',
@@ -141,7 +146,7 @@ const TradesPage = () => {
   const { openModal } = useModal();
 
   return (
-    <>
+    <TableProviders>
       <Paper sx={{ p: 3 }}>
         <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
@@ -169,11 +174,17 @@ const TradesPage = () => {
             <TradingSessionSelect />
           </Stack>
         </Stack>
-        <TradesTableContainer />
+
+        <Stack>
+          <TradesFiltersContainer>
+            <TradesFilters />
+          </TradesFiltersContainer>
+          <TradesTableMain />
+        </Stack>
       </Paper>
 
       <TradesModalList />
-    </>
+    </TableProviders>
   );
 };
 
