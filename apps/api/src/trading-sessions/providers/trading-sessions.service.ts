@@ -50,6 +50,7 @@ export class TradingSessionsService {
       this.tradingSessionsRepository,
       query,
       {
+        loadRelationIds: { relations: ['defaultPair'] },
         order: { id: -1 },
         where: {
           user,

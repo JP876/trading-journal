@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
 
-import { db, type UserDB } from '../..';
+import { db } from '../..';
 import type { PaginationInfo } from '../../../../types';
-import type { Tag, TagFormSchemaType } from '../../../../types/tag';
+import type { GetTagsOptions, Tag, TagFormSchemaType } from '../../../../types/tag';
+import handlePagination from '../../pagination';
 
 export const findTagById = async (id: number) => {
   const tag = await db.tags.where('id').equals(id).first();
@@ -12,27 +13,33 @@ export const findTagById = async (id: number) => {
   return tag;
 };
 
-export const getTagsDB = async (): Promise<PaginationInfo<Tag[]>> => {
-  const results = await db.tags.toArray();
-  return { results, totalItems: results.length, totalItemsExcludingFilter: results.length };
+export const getTagsDB = async (params?: GetTagsOptions): Promise<PaginationInfo<Tag[]>> => {
+  let query = db.tags.reverse();
+  const totalCount = await db.tags.count();
+
+  if (params?.title) {
+    const filter = (el: Tag) => {
+      return el.title.toLowerCase().includes(params.title?.toLowerCase() || '');
+    };
+    query = query.filter(filter);
+  }
+
+  return { ...(await handlePagination(query, params)), totalItemsExcludingFilter: totalCount };
 };
 
-export const addTagDB = async (tagData: TagFormSchemaType, user: UserDB) => {
-  const { isLoggedIn, ...rest } = user;
+export const addTagDB = async (tagData: TagFormSchemaType) => {
   return db.tags.add({
     ...tagData,
-    user: { ...rest, email: '' },
     createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
   });
 };
 
 export const editTagDB = async (id: number, tagData: TagFormSchemaType) => {
-  const tag = await findTagById(id);
-  tag.title = tagData.title ?? tag.title;
-  tag.color = tagData.color ?? tag.color;
-  tag.updatedAt = format(new Date(), 'yyyy-MM-dd HH:mm');
-  return db.tags.update(id, tag);
+  return await db.tags
+    .where('id')
+    .equals(id)
+    .modify({ ...tagData, updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm') });
 };
 
 export const deleteTagDB = async (id: number) => {

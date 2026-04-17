@@ -4,18 +4,12 @@ import { addTagDB, deleteTagDB, editTagDB, getTagsDB } from '../../lib/db/api/ta
 import transformToFormData from '../../lib/transformToFormData';
 import withDelay from '../../lib/withDelay';
 import type { PaginationInfo } from '../../types';
-import type { Tag, TagFormSchemaType } from '../../types/tag';
-
-type GetTagsOptions = {
-  page?: number;
-  rowsPerPage?: number;
-  title?: string;
-};
+import type { GetTagsOptions, Tag, TagFormSchemaType } from '../../types/tag';
 
 export const getTags = async (params?: GetTagsOptions) => {
   const user = await getCurrentUser();
   if (user?.isLoggedIn) {
-    return getTagsDB();
+    return getTagsDB(params);
   }
 
   const response = await withDelay(
@@ -34,7 +28,7 @@ export const getTags = async (params?: GetTagsOptions) => {
 export const addTag = async (tag: TagFormSchemaType) => {
   const user = await getCurrentUser();
   if (user?.isLoggedIn) {
-    return addTagDB(tag, user);
+    return addTagDB(tag);
   }
 
   const response = await axiosInstance.post('tags', transformToFormData(tag));

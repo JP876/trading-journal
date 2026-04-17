@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
 import type { PaginationInfo } from '..';
-import type { Pair } from '../pair';
 
 export const TradingSessionFormSchema = z.object({
   title: z.string().nonempty('This field is required'),
@@ -17,7 +16,7 @@ export type TradingSessionFormSchemaType = z.infer<typeof TradingSessionFormSche
 export type TradingSession = {
   id: number;
   isMain: number;
-  defaultPair: Pair | null;
+  defaultPair: number | null;
   createdAt: string;
   updatedAt: string;
   defaultOpenDate?: string;

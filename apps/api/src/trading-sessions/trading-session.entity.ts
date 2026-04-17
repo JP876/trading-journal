@@ -24,7 +24,7 @@ export class TradingSession {
   @OneToMany(() => Trade, (trade) => trade.tradingSession)
   trades?: Trade[];
 
-  @ManyToOne(() => Pair, (pair) => pair.tradingSessions, { eager: true })
+  @ManyToOne(() => Pair, (pair) => pair.tradingSessions)
   defaultPair?: Pair;
 
   @Column({ type: 'real', nullable: true })

@@ -44,7 +44,7 @@ const EditTradingSessionForm = ({ session }: EditTradingSessionFormProps) => {
     defaultValues: {
       ...session,
       isMain: !!session?.isMain,
-      defaultPairId: session?.defaultPair?.id,
+      defaultPairId: session?.defaultPair || undefined,
       defaultOpenDate: session?.defaultOpenDate ? new Date(session.defaultOpenDate) : undefined,
       defaultStopLoss: session?.defaultStopLoss || undefined,
       defaultTakeProfit: session?.defaultTakeProfit || undefined,

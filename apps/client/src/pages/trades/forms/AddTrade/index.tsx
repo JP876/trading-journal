@@ -37,7 +37,7 @@ const AddTradeForm = () => {
     defaultValues: {
       orderType: 'market_order',
       closedBy: 'tp/sl',
-      pairId: mainSession?.defaultPair ? mainSession.defaultPair.id : undefined,
+      pairId: mainSession?.defaultPair || undefined,
       openDate: mainSession?.defaultOpenDate ? new Date(mainSession.defaultOpenDate) : undefined,
       takeProfit: mainSession?.defaultTakeProfit,
       stopLoss: mainSession?.defaultStopLoss,

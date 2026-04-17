@@ -7,8 +7,6 @@ import type {
   TradingSession,
   TradingSessionFormSchemaType,
 } from '../../../../types/tradingSessions';
-import type { Pair } from '../../../../types/pair';
-import { findPairById } from '../pairs';
 import handlePagination from '../../pagination';
 
 const updateMainTradingSession = async (id: number) => {
@@ -53,19 +51,14 @@ export const getTradingSessionsDB = async (
 };
 
 export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) => {
-  let pair: Pair | null = null;
   const { defaultPairId, ...session } = data;
-
-  if (defaultPairId) {
-    pair = await findPairById(defaultPairId);
-  }
 
   const id = await db.tradingSessions.add({
     ...session,
     createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     defaultOpenDate: session.defaultOpenDate && format(session.defaultOpenDate, 'dd/MM/yyyy HH:mm'),
-    defaultPair: pair,
+    defaultPair: defaultPairId || null,
     isMain: +!!data.isMain,
   });
 
@@ -76,19 +69,13 @@ export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) =>
 };
 
 export const editTradingSessionDB = async (id: number, data: Partial<TradingSessionFormSchemaType>) => {
-  let pair: Pair | null = null;
   const { defaultPairId, ...rest } = data;
-
-  if (defaultPairId) {
-    pair = await findPairById(defaultPairId);
-  }
-
   const session = await findTradingSessionById(id);
 
   session.title = rest.title ?? session.title;
   session.description = rest.description ?? session.description;
   session.isMain = +!!rest.isMain;
-  session.defaultPair = pair || session.defaultPair;
+  session.defaultPair = defaultPairId || session.defaultPair;
   session.defaultOpenDate = rest.defaultOpenDate
     ? format(rest.defaultOpenDate, 'yyyy-MM-dd HH:mm')
     : session.defaultOpenDate;
