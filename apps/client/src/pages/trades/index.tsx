@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import QueueIcon from '@mui/icons-material/Queue';
 import { useAtom, useAtomValue } from 'jotai';
 
 import type { Trade } from '../../types/trade';
@@ -25,6 +26,7 @@ import DateFilter from '../../components/table/filters/DateFilter';
 import { tradesFiltersAtom } from '../../atoms/trades';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
 import useTagsOptions from './hooks/useTagsOptions';
+import { addMultipleRandomTradesDB } from '../../lib/db/api/trades';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -162,6 +164,9 @@ const TradesPage = () => {
                 onClick={() => openModal(TradesPageModal.ADD_TRADE)}
               >
                 <AddIcon />
+              </IconButton>
+              <IconButton size="small" aria-label="add-multiple-trades" onClick={() => addMultipleRandomTradesDB()}>
+                <QueueIcon />
               </IconButton>
               <TradesFiltersButton />
             </Stack>
