@@ -109,7 +109,9 @@ const useColumns = () => {
         header: 'Result',
         size: 120,
         cell: ({ row }) => {
-          const { result, closedBy, closedAt, takeProfit, stopLoss } = row.original;
+          let { result, closedBy, closedAt, takeProfit, stopLoss } = row.original;
+          takeProfit = +(takeProfit ?? 0).toFixed(1);
+          stopLoss = +(stopLoss ?? 0).toFixed(1);
 
           if (!result) return <NotFoundValue />;
 
@@ -155,7 +157,8 @@ const useColumns = () => {
         size: 60,
         header: 'TP',
         cell: ({ row }) => {
-          const { takeProfit, result, closedBy } = row.original;
+          let { takeProfit, result, closedBy } = row.original;
+          takeProfit = +(takeProfit ?? 0).toFixed(1);
 
           if (!takeProfit) return <NotFoundValue />;
 
@@ -181,7 +184,8 @@ const useColumns = () => {
         header: 'SL',
         size: 60,
         cell: ({ row }) => {
-          const { stopLoss, result, closedBy } = row.original;
+          let { stopLoss, result, closedBy } = row.original;
+          stopLoss = +(stopLoss ?? 0).toFixed(1);
 
           if (!stopLoss) return <NotFoundValue />;
 

@@ -11,6 +11,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import QueueIcon from '@mui/icons-material/Queue';
 import { useAtom, useAtomValue } from 'jotai';
+import { useQueryClient } from '@tanstack/react-query';
 
 import type { Trade } from '../../types/trade';
 import TradingSessionSelect from './TradingSessionSelect';
@@ -27,6 +28,8 @@ import { tradesFiltersAtom } from '../../atoms/trades';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
 import useTagsOptions from './hooks/useTagsOptions';
 import { addMultipleRandomTradesDB } from '../../lib/db/api/trades';
+import withCatch from '../../lib/withCatch';
+import { QueryKey } from '../../enums';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
@@ -147,6 +150,28 @@ const TradesFiltersButton = () => {
   );
 };
 
+const AddMultipleTradesButton = () => {
+  const queryClient = useQueryClient();
+
+  const handleAddMultipleTrades = async () => {
+    const [error] = await withCatch(addMultipleRandomTradesDB());
+    if (error) {
+      console.error(error);
+      return null;
+    }
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
+      queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
+    ]);
+  };
+
+  return (
+    <IconButton size="small" aria-label="add-multiple-trades" onClick={handleAddMultipleTrades}>
+      <QueueIcon />
+    </IconButton>
+  );
+};
+
 const TradesPage = () => {
   const { openModal } = useModal();
 
@@ -165,9 +190,7 @@ const TradesPage = () => {
               >
                 <AddIcon />
               </IconButton>
-              <IconButton size="small" aria-label="add-multiple-trades" onClick={() => addMultipleRandomTradesDB()}>
-                <QueueIcon />
-              </IconButton>
+              <AddMultipleTradesButton />
               <TradesFiltersButton />
             </Stack>
           </Stack>
