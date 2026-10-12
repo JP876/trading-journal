@@ -4,6 +4,7 @@ import { db } from '../..';
 import type { PaginationInfo } from '../../../../types';
 import type { GetTagsOptions, Tag, TagFormSchemaType } from '../../../../types/tag';
 import handlePagination from '../../pagination';
+import { getRandomInt } from '../../../utils';
 
 export const findTagById = async (id: number) => {
   const tag = await db.tags.where('id').equals(id).first();
@@ -11,6 +12,13 @@ export const findTagById = async (id: number) => {
     throw new Error(`Tag with ID: ${id} not found`);
   }
   return tag;
+};
+
+export const getRandomTagIdsDB = (tags: Tag[]) => {
+  return Array.from({ length: getRandomInt(0, tags.length) }).reduce<number[]>((acc) => {
+    const t = tags[getRandomInt(0, tags.length - 1)];
+    return acc.includes(t.id) ? acc : [...acc, t.id];
+  }, []);
 };
 
 export const getTagsDB = async (params?: GetTagsOptions): Promise<PaginationInfo<Tag[]>> => {

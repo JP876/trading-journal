@@ -1,23 +1,23 @@
-import { memo, useEffect } from 'react';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import NewLabelIcon from '@mui/icons-material/NewLabel';
-import { Controller, useFormContext, useWatch, Watch, type UseFormReturn } from 'react-hook-form';
-import { addHours } from 'date-fns';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import Tooltip from '@mui/material/Tooltip';
+import { memo } from 'react';
+import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
 
-import type { TradeFormSchemaType } from '../../../types/trade';
-import FormMain from '../../../components/form/FormMain';
-import TextInput from '../../../components/form/TextInput';
-import SelectInput from '../../../components/form/SelectInput';
-import DateTimeInput, { type DateTimeInputProps } from '../../../components/form/DateTimeInput';
 import AutocompleteInput from '../../../components/form/AutocompleteInput';
-import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
-import usepairsOptions from '../hooks/usePairsOptions';
+import DateTimeInput from '../../../components/form/DateTimeInput';
+import FormMain from '../../../components/form/FormMain';
+import SelectInput from '../../../components/form/SelectInput';
 import SubmitButton from '../../../components/form/SubmitButton';
-import useTagsOptions from '../hooks/useTagsOptions';
+import TextInput from '../../../components/form/TextInput';
 import useModal from '../../../hooks/useModal';
+import type { TradeFormSchemaType } from '../../../types/trade';
+import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
 import { TradesPageModal } from '../enums';
+import usePairsOptions from '../hooks/usePairsOptions';
+import useTagsOptions from '../hooks/useTagsOptions';
+import CloseDateInput from './CloseDateInput';
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -38,31 +38,8 @@ const AddTagButton = memo(() => {
   );
 });
 
-type CloseDateInputProps = Pick<DateTimeInputProps, 'field' | 'fieldState' | 'formState'> & {};
-
-const CloseDateInput = ({ field, fieldState, formState }: CloseDateInputProps) => {
-  const [openDate] = useWatch({ name: ['openDate'] });
-  const methods = useFormContext();
-
-  useEffect(() => {
-    if (!fieldState.isDirty && openDate) {
-      methods.setValue('closeDate', addHours(new Date(openDate), 1));
-    }
-  }, [fieldState.isDirty, openDate]);
-
-  return (
-    <DateTimeInput
-      label="Close Date"
-      inputProps={{ disableFuture: true, minDate: openDate }}
-      field={field}
-      fieldState={fieldState}
-      formState={formState}
-    />
-  );
-};
-
 const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
-  const pairsOptions = usepairsOptions();
+  const pairsOptions = usePairsOptions();
   const tagsOptions = useTagsOptions();
 
   return (

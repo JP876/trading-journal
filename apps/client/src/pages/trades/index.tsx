@@ -1,37 +1,34 @@
-import { lazy } from 'react';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Collapse from '@mui/material/Collapse';
 import AddIcon from '@mui/icons-material/Add';
-import SettingsIcon from '@mui/icons-material/Settings';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import QueueIcon from '@mui/icons-material/Queue';
+import SettingsIcon from '@mui/icons-material/Settings';
+import Box from '@mui/material/Box';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import { useAtom, useAtomValue } from 'jotai';
-import { useQueryClient } from '@tanstack/react-query';
+import { lazy } from 'react';
 
-import type { Trade } from '../../types/trade';
-import TradingSessionSelect from './TradingSessionSelect';
-import DialogMain from '../../components/DialogMain';
-import useModal from '../../hooks/useModal';
 import { modalAtom } from '../../atoms/modal';
+import { tradesFiltersAtom } from '../../atoms/trades';
+import DialogMain from '../../components/DialogMain';
+import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
+import DateFilter from '../../components/table/filters/DateFilter';
+import useClearFilters from '../../components/table/hooks/useClearFilters';
+import TableProviders from '../../components/table/providers';
+import useModal from '../../hooks/useModal';
+import type { Trade } from '../../types/trade';
+import { resultOptions } from './consts';
 import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
-import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
-import { resultOptions } from './consts';
-import TableProviders from '../../components/table/providers';
-import DateFilter from '../../components/table/filters/DateFilter';
-import { tradesFiltersAtom } from '../../atoms/trades';
-import useClearFilters from '../../components/table/hooks/useClearFilters';
 import useTagsOptions from './hooks/useTagsOptions';
-import { addMultipleRandomTradesDB } from '../../lib/db/api/trades';
-import withCatch from '../../lib/withCatch';
-import { QueryKey } from '../../enums';
+import TradingSessionSelect from './TradingSessionSelect';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
+const AddMultipleRandomTradesForm = lazy(() => import('./forms/AddMultipleRandomTrades'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
 const DeleteTrade = lazy(() => import('./DeleteTrade'));
 const TradesSettingsMain = lazy(() => import('./Settings'));
@@ -46,6 +43,10 @@ const TradesModalList = () => {
     <>
       <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
         <AddTradeForm />
+      </DialogMain>
+
+      <DialogMain id={TradesPageModal.ADD_MULTIPLE_RANDOM_TRADES} title="Add multiple random trades">
+        <AddMultipleRandomTradesForm />
       </DialogMain>
 
       <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
@@ -150,28 +151,6 @@ const TradesFiltersButton = () => {
   );
 };
 
-const AddMultipleTradesButton = () => {
-  const queryClient = useQueryClient();
-
-  const handleAddMultipleTrades = async () => {
-    const [error] = await withCatch(addMultipleRandomTradesDB());
-    if (error) {
-      console.error(error);
-      return null;
-    }
-    await Promise.all([
-      queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
-      queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
-    ]);
-  };
-
-  return (
-    <IconButton size="small" aria-label="add-multiple-trades" onClick={handleAddMultipleTrades}>
-      <QueueIcon />
-    </IconButton>
-  );
-};
-
 const TradesPage = () => {
   const { openModal } = useModal();
 
@@ -190,7 +169,13 @@ const TradesPage = () => {
               >
                 <AddIcon />
               </IconButton>
-              <AddMultipleTradesButton />
+              <IconButton
+                size="small"
+                aria-label="add-multiple-trades"
+                onClick={() => openModal(TradesPageModal.ADD_MULTIPLE_RANDOM_TRADES)}
+              >
+                <QueueIcon />
+              </IconButton>
               <TradesFiltersButton />
             </Stack>
           </Stack>

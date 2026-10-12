@@ -38,6 +38,18 @@ export const EditTradeFormSchema = TradeFormSchema.extend({
 });
 export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 
+export const AddMultipleRandomTradesFormSchema = z.object({
+  count: z.number().positive().optional(),
+  pairs: z.array(z.number().max(10)).optional(),
+  maxStopLoss: z.number().positive().optional(),
+  minStopLoss: z.number().positive().optional(),
+  maxTakeProfit: z.number().positive().optional(),
+  minTakeProfit: z.number().positive().optional(),
+  openDate: z.date().optional(),
+  closeDate: z.date().optional(),
+});
+export type AddMultipleRandomTradesFormType = z.infer<typeof AddMultipleRandomTradesFormSchema>;
+
 export type Trade = {
   id: number;
   pair: number;
