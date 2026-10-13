@@ -17,7 +17,7 @@ export const TradeFormSchema = z.object({
   closeDate: z.date().optional(),
   closedBy: z.union([z.literal('tp/sl'), z.literal('user')]).optional(),
   closedAt: z.number().optional(),
-  tags: z.array(z.number().max(10)).optional(),
+  tags: z.array(z.number()).length(10).optional(),
   orderType: z
     .union([
       z.literal('market_order'),
@@ -38,17 +38,17 @@ export const EditTradeFormSchema = TradeFormSchema.extend({
 });
 export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 
-export const AddMultipleRandomTradesFormSchema = z.object({
+export const AddRandomTradesFormSchema = z.object({
   count: z.number().positive().optional(),
-  pairs: z.array(z.number().max(10)).optional(),
-  maxStopLoss: z.number().positive().optional(),
-  minStopLoss: z.number().positive().optional(),
-  maxTakeProfit: z.number().positive().optional(),
-  minTakeProfit: z.number().positive().optional(),
-  openDate: z.date().optional(),
-  closeDate: z.date().optional(),
+  pairs: z.array(z.number()).optional(),
+  stopLoss: z.array(z.number().nonnegative()).optional(),
+  takeProfit: z.array(z.number().nonnegative()).optional(),
+  winPercentage: z.number().positive().max(100).optional(),
+  longPercentage: z.number().positive().max(100).optional(),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
 });
-export type AddMultipleRandomTradesFormType = z.infer<typeof AddMultipleRandomTradesFormSchema>;
+export type AddRandomTradesFormType = z.infer<typeof AddRandomTradesFormSchema>;
 
 export type Trade = {
   id: number;

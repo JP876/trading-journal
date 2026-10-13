@@ -5,9 +5,12 @@ import { addHours } from 'date-fns';
 import type { DateTimeInputProps } from '../../../components/form/DateTimeInput';
 import DateTimeInput from '../../../components/form/DateTimeInput';
 
-type CloseDateInputProps = Pick<DateTimeInputProps, 'field' | 'fieldState' | 'formState'> & { addHoursCount?: number };
+type CloseDateInputProps = Omit<DateTimeInputProps, 'label'> & {
+  label?: string;
+  addHoursCount?: number;
+};
 
-const CloseDateInput = ({ field, fieldState, formState, addHoursCount }: CloseDateInputProps) => {
+const CloseDateInput = ({ field, fieldState, formState, addHoursCount, inputProps, label }: CloseDateInputProps) => {
   const [openDate] = useWatch({ name: ['openDate'] });
   const methods = useFormContext();
 
@@ -19,8 +22,8 @@ const CloseDateInput = ({ field, fieldState, formState, addHoursCount }: CloseDa
 
   return (
     <DateTimeInput
-      label="Close Date"
-      inputProps={{ disableFuture: true, minDate: openDate }}
+      label={label || 'Close Date'}
+      inputProps={{ disableFuture: true, minDate: openDate, ...inputProps }}
       field={field}
       fieldState={fieldState}
       formState={formState}

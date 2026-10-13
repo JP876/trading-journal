@@ -1,6 +1,6 @@
 export enum TradesPageModal {
   ADD_TRADE = 'addTradeForm',
-  ADD_MULTIPLE_RANDOM_TRADES = 'addMultipleRandomTrades',
+  ADD_RANDOM_TRADES = 'addRandomTrades',
   EDIT_TRADE = 'editTradeForm',
   DELETE_TRADE = 'deleteTradeDialog',
 

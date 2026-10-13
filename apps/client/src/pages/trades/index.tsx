@@ -28,7 +28,7 @@ import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
-const AddMultipleRandomTradesForm = lazy(() => import('./forms/AddMultipleRandomTrades'));
+const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
 const DeleteTrade = lazy(() => import('./DeleteTrade'));
 const TradesSettingsMain = lazy(() => import('./Settings'));
@@ -45,8 +45,8 @@ const TradesModalList = () => {
         <AddTradeForm />
       </DialogMain>
 
-      <DialogMain id={TradesPageModal.ADD_MULTIPLE_RANDOM_TRADES} title="Add multiple random trades">
-        <AddMultipleRandomTradesForm />
+      <DialogMain id={TradesPageModal.ADD_RANDOM_TRADES} title="Add random trades">
+        <AddRandomTradesForm />
       </DialogMain>
 
       <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
@@ -172,7 +172,7 @@ const TradesPage = () => {
               <IconButton
                 size="small"
                 aria-label="add-multiple-trades"
-                onClick={() => openModal(TradesPageModal.ADD_MULTIPLE_RANDOM_TRADES)}
+                onClick={() => openModal(TradesPageModal.ADD_RANDOM_TRADES)}
               >
                 <QueueIcon />
               </IconButton>

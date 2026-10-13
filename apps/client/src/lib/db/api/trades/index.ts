@@ -1,18 +1,19 @@
-import { addMinutes, format, isBefore, subDays, subHours } from 'date-fns';
+import { addMilliseconds, addMinutes, clamp, format, isBefore, subMonths } from 'date-fns';
 
 import { db } from '../..';
+import type { PaginationInfo } from '../../../../types';
 import type {
-  AddMultipleRandomTradesFormType,
+  AddRandomTradesFormType,
   GetTradesOptions,
+  Result,
   Trade,
   TradeFormSchemaType,
   TradesCount,
 } from '../../../../types/trade';
-import type { PaginationInfo } from '../../../../types';
-import { findMainTradingSession } from '../tradingSessions';
-import handlePagination from '../../pagination';
 import { getRandomFloat, getRandomInt, getRandomItem } from '../../../utils';
+import handlePagination from '../../pagination';
 import { getRandomTagIdsDB } from '../tags';
+import { findMainTradingSession } from '../tradingSessions';
 
 export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]> => {
   const [sessions] = await Promise.all([db.tradingSessions.toArray(), db.trades.toArray()]);
@@ -80,17 +81,65 @@ export const addTradeDB = async (trade: TradeFormSchemaType & { tradingSessionId
   });
 };
 
-export const addMultipleRandomTradesDB = async (
-  options: AddMultipleRandomTradesFormType & { tradingSessionId: number }
-) => {
+export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
+  count: 100,
+  pairs: [],
+  stopLoss: [0, 20],
+  takeProfit: [0, 20],
+  winPercentage: 50,
+  longPercentage: 50,
+  startDate: subMonths(new Date(), 6),
+  endDate: new Date(),
+};
+
+// Fisher-Yates (Durstenfeld) algorithm
+const shuffleArray = <T>(arr: T[]): T[] => {
+  let j: number;
+  let copy = [...arr];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+};
+
+export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tradingSessionId: number }) => {
   const lastTrade = await db.trades.orderBy('id').last();
   const tags = await db.tags.toArray();
+  const count = options?.count || ADD_RANDOM_TRADES_OPTIONS.count;
 
-  const trades: Trade[] = Array.from({ length: options?.count || 100 }).map((_, index) => {
-    const openDate = subDays(subHours(new Date(), getRandomInt(2, 10)), getRandomInt(0, 20));
-    const closeDate = addMinutes(openDate, getRandomInt(10, 1_000));
+  let pair;
 
-    const pair =
+  let openDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
+  let closeDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
+
+  const interval = (closeDate.getTime() - openDate.getTime()) / count;
+
+  const winRate = (options?.winPercentage || ADD_RANDOM_TRADES_OPTIONS.winPercentage) / 100;
+  const directionPercentage = options.longPercentage || ADD_RANDOM_TRADES_OPTIONS.longPercentage;
+
+  const resultArr: Result[] = shuffleArray([
+    ...Array.from({ length: count * winRate }).map(() => 'win' as const),
+    ...Array.from({ length: count * (1 - winRate) }).map(() => 'loss' as const),
+  ]);
+
+  let stopLoss = ADD_RANDOM_TRADES_OPTIONS.stopLoss;
+  if (Array.isArray(options?.stopLoss) && options?.stopLoss.length === 2) {
+    stopLoss = options.stopLoss;
+  }
+
+  let takeProfit = ADD_RANDOM_TRADES_OPTIONS.takeProfit;
+  if (Array.isArray(options?.takeProfit) && options?.takeProfit.length === 2) {
+    takeProfit = options.takeProfit;
+  }
+
+  const trades: Trade[] = Array.from({ length: count }).map((_, index) => {
+    openDate = addMilliseconds(openDate, interval * index);
+    closeDate = addMinutes(openDate, getRandomInt(10, 60 * 5));
+
+    pair =
       Array.isArray(options?.pairs) && options.pairs.length
         ? getRandomItem(options.pairs) || getRandomInt(1, 10)
         : getRandomInt(1, 10);
@@ -100,13 +149,25 @@ export const addMultipleRandomTradesDB = async (
       tags: tags.length < 2 ? [] : getRandomTagIdsDB(tags),
       tradingSession: options.tradingSessionId,
       pair: pair,
-      result: Math.random() >= 0.5 ? 'win' : 'loss',
-      direction: Math.random() >= 0.5 ? 'long' : 'short',
-      stopLoss: getRandomFloat(options?.minStopLoss ?? 10, options?.maxStopLoss ?? 20),
-      takeProfit: getRandomFloat(options?.minTakeProfit ?? 10, options?.maxTakeProfit ?? 20),
+      result: resultArr[index],
+      direction: Math.random() >= directionPercentage / 100 ? 'long' : 'short',
+      stopLoss: getRandomFloat(stopLoss[0], stopLoss[1]),
+      takeProfit: getRandomFloat(takeProfit[0], takeProfit[1]),
       closedBy: 'tp/sl',
-      openDate: format(openDate, 'yyyy-MM-dd HH:mm'),
-      closeDate: format(closeDate, 'yyyy-MM-dd HH:mm'),
+      openDate: format(
+        clamp(openDate, {
+          start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,
+          end: options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate,
+        }),
+        'yyyy-MM-dd HH:mm'
+      ),
+      closeDate: format(
+        clamp(closeDate, {
+          start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,
+          end: options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate,
+        }),
+        'yyyy-MM-dd HH:mm'
+      ),
       createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
       updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     };
