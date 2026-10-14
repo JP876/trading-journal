@@ -137,7 +137,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
 
   const trades: Trade[] = Array.from({ length: count }).map((_, index) => {
     openDate = addMilliseconds(openDate, interval * index);
-    closeDate = addMinutes(openDate, getRandomInt(10, 60 * 5));
+    closeDate = addMinutes(openDate, getRandomInt(1, 60 * 5));
 
     pair =
       Array.isArray(options?.pairs) && options.pairs.length

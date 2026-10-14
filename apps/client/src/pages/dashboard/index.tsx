@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 
 import ConsecutiveTrades from './widgets/ConsecutiveTrades';
+import TradeDurations from './widgets/TradeDurations';
 
 const DashboardMain = () => {
   return (
@@ -13,6 +14,7 @@ const DashboardMain = () => {
       })}
     >
       <ConsecutiveTrades />
+      <TradeDurations />
     </Box>
   );
 };

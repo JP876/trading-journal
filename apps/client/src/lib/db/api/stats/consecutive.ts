@@ -1,11 +1,10 @@
 import { db } from '../..';
-import type { Result } from '../../../../types/trade';
+import { findMainTradingSession } from '../tradingSessions';
+import type { StreakResult } from './types';
 
-type StreakMap = { [key: string]: number };
-export type StreakResult = { [R in Result]: StreakMap };
-
-export const findConsecutiveTrades = async (): Promise<StreakResult> => {
-  const trades = await db.trades.toArray();
+export const getConsecutiveTrades = async (): Promise<StreakResult> => {
+  const session = await findMainTradingSession();
+  const trades = await db.trades.where({ tradingSession: session.id }).toArray();
 
   const streaks: StreakResult = { win: {}, loss: {}, be: {} };
 

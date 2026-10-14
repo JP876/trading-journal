@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
-import { Box } from '@mui/material';
+import Box from '@mui/material/Box';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 import { useQuery } from '@tanstack/react-query';
 
 import { QueryKey } from '../../../../enums';
-import { findConsecutiveTrades, type StreakResult } from '../../../../lib/db/api/stats';
+import type { StreakResult } from '../../../../lib/db/api/stats/types';
+import { getConsecutiveTrades } from '../../../../lib/db/api/stats/consecutive';
 
 const transformData = (data: StreakResult) => {
   const flatList = [];
@@ -30,21 +31,21 @@ type ConsecutiveTradesChartProps = {};
 
 const ConsecutiveTradesChart = ({}: ConsecutiveTradesChartProps) => {
   const { data } = useQuery({
-    queryKey: [QueryKey.STATS],
-    queryFn: () => findConsecutiveTrades(),
+    queryKey: [QueryKey.STATS, QueryKey.STATS_CONSECUTIVE],
+    queryFn: () => getConsecutiveTrades(),
     staleTime: Infinity,
   });
 
   const chartProps = useMemo(() => {
     if (!data) return null;
 
-    const formatted = transformData(data);
+    const chartData = transformData(data);
 
     return {
-      dataset: formatted,
+      dataset: chartData,
       xAxis: [
         {
-          data: formatted.map((el) => el.count),
+          data: chartData.map((el) => el.count),
           label: 'Consecutive trades count',
           categoryGapRatio: 0.06,
           barGapRatio: 0.06,
