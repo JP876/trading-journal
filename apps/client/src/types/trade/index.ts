@@ -41,8 +41,9 @@ export type EditTradeFormSchemaType = z.infer<typeof EditTradeFormSchema>;
 export const AddRandomTradesFormSchema = z.object({
   count: z.number().positive().optional(),
   pairs: z.array(z.number()).optional(),
-  stopLoss: z.array(z.number().nonnegative()).optional(),
-  takeProfit: z.array(z.number().nonnegative()).optional(),
+  stopLoss: z.array(z.number().positive()).nonempty().optional(),
+  takeProfit: z.array(z.number().positive()).nonempty().optional(),
+  tradeDuration: z.array(z.number().positive()).nonempty().optional(),
   winPercentage: z.number().positive().max(100).optional(),
   longPercentage: z.number().positive().max(100).optional(),
   startDate: z.date().optional(),

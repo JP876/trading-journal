@@ -33,7 +33,6 @@ const ConsecutiveTradesChart = ({}: ConsecutiveTradesChartProps) => {
   const { data } = useQuery({
     queryKey: [QueryKey.STATS, QueryKey.STATS_CONSECUTIVE],
     queryFn: () => getConsecutiveTrades(),
-    staleTime: Infinity,
   });
 
   const chartProps = useMemo(() => {

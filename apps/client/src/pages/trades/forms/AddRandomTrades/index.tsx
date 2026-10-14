@@ -18,7 +18,7 @@ import DateTimeInput from '../../../../components/form/DateTimeInput';
 import CloseDateInput from '../CloseDateInput';
 import SubmitButton from '../../../../components/form/SubmitButton';
 import SliderInput from '../../../../components/form/SliderInput';
-import { useRef } from 'react';
+import { minutesToHours } from 'date-fns';
 
 const getMarks = (length: number = 200, step: number = 20) => {
   return Array.from({ length: length / 10 }).map((_, i) => ({ value: i * step, label: i * step }));
@@ -34,7 +34,6 @@ const AddRandomTradesForm = () => {
   const mainSession = sessions?.results?.find((el) => el?.isMain);
 
   const pairsOptions = usePairsOptions();
-  const marks = useRef(getMarks());
 
   const mutation = useMutation({
     mutationFn: addRandomTradesDB,
@@ -86,21 +85,6 @@ const AddRandomTradesForm = () => {
         />
       </Stack>
 
-      <Controller
-        name="stopLoss"
-        control={form.control}
-        render={(props) => (
-          <SliderInput label="Stop Loss" inputProps={{ min: 0, max: 200, marks: marks.current }} {...props} />
-        )}
-      />
-      <Controller
-        name="takeProfit"
-        control={form.control}
-        render={(props) => (
-          <SliderInput label="Take Profit" inputProps={{ min: 0, max: 200, marks: marks.current }} {...props} />
-        )}
-      />
-
       <Stack direction="row" alignItems="center" gap={4}>
         <Controller
           name="winPercentage"
@@ -125,6 +109,50 @@ const AddRandomTradesForm = () => {
           )}
         />
       </Stack>
+
+      <Controller
+        name="stopLoss"
+        control={form.control}
+        render={(props) => (
+          <SliderInput
+            label="Stop Loss"
+            inputProps={{ min: 1, max: 200, marks: [{ value: 1, label: 1 }, ...getMarks()] }}
+            {...props}
+          />
+        )}
+      />
+      <Controller
+        name="takeProfit"
+        control={form.control}
+        render={(props) => (
+          <SliderInput
+            label="Take Profit"
+            inputProps={{ min: 1, max: 200, marks: [{ value: 1, label: 1 }, ...getMarks()] }}
+            {...props}
+          />
+        )}
+      />
+      <Controller
+        name="tradeDuration"
+        control={form.control}
+        render={(props) => (
+          <SliderInput
+            label="Trade Duration (min)"
+            inputProps={{
+              min: 1,
+              max: 12 * 60,
+              marks: [
+                { value: 1, label: 1 },
+                ...getMarks(12 * 60, 60).map((el) => ({
+                  ...el,
+                  label: `${minutesToHours(el.value)}h`,
+                })),
+              ],
+            }}
+            {...props}
+          />
+        )}
+      />
 
       <Stack direction="row" alignItems="center" gap={4}>
         <Controller

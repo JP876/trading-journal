@@ -40,7 +40,6 @@ const TradeDurationsChart = () => {
   const { data } = useQuery({
     queryKey: [QueryKey.STATS, QueryKey.STATS_DURATION],
     queryFn: () => getTradeDurations(),
-    staleTime: Infinity,
   });
 
   const chartProps = useMemo(() => {

@@ -86,6 +86,7 @@ export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   pairs: [],
   stopLoss: [0, 20],
   takeProfit: [0, 20],
+  tradeDuration: [1, 60],
   winPercentage: 50,
   longPercentage: 50,
   startDate: subMonths(new Date(), 6),
@@ -135,9 +136,14 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     takeProfit = options.takeProfit;
   }
 
+  let tradeDuration = ADD_RANDOM_TRADES_OPTIONS.tradeDuration;
+  if (Array.isArray(options?.tradeDuration) && options?.tradeDuration.length === 2) {
+    tradeDuration = options.tradeDuration;
+  }
+
   const trades: Trade[] = Array.from({ length: count }).map((_, index) => {
     openDate = addMilliseconds(openDate, interval * index);
-    closeDate = addMinutes(openDate, getRandomInt(1, 60 * 5));
+    closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
     pair =
       Array.isArray(options?.pairs) && options.pairs.length
