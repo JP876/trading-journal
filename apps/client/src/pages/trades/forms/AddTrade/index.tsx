@@ -26,6 +26,7 @@ const AddTradeForm = () => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.STATS] }),
       ]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been saved.' });
       closeModal(TradesPageModal.ADD_TRADE);

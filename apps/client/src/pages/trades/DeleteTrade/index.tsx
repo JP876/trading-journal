@@ -28,6 +28,7 @@ const DeleteTrade = ({ trade }: DeleteTradeProps) => {
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.STATS] }),
       ]);
       openSnackbar({ severity: 'success', message: 'Your trade have been deleted.' });
       closeModal(TradesPageModal.DELETE_TRADE);

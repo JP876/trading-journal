@@ -33,7 +33,10 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       return editTrade(trade.id, { ...data, tradingSessionId: session });
     },
     onSuccess: async () => {
-      await Promise.all([queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] })]);
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.STATS] }),
+      ]);
       openSnackbar({ severity: 'success', message: 'Your trade details have been updated.' });
       closeModal(TradesPageModal.EDIT_TRADE);
     },
