@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QueryKey } from '../../../../enums';
 import type { StreakResult } from '../../../../lib/db/api/stats/types';
 import { getConsecutiveTrades } from '../../../../lib/db/api/stats/consecutive';
+import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
 
 const transformData = (data: StreakResult) => {
   const flatList = [];
@@ -46,15 +47,15 @@ const ConsecutiveTradesChart = ({}: ConsecutiveTradesChartProps) => {
         {
           data: chartData.map((el) => el.count),
           label: 'Consecutive trades count',
-          categoryGapRatio: 0.06,
-          barGapRatio: 0.06,
-          tickPlacement: 'extremities',
+          ...DEFAULT_BAR_CHART_PROPS.xAxis,
+          tickLabelPlacement: 'middle',
         },
       ],
-      yAxis: [{ label: 'Trades count' }],
+      yAxis: [{ label: 'Trades count', width: 48 }],
+      margin: { left: 0, right: 0 },
       series: [
-        { dataKey: 'win', label: 'Won trades' },
-        { dataKey: 'loss', label: 'Lost trades' },
+        { dataKey: 'win', label: 'Won trades', ...DEFAULT_BAR_CHART_PROPS.series },
+        { dataKey: 'loss', label: 'Lost trades', ...DEFAULT_BAR_CHART_PROPS.series },
       ],
     } as BarChartProps;
   }, [data]);

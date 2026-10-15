@@ -9,6 +9,7 @@ import { secondsToMinutes } from 'date-fns';
 import { QueryKey } from '../../../../enums';
 import { getTradeDurations } from '../../../../lib/db/api/stats/duration';
 import type { ProfitabilityAnalysis } from '../../../../lib/db/api/stats/types';
+import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
 
 const formatMinutes = (value: number): string => {
   if (!value) return value.toString();
@@ -81,12 +82,9 @@ const TradeDurationsChart = ({ period }: TTradeDurationsChartProps) => {
     return {
       xAxis: [
         {
+          ...DEFAULT_BAR_CHART_PROPS.xAxis,
           dataKey: 'interval',
           label: 'Periods',
-          categoryGapRatio: 0.08,
-          barGapRatio: 0,
-          tickPlacement: 'end',
-          tickLabelPlacement: 'tick',
           valueFormatter: (code: TTransformedDataItem['interval'], context: AxisValueFormatterContext) => {
             if (context.location === 'tick') {
               return code.end;
@@ -99,16 +97,16 @@ const TradeDurationsChart = ({ period }: TTradeDurationsChartProps) => {
       margin: { left: 0, right: 0 },
       series: [
         {
+          ...DEFAULT_BAR_CHART_PROPS.series,
           dataKey: 'winCount',
           label: 'Won trades',
           color: theme.palette.success.light,
-          highlightScope: { highlight: 'series', fade: 'global' },
         },
         {
+          ...DEFAULT_BAR_CHART_PROPS.series,
           dataKey: 'lossCount',
           label: 'Lost trades',
           color: theme.palette.error.light,
-          highlightScope: { highlight: 'series', fade: 'global' },
         },
       ],
     } as BarChartProps;
