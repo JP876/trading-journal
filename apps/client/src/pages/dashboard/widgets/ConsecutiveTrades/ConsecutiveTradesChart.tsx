@@ -54,7 +54,7 @@ const ConsecutiveTradesChart = ({}: ConsecutiveTradesChartProps) => {
       yAxis: [{ label: 'Trades count' }],
       series: [
         { dataKey: 'win', label: 'Won trades' },
-        { dataKey: 'loss', label: 'Lossed trades' },
+        { dataKey: 'loss', label: 'Lost trades' },
       ],
     } as BarChartProps;
   }, [data]);

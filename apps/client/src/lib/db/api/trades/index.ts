@@ -113,10 +113,10 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
 
   let pair;
 
-  let openDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
-  let closeDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
+  let startDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
+  let endDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
 
-  const interval = (closeDate.getTime() - openDate.getTime()) / count;
+  const interval = (endDate.getTime() - startDate.getTime()) / count;
 
   const winRate = (options?.winPercentage || ADD_RANDOM_TRADES_OPTIONS.winPercentage) / 100;
   const directionPercentage = options.longPercentage || ADD_RANDOM_TRADES_OPTIONS.longPercentage;
@@ -142,8 +142,8 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
   }
 
   const trades: Trade[] = Array.from({ length: count }).map((_, index) => {
-    openDate = addMilliseconds(openDate, interval * index);
-    closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
+    let openDate = addMilliseconds(startDate, interval * index);
+    let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
     pair =
       Array.isArray(options?.pairs) && options.pairs.length

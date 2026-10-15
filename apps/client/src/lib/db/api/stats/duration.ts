@@ -1,113 +1,121 @@
+import { differenceInSeconds } from 'date-fns';
+
 import { db } from '../..';
-import type { Trade } from '../../../../types/trade';
-import { findMainTradingSession } from '../tradingSessions';
 import type { ProfitabilityAnalysis, TradeWithDuration } from './types';
+import { decreasingLinearRange } from '../../../utils';
+import { findMainTradingSession } from '../tradingSessions';
 
-const formatDuration = (ms: number): string => {
-  if (ms === 0) return '0s';
-
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 0) return `${days}d ${hours % 24}h`;
-  if (hours > 0) return `${hours}h ${minutes % 60}m`;
-  if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
-
-  return `${seconds}s`;
+type TAnalyzeTradeDurationsOptions = {
+  maxIntervals?: number;
+  maxCount?: number;
 };
 
-const getBucketLabel = (ms: number, size = 30): string => {
-  const totalMinutes = Math.floor(ms / 60000);
-  const bucketIndex = Math.floor(totalMinutes / size);
-
-  const start = bucketIndex * size;
-  const end = start + size;
-
-  return `${start}-${end}m`;
-};
-
-const calculateBuckets = (trades: { trade: Trade; duration: number }[], resultType: 'win' | 'loss') => {
-  const buckets: { [key: string]: number } = {};
-  const filtered = trades.filter((t) => t.trade.result === resultType);
-
-  filtered.forEach(({ duration }) => {
-    const label = getBucketLabel(duration);
-    buckets[label] = (buckets[label] || 0) + 1;
+const analyzeTradeDurations = (trades: TradeWithDuration[], options?: TAnalyzeTradeDurationsOptions) => {
+  let tradesWithDuration = trades.map((trade) => {
+    const duration = differenceInSeconds(trade.closeDate, trade.openDate);
+    return { trade, duration };
   });
 
-  return buckets;
-};
+  const shortest = tradesWithDuration.reduce((acc, trade) => {
+    return acc.duration > trade.duration && trade.duration ? trade : acc;
+  }, tradesWithDuration[0]);
 
-const analyzeTradeDurations = (
-  trades: TradeWithDuration[],
-  options?: TradeDurationOptions
-): ProfitabilityAnalysis | null => {
-  if (trades.length === 0) return null;
+  const longest = tradesWithDuration.reduce((acc, trade) => {
+    return acc.duration < trade.duration && trade.duration ? trade : acc;
+  }, tradesWithDuration[0]);
 
-  // Pre-calculate all durations once to avoid repeated .getTime() calls
-  const tradesWithDuration = trades.map((trade) => {
-    return {
-      trade,
-      duration: new Date(trade.closeDate).getTime() - new Date(trade.openDate).getTime(),
-    };
-  });
+  // Group trades by intervals. If count is more than 10, group them again with decreased intervals
+  // Intervals are in seconds, start from longest trade and end with shortest or 1min
+  let finalData: ProfitabilityAnalysis = {};
 
-  const wins = tradesWithDuration.filter((t) => t.trade.result === 'win');
-  const losses = tradesWithDuration.filter((t) => t.trade.result === 'loss');
+  const groupTradesByInterval = (intervals: number[], numOfCalls: number = 1) => {
+    if (!intervals.length || intervals.length < 2) return;
 
-  // Calculate Averages
-  const totalWinDuration = wins.reduce((sum, t) => sum + t.duration, 0);
-  const totalLossDuration = losses.reduce((sum, t) => sum + t.duration, 0);
+    const grouped = tradesWithDuration.reduce((acc, trade) => {
+      let group = 0;
 
-  // Find Min/Max
-  const fastestWin = wins.reduce((prev, curr) => (curr.duration < prev.duration ? curr : prev), wins[0]);
-  const slowestWin = wins.reduce((prev, curr) => (curr.duration > prev.duration ? curr : prev), wins[0]);
-  const fastestLoss = losses.reduce((prev, curr) => (curr.duration < prev.duration ? curr : prev), losses[0]);
-  const slowestLoss = losses.reduce((prev, curr) => (curr.duration > prev.duration ? curr : prev), losses[0]);
+      for (let i = 0; i < intervals.length; i++) {
+        let interval = intervals[i];
+        if (!intervals[i + 1]) break;
+        if (trade.duration < interval && trade.duration >= intervals[i + 1]) {
+          group = interval;
+          break;
+        }
+      }
 
-  return {
-    fastestWin: {
-      durationMs: fastestWin?.duration || 0,
-      durationFormatted: formatDuration(fastestWin?.duration || 0),
-      trade: fastestWin?.trade as Trade,
-    },
-    slowestWin: {
-      durationMs: slowestWin?.duration || 0,
-      durationFormatted: formatDuration(slowestWin?.duration || 0),
-      trade: slowestWin?.trade as Trade,
-    },
-    fastestLoss: {
-      durationMs: fastestLoss?.duration || 0,
-      durationFormatted: formatDuration(fastestLoss?.duration || 0),
-      trade: fastestLoss?.trade as Trade,
-    },
-    slowestLoss: {
-      durationMs: slowestLoss?.duration || 0,
-      durationFormatted: formatDuration(slowestLoss?.duration || 0),
-      trade: slowestLoss?.trade as Trade,
-    },
-    avgWinDuration: formatDuration(wins.length > 0 ? totalWinDuration / wins.length : 0),
-    avgLossDuration: formatDuration(losses.length > 0 ? totalLossDuration / losses.length : 0),
-    totalWins: wins.length,
-    totalLosses: losses.length,
-    // Call the separate bucket logic
-    winBuckets: calculateBuckets(tradesWithDuration, 'win'),
-    lossBuckets: calculateBuckets(tradesWithDuration, 'loss'),
+      if (!group) return acc;
+
+      return {
+        ...acc,
+        [group]: {
+          count: (acc?.[group]?.count ?? 0) + 1,
+          trades: [
+            ...(acc?.[group]?.trades || []),
+            { duration: trade.duration, id: trade.trade.id, result: trade.trade.result },
+          ],
+        },
+      };
+    }, {} as ProfitabilityAnalysis);
+
+    if (intervals.length === 2 || !options?.maxCount) {
+      finalData = { ...finalData, ...grouped };
+      return;
+    }
+
+    const maxCount = Math.floor(Math.max(10, options?.maxCount || trades.length * 0.05));
+
+    for (const key in grouped) {
+      const value = grouped[key];
+
+      const index = intervals.findIndex((val) => val === +key);
+      const min = intervals[index + 1] || 60;
+
+      if (value.count <= maxCount || +key === min) {
+        finalData[+key] = value;
+        tradesWithDuration = tradesWithDuration.filter((trade) => !value.trades.find((t) => t.id === trade.trade.id));
+      } else {
+        const nextIntervals = new Set(decreasingLinearRange(+key, min, Math.max(4, 10 - numOfCalls)));
+        groupTradesByInterval([...nextIntervals], numOfCalls++);
+      }
+    }
   };
+
+  // Add 10 to longest duration so that it includes longest trades into finalData
+  const interval = new Set(
+    decreasingLinearRange(longest.duration + 10, shortest.duration || 60, options?.maxIntervals || 10)
+  );
+  groupTradesByInterval([...interval]);
+
+  let count = 0;
+  let tradeIds = new Set();
+
+  for (const key in finalData) {
+    const value = finalData[key];
+    if (value.count !== value.trades.length) {
+      console.error(`For ${key}, count and trades length is different`);
+    }
+    count += value.count;
+    for (let trade of value.trades) {
+      tradeIds.add(trade.id);
+    }
+  }
+
+  if (count !== tradeIds.size) {
+    console.error('Duplicates in final data');
+    console.log(tradesWithDuration);
+  }
+
+  return finalData;
 };
 
-type TradeDurationOptions = {
-  period?: string;
-};
+export const getTradeDurations = async (options?: TAnalyzeTradeDurationsOptions): Promise<ProfitabilityAnalysis> => {
+  const mainSession = await findMainTradingSession();
 
-export const getTradeDurations = async (options?: TradeDurationOptions) => {
-  const session = await findMainTradingSession();
   const trades = (await db.trades
-    .where({ tradingSession: session.id })
-    .filter((t) => !!(t.openDate && t.closeDate))
+    .where({ tradingSession: mainSession.id })
+    .filter((t) => !!(t?.openDate && t?.closeDate))
     .toArray()) as TradeWithDuration[];
 
-  return analyzeTradeDurations(trades, options);
+  const durations = analyzeTradeDurations(trades, options);
+  return durations;
 };
