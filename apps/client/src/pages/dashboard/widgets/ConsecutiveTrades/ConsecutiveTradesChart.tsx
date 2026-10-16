@@ -28,43 +28,46 @@ const transformData = (data: StreakResult) => {
   return flatList;
 };
 
-type ConsecutiveTradesChartProps = {};
+type TConsecutiveTradesChartProps = {};
 
-const ConsecutiveTradesChart = ({}: ConsecutiveTradesChartProps) => {
+const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
   const { data } = useQuery({
     queryKey: [QueryKey.STATS, QueryKey.STATS_CONSECUTIVE],
     queryFn: () => getConsecutiveTrades(),
   });
 
   const chartProps = useMemo(() => {
-    if (!data) return null;
-
-    const chartData = transformData(data);
-
     return {
-      dataset: chartData,
       xAxis: [
         {
-          data: chartData.map((el) => el.count),
-          label: 'Consecutive trades count',
           ...DEFAULT_BAR_CHART_PROPS.xAxis,
+          dataKey: 'count',
+          label: 'Consecutive trades count',
           tickLabelPlacement: 'middle',
         },
       ],
       yAxis: [{ label: 'Trades count', width: 48 }],
       margin: { left: 0, right: 0 },
       series: [
-        { dataKey: 'win', label: 'Won trades', ...DEFAULT_BAR_CHART_PROPS.series },
-        { dataKey: 'loss', label: 'Lost trades', ...DEFAULT_BAR_CHART_PROPS.series },
+        {
+          ...DEFAULT_BAR_CHART_PROPS.series,
+          dataKey: 'win',
+          label: 'Won trades',
+        },
+        {
+          ...DEFAULT_BAR_CHART_PROPS.series,
+          dataKey: 'loss',
+          label: 'Lost trades',
+        },
       ],
     } as BarChartProps;
   }, [data]);
 
-  if (!chartProps) return null;
+  if (!data) return null;
 
   return (
     <Box sx={() => ({ width: '100%', height: '100%', display: 'flex' })}>
-      <BarChart borderRadius={2} {...chartProps} />
+      <BarChart borderRadius={2} dataset={transformData(data)} {...chartProps} />
     </Box>
   );
 };

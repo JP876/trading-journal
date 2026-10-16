@@ -67,3 +67,20 @@ export const decreasingExponentialRange = (
     return values[index];
   });
 };
+
+export const increasingRange = (min: number, max: number, step: number): number[] => {
+  if (min > max) throw new Error('min must be less than or equal to max');
+  if (step <= 0) throw new Error('step must be greater than 0');
+
+  const values: number[] = [];
+
+  for (let value = min; value < max; value += step) {
+    values.push(value);
+  }
+
+  if (values[values.length - 1] !== max) {
+    values.push(max);
+  }
+
+  return values;
+};
