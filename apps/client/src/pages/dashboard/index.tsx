@@ -9,7 +9,7 @@ const DashboardMain = () => {
       sx={(theme) => ({
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(28rem, 1fr))',
-        gridTemplateRows: '24rem',
+        gridAutoRows: '24rem',
         gap: theme.spacing(2),
       })}
     >

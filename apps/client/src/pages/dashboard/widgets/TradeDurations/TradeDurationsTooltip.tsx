@@ -10,7 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
-import type { TDurationAnalysisValue } from '../../../../lib/db/api/stats/types';
+import type { TDurationAnalysisValue } from '../../utils/types';
 import type { TTradeDurationsTooltipContentProps, TTradeDurationsTooltipProps } from './types';
 
 const formatTooltipData = (data: TDurationAnalysisValue['trades'], fraction: number = 1) => {

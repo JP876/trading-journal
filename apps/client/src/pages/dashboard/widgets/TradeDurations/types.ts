@@ -1,5 +1,5 @@
 import type { SeriesItem } from '@mui/x-charts';
-import type { TDurationAnalysisValue } from '../../../../lib/db/api/stats/types';
+import type { TDurationAnalysisValue } from '../../utils/types';
 
 export type TTradeDurationsChartProps = {
   period?: number;

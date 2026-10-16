@@ -1,20 +1,15 @@
 import { differenceInSeconds } from 'date-fns';
 
-import { db } from '../..';
-import type { TDurationAnalysis, TDurationAnalysisValue } from './types';
-import { decreasingLinearRange } from '../../../utils';
-import { findMainTradingSession } from '../tradingSessions';
-import type { Trade } from '../../../../types/trade';
+import type {
+  TTradeDurationsOptions,
+  TDurationAnalysis,
+  TDurationAnalysisValue,
+  TGroupTradesByDurationOptions,
+} from './types';
+import { decreasingLinearRange } from '../../../lib/utils';
+import type { Trade } from '../../../types/trade';
 
-type TAnalyzeTradeDurationsOptions = {
-  maxIntervals?: number;
-};
-
-type TGroupTradesByDurationOptions = {
-  mutate?: boolean;
-};
-
-const groupTradesByDuration = (
+export const groupTradesByDuration = (
   end: number,
   start: number,
   trades: Trade[],
@@ -54,8 +49,8 @@ const groupTradesByDuration = (
   return result;
 };
 
-const analyzeTradeDurations = (trades: Trade[], options?: TAnalyzeTradeDurationsOptions) => {
-  let tradesWithDuration = trades.reduce(
+export const getTradeDurationInfo = (trades: Trade[]) => {
+  const tradesWithDuration = trades.reduce(
     (acc, trade) => {
       if (!trade?.closeDate || !trade?.openDate) return acc;
       const duration = differenceInSeconds(trade.closeDate, trade.openDate);
@@ -72,13 +67,25 @@ const analyzeTradeDurations = (trades: Trade[], options?: TAnalyzeTradeDurations
     return acc.duration < trade.duration && trade.duration ? trade : acc;
   }, tradesWithDuration[0]);
 
+  return { tradesWithDuration, shortest, longest };
+};
+
+export const getTradeDurationAnalysis = (trades: Trade[], options?: TTradeDurationsOptions) => {
+  let shortest = options?.shortestDuration;
+  let longest = options?.longestDuration;
+
+  if (!shortest || !longest) {
+    let info = getTradeDurationInfo(trades);
+
+    shortest = shortest || info.shortest.duration;
+    longest = longest || info.longest.duration;
+  }
+
   // Group trades by intervals. If count is more than 10, group them again with decreased intervals
   // Intervals are in seconds, start from longest trade and end with shortest or 1min
 
   // Add 10 to longest duration so that it includes longest trades into finalData
-  const intervals = [
-    ...new Set(decreasingLinearRange(longest.duration + 10, shortest.duration || 60, options?.maxIntervals || 10)),
-  ];
+  const intervals = [...new Set(decreasingLinearRange(longest + 10, shortest || 60, options?.maxIntervals || 10))];
 
   let finalData: TDurationAnalysis = {};
   let tradesCopy = [...trades];
@@ -91,33 +98,5 @@ const analyzeTradeDurations = (trades: Trade[], options?: TAnalyzeTradeDurations
     finalData[intervals[i]] = result;
   }
 
-  let count = 0;
-  let tradeIds = new Set();
-
-  for (const key in finalData) {
-    const value = finalData[key];
-    if (value.count !== value.trades.length) {
-      console.error(`For ${key}, count and trades length is different`);
-    }
-    count += value.count;
-    for (let trade of value.trades) {
-      tradeIds.add(trade.id);
-    }
-  }
-
-  if (count !== tradeIds.size) {
-    console.error('Duplicates in final data');
-    console.log(tradesWithDuration);
-  }
-
   return finalData;
-};
-
-export const getTradeDurations = async (options?: TAnalyzeTradeDurationsOptions): Promise<TDurationAnalysis> => {
-  const mainSession = await findMainTradingSession();
-  const trades = await db.trades.where({ tradingSession: mainSession.id }).toArray();
-
-  const durations = analyzeTradeDurations(trades, options);
-
-  return durations;
 };

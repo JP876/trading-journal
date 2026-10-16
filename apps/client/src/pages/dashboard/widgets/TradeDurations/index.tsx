@@ -1,14 +1,14 @@
-import { memo, useId, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import Paper from '@mui/material/Paper';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { memo, useId, useState } from 'react';
 
-import TradeDurationsChart from './TradeDurationsChart';
 import { increasingRange } from '../../../../lib/utils';
+import TradeDurationsChart from './TradeDurationsChart';
 
 const options = increasingRange(10, 20, 2);
 

@@ -1,5 +1,7 @@
 import { memo } from 'react';
-import { Paper, Stack, Typography } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import ConsecutiveTradesChart from './ConsecutiveTradesChart';
 
@@ -12,6 +14,7 @@ const ConsecutiveTrades = () => {
           <Typography variant="caption">View how often your trades cluster into winning or losing streaks </Typography>
         </Stack>
       </Stack>
+
       <ConsecutiveTradesChart />
     </Paper>
   );

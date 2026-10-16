@@ -44,7 +44,7 @@ type PaginationProviderProps = {
 const PaginationProvider = ({ page, rowsPerPage, children }: PaginationProviderProps) => {
   const [state, dispatch] = useReducer(reducer, {
     page: page || 1,
-    rowsPerPage: rowsPerPage || 10,
+    rowsPerPage: rowsPerPage || 20,
   });
 
   return (

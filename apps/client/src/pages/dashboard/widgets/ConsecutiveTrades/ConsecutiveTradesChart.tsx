@@ -4,17 +4,18 @@ import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
 import { useQuery } from '@tanstack/react-query';
 
 import { QueryKey } from '../../../../enums';
-import type { StreakResult } from '../../../../lib/db/api/stats/types';
-import { getConsecutiveTrades } from '../../../../lib/db/api/stats/consecutive';
+import type { TStreakResult } from '../../utils/types';
+import { getConsecutiveTrades } from '../../utils/consecutive';
 import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
+import { getTrades } from '../../../../api/trades';
+import { useTheme } from '@mui/material';
 
-const transformData = (data: StreakResult) => {
-  const flatList = [];
-  const allKeys = [...Object.keys(data.win), ...Object.keys(data.loss)].map(Number);
-  const maxStreak = allKeys.length > 0 ? Math.max(...allKeys) : 0;
+const transformData = (data: TStreakResult) => {
+  let flatList = [];
+  let allKeys = [...Object.keys(data.win), ...Object.keys(data.loss)].map(Number);
 
-  for (let i = 1; i <= maxStreak; i++) {
-    const key = i.toString();
+  for (let i = 1; i <= Math.max(...allKeys); i++) {
+    let key = i.toString();
 
     if (data.win[key] || data.loss[key] || data.be[key]) {
       flatList.push({
@@ -31,10 +32,17 @@ const transformData = (data: StreakResult) => {
 type TConsecutiveTradesChartProps = {};
 
 const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
-  const { data } = useQuery({
-    queryKey: [QueryKey.STATS, QueryKey.STATS_CONSECUTIVE],
-    queryFn: () => getConsecutiveTrades(),
+  const theme = useTheme();
+
+  const trades = useQuery({
+    queryKey: [QueryKey.TRADES],
+    queryFn: () => getTrades({}),
   });
+
+  const chartData = (() => {
+    if (!Array.isArray(trades.data?.results)) return null;
+    return transformData(getConsecutiveTrades(trades.data.results));
+  })();
 
   const chartProps = useMemo(() => {
     return {
@@ -42,32 +50,34 @@ const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
         {
           ...DEFAULT_BAR_CHART_PROPS.xAxis,
           dataKey: 'count',
-          label: 'Consecutive trades count',
+          label: 'Consecutive count',
           tickLabelPlacement: 'middle',
         },
       ],
-      yAxis: [{ label: 'Trades count', width: 48 }],
+      yAxis: [{ label: 'Count', width: 48 }],
       margin: { left: 0, right: 0 },
       series: [
         {
           ...DEFAULT_BAR_CHART_PROPS.series,
           dataKey: 'win',
           label: 'Won trades',
+          color: theme.palette.success.main,
         },
         {
           ...DEFAULT_BAR_CHART_PROPS.series,
           dataKey: 'loss',
           label: 'Lost trades',
+          color: theme.palette.error.main,
         },
       ],
     } as BarChartProps;
-  }, [data]);
+  }, []);
 
-  if (!data) return null;
+  if (!chartData) return null;
 
   return (
     <Box sx={() => ({ width: '100%', height: '100%', display: 'flex' })}>
-      <BarChart borderRadius={2} dataset={transformData(data)} {...chartProps} />
+      <BarChart borderRadius={2} dataset={chartData} {...chartProps} />
     </Box>
   );
 };

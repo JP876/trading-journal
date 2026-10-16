@@ -17,7 +17,7 @@ export const TradeFormSchema = z.object({
   closeDate: z.date().optional(),
   closedBy: z.union([z.literal('tp/sl'), z.literal('user')]).optional(),
   closedAt: z.number().optional(),
-  tags: z.array(z.number()).length(10).optional(),
+  tags: z.array(z.number()).max(10).optional(),
   orderType: z
     .union([
       z.literal('market_order'),
