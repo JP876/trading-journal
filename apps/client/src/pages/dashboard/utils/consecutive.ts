@@ -4,9 +4,9 @@ import type { TStreakResult } from './types';
 const INITIAL_STREAKS: TStreakResult = { win: {}, loss: {}, be: {} };
 
 export const getConsecutiveTrades = (trades: Trade[]): TStreakResult => {
-  if (trades.length === 0) return INITIAL_STREAKS;
+  if (trades.length === 0) return structuredClone(INITIAL_STREAKS);
 
-  let streaks = INITIAL_STREAKS;
+  let streaks = structuredClone(INITIAL_STREAKS);
   let currentResult = trades[0].result;
   let currentCount = 1;
   let trade;

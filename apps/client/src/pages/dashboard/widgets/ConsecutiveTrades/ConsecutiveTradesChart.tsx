@@ -71,7 +71,7 @@ const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
         },
       ],
     } as BarChartProps;
-  }, []);
+  }, [theme]);
 
   if (!chartData) return null;
 

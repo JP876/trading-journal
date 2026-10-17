@@ -83,7 +83,7 @@ const TradeDurationsChart = ({ period }: TTradeDurationsChartProps) => {
           label: 'Periods',
           valueFormatter: (value: TTransformedDataItem['interval'], context: AxisValueFormatterContext) => {
             if (context.location === 'tooltip') {
-              return `Period: ${value.end} - ${value.start}`;
+              return `Period: ${value.start} - ${value.end}`;
             }
             return value.end;
           },
