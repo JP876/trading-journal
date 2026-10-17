@@ -1,4 +1,5 @@
-import type { Result } from '../../../types/trade';
+import type { Pair } from '../../../types/pair';
+import type { Result, Trade } from '../../../types/trade';
 
 export type TStreakMap = { [key: string]: number };
 export type TStreakResult = { [R in Result]: TStreakMap };
@@ -26,4 +27,11 @@ export type TDurationAnalysisValue = {
 
 export type TDurationAnalysis = {
   [key: string]: TDurationAnalysisValue;
+};
+
+export type TPairProfitability = {
+  pair: Pair;
+  trades: Trade[];
+  winRate: number;
+  winCount: number;
 };

@@ -51,7 +51,6 @@ const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
           ...DEFAULT_BAR_CHART_PROPS.xAxis,
           dataKey: 'count',
           label: 'Consecutive count',
-          tickLabelPlacement: 'middle',
         },
       ],
       yAxis: [{ label: 'Count', width: 48 }],
