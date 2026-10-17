@@ -156,10 +156,10 @@ const TradesPage = () => {
 
   return (
     <TableProviders>
-      <Paper sx={{ p: 3 }}>
-        <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
+      <Paper sx={{ p: 2 }}>
+        <Stack mb={4} direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>
-            <Typography variant="h5">Trades</Typography>
+            <Typography variant="h4">Trades</Typography>
 
             <Stack direction="row" alignItems="center" gap={1}>
               <IconButton

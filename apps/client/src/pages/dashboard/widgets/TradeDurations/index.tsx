@@ -22,7 +22,7 @@ const TradeDurations = () => {
   };
 
   return (
-    <Paper sx={(theme) => ({ padding: theme.spacing(2) })}>
+    <Paper sx={(theme) => ({ padding: theme.spacing(2), display: 'flex', flexDirection: 'column' })}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} gap={2}>
         <Stack>
           <Typography variant="h5">Trade durations</Typography>

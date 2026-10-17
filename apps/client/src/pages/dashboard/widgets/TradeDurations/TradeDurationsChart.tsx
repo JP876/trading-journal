@@ -1,6 +1,7 @@
 import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import { BarChart, type BarChartProps } from '@mui/x-charts/BarChart';
+import type { AxisValueFormatterContext } from '@mui/x-charts';
 import { useQuery } from '@tanstack/react-query';
 import { secondsToMinutes } from 'date-fns';
 
@@ -10,7 +11,6 @@ import type { TDurationAnalysis } from '../../utils/types';
 import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
 import type { TTradeDurationsChartProps, TTradeDurationsTooltipProps, TTransformedDataItem } from './types';
 import { getTrades } from '../../../../api/trades';
-import type { AxisValueFormatterContext } from '@mui/x-charts';
 
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides extends TTradeDurationsTooltipProps {}
@@ -89,8 +89,8 @@ const TradeDurationsChart = ({ period }: TTradeDurationsChartProps) => {
           },
         },
       ],
-      yAxis: [{ label: 'Trades count', width: 48 }],
-      margin: { left: 0, right: 0 },
+      yAxis: [{ label: 'Trades count', width: 42 }],
+      margin: 0,
       series: [
         {
           ...DEFAULT_BAR_CHART_PROPS.series,
