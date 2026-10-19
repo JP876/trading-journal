@@ -12,8 +12,5 @@
   "workspaces": [
     "apps/*"
   ],
-  "packageManager": "npm@11.1.0",
-  "dependencies": {
-    "papaparse": "^5.7.0"
-  }
+  "packageManager": "npm@11.1.0"
 }

@@ -25,7 +25,7 @@ export class TradingSession {
   @Column({ type: 'real', nullable: false })
   accountSize: number;
 
-  @Column({ type: 'string', nullable: false, default: CurrencyOptions.EUR })
+  @Column({ type: 'text', nullable: false, default: CurrencyOptions.EUR })
   currency: string;
 
   @OneToMany(() => Trade, (trade) => trade.tradingSession)
