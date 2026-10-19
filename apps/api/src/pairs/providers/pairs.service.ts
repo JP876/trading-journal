@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, RequestTimeoutException } from '@nestjs/
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { join } from 'path';
-import * as csv from 'csv-parser';
+import csv from 'csv-parser';
 import * as fs from 'fs';
 
 import { Pair } from '../pair.entitiy';

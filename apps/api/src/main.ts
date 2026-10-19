@@ -9,7 +9,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(helmet());
-  app.use(cookieParser(process.env.JWT_SECRET));
+  app.use(cookieParser.default(process.env.JWT_SECRET));
   app.setGlobalPrefix('api/v1');
   app.set('trust proxy', 'loopback');
 

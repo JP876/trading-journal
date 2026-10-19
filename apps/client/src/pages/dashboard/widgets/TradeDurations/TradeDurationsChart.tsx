@@ -89,7 +89,7 @@ const TradeDurationsChart = ({ period }: TTradeDurationsChartProps) => {
           },
         },
       ],
-      yAxis: [{ label: 'Trades count', width: 42 }],
+      yAxis: [{ label: 'Trades count', width: 48 }],
       margin: 0,
       series: [
         {

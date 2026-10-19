@@ -53,7 +53,7 @@ const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
           label: 'Consecutive count',
         },
       ],
-      yAxis: [{ label: 'Count', width: 42 }],
+      yAxis: [{ label: 'Count', width: 48 }],
       margin: 0,
       series: [
         {
