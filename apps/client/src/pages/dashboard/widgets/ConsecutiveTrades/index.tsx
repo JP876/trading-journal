@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import ConsecutiveTradesChart from './ConsecutiveTradesChart';
+import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 
 const ConsecutiveTrades = () => {
   return (
@@ -11,7 +12,9 @@ const ConsecutiveTrades = () => {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
         <Stack>
           <Typography variant="h5">Consecutive trades</Typography>
-          <Typography variant="caption">View how often your trades cluster into winning or losing streaks </Typography>
+          <ClampedTextContainer variant="caption">
+            View how often your trades cluster into winning or losing streaks
+          </ClampedTextContainer>
         </Stack>
       </Stack>
 

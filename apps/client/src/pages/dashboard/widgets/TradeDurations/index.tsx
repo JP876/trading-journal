@@ -9,6 +9,7 @@ import { memo, useId, useState } from 'react';
 
 import { increasingRange } from '../../../../lib/utils';
 import TradeDurationsChart from './TradeDurationsChart';
+import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 
 const options = increasingRange(10, 20, 2);
 
@@ -26,9 +27,9 @@ const TradeDurations = () => {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} gap={2}>
         <Stack>
           <Typography variant="h5">Trade durations</Typography>
-          <Typography variant="caption" sx={() => ({ textWrap: 'pretty' })}>
+          <ClampedTextContainer variant="caption">
             Your quickest profit. This is the ideal duration for your winning strategy.
-          </Typography>
+          </ClampedTextContainer>
         </Stack>
 
         <FormControl sx={{ width: '6.4rem' }} size="small">

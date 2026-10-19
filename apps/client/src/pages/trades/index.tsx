@@ -26,6 +26,7 @@ import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
+import UploadTrades from './UploadTrades';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
@@ -180,6 +181,7 @@ const TradesPage = () => {
             </Stack>
           </Stack>
           <Stack direction="row" alignItems="center" gap={2}>
+            <UploadTrades />
             <IconButton
               size="small"
               aria-label="trades-settings-button"

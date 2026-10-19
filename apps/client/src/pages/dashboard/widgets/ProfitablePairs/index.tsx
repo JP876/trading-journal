@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { memo } from 'react';
 
 import ProfitablePairsChart from './ProfitablePairsChart';
+import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 
 const ProfitablePairs = () => {
   return (
@@ -11,7 +12,9 @@ const ProfitablePairs = () => {
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
         <Stack>
           <Typography variant="h5">Most Profitable pairs</Typography>
-          <Typography variant="caption">See which trading pairs generated the highest net profit</Typography>
+          <ClampedTextContainer variant="caption">
+            See which trading pairs generated the highest net profit
+          </ClampedTextContainer>
         </Stack>
       </Stack>
 

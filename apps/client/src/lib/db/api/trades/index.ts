@@ -81,6 +81,13 @@ export const addTradeDB = async (trade: TradeFormSchemaType & { tradingSessionId
   });
 };
 
+export const addMultipleTradesDB = async (trades: Omit<Trade, 'id'>[]) => {
+  const lastTrade = await db.trades.orderBy('id').last();
+  const data = trades.map((t, index) => ({ ...t, id: index + 1 + (lastTrade?.id ?? 0) }));
+
+  return db.trades.bulkAdd(data);
+};
+
 export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   count: 100,
   pairs: [],
@@ -107,7 +114,6 @@ const shuffleArray = <T>(arr: T[]): T[] => {
 };
 
 export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tradingSessionId: number }) => {
-  const lastTrade = await db.trades.orderBy('id').last();
   const tags = await db.tags.toArray();
   const count = options?.count || ADD_RANDOM_TRADES_OPTIONS.count;
 
@@ -141,7 +147,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     tradeDuration = options.tradeDuration;
   }
 
-  const trades: Trade[] = Array.from({ length: count }).map((_, index) => {
+  const trades: Omit<Trade, 'id'>[] = Array.from({ length: count }).map((_, index) => {
     let openDate = addMilliseconds(startDate, interval * index);
     let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
@@ -151,7 +157,6 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
         : getRandomInt(1, 10);
 
     return {
-      id: index + 1 + (lastTrade?.id ?? 0),
       tags: tags.length < 2 ? [] : getRandomTagIdsDB(tags),
       tradingSession: options.tradingSessionId,
       pair: pair,
@@ -179,7 +184,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     };
   });
 
-  return db.trades.bulkAdd(trades);
+  return addMultipleTradesDB(trades);
 };
 
 export const editTradeDB = async (id: number, trade: TradeFormSchemaType & { tradingSessionId: number }) => {
