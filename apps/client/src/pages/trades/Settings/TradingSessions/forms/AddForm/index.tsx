@@ -33,7 +33,12 @@ const AddTradingSessionForm = () => {
 
   const form = useForm<TradingSessionFormSchemaType>({
     resolver: standardSchemaResolver(TradingSessionFormSchema),
-    defaultValues: { title: '', description: '', isMain: false },
+    defaultValues: {
+      title: '',
+      description: '',
+      isMain: false,
+      accountSize: 10_000,
+    },
   });
 
   const onSubmit = (data: TradingSessionFormSchemaType) => {

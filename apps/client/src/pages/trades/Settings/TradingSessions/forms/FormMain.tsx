@@ -26,13 +26,18 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
       <Stack direction="row" alignItems="center" gap={2}>
         <Controller name="title" control={form.control} render={(props) => <TextInput label="Title *" {...props} />} />
         <Controller
+          name="accountSize"
+          control={form.control}
+          render={(props) => <TextInput label="Account size" {...props} inputProps={{ type: 'number' }} />}
+        />
+        <Controller
           name="isMain"
           control={form.control}
           render={({ field, fieldState, formState }) => {
             return (
               <CheckboxInput
                 formControlProps={{
-                  sx: { flex: '0 0 30%' },
+                  sx: { flex: '0 0 28%' },
                 }}
                 checkboxProps={{
                   disabled: !!formState.defaultValues?.isMain,

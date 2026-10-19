@@ -89,10 +89,12 @@ export class TradingSessionsService {
 
     session.title = updateSession.title ?? session.title;
     session.description = updateSession.description ?? session.description;
+    session.accountSize = updateSession.accountSize ?? session.accountSize;
     session.isMain = updateSession.isMain ?? session.isMain;
     session.defaultStopLoss = updateSession.defaultStopLoss ?? session.defaultStopLoss;
     session.defaultTakeProfit = updateSession.defaultTakeProfit ?? session.defaultTakeProfit;
     session.defaultOpenDate = updateSession.defaultOpenDate ?? session.defaultOpenDate;
+    session.defaultPositionSize = updateSession.defaultPositionSize ?? session.defaultPositionSize;
 
     if (updateSession.defaultPairId) {
       session.defaultPair = await this.pairsProvider.findOneBy({ id: updateSession.defaultPairId });

@@ -47,6 +47,10 @@ export class CreateTradingSessionDto {
 
   @IsNumber()
   @IsOptional()
+  defaultPositionSize?: number;
+
+  @IsNumber()
+  @IsOptional()
   defaultStopLoss?: number;
 
   @IsNumber()

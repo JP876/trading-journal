@@ -35,6 +35,9 @@ export class TradingSession {
   defaultPair?: Pair;
 
   @Column({ type: 'real', nullable: true })
+  defaultPositionSize: number | null;
+
+  @Column({ type: 'real', nullable: true })
   defaultStopLoss: number | null;
 
   @Column({ type: 'real', nullable: true })
