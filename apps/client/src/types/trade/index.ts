@@ -29,6 +29,7 @@ export const TradeFormSchema = z.object({
     .optional(),
   comment: z.string().optional(),
   entryPrice: z.number().optional(),
+  closePrice: z.number().optional(),
   stopLossPrice: z.number().optional(),
   takeProfitPrice: z.number().optional(),
   profit: z.number().positive().optional(),

@@ -64,6 +64,19 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
       <Stack direction="row" alignItems="center" gap={2}>
         <Controller
+          name="entryPrice"
+          control={form.control}
+          render={(props) => <TextInput label="Entry price " {...props} inputProps={{ type: 'number' }} />}
+        />
+        <Controller
+          name="closePrice"
+          control={form.control}
+          render={(props) => <TextInput label="Close price" {...props} inputProps={{ type: 'number' }} />}
+        />
+      </Stack>
+
+      <Stack direction="row" alignItems="center" gap={2}>
+        <Controller
           name="direction"
           control={form.control}
           render={(props) => <SelectInput options={directonOptions} label="Direction *" {...props} />}

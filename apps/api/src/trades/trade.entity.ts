@@ -72,6 +72,9 @@ export class Trade {
   entryPrice: number | null;
 
   @Column({ type: 'real', nullable: true })
+  closePrice: number | null;
+
+  @Column({ type: 'real', nullable: true })
   profit: number | null;
 
   @CreateDateColumn({ type: 'datetime' })

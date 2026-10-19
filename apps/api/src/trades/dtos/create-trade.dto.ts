@@ -92,4 +92,8 @@ export class CreateTradeDto {
   @IsNumber()
   @IsOptional()
   entryPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
+  closePrice?: number;
 }

@@ -192,6 +192,8 @@ export class TradesService {
     trade.takeProfit = updateTradeDto.takeProfit ?? trade.takeProfit;
     trade.result = updateTradeDto.result ?? trade.result;
     trade.direction = updateTradeDto.direction ?? trade.direction;
+    trade.entryPrice = updateTradeDto.entryPrice ?? trade.entryPrice;
+    trade.closePrice = updateTradeDto.closePrice ?? trade.closePrice;
 
     if (updateTradeDto.pairId) {
       trade.pair = await this.pairsService.findOneBy({ id: updateTradeDto.pairId });
