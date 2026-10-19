@@ -29,6 +29,9 @@ export class Trade {
   @JoinTable()
   tags?: Tag[];
 
+  @Column({ type: 'real', nullable: false })
+  positionSize: number;
+
   @Column({ type: 'text', nullable: false })
   result: ResultOptions;
 
@@ -39,7 +42,13 @@ export class Trade {
   stopLoss: number | null;
 
   @Column({ type: 'real', nullable: true })
+  stopLossPrice: number | null;
+
+  @Column({ type: 'real', nullable: true })
   takeProfit: number | null;
+
+  @Column({ type: 'real', nullable: true })
+  takeProfitPrice: number | null;
 
   @Column({ type: 'datetime', nullable: true })
   openDate: Date | null;
@@ -61,6 +70,9 @@ export class Trade {
 
   @Column({ type: 'real', nullable: true })
   entryPrice: number | null;
+
+  @Column({ type: 'real', nullable: true })
+  profit: number | null;
 
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date;
