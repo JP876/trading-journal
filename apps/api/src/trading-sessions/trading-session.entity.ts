@@ -3,6 +3,7 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, Prima
 import { Trade } from 'src/trades/trade.entity';
 import { User } from 'src/users/user.entity';
 import { Pair } from 'src/pairs/pair.entitiy';
+import { CurrencyOptions } from './enums';
 
 @Entity('trading-sessions')
 export class TradingSession {
@@ -20,6 +21,12 @@ export class TradingSession {
 
   @ManyToOne(() => User, (user) => user.tradingSessions, { onDelete: 'CASCADE' })
   user: User;
+
+  @Column({ type: 'real', nullable: false })
+  accountSize: number;
+
+  @Column({ type: 'string', nullable: false, default: CurrencyOptions.EUR })
+  currency: string;
 
   @OneToMany(() => Trade, (trade) => trade.tradingSession)
   trades?: Trade[];

@@ -8,13 +8,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Repository } from 'typeorm';
+import { format } from 'date-fns';
 
-import { User } from '../user.entity';
-import { CreateUserDto } from '../dtos/create-user.dto';
-import withCatch from 'src/utils/withCatch';
 import { HashingProvider } from 'src/auth/providers/hashing.provider';
 import { TradingSessionsService } from 'src/trading-sessions/providers/trading-sessions.service';
-import { format } from 'date-fns';
+import withCatch from 'src/utils/withCatch';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { User } from '../user.entity';
 
 @Injectable()
 export class UsersService {
@@ -71,6 +71,7 @@ export class UsersService {
 
     await this.tradingSessionsService.create(user, {
       title: `Initial session ${format(new Date(), 'MM/yy')}`,
+      accountSize: 10_000,
       isMain: 1,
     });
 

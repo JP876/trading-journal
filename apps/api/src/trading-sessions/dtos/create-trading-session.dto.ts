@@ -1,5 +1,6 @@
 import {
   IsDate,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -10,6 +11,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { CurrencyOptions } from '../enums';
 
 export class CreateTradingSessionDto {
   @IsString()
@@ -22,6 +24,15 @@ export class CreateTradingSessionDto {
   @IsOptional()
   @MaxLength(400)
   description?: string;
+
+  @IsEnum(CurrencyOptions)
+  @IsOptional()
+  currency?: CurrencyOptions;
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsNumber()
+  accountSize: number;
 
   @IsInt()
   @IsOptional()

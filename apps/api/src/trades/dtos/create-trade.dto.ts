@@ -26,6 +26,10 @@ export class CreateTradeDto {
   @IsNotEmpty()
   result: ResultOptions;
 
+  @IsNumber()
+  @IsNotEmpty()
+  positionSize: number;
+
   @IsEnum(DirectionOptions)
   @IsNotEmpty()
   direction: DirectionOptions;
@@ -36,7 +40,15 @@ export class CreateTradeDto {
 
   @IsNumber()
   @IsOptional()
+  stopLossPrice?: number;
+
+  @IsNumber()
+  @IsOptional()
   takeProfit?: number;
+
+  @IsNumber()
+  @IsOptional()
+  takeProfitPrice?: number;
 
   @IsDate()
   @IsOptional()
@@ -72,6 +84,10 @@ export class CreateTradeDto {
   @IsString()
   @IsOptional()
   comment?: string;
+
+  @IsNumber()
+  @IsOptional()
+  profit?: number;
 
   @IsNumber()
   @IsOptional()
