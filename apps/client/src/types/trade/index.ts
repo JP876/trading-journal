@@ -29,6 +29,10 @@ export const TradeFormSchema = z.object({
     .optional(),
   comment: z.string().optional(),
   entryPrice: z.number().optional(),
+  stopLossPrice: z.number().optional(),
+  takeProfitPrice: z.number().optional(),
+  profit: z.number().positive().optional(),
+  positionSize: z.number().positive(),
 });
 
 export type TradeFormSchemaType = z.infer<typeof TradeFormSchema>;
@@ -46,6 +50,7 @@ export const AddRandomTradesFormSchema = z.object({
   tradeDuration: z.array(z.number().positive()).nonempty().optional(),
   winPercentage: z.number().positive().max(100).optional(),
   longPercentage: z.number().positive().max(100).optional(),
+  positionSize: z.array(z.number().positive()).nonempty().optional(),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
 });

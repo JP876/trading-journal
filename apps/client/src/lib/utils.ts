@@ -1,5 +1,7 @@
-export const getRandomInt = (min: number = 0, max: number = 1) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+export const getRandomInt = (min: number = 0, max: number = 1, roundTo?: number) => {
+  let num = Math.floor(Math.random() * (max - min + 1)) + min;
+  if (roundTo) num = Math.round(num / roundTo) * roundTo;
+  return num;
 };
 
 export const getRandomItem = <T>(arr: T[]): T | null => {
@@ -7,8 +9,10 @@ export const getRandomItem = <T>(arr: T[]): T | null => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-export const getRandomFloat = (min: number = 0, max: number = 1) => {
-  return Math.random() * (max - min) + min;
+export const getRandomFloat = (min: number = 0, max: number = 1, roundTo?: number) => {
+  let num = Math.random() * (max - min) + min;
+  if (roundTo) num = Math.round(num / roundTo) * roundTo;
+  return num;
 };
 
 export const getRandomNumArray = (length: number, min?: number, max?: number) => {

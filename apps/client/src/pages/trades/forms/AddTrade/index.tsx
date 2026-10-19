@@ -42,6 +42,7 @@ const AddTradeForm = () => {
       openDate: mainSession?.defaultOpenDate ? new Date(mainSession.defaultOpenDate) : undefined,
       takeProfit: mainSession?.defaultTakeProfit,
       stopLoss: mainSession?.defaultStopLoss,
+      positionSize: 10_000,
     },
   });
 

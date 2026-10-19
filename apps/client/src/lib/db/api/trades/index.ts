@@ -94,6 +94,7 @@ export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   stopLoss: [0, 20],
   takeProfit: [0, 20],
   tradeDuration: [1, 60],
+  positionSize: [1, 10_000],
   winPercentage: 50,
   longPercentage: 50,
   startDate: subMonths(new Date(), 6),
@@ -147,6 +148,11 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     tradeDuration = options.tradeDuration;
   }
 
+  let positionSize = ADD_RANDOM_TRADES_OPTIONS.positionSize;
+  if (Array.isArray(options?.positionSize) && options?.positionSize.length === 2) {
+    positionSize = options.positionSize;
+  }
+
   const trades: Omit<Trade, 'id'>[] = Array.from({ length: count }).map((_, index) => {
     let openDate = addMilliseconds(startDate, interval * index);
     let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
@@ -162,9 +168,10 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
       pair: pair,
       result: resultArr[index],
       direction: Math.random() >= directionPercentage / 100 ? 'long' : 'short',
-      stopLoss: getRandomFloat(stopLoss[0], stopLoss[1]),
-      takeProfit: getRandomFloat(takeProfit[0], takeProfit[1]),
+      stopLoss: +getRandomFloat(stopLoss[0], stopLoss[1]).toFixed(2),
+      takeProfit: +getRandomFloat(takeProfit[0], takeProfit[1]).toFixed(2),
       closedBy: 'tp/sl',
+      positionSize: getRandomInt(positionSize[0], positionSize[1], 100),
       openDate: format(
         clamp(openDate, {
           start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,
