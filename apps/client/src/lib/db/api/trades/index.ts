@@ -81,9 +81,14 @@ export const addTradeDB = async (trade: TradeFormSchemaType & { tradingSessionId
   });
 };
 
-export const addMultipleTradesDB = async (trades: Omit<Trade, 'id'>[]) => {
+export const addMultipleTradesDB = async (trades: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[]) => {
   const lastTrade = await db.trades.orderBy('id').last();
-  const data = trades.map((t, index) => ({ ...t, id: index + 1 + (lastTrade?.id ?? 0) }));
+  const data = trades.map((t, index) => ({
+    ...t,
+    id: index + 1 + (lastTrade?.id ?? 0),
+    createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+  }));
 
   return db.trades.bulkAdd(data);
 };
@@ -153,7 +158,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     positionSize = options.positionSize;
   }
 
-  const trades: Omit<Trade, 'id'>[] = Array.from({ length: count }).map((_, index) => {
+  const trades: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[] = Array.from({ length: count }).map((_, index) => {
     let openDate = addMilliseconds(startDate, interval * index);
     let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
@@ -186,8 +191,6 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
         }),
         'yyyy-MM-dd HH:mm'
       ),
-      createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
-      updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     };
   });
 

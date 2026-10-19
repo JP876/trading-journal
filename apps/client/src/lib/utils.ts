@@ -88,3 +88,21 @@ export const increasingRange = (min: number, max: number, step: number): number[
 
   return values;
 };
+
+export type TFormatToPips = {
+  pipSize?: number;
+  pair?: string;
+  fraction?: number;
+};
+
+export const formatToPips = (firstPrice: number, secondPrice: number, options?: TFormatToPips): number => {
+  let pipSize = 0.0001;
+
+  if (options?.pipSize) {
+    pipSize = options.pipSize;
+  } else if (options?.pair && (options.pair.includes('JPY') || options.pair.includes('jpy'))) {
+    pipSize = 0.01;
+  }
+
+  return +(Math.abs(firstPrice - secondPrice) / pipSize).toFixed(options?.fraction || 2);
+};
