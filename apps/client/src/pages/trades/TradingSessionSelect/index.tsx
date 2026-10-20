@@ -10,7 +10,11 @@ import useSnackbar from '../../../hooks/useSnackbar';
 import { editTradingSession, getTradingSessions } from '../../../api/tradingSessions';
 import { QueryKey } from '../../../enums';
 
-const TradingSessionSelect = () => {
+export type TTradingSessionSelectProps = {
+  onSuccess?: () => void;
+};
+
+const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
   const labelId = useId();
   const queryClient = useQueryClient();
 
@@ -27,6 +31,7 @@ const TradingSessionSelect = () => {
     mutationFn: (id: number) => editTradingSession(id, { isMain: true }),
     onSuccess: async () => {
       openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
+      if (onSuccess) onSuccess();
       await Promise.all([
         queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
         queryClient.refetchQueries({ queryKey: [QueryKey.TRADES] }),

@@ -2,18 +2,21 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-import ConsecutiveTrades from './widgets/ConsecutiveTrades';
-import TradeDurations from './widgets/TradeDurations';
-import ProfitablePairs from './widgets/ProfitablePairs';
 import TradingSessionSelect from '../trades/TradingSessionSelect';
+import useResetWidgets from './hooks/useResetWidgets';
+import ConsecutiveTrades from './widgets/ConsecutiveTrades';
+import ProfitablePairs from './widgets/ProfitablePairs';
+import TradeDurations from './widgets/TradeDurations';
 
 const DashboardMain = () => {
+  const [handleReset] = useResetWidgets();
+
   return (
     <Box sx={(theme) => ({ padding: theme.spacing(2) })}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
         <Typography variant="h4">Dashboard</Typography>
         <Stack direction="row" alignItems="center" gap={2}>
-          <TradingSessionSelect />
+          <TradingSessionSelect onSuccess={handleReset} />
         </Stack>
       </Stack>
 

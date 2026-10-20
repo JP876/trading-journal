@@ -1,10 +1,6 @@
 import type { SeriesItem } from '@mui/x-charts';
 import type { TDurationAnalysisValue } from '../../utils/types';
 
-export type TTradeDurationsChartProps = {
-  period?: number;
-};
-
 export type TTradeDurationsTooltipContentProps = {
   data: TTransformedDataItem;
   title: string;
