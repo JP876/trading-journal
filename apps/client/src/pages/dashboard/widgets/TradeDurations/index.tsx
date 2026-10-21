@@ -3,16 +3,14 @@ import FormControl from '@mui/material/FormControl';
 import IconButton from '@mui/material/IconButton';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { Provider, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useEffect, useId } from 'react';
 
-import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 import { increasingRange } from '../../../../lib/utils';
+import WidgetContainer from '../WidgetContainer';
 import {
   handlePreviousPeriodAtom,
   periodsAtom,
@@ -69,28 +67,6 @@ const PeriodSelect = () => {
   );
 };
 
-const TradeDurationsMain = () => {
-  return (
-    <Paper sx={(theme) => ({ padding: theme.spacing(2), display: 'flex', flexDirection: 'column' })}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2} gap={2}>
-        <Stack>
-          <Typography variant="h5">Trade durations</Typography>
-          <ClampedTextContainer variant="caption">
-            Your quickest profit. This is the ideal duration for your winning strategy.
-          </ClampedTextContainer>
-        </Stack>
-
-        <Stack direction="row" alignItems="center" gap={1}>
-          <ResetButton />
-          <PeriodSelect />
-        </Stack>
-      </Stack>
-
-      <TradeDurationsChart />
-    </Paper>
-  );
-};
-
 const TradeDurations = () => {
   const resetTradeDurations = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
 
@@ -100,7 +76,18 @@ const TradeDurations = () => {
 
   return (
     <Provider store={tradeDurationsChartStore}>
-      <TradeDurationsMain />
+      <WidgetContainer
+        title="Trade durations"
+        description="Your quickest profit. This is the ideal duration for your winning strategy."
+        renderActions={() => (
+          <Stack direction="row" alignItems="center" gap={1}>
+            <ResetButton />
+            <PeriodSelect />
+          </Stack>
+        )}
+      >
+        <TradeDurationsChart />
+      </WidgetContainer>
     </Provider>
   );
 };

@@ -7,6 +7,7 @@ import useResetWidgets from './hooks/useResetWidgets';
 import ConsecutiveTrades from './widgets/ConsecutiveTrades';
 import ProfitablePairs from './widgets/ProfitablePairs';
 import TradeDurations from './widgets/TradeDurations';
+import Performance from './widgets/Performance';
 
 const DashboardMain = () => {
   const [handleReset] = useResetWidgets();
@@ -28,6 +29,7 @@ const DashboardMain = () => {
           gap: theme.spacing(2),
         })}
       >
+        <Performance />
         <ProfitablePairs />
         <ConsecutiveTrades />
         <TradeDurations />

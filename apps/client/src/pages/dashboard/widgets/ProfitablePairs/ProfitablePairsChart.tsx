@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-
 import {
   BarChart,
   type AxisValueFormatterContext,
@@ -9,6 +8,7 @@ import {
   type BarItem,
   type BarLabelContext,
 } from '@mui/x-charts';
+
 import { getPairs } from '../../../../api/pairs';
 import { getTrades } from '../../../../api/trades';
 import { QueryKey } from '../../../../enums';
