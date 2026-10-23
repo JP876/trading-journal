@@ -2,14 +2,13 @@ import { useTheme } from '@mui/material';
 import type { AxisValueFormatterContext, ChartsAxisData } from '@mui/x-charts';
 import { BarChart, barClasses, type BarChartProps } from '@mui/x-charts/BarChart';
 import { useQuery } from '@tanstack/react-query';
-import { secondsToMinutes } from 'date-fns';
 import { useAtomValue, useSetAtom } from 'jotai';
 
 import { getTrades } from '../../../../api/trades';
 import LoadingContainer from '../../../../components/feedback/LoadingContainer';
 import { QueryKey } from '../../../../enums';
 import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
-import { getTradeDurationAnalysis, getTradeDurationInfo } from '../../utils/duration';
+import { formatSeconds, getTradeDurationAnalysis, getTradeDurationInfo } from '../../utils/duration';
 import type { TDurationAnalysis } from '../../utils/types';
 import { periodsAtom, periodsCountAtom, tradeDurationsChartStore, updatePeriodsAtom } from './atoms';
 import type { TTradeDurationsTooltipProps, TTransformedDataItem } from './types';
@@ -17,20 +16,6 @@ import type { TTradeDurationsTooltipProps, TTransformedDataItem } from './types'
 declare module '@mui/x-charts' {
   interface TooltipPropsOverrides extends TTradeDurationsTooltipProps {}
 }
-
-const formatMinutes = (value: number): string => {
-  if (!value) return value.toString();
-
-  let days = Math.floor(value / (60 * 24));
-  let hours = Math.floor(value / 60);
-
-  if (!hours) return `${value}m`;
-
-  if (days) return `${days}d${hours}h`;
-  if (hours) return `${hours}h${value % 60}m`;
-
-  return value.toString();
-};
 
 const transformData = (analysis: TDurationAnalysis, shortest: number = 0) => {
   const intervals = Object.keys(analysis);
@@ -40,8 +25,8 @@ const transformData = (analysis: TDurationAnalysis, shortest: number = 0) => {
     data = analysis[curr];
 
     startSec = +(intervals[index - 1] ?? shortest);
-    start = formatMinutes(secondsToMinutes(startSec));
-    end = formatMinutes(secondsToMinutes(+curr));
+    start = formatSeconds(startSec, { excludeSeconds: true });
+    end = formatSeconds(+curr, { excludeSeconds: true });
 
     return [
       ...prev,

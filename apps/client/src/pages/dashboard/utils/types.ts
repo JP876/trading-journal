@@ -35,3 +35,41 @@ export type TPairProfitability = {
   winRate: number;
   winCount: number;
 };
+
+export type TStatistic = {
+  all: number | null;
+  long: number | null;
+  short: number | null;
+};
+
+export type TStatisticsReturn = {
+  daysProcessed: number;
+  monthsProcessed: number;
+  avgTradesPerDay: number;
+  returnPercentage: number;
+  avgProft: TStatistic;
+  avgLoss: TStatistic;
+  tradesCount: TStatistic;
+  lossTrades: TStatistic;
+  winTrades: TStatistic;
+  winRate: TStatistic;
+  shortestLostTrades: TStatistic;
+  shortestWonTrades: TStatistic;
+  longestLostTrades: TStatistic;
+  longestWonTrades: TStatistic;
+};
+
+export type TStatisticsOptions = {
+  fraction?: number;
+};
+
+export type TPerformanceReturn = {
+  pl: number;
+  plPercentage: number;
+  endDate: Date;
+};
+
+export abstract class Statistic {
+  constructor() {}
+  abstract update(trade: Trade | null, info?: any): void;
+}

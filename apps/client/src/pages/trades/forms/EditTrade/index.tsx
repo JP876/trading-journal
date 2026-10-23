@@ -1,15 +1,15 @@
-import { useForm } from 'react-hook-form';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 
-import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from '../../../../types/trade';
-import TradeForm from '../TradeForm';
+import { editTrade } from '../../../../api/trades';
+import { QueryKey } from '../../../../enums';
+import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
-import { editTrade } from '../../../../api/trades';
-import type { TradingSessionsResult } from '../../../../types/tradingSessions';
+import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
-import { QueryKey } from '../../../../enums';
+import TradeForm from '../TradeForm';
 
 type EditTradeFormProps = {
   trade: Trade;
@@ -21,8 +21,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
-  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.results?.find((el) => el?.isMain);
+  const [mainSession] = useMainSession();
 
   const mutation = useMutation({
     mutationFn: (data: EditTradeFormSchemaType) => {

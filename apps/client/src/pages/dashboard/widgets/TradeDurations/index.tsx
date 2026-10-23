@@ -10,7 +10,7 @@ import { Provider, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useEffect, useId } from 'react';
 
 import { increasingRange } from '../../../../lib/utils';
-import WidgetContainer from '../WidgetContainer';
+import WidgetContainer, { type TWidgetContainerProps } from '../WidgetContainer';
 import {
   handlePreviousPeriodAtom,
   periodsAtom,
@@ -67,7 +67,11 @@ const PeriodSelect = () => {
   );
 };
 
-const TradeDurations = () => {
+type TTradeDurationsProps = {
+  paperProps?: TWidgetContainerProps['paperProps'];
+};
+
+const TradeDurations = ({ paperProps }: TTradeDurationsProps) => {
   const resetTradeDurations = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
 
   useEffect(() => {
@@ -79,6 +83,7 @@ const TradeDurations = () => {
       <WidgetContainer
         title="Trade durations"
         description="Your quickest profit. This is the ideal duration for your winning strategy."
+        paperProps={paperProps}
         renderActions={() => (
           <Stack direction="row" alignItems="center" gap={1}>
             <ResetButton />
@@ -92,4 +97,4 @@ const TradeDurations = () => {
   );
 };
 
-export default memo(TradeDurations);
+export default TradeDurations;

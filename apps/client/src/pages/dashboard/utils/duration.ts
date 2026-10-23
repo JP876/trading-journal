@@ -81,9 +81,6 @@ export const getTradeDurationAnalysis = (trades: Trade[], options?: TTradeDurati
     longest = longest || info.longest.duration;
   }
 
-  // Group trades by intervals. If count is more than 10, group them again with decreased intervals
-  // Intervals are in seconds, start from longest trade and end with shortest or 1min
-
   // Add 10 to longest duration so that it includes longest trades into finalData
   const intervals = [...new Set(decreasingLinearRange(longest + 10, shortest || 60, options?.maxIntervals || 10))];
 
@@ -99,4 +96,20 @@ export const getTradeDurationAnalysis = (trades: Trade[], options?: TTradeDurati
   }
 
   return finalData;
+};
+
+export const formatSeconds = (value: number, options?: { excludeSeconds: boolean }): string => {
+  if (!value) return value.toString();
+
+  let mins = Math.floor(value / 60);
+  let days = Math.floor(mins / (60 * 24));
+  let hours = Math.floor(mins / 60);
+
+  if (!mins && !options?.excludeSeconds) return `${value}s`;
+  if (!hours) return `${mins}m` + (options?.excludeSeconds ? '' : `${value % 60}s`);
+
+  if (days) return `${days}d${hours}h`;
+  if (hours) return `${hours}h${mins % 60}m`;
+
+  return value.toString();
 };

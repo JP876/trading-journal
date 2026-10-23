@@ -106,3 +106,8 @@ export const formatToPips = (firstPrice: number, secondPrice: number, options?: 
 
   return +(Math.abs(firstPrice - secondPrice) / pipSize).toFixed(options?.fraction || 2);
 };
+
+export const formatCurrency = (value?: number, options?: Intl.NumberFormatOptions) => {
+  if (!value) return '-';
+  return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', ...(options || {}) }).format(value);
+};

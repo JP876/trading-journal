@@ -1,24 +1,24 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { Stack } from '@mui/material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
-import { Stack } from '@mui/material';
 
+import { minutesToHours } from 'date-fns';
+import DateTimeInput from '../../../../components/form/DateTimeInput';
 import FormMain from '../../../../components/form/FormMain';
 import SelectInput from '../../../../components/form/SelectInput';
+import SliderInput from '../../../../components/form/SliderInput';
+import SubmitButton from '../../../../components/form/SubmitButton';
 import TextInput from '../../../../components/form/TextInput';
 import { QueryKey } from '../../../../enums';
+import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from '../../../../lib/db/api/trades';
 import { AddRandomTradesFormSchema, type AddRandomTradesFormType } from '../../../../types/trade';
-import type { TradingSessionsResult } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
 import usePairsOptions from '../../hooks/usePairsOptions';
-import DateTimeInput from '../../../../components/form/DateTimeInput';
 import CloseDateInput from '../CloseDateInput';
-import SubmitButton from '../../../../components/form/SubmitButton';
-import SliderInput from '../../../../components/form/SliderInput';
-import { minutesToHours } from 'date-fns';
 
 const getMarks = (length: number = 200, step: number = 20) => {
   return Array.from({ length: length / 10 }).map((_, i) => ({ value: i * step, label: i * step }));
@@ -29,9 +29,7 @@ const AddRandomTradesForm = () => {
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
-
-  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.results?.find((el) => el?.isMain);
+  const [mainSession] = useMainSession();
 
   const pairsOptions = usePairsOptions();
 

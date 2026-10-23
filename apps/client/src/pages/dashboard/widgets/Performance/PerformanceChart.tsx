@@ -1,53 +1,22 @@
-import { LineChart, type AxisValueFormatterContext, type LineChartProps } from '@mui/x-charts';
 import { useTheme } from '@mui/material';
+import { LineChart, type AxisValueFormatterContext, type LineChartProps } from '@mui/x-charts';
 import { useQuery } from '@tanstack/react-query';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
 
 import { getTrades } from '../../../../api/trades';
 import LoadingContainer from '../../../../components/feedback/LoadingContainer';
 import { QueryKey } from '../../../../enums';
-import { queryClient } from '../../../../lib/queryClient';
+import useMainSession from '../../../../hooks/useMainSession';
 import type { Trade } from '../../../../types/trade';
-import type { TradingSessionsResult } from '../../../../types/tradingSessions';
+import { getPerformance } from '../../utils/performance';
 
-type TPerformanceChartData = { pl: number; plPercentage: number; endDate: Date };
-
-const formatChartData = (trades: Trade[], accountSize: number): TPerformanceChartData[] => {
-  let startBalance = accountSize;
-  let firstTradeIndex = trades.findIndex((t) => t.closeDate);
-
-  let finalData: TPerformanceChartData[] = [];
-  finalData.push({
-    pl: accountSize,
-    plPercentage: 0,
-    endDate: subDays(new Date(trades[firstTradeIndex].closeDate!), 1),
-  });
-
-  for (let i = firstTradeIndex; i < trades.length; i++) {
-    let trade = trades[i];
-    if (!trade?.profit || !trade?.closeDate) {
-      continue;
-    }
-
-    let nextPl = startBalance + trade.profit;
-    let plPercentage = nextPl / accountSize - 1;
-
-    finalData.push({
-      pl: nextPl,
-      plPercentage: +plPercentage.toFixed(4),
-      endDate: new Date(trade.closeDate),
-    });
-    startBalance = nextPl;
-  }
-
-  return finalData;
+const formatChartData = (trades: Trade[], accountSize: number) => {
+  return getPerformance(trades, accountSize);
 };
 
 const PerformanceChart = () => {
   const theme = useTheme();
-
-  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.results?.find((el) => el?.isMain);
+  const [mainSession] = useMainSession();
 
   const tradesQuery = useQuery({
     queryKey: [QueryKey.TRADES],
