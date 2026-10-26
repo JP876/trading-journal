@@ -17,15 +17,15 @@ class PerformanceStatistic implements Statistic {
   update(trade: Trade | null, count: CountTradesStatistic): void {
     if (!trade || typeof trade.profit !== 'number') {
       if (this.avgProft.long && this.avgProft.short) {
-        this.avgProft.all = (this.avgProft.long + this.avgProft.short) / (count.trades.all ?? 1);
-        this.avgProft.long = this.avgProft.long / (count.trades.long || 1);
-        this.avgProft.short = this.avgProft.short / (count.trades.short || 1);
+        this.avgProft.all = (this.avgProft.long + this.avgProft.short) / (count.win.all ?? 1);
+        this.avgProft.long = this.avgProft.long / (count.win.long || 1);
+        this.avgProft.short = this.avgProft.short / (count.win.short || 1);
       }
 
       if (this.avgLoss.long && this.avgLoss.short) {
-        this.avgLoss.all = (this.avgLoss.long + this.avgLoss.short) / (count.trades.all ?? 1);
-        this.avgLoss.long = this.avgLoss.long / (count.trades.long || 1);
-        this.avgLoss.short = this.avgLoss.short / (count.trades.short || 1);
+        this.avgLoss.all = (this.avgLoss.long + this.avgLoss.short) / (count.loss.all ?? 1);
+        this.avgLoss.long = this.avgLoss.long / (count.loss.long || 1);
+        this.avgLoss.short = this.avgLoss.short / (count.loss.short || 1);
       }
 
       if (this.finalProft) {

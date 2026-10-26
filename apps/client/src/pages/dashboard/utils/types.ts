@@ -71,5 +71,5 @@ export type TPerformanceReturn = {
 
 export abstract class Statistic {
   constructor() {}
-  abstract update(trade: Trade | null, info?: any): void;
+  abstract update(trade: Trade | null, ...args: any[]): void;
 }
