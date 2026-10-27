@@ -1,12 +1,15 @@
 import CheckIcon from '@mui/icons-material/Check';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Provider, useAtom, useSetAtom } from 'jotai';
-import { useEffect, type ChangeEvent } from 'react';
+import IconButton from '@mui/material/IconButton';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Provider, useAtomValue, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 
-import UploadButton from '../../../components/UploadButton';
+import Dropzone from '../../../components/Dropzone';
+import { dropzoneStore, dzFilesAtom } from '../../../components/Dropzone/atoms';
 import { QueryKey } from '../../../enums';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { handleCSVFile } from '../../../lib/CSVFile';
@@ -16,9 +19,10 @@ import withCatch from '../../../lib/withCatch';
 import type { Pair } from '../../../types/pair';
 import type { Trade } from '../../../types/trade';
 import type { TradingSession, TradingSessionsResult } from '../../../types/tradingSessions';
-import { fileAtom, importTradesStore, parsedFileResultAtom, resetStoreAtom } from './atoms';
+import { importTradesStore, parsedFileResultAtom, resetStoreAtom } from './atoms';
 import Description from './Description';
 import transformTrades from './utils/transformTrades';
+import useRemoveFile from '../../../components/Dropzone/hooks/useRemoveFile';
 
 const getPairsAndSession = async (): Promise<[Pair[] | null, TradingSession | null]> => {
   let [sessions, pairs] = await Promise.all([
@@ -64,41 +68,71 @@ const ConfirmImportButton = () => {
   );
 };
 
-const ImportTradesButton = () => {
-  const { openSnackbar } = useSnackbar();
+type TSelectedFileProps = {
+  name: string;
+  size: number;
+  id: string;
+};
 
+const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
+  const [removeFile] = useRemoveFile();
   const setParesedFileResult = useSetAtom(parsedFileResultAtom, { store: importTradesStore });
-  const [file, setFile] = useAtom(fileAtom, { store: importTradesStore });
 
-  const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    let files = event.target.files;
-    if (!files) {
-      openSnackbar({
-        severity: 'error',
-        message: 'This CSV appears to be empty. Check the file and upload it again.',
-      });
-      return;
-    }
-    setFile(files[0]);
-
-    let result = await handleCSVFile<Trade>(files[0]);
-    if (!result) return;
-
-    setParesedFileResult(result);
+  const handleClick = () => {
+    removeFile(id);
+    setParesedFileResult(null);
   };
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between" my={1}>
-      <UploadButton onChange={handleChange} accept=".csv, text/csv">
-        Upload trades (CSV)
-      </UploadButton>
-      {file ? (
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={[
+        (theme) => ({
+          border: `1px solid ${theme.palette.grey[200]}`,
+          paddingInline: theme.spacing(2),
+          paddingBlock: theme.spacing(0.5),
+        }),
+      ]}
+    >
+      <Stack direction="row" alignItems="center" gap={2}>
+        <InsertDriveFileIcon color="primary" />
         <Stack>
-          <Typography variant="subtitle1">
-            {file.name} - {(file.size * 0.0009765625).toFixed(1)}kb
-          </Typography>
+          <Typography variant="subtitle2">{name}</Typography>
+          <Typography variant="caption">{(size * 0.0009765625).toFixed(1)}kb</Typography>
         </Stack>
-      ) : null}
+      </Stack>
+      <IconButton size="small" onClick={handleClick}>
+        <ClearIcon color="error" />
+      </IconButton>
+    </Stack>
+  );
+};
+
+const ImportTradesButton = () => {
+  const setParesedFileResult = useSetAtom(parsedFileResultAtom, { store: importTradesStore });
+  const files = useAtomValue(dzFilesAtom, { store: dropzoneStore });
+
+  useEffect(() => {
+    if (Array.isArray(files) && files.length > 0) {
+      (async () => {
+        let result = await handleCSVFile<Trade>(files[0].file);
+        if (result) setParesedFileResult(result);
+      })();
+    }
+  }, [files]);
+
+  return (
+    <Stack gap={1} my={1}>
+      <Dropzone accept=".csv, text/csv" />
+      {!files ? null : (
+        <Stack gap={0.5}>
+          {files.map(({ file, fileId }) => (
+            <SelectedFile key={fileId} name={file.name} size={file.size} id={fileId} />
+          ))}
+        </Stack>
+      )}
     </Stack>
   );
 };
@@ -108,7 +142,6 @@ const ImportTradesMain = () => {
     <Stack gap={2}>
       <Description />
       <ImportTradesButton />
-      <Divider />
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
         <ConfirmImportButton />
       </Stack>
@@ -124,8 +157,10 @@ const ImportTrades = () => {
   }, []);
 
   return (
-    <Provider store={importTradesStore}>
-      <ImportTradesMain />
+    <Provider store={dropzoneStore}>
+      <Provider store={importTradesStore}>
+        <ImportTradesMain />
+      </Provider>
     </Provider>
   );
 };

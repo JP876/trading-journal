@@ -4,11 +4,9 @@ import type { ParseResult } from 'papaparse';
 import type { Trade } from '../../../types/trade';
 
 export const parsedFileResultAtom = atom<ParseResult<Trade> | null>(null);
-export const fileAtom = atom<File | null>(null);
 
 export const importTradesStore = createStore();
 
-export const resetStoreAtom = atom(null, (_, set) => {
-  set(parsedFileResultAtom, null);
-  set(fileAtom, null);
+export const resetStoreAtom = atom(null, () => {
+  importTradesStore.set(parsedFileResultAtom, null);
 });

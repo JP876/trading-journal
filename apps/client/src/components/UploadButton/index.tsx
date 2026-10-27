@@ -1,6 +1,6 @@
 import UploadIcon from '@mui/icons-material/Upload';
 import Button, { type ButtonProps } from '@mui/material/Button';
-import type { InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes } from 'react';
 
 import { VisuallyHiddenInput } from '../styledComps';
 
@@ -9,7 +9,7 @@ type TUploadButtonProps = InputHTMLAttributes<HTMLInputElement> & {
   children?: ButtonProps['children'];
 };
 
-const UploadButton = ({ buttonProps, children, ...rest }: TUploadButtonProps) => {
+const UploadButton = forwardRef<HTMLInputElement, TUploadButtonProps>(({ buttonProps, children, ...rest }, ref) => {
   return (
     <Button
       component="label"
@@ -21,9 +21,9 @@ const UploadButton = ({ buttonProps, children, ...rest }: TUploadButtonProps) =>
       {...buttonProps}
     >
       {children || 'Upload files'}
-      <VisuallyHiddenInput type="file" {...rest} />
+      <VisuallyHiddenInput type="file" ref={ref} {...rest} />
     </Button>
   );
-};
+});
 
 export default UploadButton;
