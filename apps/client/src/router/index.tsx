@@ -5,7 +5,7 @@ import { getDefaultStore } from 'jotai';
 import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
 import ProtectedRoutes from './ProtectedRoutes';
-import { snackbarAtom } from '../atoms/snackbar';
+import { openSnackbarAtom } from '../atoms/snackbar';
 import { getCurrentUser } from '../lib/db/api/auth';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
@@ -22,8 +22,7 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const [error] = await withCatch(refreshToken());
 
   if (error) {
-    getDefaultStore().set(snackbarAtom, {
-      open: true,
+    getDefaultStore().set(openSnackbarAtom, {
       severity: 'error',
       message: "Looks like you're not logged in. Please sign in.",
     });

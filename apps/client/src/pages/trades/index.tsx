@@ -3,6 +3,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import QueueIcon from '@mui/icons-material/Queue';
 import SettingsIcon from '@mui/icons-material/Settings';
+import PublishIcon from '@mui/icons-material/Publish';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -26,7 +27,7 @@ import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
-import UploadTrades from './UploadTrades';
+import ImportTrades from './ImportTrades';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
@@ -48,6 +49,10 @@ const TradesModalList = () => {
 
       <DialogMain id={TradesPageModal.ADD_RANDOM_TRADES} title="Add random trades">
         <AddRandomTradesForm />
+      </DialogMain>
+
+      <DialogMain id={TradesPageModal.IMPORT_TRADES} size="md" title="Import trades">
+        <ImportTrades />
       </DialogMain>
 
       <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
@@ -177,11 +182,17 @@ const TradesPage = () => {
               >
                 <QueueIcon />
               </IconButton>
+              <IconButton
+                size="small"
+                aria-label="import-trades"
+                onClick={() => openModal(TradesPageModal.IMPORT_TRADES)}
+              >
+                <PublishIcon />
+              </IconButton>
               <TradesFiltersButton />
             </Stack>
           </Stack>
           <Stack direction="row" alignItems="center" gap={2}>
-            <UploadTrades />
             <IconButton
               size="small"
               aria-label="trades-settings-button"

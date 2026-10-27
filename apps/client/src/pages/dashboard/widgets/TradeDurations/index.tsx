@@ -72,10 +72,10 @@ type TTradeDurationsProps = {
 };
 
 const TradeDurations = ({ paperProps }: TTradeDurationsProps) => {
-  const resetTradeDurations = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
+  const resetStore = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
 
   useEffect(() => {
-    resetTradeDurations();
+    resetStore();
   }, []);
 
   return (

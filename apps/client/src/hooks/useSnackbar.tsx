@@ -1,22 +1,15 @@
 import { useCallback, useMemo } from 'react';
 import { getDefaultStore, useSetAtom } from 'jotai';
 
-import { snackbarAtom } from '../atoms/snackbar';
+import { closeSnackbarAtom, openSnackbarAtom } from '../atoms/snackbar';
 import type { SnackbarAtom } from '../types/snackbar';
 
 const useSnackbar = () => {
-  const setSnackbarInfo = useSetAtom(snackbarAtom, { store: getDefaultStore() });
+  const open = useSetAtom(openSnackbarAtom, { store: getDefaultStore() });
+  const close = useSetAtom(closeSnackbarAtom, { store: getDefaultStore() });
 
-  const openSnackbar = useCallback(
-    (info: Omit<SnackbarAtom, 'open'>) => {
-      setSnackbarInfo((prevState) => ({ ...prevState, ...info, open: true }));
-    },
-    [setSnackbarInfo]
-  );
-
-  const closeSnackbar = useCallback(() => {
-    setSnackbarInfo((prevState) => ({ ...prevState, open: false }));
-  }, [setSnackbarInfo]);
+  const openSnackbar = useCallback((info: Omit<SnackbarAtom, 'open'>) => open(info), [open]);
+  const closeSnackbar = useCallback(() => close(), [close]);
 
   return useMemo(() => ({ openSnackbar, closeSnackbar }), [closeSnackbar, openSnackbar]);
 };
