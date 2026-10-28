@@ -1,4 +1,4 @@
-import { alpha, styled } from '@mui/material';
+import { alpha, styled, type ButtonProps } from '@mui/material';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -9,10 +9,12 @@ import {
   clearDropzoneStore,
   dropzoneStore,
   dzContianerElAtom,
+  dzFilesAtom,
   dzInputElAtom,
   dzIsDraggingAtom,
   dzSetFilesAtom,
   dzUpateStatusAtom,
+  type TDzFile,
 } from './atoms';
 
 type TDropzoneContainerProps = BoxProps<
@@ -50,9 +52,12 @@ type TDropzoneProps = {
   multiple?: boolean;
   disabled?: boolean;
   accept?: React.InputHTMLAttributes<HTMLInputElement>['accept'];
+  onChange?: (event: React.DragEvent<Element> | React.ChangeEvent<HTMLInputElement>, files: TDzFile[]) => void;
+  buttonLabel?: ButtonProps['children'];
+  label?: string;
 };
 
-const Dropzone = ({ multiple, disabled, accept }: TDropzoneProps) => {
+const Dropzone = ({ multiple, disabled, accept, onChange, buttonLabel, label }: TDropzoneProps) => {
   const dragTargetsRef = useRef<EventTarget[]>([]);
 
   const isDragging = useAtomValue(dzIsDraggingAtom, { store: dropzoneStore });
@@ -61,11 +66,15 @@ const Dropzone = ({ multiple, disabled, accept }: TDropzoneProps) => {
   const setContainerEl = useSetAtom(dzContianerElAtom, { store: dropzoneStore });
   const setInputEl = useSetAtom(dzInputElAtom, { store: dropzoneStore });
 
-  const handleChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    let files = event.target.files;
-    if (!files) return;
-    dropzoneStore.set(dzSetFilesAtom, [...files]);
-  }, []);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      let files = event.target.files;
+      if (!files) return;
+      dropzoneStore.set(dzSetFilesAtom, [...files]);
+      if (onChange) onChange(event, dropzoneStore.get(dzFilesAtom) || []);
+    },
+    [onChange]
+  );
 
   const handleDrop = useCallback(
     (event: React.DragEvent<Element>) => {
@@ -73,12 +82,29 @@ const Dropzone = ({ multiple, disabled, accept }: TDropzoneProps) => {
       if (disabled) return;
 
       let droppedFiles = Array.from(event.dataTransfer.files);
+      if (accept) {
+        let options = accept.split(',').map((el) => el.trim());
+        droppedFiles = droppedFiles.reduce((acc, file) => {
+          for (let option of options) {
+            if (file.name.endsWith(option) || file.type.includes(option)) {
+              return [...acc, file];
+            }
+          }
+          return acc;
+        }, [] as File[]);
+      }
+      if (!multiple) {
+        droppedFiles = droppedFiles.splice(0, 1);
+      }
+
       dropzoneStore.set(dzSetFilesAtom, droppedFiles);
 
       dragTargetsRef.current = [];
       dropzoneStore.set(dzUpateStatusAtom, { isDragging: false });
+
+      if (onChange) onChange(event, dropzoneStore.get(dzFilesAtom) || []);
     },
-    [disabled]
+    [disabled, accept, onChange]
   );
 
   const handleDragEnter = useCallback((event: React.DragEvent<Element>) => {
@@ -123,15 +149,17 @@ const Dropzone = ({ multiple, disabled, accept }: TDropzoneProps) => {
       <UploadButton
         ref={setInputEl}
         onChange={handleChange}
-        multiple={multiple}
+        multiple={!!multiple}
         accept={accept}
         buttonProps={{ disabled }}
-      />
+      >
+        {buttonLabel}
+      </UploadButton>
       <Typography
         variant="subtitle1"
         sx={[(theme) => ({ color: theme.palette.text[disabled ? 'disabled' : 'primary'] })]}
       >
-        Drag 'n' drop some files here
+        {label || "Drag 'n' drop some files here"}
       </Typography>
     </DropzoneContainer>
   );

@@ -3,29 +3,36 @@ import { atom, createStore } from 'jotai';
 type TDzStatusOptions = 'isDragging';
 type TDzStatus = { [key in TDzStatusOptions]: boolean };
 
+export type TDzFile = {
+  fileId: string;
+  file: File;
+};
+
 const INITIAL_STATUS: TDzStatus = {
   isDragging: false,
 };
 
-export const dzFilesAtom = atom<{ fileId: string; file: File }[] | null>(null);
+export const dzFilesAtom = atom<TDzFile[] | null>(null);
 
-export const dzSetFilesAtom = atom(null, (_, __, value: File[]) => {
+export const dzSetFilesAtom = atom(null, (_, set, value: File[]) => {
   let nextValue = value.map((file: File) => ({ file, fileId: crypto.randomUUID() }));
-  dropzoneStore.set(dzFilesAtom, nextValue);
+  set(dzFilesAtom, nextValue);
 });
 
-export const dzRemoveFileAtom = atom(null, (_, __, value: string) => {
-  let prevFiles = dropzoneStore.get(dzFilesAtom);
+export const dzRemoveFileAtom = atom(null, (get, set, value: string) => {
+  let prevFiles = get(dzFilesAtom);
   if (!prevFiles) return;
   let nextValue = prevFiles.filter((el) => el.fileId !== value);
-  dropzoneStore.set(dzFilesAtom, nextValue);
+  set(dzFilesAtom, nextValue);
 });
 
-export const dzIsDraggingAtom = atom<boolean>((get) => get(dzStatusAtom).isDragging);
+export const dzIsDraggingAtom = atom<boolean>((get) => {
+  return get(dzStatusAtom).isDragging;
+});
 
 export const dzStatusAtom = atom<TDzStatus>(INITIAL_STATUS);
-export const dzUpateStatusAtom = atom(null, (_, __, value: TDzStatus) => {
-  dropzoneStore.set(dzStatusAtom, { ...dropzoneStore.get(dzStatusAtom), ...value });
+export const dzUpateStatusAtom = atom(null, (get, set, value: TDzStatus) => {
+  set(dzStatusAtom, { ...get(dzStatusAtom), ...value });
 });
 
 export const dzContianerElAtom = atom<HTMLElement | null>(null);

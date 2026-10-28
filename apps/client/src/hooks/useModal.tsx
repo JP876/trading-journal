@@ -1,10 +1,10 @@
 import { useCallback, useMemo } from 'react';
-import { useSetAtom } from 'jotai';
+import { getDefaultStore, useSetAtom } from 'jotai';
 
 import { modalAtom } from '../atoms/modal';
 
 const useModal = () => {
-  const setModalInfo = useSetAtom(modalAtom);
+  const setModalInfo = useSetAtom(modalAtom, { store: getDefaultStore() });
 
   const openModal = useCallback(
     (id: string, data?: any) => {
