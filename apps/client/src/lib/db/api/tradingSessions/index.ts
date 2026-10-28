@@ -73,6 +73,7 @@ export const editTradingSessionDB = async (id: number, data: Partial<TradingSess
   const session = await findTradingSessionById(id);
 
   session.title = rest.title ?? session.title;
+  session.accountSize = rest.accountSize ?? session.accountSize;
   session.description = rest.description ?? session.description;
   session.isMain = +!!rest.isMain;
   session.defaultPair = defaultPairId || session.defaultPair;
