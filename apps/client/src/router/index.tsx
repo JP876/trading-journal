@@ -1,12 +1,12 @@
+import { getDefaultStore } from 'jotai';
 import { lazy } from 'react';
 import { createBrowserRouter, redirect, type MiddlewareFunction } from 'react-router';
-import { getDefaultStore } from 'jotai';
 
-import withCatch from '../lib/withCatch';
 import { refreshToken } from '../api/auth';
-import ProtectedRoutes from './ProtectedRoutes';
 import { openSnackbarAtom } from '../atoms/snackbar';
 import { getCurrentUser } from '../lib/db/api/auth';
+import withCatch from '../lib/withCatch';
+import ProtectedRoutes from './ProtectedRoutes';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));

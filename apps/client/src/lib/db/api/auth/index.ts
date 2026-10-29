@@ -10,7 +10,7 @@ export const getCurrentUser = async () => {
 };
 
 export const loginUserDB = async () => {
-  const user = await getCurrentUser();
+  let user = await getCurrentUser();
 
   if (user?.id) {
     const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true }));
@@ -23,6 +23,7 @@ export const loginUserDB = async () => {
       addTradingSessionDB({
         title: `Initial session ${format(new Date(), 'MM/yy')}`,
         isMain: true,
+        accountSize: 10_000,
       })
     );
     if (sessionError) return sessionError;

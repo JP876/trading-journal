@@ -1,19 +1,23 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Avatar, IconButton, Tooltip } from '@mui/material';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
+import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 
-import MenuActions from '../../MenuActions';
-import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
-import withCatch from '../../../lib/withCatch';
 import { getLoggedInUser, logoutUser } from '../../../api/auth';
-import useSnackbar from '../../../hooks/useSnackbar';
+import { userAtom } from '../../../atoms/user';
 import { QueryKey } from '../../../enums';
 import useLogout from '../../../hooks/useLogout';
+import useSnackbar from '../../../hooks/useSnackbar';
+import withCatch from '../../../lib/withCatch';
+import MenuActions from '../../MenuActions';
+import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
 
 const MenuActionButton = () => {
   const { handleClick } = useMenuActionsContext();
+  const setUser = useSetAtom(userAtom);
 
   const { data } = useQuery({
     queryKey: [QueryKey.USER],
@@ -21,6 +25,10 @@ const MenuActionButton = () => {
     refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
+
+  useEffect(() => {
+    if (data) setUser(data);
+  }, [data]);
 
   return (
     <IconButton size="small" aria-label="settings" onClick={handleClick}>
