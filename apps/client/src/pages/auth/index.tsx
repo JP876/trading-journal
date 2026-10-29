@@ -36,9 +36,9 @@ const AuthPage = () => {
           </Typography>
         </Stack>
 
-        <Box sx={() => ({ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 })}>
+        <Box sx={() => ({ display: 'grid', gridTemplateColumns: '1fr', gap: 2 })}>
           <GuestLogin />
-          <GoogleButton />
+          {/* <GoogleButton /> */}
         </Box>
 
         {show === 'login' ? (
