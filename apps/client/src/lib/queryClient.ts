@@ -7,7 +7,7 @@ import { createAuthEvent } from './authEvent';
 
 export const RETRY_OPTIONS = {
   count: 2,
-  delay: 5_000,
+  delay: 2_000,
 } as const;
 
 const onError = (error: Error) => {

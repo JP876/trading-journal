@@ -44,11 +44,13 @@ const ProtectedRoutes = () => {
 
     const handleEvent = (event: CustomEventInit<authDetailType>) => {
       if (event.detail && !event.detail.isAuthenticated) {
-        logout(event.detail?.prevLocation);
-        openSnackbar({
-          severity: 'error',
-          message: "Looks like you're not logged in. Please sign in.",
-        });
+        setTimeout(() => {
+          logout(event.detail?.prevLocation);
+          openSnackbar({
+            severity: 'error',
+            message: "Looks like you're not logged in. Please sign in.",
+          });
+        }, 0);
       }
     };
 

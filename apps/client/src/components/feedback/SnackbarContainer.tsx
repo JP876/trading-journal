@@ -1,6 +1,7 @@
-import { memo } from 'react';
-import { Alert, Snackbar } from '@mui/material';
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 import { getDefaultStore, useAtomValue } from 'jotai';
+import { memo } from 'react';
 
 import { snackbarAtom } from '../../atoms/snackbar';
 import useSnackbar from '../../hooks/useSnackbar';
