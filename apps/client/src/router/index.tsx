@@ -1,11 +1,14 @@
 import { getDefaultStore } from 'jotai';
 import { lazy } from 'react';
-import { createBrowserRouter, redirect, type MiddlewareFunction } from 'react-router';
+import { createBrowserRouter, redirect, type MiddlewareFunction, type RouteObject } from 'react-router';
 
 import { refreshToken } from '../api/auth';
 import { openSnackbarAtom } from '../atoms/snackbar';
+import { userAtom } from '../atoms/user';
+import { axiosInstance } from '../lib/axiosInstance';
 import { getCurrentUser } from '../lib/db/api/auth';
 import withCatch from '../lib/withCatch';
+import type { User } from '../types/user';
 import ProtectedRoutes from './ProtectedRoutes';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
@@ -13,22 +16,36 @@ const AuthPage = lazy(() => import('../pages/auth'));
 const TradesPage = lazy(() => import('../pages/trades'));
 const DashboardMain = lazy(() => import('../pages/dashboard'));
 
+const showErrorMessage = () => {
+  getDefaultStore().set(openSnackbarAtom, {
+    severity: 'error',
+    message: "Looks like you're not logged in. Please sign in.",
+  });
+};
+
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const user = await getCurrentUser();
+
   if (user?.isLoggedIn) {
+    getDefaultStore().set(userAtom, user);
     return await next();
   }
 
   const [error] = await withCatch(refreshToken());
 
   if (error) {
-    getDefaultStore().set(openSnackbarAtom, {
-      severity: 'error',
-      message: "Looks like you're not logged in. Please sign in.",
-    });
+    showErrorMessage();
     throw redirect('/');
   }
 
+  const [userErr, response] = await withCatch(axiosInstance.get<User>('auth/me'));
+
+  if (userErr) {
+    showErrorMessage();
+    throw redirect('/');
+  }
+
+  getDefaultStore().set(userAtom, response.data);
   return await next();
 };
 
@@ -40,7 +57,7 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
   return redirect('/dashboard');
 };
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   { path: '/', Component: AuthPage, middleware: [authMiddleware] },
   {
     Component: ProtectedRoutes,
@@ -56,4 +73,6 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+];
+
+export const router = createBrowserRouter(routes, {});

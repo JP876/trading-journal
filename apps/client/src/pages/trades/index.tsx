@@ -27,13 +27,14 @@ import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
-import ImportTrades from './ImportTrades';
+import { userAtom } from '../../atoms/user';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
 const EditTradeForm = lazy(() => import('./forms/EditTrade'));
 const DeleteTrade = lazy(() => import('./DeleteTrade'));
 const TradesSettingsMain = lazy(() => import('./Settings'));
+const ImportTrades = lazy(() => import('./ImportTrades'));
 
 const TradesTableMain = lazy(() => import('./TradesTable'));
 const AddTagForm = lazy(() => import('./Settings/Tags/forms/AddForm'));
@@ -159,6 +160,7 @@ const TradesFiltersButton = () => {
 
 const TradesPage = () => {
   const { openModal } = useModal();
+  const user = useAtomValue(userAtom);
 
   return (
     <TableProviders>
@@ -175,20 +177,27 @@ const TradesPage = () => {
               >
                 <AddIcon />
               </IconButton>
-              <IconButton
-                size="small"
-                aria-label="add-multiple-trades"
-                onClick={() => openModal(TradesPageModal.ADD_RANDOM_TRADES)}
-              >
-                <QueueIcon />
-              </IconButton>
-              <IconButton
-                size="small"
-                aria-label="import-trades"
-                onClick={() => openModal(TradesPageModal.IMPORT_TRADES)}
-              >
-                <PublishIcon />
-              </IconButton>
+
+              {user?.variety === 'GUEST' ? (
+                <>
+                  {/* Implemented only when user is logged in as guest */}
+                  <IconButton
+                    size="small"
+                    aria-label="add-multiple-trades"
+                    onClick={() => openModal(TradesPageModal.ADD_RANDOM_TRADES)}
+                  >
+                    <QueueIcon />
+                  </IconButton>
+                  <IconButton
+                    size="small"
+                    aria-label="import-trades"
+                    onClick={() => openModal(TradesPageModal.IMPORT_TRADES)}
+                  >
+                    <PublishIcon />
+                  </IconButton>
+                </>
+              ) : null}
+
               <TradesFiltersButton />
             </Stack>
           </Stack>

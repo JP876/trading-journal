@@ -1,3 +1,7 @@
+import { getDefaultStore } from 'jotai';
+
+import { userAtom } from '../atoms/user';
+
 export const getRandomInt = (min: number = 0, max: number = 1, roundTo?: number) => {
   let num = Math.floor(Math.random() * (max - min + 1)) + min;
   if (roundTo) num = Math.round(num / roundTo) * roundTo;
@@ -111,3 +115,5 @@ export const formatCurrency = (value?: number, options?: Intl.NumberFormatOption
   if (!value) return '-';
   return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', ...(options || {}) }).format(value);
 };
+
+export const isGuest = () => getDefaultStore().get(userAtom)?.variety === 'GUEST';

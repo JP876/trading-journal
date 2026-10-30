@@ -13,10 +13,10 @@ export const loginUserDB = async () => {
   let user = await getCurrentUser();
 
   if (user?.id) {
-    const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true }));
+    const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true, variety: 'GUEST' }));
     if (error) return error;
   } else {
-    const [error] = await withCatch(db.users.add({ name: '', image: null, isLoggedIn: true }));
+    const [error] = await withCatch(db.users.add({ name: '', image: null, isLoggedIn: true, variety: 'GUEST' }));
     if (error) return error;
 
     const [sessionError] = await withCatch(

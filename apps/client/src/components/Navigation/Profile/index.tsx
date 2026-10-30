@@ -2,13 +2,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useSetAtom } from 'jotai';
-import { useEffect } from 'react';
+import { useAtomValue } from 'jotai';
 
-import { getLoggedInUser, logoutUser } from '../../../api/auth';
+import { logoutUser } from '../../../api/auth';
 import { userAtom } from '../../../atoms/user';
-import { QueryKey } from '../../../enums';
 import useLogout from '../../../hooks/useLogout';
 import useSnackbar from '../../../hooks/useSnackbar';
 import withCatch from '../../../lib/withCatch';
@@ -17,24 +14,13 @@ import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
 
 const MenuActionButton = () => {
   const { handleClick } = useMenuActionsContext();
-  const setUser = useSetAtom(userAtom);
-
-  const { data } = useQuery({
-    queryKey: [QueryKey.USER],
-    queryFn: getLoggedInUser,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-  });
-
-  useEffect(() => {
-    if (data) setUser(data);
-  }, [data]);
+  const user = useAtomValue(userAtom);
 
   return (
     <IconButton size="small" aria-label="settings" onClick={handleClick}>
-      <Tooltip arrow disableInteractive title={data?.name}>
-        {data?.image ? (
-          <Avatar src={data.image} />
+      <Tooltip arrow disableInteractive title={user?.name}>
+        {user?.image ? (
+          <Avatar src={user.image} />
         ) : (
           <Avatar>
             <PersonIcon />
@@ -49,10 +35,8 @@ const ProfileMain = () => {
   const { openSnackbar } = useSnackbar();
   const [logout] = useLogout();
 
-  const handleLogout = async (_: any, handleClose: () => void) => {
+  const handleLogout = async () => {
     await withCatch(logoutUser());
-    handleClose();
-
     openSnackbar({ severity: 'success', message: 'You have successfully logged out.' });
     logout();
   };

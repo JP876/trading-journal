@@ -1,12 +1,10 @@
 import { Dexie, type EntityTable } from 'dexie';
 
-import type { User } from '../../types/user';
+import type { UserDB } from '../../types/user';
 import type { TradingSession } from '../../types/tradingSessions';
 import type { Trade } from '../../types/trade';
 import type { Tag } from '../../types/tag';
 import type { Pair } from '../../types/pair';
-
-export type UserDB = Omit<User, 'email'> & { isLoggedIn: boolean };
 
 export const db = new Dexie('LogMyTradesDB') as Dexie & {
   users: EntityTable<UserDB, 'id'>;

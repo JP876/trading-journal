@@ -1,22 +1,20 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import type { PaginationInfo } from '../../types';
-import type {
-  GetTradingSessionsOptions,
-  TradingSession,
-  TradingSessionFormSchemaType,
-} from '../../types/tradingSessions';
 import {
   addTradingSessionDB,
   deleteTradingSessionDB,
   editTradingSessionDB,
   getTradingSessionsDB,
 } from '../../lib/db/api/tradingSessions';
-import { getCurrentUser } from '../../lib/db/api/auth';
+import { isGuest } from '../../lib/utils';
+import type { PaginationInfo } from '../../types';
+import type {
+  GetTradingSessionsOptions,
+  TradingSession,
+  TradingSessionFormSchemaType,
+} from '../../types/tradingSessions';
 
 export const getTradingSessions = async (params?: GetTradingSessionsOptions) => {
-  const user = await getCurrentUser();
-
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return await getTradingSessionsDB({ ...params });
   }
 
@@ -31,9 +29,7 @@ export const getTradingSessions = async (params?: GetTradingSessionsOptions) => 
 };
 
 export const addTradingSession = async (data: TradingSessionFormSchemaType) => {
-  const user = await getCurrentUser();
-
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return await addTradingSessionDB(data);
   }
 
@@ -42,9 +38,7 @@ export const addTradingSession = async (data: TradingSessionFormSchemaType) => {
 };
 
 export const editTradingSession = async (id: number, data: Partial<TradingSessionFormSchemaType>) => {
-  const user = await getCurrentUser();
-
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return await editTradingSessionDB(id, data);
   }
 
@@ -57,8 +51,7 @@ export const deleteTradingSession = async (id: number | undefined) => {
     throw new Error(`TradingSession ID not found: ${id}`);
   }
 
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return await deleteTradingSessionDB(id);
   }
 

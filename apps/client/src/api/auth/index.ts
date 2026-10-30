@@ -1,6 +1,7 @@
 import { axiosInstance } from '../../lib/axiosInstance';
 import { db } from '../../lib/db';
 import { getCurrentUser } from '../../lib/db/api/auth';
+import { isGuest } from '../../lib/utils';
 import withDelay from '../../lib/withDelay';
 import type { LoginFormData, RegisterFormData } from '../../types/auth';
 import type { User } from '../../types/user';
@@ -18,9 +19,9 @@ export const loginUser = async (data: LoginFormData) => {
 };
 
 export const logoutUser = async () => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
-    return await db.users.update(user.id, { isLoggedIn: false });
+  if (isGuest()) {
+    const user = await getCurrentUser();
+    return await db.users.update(user!.id, { isLoggedIn: false });
   }
 
   const response = await axiosInstance.post('auth/logout');

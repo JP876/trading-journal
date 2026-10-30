@@ -1,5 +1,4 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { getCurrentUser } from '../../lib/db/api/auth';
 import {
   addTradeDB,
   deleteTradeDB,
@@ -8,15 +7,14 @@ import {
   getTradesDB,
 } from '../../lib/db/api/trades';
 import transformToFormData from '../../lib/transformToFormData';
+import { isGuest } from '../../lib/utils';
 import type { PaginationInfo } from '../../types';
 import type { GetTradesOptions, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
 export const getTrades = async (params: GetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return getTradesDB(params);
   }
-
   const response = await axiosInstance.get<TradesResult>('trades', {
     params: {
       page: params.page || 1,
@@ -32,8 +30,7 @@ export const getTrades = async (params: GetTradesOptions): Promise<PaginationInf
 };
 
 export const getTradesCountPerTradingSession = async (): Promise<TradesCount[]> => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return getTradesCountPerTradingSessionDB();
   }
   const response = await axiosInstance.get<TradesCount[]>('trades/count-per-session');
@@ -41,8 +38,7 @@ export const getTradesCountPerTradingSession = async (): Promise<TradesCount[]> 
 };
 
 export const addTrade = async (trade: TradeFormSchemaType & { tradingSessionId: number }) => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return addTradeDB(trade);
   }
   const response = await axiosInstance.post('trades', transformToFormData(trade));
@@ -53,8 +49,7 @@ export const editTrade = async (id: number, trade: TradeFormSchemaType & { tradi
   if (!id) {
     throw new Error(`Trade ID not found: ${id}`);
   }
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return editTradeDB(id, trade);
   }
   const response = await axiosInstance.patch(`trades/${id}`, transformToFormData({ ...trade }));
@@ -65,8 +60,7 @@ export const deleteTrade = async (id: number | undefined) => {
   if (!id) {
     throw new Error(`Trade ID not found: ${id}`);
   }
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return deleteTradeDB(id);
   }
   const response = await axiosInstance.delete(`trades/${id}`);

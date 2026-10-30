@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
 import { queryOptions, useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
 
 import { refreshToken } from '../api/auth';
 import { getPairs } from '../api/pairs';
 import { QueryKey } from '../enums';
-import useSnackbar from '../hooks/useSnackbar';
 import useLogout from '../hooks/useLogout';
+import useSnackbar from '../hooks/useSnackbar';
 import { AUTH_EVENT_TYPE, type authDetailType } from '../lib/authEvent';
-import { getCurrentUser } from '../lib/db/api/auth';
+import { isGuest } from '../lib/utils';
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
 const refreshTokenQueryOptions = queryOptions({
@@ -33,8 +33,7 @@ const ProtectedRoutes = () => {
 
   useEffect(() => {
     (async () => {
-      const user = await getCurrentUser();
-      if (!user || !user.isLoggedIn) {
+      if (!isGuest()) {
         setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
       }
     })();
@@ -46,7 +45,10 @@ const ProtectedRoutes = () => {
     const handleEvent = (event: CustomEventInit<authDetailType>) => {
       if (event.detail && !event.detail.isAuthenticated) {
         logout(event.detail?.prevLocation);
-        openSnackbar({ severity: 'error', message: "Looks like you're not logged in. Please sign in." });
+        openSnackbar({
+          severity: 'error',
+          message: "Looks like you're not logged in. Please sign in.",
+        });
       }
     };
 

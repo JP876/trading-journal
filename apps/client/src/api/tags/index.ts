@@ -1,14 +1,13 @@
 import { axiosInstance } from '../../lib/axiosInstance';
-import { getCurrentUser } from '../../lib/db/api/auth';
 import { addTagDB, deleteTagDB, editTagDB, getTagsDB } from '../../lib/db/api/tags';
 import transformToFormData from '../../lib/transformToFormData';
+import { isGuest } from '../../lib/utils';
 import withDelay from '../../lib/withDelay';
 import type { PaginationInfo } from '../../types';
 import type { GetTagsOptions, Tag, TagFormSchemaType } from '../../types/tag';
 
 export const getTags = async (params?: GetTagsOptions) => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return getTagsDB(params);
   }
 
@@ -26,8 +25,7 @@ export const getTags = async (params?: GetTagsOptions) => {
 };
 
 export const addTag = async (tag: TagFormSchemaType) => {
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return addTagDB(tag);
   }
 
@@ -40,8 +38,7 @@ export const editTag = async (id: number, tag: TagFormSchemaType) => {
     throw new Error(`Tag ID not found: ${id}`);
   }
 
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return editTagDB(id, tag);
   }
 
@@ -54,8 +51,7 @@ export const deleteTag = async (id: number | undefined) => {
     throw new Error(`Tag ID not found: ${id}`);
   }
 
-  const user = await getCurrentUser();
-  if (user?.isLoggedIn) {
+  if (isGuest()) {
     return deleteTagDB(id);
   }
 
