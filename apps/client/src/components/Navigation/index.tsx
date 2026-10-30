@@ -1,6 +1,14 @@
-import { memo } from 'react';
-import { Box, Divider, IconButton, Stack, Toolbar, Typography, useTheme } from '@mui/material';
-import { useAtom } from 'jotai';
+import { memo, useEffect } from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material';
+import { useAtom, useAtomValue } from 'jotai';
 import { Outlet } from 'react-router';
 
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
@@ -9,6 +17,35 @@ import getIcon from '../getIcon';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
 import ColorModeMain from './ColorMode';
+import { retryAtom } from '../../atoms/retry';
+import useSnackbar from '../../hooks/useSnackbar';
+import { RETRY_OPTIONS } from '../../lib/queryClient';
+
+const RetryContainer = memo(() => {
+  const retryInfo = useAtomValue(retryAtom);
+  const { openSnackbar, closeSnackbar } = useSnackbar();
+
+  useEffect(() => {
+    if (retryInfo.isRetrying) {
+      openSnackbar({
+        autoHideDuration: RETRY_OPTIONS.delay * RETRY_OPTIONS.count,
+        severity: 'warning',
+        message: `Request failed. Retrying... (attempt ${retryInfo.count} of ${RETRY_OPTIONS.count}; next retry in ${RETRY_OPTIONS.delay / 1_000} seconds)`,
+      });
+    } else {
+      closeSnackbar();
+    }
+  }, [retryInfo.isRetrying, retryInfo.count]);
+
+  return (
+    <Backdrop
+      sx={[(theme) => ({ color: theme.palette.grey[100], zIndex: theme.zIndex.drawer + 1 })]}
+      open={retryInfo.isRetrying}
+    >
+      <CircularProgress color="inherit" size={60} />
+    </Backdrop>
+  );
+});
 
 const MainContainer = memo(() => {
   return (
@@ -61,6 +98,7 @@ const NavigationMain = () => {
         <NavigationList open={!!drawer?.open} />
       </Drawer>
 
+      <RetryContainer />
       <MainContainer />
     </Box>
   );
