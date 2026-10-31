@@ -12,7 +12,7 @@ import { formatSeconds } from '../../utils/duration';
 import { getStatistics } from '../../utils/statistics';
 import type { TStatistic, TStatisticsReturn } from '../../utils/types';
 import useMainSession from '../../../../hooks/useMainSession';
-import { formatCurrency } from '../../../../lib/utils';
+import Price from '../../../../lib/Price';
 
 type TStatisticTableRow = {
   [k in keyof TStatistic]: number | string | null;
@@ -53,16 +53,24 @@ const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsRetur
     avgTradesPerDay: data.avgTradesPerDay,
     returnPercentage: data.returnPercentage ? `${(data.returnPercentage * 100).toFixed(1)}%` : '-',
     tableData: [
-      { ...formatStatistic(data.winRate, (value) => `${value * 100}%`), label: 'Win rate', rowId: 'winRate' },
+      {
+        ...formatStatistic(data.winRate, (value) => `${(value * 100).toFixed(1)}%`),
+        label: 'Win rate',
+        rowId: 'winRate',
+      },
       { ...data.tradesCount, label: 'Trades count', rowId: 'tradesCount' },
       { ...data.winTrades, label: 'Won trades', rowId: 'wonTrades' },
       { ...data.lossTrades, label: 'Lost trades', rowId: 'lostTrades' },
       {
-        ...formatStatistic(data.avgProft, (value) => formatCurrency(value)),
+        ...formatStatistic(data.avgProft, (value) => Price.formatToCurrency(value)),
         label: 'Average profit',
         rowId: 'avgProfit',
       },
-      { ...formatStatistic(data.avgLoss, (value) => formatCurrency(value)), label: 'Average loss', rowId: 'avgLoss' },
+      {
+        ...formatStatistic(data.avgLoss, (value) => Price.formatToCurrency(value)),
+        label: 'Average loss',
+        rowId: 'avgLoss',
+      },
       { ...formatTradeDurations(data.longestWonTrades), label: 'Longest win', rowId: 'longestWin' },
       { ...formatTradeDurations(data.shortestWonTrades), label: 'Shortest win', rowId: 'shortestWin' },
       { ...formatTradeDurations(data.longestLostTrades), label: 'Longest loss', rowId: 'longestLoss' },
@@ -130,7 +138,7 @@ const StatisticsList = () => {
         <Typography>Average trades per day</Typography>
         <Typography fontWeight="bold"> {statsData.avgTradesPerDay}</Typography>
         <Typography>Account size</Typography>
-        <Typography fontWeight="bold"> {formatCurrency(mainSession?.accountSize)}</Typography>
+        <Typography fontWeight="bold"> {Price.formatToCurrency(mainSession?.accountSize)}</Typography>
         <Typography>Return %</Typography>
         <Typography fontWeight="bold"> {statsData.returnPercentage}</Typography>
       </Box>

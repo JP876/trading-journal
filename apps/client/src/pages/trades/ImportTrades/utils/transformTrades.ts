@@ -1,4 +1,4 @@
-import { formatToPips } from '../../../../lib/utils';
+import Price from '../../../../lib/Price';
 import type { Pair } from '../../../../types/pair';
 import type { ClosedBy, Direction, Result, Trade } from '../../../../types/trade';
 import type { TradingSession } from '../../../../types/tradingSessions';
@@ -33,19 +33,19 @@ const transformTrades = (trades: Trade[], pairs: Pair[], mainSession: TradingSes
         (result === 'win' && t.takeProfitPrice && t.takeProfitPrice !== t.takeProfitPrice)
       ) {
         closedBy = 'user';
-        closedAt = formatToPips(t.entryPrice, t.closePrice, {
+        closedAt = Price.formatToPips(t.entryPrice, t.closePrice, {
           pair: pair?.pair,
         });
       }
     }
 
     if (t.entryPrice && t.stopLossPrice) {
-      stopLoss = formatToPips(t.entryPrice, t.stopLossPrice, {
+      stopLoss = Price.formatToPips(t.entryPrice, t.stopLossPrice, {
         pair: pair?.pair,
       });
     }
     if (t.entryPrice && t.takeProfitPrice) {
-      takeProfit = formatToPips(t.entryPrice, t.takeProfitPrice, {
+      takeProfit = Price.formatToPips(t.entryPrice, t.takeProfitPrice, {
         pair: pair?.pair,
       });
     }

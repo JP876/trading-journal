@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { filesObject, type PaginationInfo } from '..';
+import type { TSortDirection } from '../../lib/db/pagination';
 
 export type Result = 'win' | 'loss' | 'be';
 export type Direction = 'long' | 'short';
@@ -80,7 +81,7 @@ export type TradesCount = {
   count: number;
 };
 
-export type GetTradesOptions = {
+export type TGetTradesOptions = {
   page?: number;
   rowsPerPage?: number;
   pair?: number;
@@ -88,4 +89,6 @@ export type GetTradesOptions = {
   openDate?: string;
   closeDate?: string;
   tags?: string;
+  sortBy?: keyof Trade;
+  direction?: TSortDirection;
 };

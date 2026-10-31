@@ -38,6 +38,9 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
     throw redirect('/');
   }
 
+  const userInfo = getDefaultStore().get(userAtom);
+  if (userInfo) return await next();
+
   const [userErr, response] = await withCatch(axiosInstance.get<User>('auth/me'));
 
   if (userErr) {

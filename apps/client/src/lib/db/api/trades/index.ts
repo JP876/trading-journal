@@ -4,7 +4,7 @@ import { db } from '../..';
 import type { PaginationInfo } from '../../../../types';
 import type {
   AddRandomTradesFormType,
-  GetTradesOptions,
+  TGetTradesOptions,
   Result,
   Trade,
   TradeFormSchemaType,
@@ -14,6 +14,11 @@ import { getRandomFloat, getRandomInt, getRandomItem } from '../../../utils';
 import handlePagination from '../../pagination';
 import { getRandomTagIdsDB } from '../tags';
 import { findMainTradingSession } from '../tradingSessions';
+import Price from '../../../Price';
+import type { Pair } from '../../../../types/pair';
+import { findPairById } from '../pairs';
+import { getPerformance } from '../../../../pages/dashboard/utils/performance';
+import type { TradingSession } from '../../../../types/tradingSessions';
 
 export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]> => {
   const [sessions] = await Promise.all([db.tradingSessions.toArray(), db.trades.toArray()]);
@@ -27,7 +32,17 @@ export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]
   return result;
 };
 
-export const getTradesDB = async (params: GetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
+export const getTradesProfitDB = async (session: TradingSession) => {
+  const trades = await db.trades.where({ tradingSession: session.id }).toArray();
+  const performance = getPerformance(trades, session.accountSize);
+
+  return {
+    count: trades.length,
+    profit: performance[performance.length - 1],
+  };
+};
+
+export const getTradesDB = async (params: TGetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
   const [session] = await Promise.all([findMainTradingSession()]);
   const totalCount = await db.trades.where({ tradingSession: session.id }).count();
 
@@ -96,10 +111,10 @@ export const addMultipleTradesDB = async (trades: Omit<Trade, 'id' | 'createdAt'
 export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   count: 100,
   pairs: [],
-  stopLoss: [0, 20],
-  takeProfit: [0, 20],
+  stopLoss: [1, 20],
+  takeProfit: [1, 20],
   tradeDuration: [1, 60],
-  positionSize: [1, 10_000],
+  positionSize: [5_000, 10_000],
   winPercentage: 50,
   longPercentage: 50,
   startDate: subMonths(new Date(), 6),
@@ -123,12 +138,25 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
   const tags = await db.tags.toArray();
   const count = options?.count || ADD_RANDOM_TRADES_OPTIONS.count;
 
-  let pair;
-
   let startDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
   let endDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
 
   const interval = (endDate.getTime() - startDate.getTime()) / count;
+
+  let pairIds: number[] = Array.from({ length: count }).map(() => {
+    if (Array.isArray(options?.pairs) && options.pairs.length) {
+      return getRandomItem(options.pairs) || getRandomInt(1, 10);
+    }
+    return getRandomInt(1, 10);
+  });
+
+  let uniquePairIds = [...new Set(pairIds)];
+  let pairsInfo: Pair[] = [];
+  let getPairsInfo = uniquePairIds.map((id) => findPairById(id));
+
+  for await (const pair of getPairsInfo) {
+    pairsInfo.push(pair);
+  }
 
   const winRate = (options?.winPercentage || ADD_RANDOM_TRADES_OPTIONS.winPercentage) / 100;
   const directionPercentage = options.longPercentage || ADD_RANDOM_TRADES_OPTIONS.longPercentage;
@@ -162,21 +190,33 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     let openDate = addMilliseconds(startDate, interval * index);
     let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
-    pair =
-      Array.isArray(options?.pairs) && options.pairs.length
-        ? getRandomItem(options.pairs) || getRandomInt(1, 10)
-        : getRandomInt(1, 10);
+    let sl = +getRandomFloat(stopLoss[0], stopLoss[1]).toFixed(2);
+    let tp = +getRandomFloat(takeProfit[0], takeProfit[1]).toFixed(2);
+    let ps = getRandomInt(positionSize[0], positionSize[1], 100);
+
+    let pairInfo = pairsInfo.find((p) => p.id === pairIds[index]);
+    let profit: number | undefined;
+
+    if (pairInfo?.pair) {
+      let calculatedProfit = Price.calculateProfit(resultArr[index] === 'win' ? tp : sl, pairInfo.pair, {
+        positionSize: ps,
+      });
+      if (calculatedProfit) {
+        profit = resultArr[index] === 'win' ? calculatedProfit : calculatedProfit * -1;
+      }
+    }
 
     return {
       tags: tags.length < 2 ? [] : getRandomTagIdsDB(tags),
       tradingSession: options.tradingSessionId,
-      pair: pair,
+      pair: pairIds[index],
       result: resultArr[index],
       direction: Math.random() >= directionPercentage / 100 ? 'long' : 'short',
-      stopLoss: +getRandomFloat(stopLoss[0], stopLoss[1]).toFixed(2),
-      takeProfit: +getRandomFloat(takeProfit[0], takeProfit[1]).toFixed(2),
+      stopLoss: sl,
+      takeProfit: tp,
       closedBy: 'tp/sl',
-      positionSize: getRandomInt(positionSize[0], positionSize[1], 100),
+      profit,
+      positionSize: ps,
       openDate: format(
         clamp(openDate, {
           start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,

@@ -19,8 +19,8 @@ const PerformanceChart = () => {
   const [mainSession] = useMainSession();
 
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
   const chartData = (() => {

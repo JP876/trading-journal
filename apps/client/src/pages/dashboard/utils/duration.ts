@@ -106,10 +106,10 @@ export const formatSeconds = (value: number, options?: { excludeSeconds: boolean
   let hours = Math.floor(mins / 60);
 
   if (!mins && !options?.excludeSeconds) return `${value}s`;
-  if (!hours) return `${mins}m` + (options?.excludeSeconds ? '' : `${value % 60}s`);
+  if (!hours) return `${mins}m` + (options?.excludeSeconds ? '' : value % 60 ? `${value % 60}s` : '');
 
   if (days) return `${days}d${hours}h`;
-  if (hours) return `${hours}h${mins % 60}m`;
+  if (hours) return `${hours}h${mins % 60 ? `${mins % 60}m` : ''}`;
 
   return value.toString();
 };

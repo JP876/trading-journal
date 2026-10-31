@@ -9,9 +9,9 @@ import {
 import transformToFormData from '../../lib/transformToFormData';
 import { isGuest } from '../../lib/utils';
 import type { PaginationInfo } from '../../types';
-import type { GetTradesOptions, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
+import type { TGetTradesOptions, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
-export const getTrades = async (params: GetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
+export const getTrades = async (params: TGetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
   if (isGuest()) {
     return getTradesDB(params);
   }

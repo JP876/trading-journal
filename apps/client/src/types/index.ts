@@ -53,3 +53,9 @@ export type PaginationInfo<T = any> = {
   currentPage?: number;
   totalPages?: number;
 };
+
+export type TCurrentRate = {
+  pair: string;
+  currency: string;
+  rate: number;
+};
