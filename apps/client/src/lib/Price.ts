@@ -1,8 +1,7 @@
-import { eurRates, usdRates } from '../consts';
+import { exchangeRates } from '../consts';
 import type { TCurrentRate } from '../types';
 
 export type TFormatToPipsOptions = {
-  pipSize?: number;
   pair?: string;
   fraction?: number;
 };
@@ -22,12 +21,12 @@ class Price {
     fraction: 4,
   };
 
-  static getCurrentRates(baseCurrency: string) {
+  static getExchangeRates(baseCurrency: string) {
     switch (baseCurrency) {
       case 'EUR':
-        return eurRates;
+        return exchangeRates.EUR;
       case 'USD':
-        return usdRates;
+        return exchangeRates.USD;
       default:
         throw new Error('Unsupported base currency');
     }
@@ -80,7 +79,7 @@ class Price {
     if (Array.isArray(options?.rates) && options.rates.length > 0) {
       rates = options.rates;
     } else {
-      rates = Price.getCurrentRates(baseCurrency);
+      rates = Price.getExchangeRates(baseCurrency);
     }
     const rateInfo = rates.find((el) => el.currency === quote);
 

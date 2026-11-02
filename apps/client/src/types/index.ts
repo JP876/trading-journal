@@ -55,7 +55,6 @@ export type PaginationInfo<T = any> = {
 };
 
 export type TCurrentRate = {
-  pair: string;
   currency: string;
   rate: number;
 };

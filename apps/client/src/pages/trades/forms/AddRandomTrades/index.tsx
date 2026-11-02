@@ -14,7 +14,7 @@ import { QueryKey } from '../../../../enums';
 import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
-import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from '../../../../lib/db/api/trades';
+import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from '../../../../lib/db/api/trades/addRandomTradesDB';
 import { AddRandomTradesFormSchema, type AddRandomTradesFormType } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
 import usePairsOptions from '../../hooks/usePairsOptions';
@@ -23,6 +23,12 @@ import CloseDateInput from '../CloseDateInput';
 const getMarks = (length: number = 200, step: number = 20) => {
   return Array.from({ length: length / 10 }).map((_, i) => ({ value: i * step, label: i * step }));
 };
+
+const durationMarks = [
+  { value: 1, label: 1 },
+  ...getMarks(12 * 60, 60).map((el) => ({ ...el, label: `${minutesToHours(el.value)}h` })),
+];
+const positionSizeMarks = getMarks(100_000, 10_000).map((el) => ({ ...el, label: `${el.value / 1_000}k` }));
 
 const AddRandomTradesForm = () => {
   const queryClient = useQueryClient();
@@ -113,7 +119,7 @@ const AddRandomTradesForm = () => {
         control={form.control}
         render={(props) => (
           <SliderInput
-            label="Stop Loss"
+            label="Stop Loss (pips)"
             inputProps={{ min: 1, max: 200, marks: [{ value: 1, label: 1 }, ...getMarks()] }}
             {...props}
           />
@@ -124,7 +130,7 @@ const AddRandomTradesForm = () => {
         control={form.control}
         render={(props) => (
           <SliderInput
-            label="Take Profit"
+            label="Take Profit (pips)"
             inputProps={{ min: 1, max: 200, marks: [{ value: 1, label: 1 }, ...getMarks()] }}
             {...props}
           />
@@ -136,17 +142,18 @@ const AddRandomTradesForm = () => {
         render={(props) => (
           <SliderInput
             label="Trade Duration (min)"
-            inputProps={{
-              min: 1,
-              max: 12 * 60,
-              marks: [
-                { value: 1, label: 1 },
-                ...getMarks(12 * 60, 60).map((el) => ({
-                  ...el,
-                  label: `${minutesToHours(el.value)}h`,
-                })),
-              ],
-            }}
+            inputProps={{ min: 1, max: 12 * 60, marks: durationMarks }}
+            {...props}
+          />
+        )}
+      />
+      <Controller
+        name="positionSize"
+        control={form.control}
+        render={(props) => (
+          <SliderInput
+            label="Position size"
+            inputProps={{ min: 10_000, max: 100_000, step: 1_000, marks: positionSizeMarks }}
             {...props}
           />
         )}
