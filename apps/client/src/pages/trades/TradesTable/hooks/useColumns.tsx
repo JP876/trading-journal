@@ -1,24 +1,24 @@
-import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
-import { format } from 'date-fns';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-
-import type { Trade } from '../../../../types/trade';
-import MenuActions from '../../../../components/MenuActions';
-import useModal from '../../../../hooks/useModal';
-import NotFoundValue from '../../../../components/NotFoundValue';
-import { TradesPageModal } from '../../enums';
-import ClampedTextContainer from '../../../../components/ClampedTextContainer';
-import TradeTagsCell from '../TradeTagsCell';
 import { useQuery } from '@tanstack/react-query';
-import { QueryKey } from '../../../../enums';
+import { type ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
+
 import { getPairs } from '../../../../api/pairs';
+import ClampedTextContainer from '../../../../components/ClampedTextContainer';
+import MenuActions from '../../../../components/MenuActions';
+import NotFoundValue from '../../../../components/NotFoundValue';
+import { QueryKey } from '../../../../enums';
+import useModal from '../../../../hooks/useModal';
+import type { Trade } from '../../../../types/trade';
+import { TradesPageModal } from '../../enums';
+import TradeTagsCell from '../TradeTagsCell';
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
@@ -158,9 +158,9 @@ const useColumns = () => {
         header: 'TP',
         cell: ({ row }) => {
           let { takeProfit, result, closedBy } = row.original;
-          takeProfit = +(takeProfit ?? 0).toFixed(1);
-
           if (!takeProfit) return <NotFoundValue />;
+
+          takeProfit = +(takeProfit ?? 0).toFixed(1);
 
           return (
             <Typography
@@ -185,9 +185,9 @@ const useColumns = () => {
         size: 60,
         cell: ({ row }) => {
           let { stopLoss, result, closedBy } = row.original;
-          stopLoss = +(stopLoss ?? 0).toFixed(1);
-
           if (!stopLoss) return <NotFoundValue />;
+
+          stopLoss = +(stopLoss ?? 0).toFixed(1);
 
           return (
             <Typography

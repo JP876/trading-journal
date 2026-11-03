@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Provider, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Dropzone from '../../../components/Dropzone';
 import { dropzoneStore, dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
@@ -39,6 +39,8 @@ const ConfirmImportButton = () => {
   const { openSnackbar } = useSnackbar();
   const { closeModal } = useModal();
 
+  const [loading, setLoading] = useState(false);
+
   const parsedFileResult = useAtomValue(parsedFileResultAtom);
 
   const handleImport = async () => {
@@ -64,6 +66,17 @@ const ConfirmImportButton = () => {
       queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
     ]);
     closeModal(TradesPageModal.IMPORT_TRADES);
+
+    openSnackbar({
+      severity: 'success',
+      message: "Import successful. We've added your trades to your account.",
+    });
+  };
+
+  const handleClick = async () => {
+    setLoading(true);
+    await handleImport();
+    setLoading(false);
   };
 
   return (
@@ -72,7 +85,8 @@ const ConfirmImportButton = () => {
       startIcon={<CheckIcon />}
       size="small"
       variant="contained"
-      onClick={handleImport}
+      loading={loading}
+      onClick={handleClick}
     >
       Confirm
     </Button>

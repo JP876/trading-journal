@@ -4,6 +4,8 @@ import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import PublishIcon from '@mui/icons-material/Publish';
 import QueueIcon from '@mui/icons-material/Queue';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -28,6 +30,8 @@ import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
+import MenuActions from '../../components/MenuActions';
+import useExportTrades from './hooks/useExportTrades';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
@@ -162,6 +166,13 @@ const TradesPage = () => {
   const { openModal } = useModal();
   const user = useAtomValue(userAtom);
 
+  const [handleExport] = useExportTrades();
+
+  const handleClick = (handleClose: () => void, fn: () => void) => {
+    handleClose();
+    fn();
+  };
+
   return (
     <TableProviders>
       <Paper sx={{ p: 2 }}>
@@ -170,33 +181,45 @@ const TradesPage = () => {
             <Typography variant="h4">Trades</Typography>
 
             <Stack direction="row" alignItems="center" gap={1}>
-              <IconButton
-                size="small"
-                aria-label="add-trade-button"
-                onClick={() => openModal(TradesPageModal.ADD_TRADE)}
-              >
-                <AddIcon />
-              </IconButton>
-
               {user?.variety === 'GUEST' ? (
-                <>
+                <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
                   {/* Implemented only when user is logged in as guest */}
-                  <IconButton
-                    size="small"
-                    aria-label="add-multiple-trades"
-                    onClick={() => openModal(TradesPageModal.ADD_RANDOM_TRADES)}
-                  >
-                    <QueueIcon />
-                  </IconButton>
-                  <IconButton
-                    size="small"
-                    aria-label="import-trades"
-                    onClick={() => openModal(TradesPageModal.IMPORT_TRADES)}
-                  >
-                    <PublishIcon />
-                  </IconButton>
-                </>
-              ) : null}
+                  <MenuActions.Item
+                    icon={<AddIcon />}
+                    label="Add trade"
+                    onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
+                  />
+                  <MenuActions.Divider />
+                  <MenuActions.Item
+                    icon={<PublishIcon />}
+                    label="Import trades"
+                    onClick={(_, handleClose) =>
+                      handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))
+                    }
+                  />
+                  <MenuActions.Item
+                    icon={<FileDownloadIcon />}
+                    label="Export trades"
+                    onClick={(_, handleClose) => handleClick(handleClose, handleExport)}
+                  />
+                  <MenuActions.Divider />
+                  <MenuActions.Item
+                    icon={<QueueIcon />}
+                    label="Add random trades"
+                    onClick={(_, handleClose) =>
+                      handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))
+                    }
+                  />
+                </MenuActions>
+              ) : (
+                <IconButton
+                  size="small"
+                  aria-label="add-trade-button"
+                  onClick={() => openModal(TradesPageModal.ADD_TRADE)}
+                >
+                  <AddIcon />
+                </IconButton>
+              )}
 
               <TradesFiltersButton />
             </Stack>

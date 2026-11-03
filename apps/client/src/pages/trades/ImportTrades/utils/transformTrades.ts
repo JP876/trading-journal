@@ -6,8 +6,8 @@ import type { TradingSession } from '../../../../types/tradingSessions';
 const transformTrades = (trades: Trade[], pairs: Pair[], mainSession: TradingSession) => {
   let finalData: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[] = trades.map((t) => {
     let result: Result = 'be';
-    let takeProfit;
-    let stopLoss;
+    let takeProfit = t?.takeProfit;
+    let stopLoss = t?.stopLoss;
     let pair = pairs.find((p) => t.pair.toString() === p.pair);
 
     let direction = t.direction as 'long' | 'short' | 'buy' | 'sell';
@@ -39,12 +39,12 @@ const transformTrades = (trades: Trade[], pairs: Pair[], mainSession: TradingSes
       }
     }
 
-    if (t.entryPrice && t.stopLossPrice) {
+    if (!stopLoss && t.entryPrice && t.stopLossPrice) {
       stopLoss = Price.formatToPips(t.entryPrice, t.stopLossPrice, {
         pair: pair?.pair,
       });
     }
-    if (t.entryPrice && t.takeProfitPrice) {
+    if (!takeProfit && t.entryPrice && t.takeProfitPrice) {
       takeProfit = Price.formatToPips(t.entryPrice, t.takeProfitPrice, {
         pair: pair?.pair,
       });

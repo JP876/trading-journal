@@ -86,7 +86,7 @@ const TradesNotFound = () => {
       ]}
     >
       <Typography variant="body1">
-        Nothing to display just yet. Add your first trade to see your dashboard come to life.
+        You haven't added any trades yet, so your dashboard is empty. Add trades whenever you're ready.
       </Typography>
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
         <Button size="small" variant="outlined" onClick={handleClick}>
