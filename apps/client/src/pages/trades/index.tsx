@@ -1,37 +1,40 @@
 import AddIcon from '@mui/icons-material/Add';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
 import PublishIcon from '@mui/icons-material/Publish';
 import QueueIcon from '@mui/icons-material/Queue';
 import SettingsIcon from '@mui/icons-material/Settings';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue } from 'jotai';
 import { lazy } from 'react';
 
+import { getTrades } from '../../api/trades';
 import { modalAtom } from '../../atoms/modal';
 import { tradesFiltersAtom } from '../../atoms/trades';
 import { userAtom } from '../../atoms/user';
 import DialogMain from '../../components/DialogMain';
+import MenuActions from '../../components/MenuActions';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import DateFilter from '../../components/table/filters/DateFilter';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
 import TableProviders from '../../components/table/providers';
+import { QueryKey } from '../../enums';
 import useModal from '../../hooks/useModal';
 import type { Trade } from '../../types/trade';
 import { resultOptions } from './consts';
 import { TradesPageModal } from './enums';
+import useExportTrades from './hooks/useExportTrades';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
-import MenuActions from '../../components/MenuActions';
-import useExportTrades from './hooks/useExportTrades';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
@@ -88,6 +91,7 @@ const COLLAPSE_TIMEOUT = 200;
 
 const TradesFiltersContainer = ({ children }: { children: React.ReactNode }) => {
   const tradesFilters = useAtomValue(tradesFiltersAtom);
+
   return (
     <Collapse in={tradesFilters} timeout={COLLAPSE_TIMEOUT}>
       {children}
@@ -99,6 +103,13 @@ const TradesFilters = () => {
   const pairsOptions = usePairsOptions();
   const tagsOptions = useTagsOptions();
 
+  const tradesQuery = useQuery({
+    queryKey: [QueryKey.TRADES],
+    queryFn: () => getTrades({}),
+  });
+
+  let uniquePairs = [...new Set((tradesQuery.data?.results || []).map((el) => el.pair))];
+
   return (
     <Box
       sx={{
@@ -109,7 +120,14 @@ const TradesFilters = () => {
         gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: '12rem 12rem repeat(3, 1fr)', md: 'repeat(3, 1fr)' },
       }}
     >
-      <AutocompleteFilter name="pair" label="Pair" options={pairsOptions} />
+      <AutocompleteFilter
+        name="pair"
+        label="Pair"
+        options={pairsOptions}
+        getOptionDisabled={(option) => {
+          return !uniquePairs.includes(+option.value);
+        }}
+      />
       <AutocompleteFilter name="result" label="Result" options={resultOptions} />
       <DateFilter name="openDate" label="Open" disableFuture />
       <DateFilter name="closeDate" label="Close" disableFuture />
