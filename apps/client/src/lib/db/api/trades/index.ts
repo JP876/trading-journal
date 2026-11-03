@@ -12,9 +12,14 @@ export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]
   const [sessions] = await Promise.all([db.tradingSessions.toArray(), db.trades.toArray()]);
   const result: TradesCount[] = [];
 
-  for await (const session of sessions) {
-    const count = await db.trades.filter((t) => t.tradingSession === session.id).count();
-    result.push({ tradingSession: session.id, count });
+  let index = 0;
+  const sessionsCountArr = sessions.map((s) => {
+    return db.trades.filter((t) => t.tradingSession === s.id).count();
+  });
+
+  for await (const count of sessionsCountArr) {
+    result.push({ tradingSession: sessions[index].id, count });
+    index++;
   }
 
   return result;

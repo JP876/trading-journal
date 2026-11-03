@@ -11,11 +11,11 @@ import { getRandomTagIdsDB } from '../tags';
 
 export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   count: 1_000,
-  pairs: [],
-  stopLoss: [1, 20],
-  takeProfit: [1, 20],
-  tradeDuration: [1, 60],
-  positionSize: [10_000, 20_000],
+  pairs: [1, 2],
+  stopLoss: [5, 20],
+  takeProfit: [5, 20],
+  tradeDuration: [10, 120],
+  positionSize: [10_000, 10_000],
   winPercentage: 50,
   longPercentage: 50,
   startDate: subMonths(new Date(), 6),

@@ -3,6 +3,9 @@ import { format } from 'date-fns';
 import { db } from '../..';
 import withCatch from '../../../withCatch';
 import { addTradingSessionDB } from '../tradingSessions';
+import { openModalAtom } from '../../../../atoms/modal';
+import { TradesPageModal } from '../../../../pages/trades/enums';
+import { getDefaultStore } from 'jotai';
 
 export const getCurrentUser = async () => {
   const [error, users] = await withCatch(db.users.toArray());
@@ -27,5 +30,7 @@ export const loginUserDB = async () => {
       })
     );
     if (sessionError) return sessionError;
+
+    getDefaultStore().set(openModalAtom, { id: TradesPageModal.INTRO });
   }
 };

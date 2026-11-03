@@ -52,7 +52,7 @@ const TradeDurationsChart = () => {
   });
 
   const chartData = (() => {
-    if (!tradesQuery.data?.results) return null;
+    if (!tradesQuery.data?.results || tradesQuery.data.results.length === 0) return null;
 
     let shortestDuration = period?.[0];
     let longestDuration = period?.[1];

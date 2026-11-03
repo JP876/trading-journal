@@ -1,9 +1,9 @@
 import AddIcon from '@mui/icons-material/Add';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
+import PublishIcon from '@mui/icons-material/Publish';
 import QueueIcon from '@mui/icons-material/Queue';
 import SettingsIcon from '@mui/icons-material/Settings';
-import PublishIcon from '@mui/icons-material/Publish';
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -15,6 +15,7 @@ import { lazy } from 'react';
 
 import { modalAtom } from '../../atoms/modal';
 import { tradesFiltersAtom } from '../../atoms/trades';
+import { userAtom } from '../../atoms/user';
 import DialogMain from '../../components/DialogMain';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import DateFilter from '../../components/table/filters/DateFilter';
@@ -27,7 +28,6 @@ import { TradesPageModal } from './enums';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
 import TradingSessionSelect from './TradingSessionSelect';
-import { userAtom } from '../../atoms/user';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
 const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));

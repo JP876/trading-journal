@@ -15,6 +15,9 @@ import ColorModeMain from './ColorMode';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
+import DialogMain from '../DialogMain';
+import { TradesPageModal } from '../../pages/trades/enums';
+import IntroForm from './Intro';
 
 const MainContainer = memo(() => {
   return (
@@ -22,6 +25,16 @@ const MainContainer = memo(() => {
       <DrawerHeader />
       <Outlet />
     </Box>
+  );
+});
+
+const NavigationModalList = memo(() => {
+  return (
+    <>
+      <DialogMain size="sm" id={TradesPageModal.INTRO} title="You're exploring as a guest">
+        <IntroForm />
+      </DialogMain>
+    </>
   );
 });
 
@@ -67,6 +80,7 @@ const NavigationMain = () => {
         <NavigationList open={!!drawer?.open} />
       </Drawer>
 
+      <NavigationModalList />
       <MainContainer />
     </Box>
   );

@@ -1,4 +1,6 @@
 export enum TradesPageModal {
+  INTRO = 'guestIntroForm',
+
   ADD_TRADE = 'addTradeForm',
   ADD_RANDOM_TRADES = 'addRandomTrades',
   EDIT_TRADE = 'editTradeForm',

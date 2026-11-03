@@ -1,34 +1,25 @@
-import { useCallback, useMemo } from 'react';
 import { getDefaultStore, useSetAtom } from 'jotai';
+import { useCallback, useMemo } from 'react';
 
-import { modalAtom } from '../atoms/modal';
+import { closeModalAtom, openModalAtom } from '../atoms/modal';
 
 const useModal = () => {
-  const setModalInfo = useSetAtom(modalAtom, { store: getDefaultStore() });
+  const open = useSetAtom(openModalAtom, { store: getDefaultStore() });
+  const close = useSetAtom(closeModalAtom, { store: getDefaultStore() });
 
-  const openModal = useCallback(
-    (id: string, data?: any) => {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      setModalInfo((prevState) => ({ ...prevState, [id]: { data } }));
-    },
-    [setModalInfo]
-  );
+  const openModal = useCallback((id: string, data?: any) => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    open({ id, data });
+  }, []);
 
-  const closeModal = useCallback(
-    (id: string) => {
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
-      setModalInfo((prevState) => {
-        const modalCopy = { ...prevState };
-        delete modalCopy[id];
-        return modalCopy;
-      });
-    },
-    [setModalInfo]
-  );
+  const closeModal = useCallback((id: string) => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    close({ id });
+  }, []);
 
   return useMemo(() => ({ openModal, closeModal }), [closeModal, openModal]);
 };

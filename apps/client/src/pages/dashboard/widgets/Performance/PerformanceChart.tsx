@@ -24,7 +24,9 @@ const PerformanceChart = () => {
   });
 
   const chartData = (() => {
-    if (!Array.isArray(tradesQuery.data?.results) || !mainSession) return null;
+    if (!Array.isArray(tradesQuery.data?.results) || !mainSession || tradesQuery.data.results.length === 0) {
+      return null;
+    }
     let chartData = formatChartData(tradesQuery.data.results, mainSession.accountSize);
     return chartData;
   })();
