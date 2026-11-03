@@ -1,4 +1,4 @@
-import { alpha, styled, type ButtonProps } from '@mui/material';
+import { styled, type ButtonProps } from '@mui/material';
 import Box, { type BoxProps } from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -29,8 +29,8 @@ const DropzoneContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== 'isDragging' && prop !== 'disabled',
 })<TDropzoneContainerProps>(({ theme, isDragging, disabled }) => {
   return {
-    border: `2px dashed ${theme.palette.grey[200]}`,
-    backgroundColor: isDragging ? alpha(theme.palette.grey[200], 0.8) : theme.palette.background.default,
+    border: `2px dashed ${theme.alpha(theme.palette.text.primary, 0.5)}`,
+    backgroundColor: isDragging ? theme.alpha(theme.palette.text.secondary, 0.05) : theme.palette.background.default,
     transition: theme.transitions.create(['background-color']),
     width: '100%',
     height: '100%',
