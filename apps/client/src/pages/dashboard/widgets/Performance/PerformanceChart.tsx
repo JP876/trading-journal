@@ -67,7 +67,7 @@ const PerformanceChart = () => {
               let date = format(value, 'dd/MM/yyyy HH:mm');
               return date;
             }
-            return format(value, 'dd/MM');
+            return format(value, 'MM/yy');
           },
         },
       ],

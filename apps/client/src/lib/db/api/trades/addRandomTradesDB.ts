@@ -18,7 +18,7 @@ export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   positionSize: [10_000, 10_000],
   winPercentage: 50,
   longPercentage: 50,
-  startDate: subMonths(new Date(), 6),
+  startDate: subMonths(new Date(), 12),
   endDate: new Date(),
 };
 
