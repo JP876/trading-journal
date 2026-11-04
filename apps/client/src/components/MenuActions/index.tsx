@@ -1,17 +1,16 @@
-import {
-  Badge,
-  CircularProgress,
-  Divider,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  type DividerProps,
-} from '@mui/material';
+import Badge from '@mui/material/Badge';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider, { type DividerProps } from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import { Provider, useAtomValue } from 'jotai';
 
 import getIcon from '../getIcon';
+import { anchorElAtom } from './atoms';
+import useMenuActions from './hooks/useMenuActions';
 import type { MenuActionsItemProps, MenuActionsProps } from './types';
-import { MenuActionsProvider, useMenuActionsContext } from './MenuActionsProvider';
 
 const MenuActionsItem = ({
   menuItemProps,
@@ -23,7 +22,7 @@ const MenuActionsItem = ({
   badgeContent,
   badgeProps,
 }: MenuActionsItemProps) => {
-  const { handleClose } = useMenuActionsContext();
+  const { handleClose } = useMenuActions();
 
   const handleClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     onClick(event, handleClose);
@@ -56,7 +55,8 @@ const MenuActionsItem = ({
 };
 
 const MenuActionsMain = ({ children, menuProps, btnProps, renderMenuBtn }: MenuActionsProps) => {
-  const { anchorEl, handleClick, handleClose } = useMenuActionsContext();
+  const anchorEl = useAtomValue(anchorElAtom);
+  const { handleClick, handleClose } = useMenuActions();
 
   return (
     <>
@@ -85,9 +85,9 @@ const MenuActionsMain = ({ children, menuProps, btnProps, renderMenuBtn }: MenuA
 
 const MenuActions = ({ ...props }: MenuActionsProps) => {
   return (
-    <MenuActionsProvider>
+    <Provider>
       <MenuActionsMain {...props} />
-    </MenuActionsProvider>
+    </Provider>
   );
 };
 

@@ -4,8 +4,8 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
 
 import MenuActions from '../../MenuActions';
-import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
 import type { MenuActionsItemProps } from '../../MenuActions/types';
+import useMenuActions from '../../MenuActions/hooks/useMenuActions';
 
 type ModeOptionsType = 'system' | 'light' | 'dark';
 
@@ -16,8 +16,7 @@ const modeIcons = {
 } as const;
 
 const MenuActionButton = ({ mode }: { mode: ModeOptionsType }) => {
-  const { handleClick } = useMenuActionsContext();
-
+  const { handleClick } = useMenuActions();
   return (
     <Button
       startIcon={

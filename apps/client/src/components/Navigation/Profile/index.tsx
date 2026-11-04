@@ -10,11 +10,11 @@ import useLogout from '../../../hooks/useLogout';
 import useSnackbar from '../../../hooks/useSnackbar';
 import withCatch from '../../../lib/withCatch';
 import MenuActions from '../../MenuActions';
-import { useMenuActionsContext } from '../../MenuActions/MenuActionsProvider';
+import useMenuActions from '../../MenuActions/hooks/useMenuActions';
 
 const MenuActionButton = () => {
-  const { handleClick } = useMenuActionsContext();
   const user = useAtomValue(userAtom);
+  const { handleClick } = useMenuActions();
 
   return (
     <IconButton size="small" aria-label="settings" onClick={handleClick}>
