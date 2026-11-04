@@ -1,10 +1,12 @@
 import type { BadgeProps, IconButtonProps, MenuItemProps, MenuProps } from '@mui/material';
+import type { Store } from 'jotai';
 
 export type MenuActionsProps = {
   children: React.ReactNode;
   menuProps?: MenuProps;
   btnProps?: IconButtonProps;
   renderMenuBtn?: () => React.ReactNode;
+  store?: Store;
 };
 
 export type ReasonType = 'escapeKeyDown' | 'backdropClick' | 'tabKeyDown' | undefined;

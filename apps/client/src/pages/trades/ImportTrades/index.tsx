@@ -5,11 +5,11 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { Provider, useAtomValue, useSetAtom } from 'jotai';
+import { createStore, Provider, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 
 import Dropzone from '../../../components/Dropzone';
-import { dropzoneStore, dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
+import { dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
 import useRemoveFile from '../../../components/Dropzone/hooks/useRemoveFile';
 import { QueryKey } from '../../../enums';
 import useSnackbar from '../../../hooks/useSnackbar';
@@ -25,6 +25,8 @@ import Description from './Description';
 import transformTrades from './utils/transformTrades';
 import useModal from '../../../hooks/useModal';
 import { TradesPageModal } from '../enums';
+
+const dzStore = createStore();
 
 const getPairsAndSession = async (): Promise<[Pair[] | null, TradingSession | null]> => {
   let [sessions, pairs] = await Promise.all([
@@ -100,7 +102,7 @@ type TSelectedFileProps = {
 };
 
 const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
-  const [removeFile] = useRemoveFile();
+  const [removeFile] = useRemoveFile(dzStore);
   const setParesedFileResult = useSetAtom(parsedFileResultAtom, { store: importTradesStore });
 
   const handleClick = () => {
@@ -136,7 +138,7 @@ const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
 };
 
 const SelectedFiles = () => {
-  const files = useAtomValue(dzFilesAtom, { store: dropzoneStore });
+  const files = useAtomValue(dzFilesAtom, { store: dzStore });
 
   if (!files) return null;
   return (
@@ -162,11 +164,13 @@ const ImportTradesAction = () => {
   return (
     <Stack gap={1} my={1}>
       <Dropzone
+        store={dzStore}
         accept=".csv, text/csv"
         onChange={handleChange}
         buttonLabel="Upload file (.csv)"
         label="Drag 'n' drop CSV file"
       />
+
       <SelectedFiles />
     </Stack>
   );
@@ -192,10 +196,8 @@ const ImportTrades = () => {
   }, []);
 
   return (
-    <Provider store={dropzoneStore}>
-      <Provider store={importTradesStore}>
-        <ImportTradesMain />
-      </Provider>
+    <Provider store={importTradesStore}>
+      <ImportTradesMain />
     </Provider>
   );
 };

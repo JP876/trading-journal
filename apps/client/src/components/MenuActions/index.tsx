@@ -31,7 +31,7 @@ const MenuActionsItem = ({
   return (
     <MenuItem
       id={id || `menu-item-${label}`}
-      sx={{ width: '100%' }}
+      sx={[{ width: '100%' }]}
       disableRipple
       {...menuItemProps}
       disabled={isLoading || menuItemProps?.disabled}
@@ -56,6 +56,7 @@ const MenuActionsItem = ({
 
 const MenuActionsMain = ({ children, menuProps, btnProps, renderMenuBtn }: MenuActionsProps) => {
   const anchorEl = useAtomValue(anchorElAtom);
+
   const { handleClick, handleClose } = useMenuActions();
 
   return (
@@ -85,7 +86,7 @@ const MenuActionsMain = ({ children, menuProps, btnProps, renderMenuBtn }: MenuA
 
 const MenuActions = ({ ...props }: MenuActionsProps) => {
   return (
-    <Provider>
+    <Provider store={props.store}>
       <MenuActionsMain {...props} />
     </Provider>
   );

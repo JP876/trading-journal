@@ -180,11 +180,20 @@ const TradesFiltersButton = () => {
   );
 };
 
+const ExportTradesItem = () => {
+  const [handleExport] = useExportTrades();
+
+  const handleClick = (_: any, handleClose: () => void) => {
+    handleClose();
+    handleExport();
+  };
+
+  return <MenuActions.Item icon={<FileDownloadIcon />} label="Export trades" onClick={handleClick} />;
+};
+
 const TradesPage = () => {
   const { openModal } = useModal();
   const user = useAtomValue(userAtom);
-
-  const [handleExport] = useExportTrades();
 
   const handleClick = (handleClose: () => void, fn: () => void) => {
     handleClose();
@@ -215,11 +224,7 @@ const TradesPage = () => {
                       handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))
                     }
                   />
-                  <MenuActions.Item
-                    icon={<FileDownloadIcon />}
-                    label="Export trades"
-                    onClick={(_, handleClose) => handleClick(handleClose, handleExport)}
-                  />
+                  <ExportTradesItem />
                   <MenuActions.Divider />
                   <MenuActions.Item
                     icon={<QueueIcon />}

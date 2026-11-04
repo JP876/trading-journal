@@ -1,10 +1,10 @@
-import { useSetAtom } from 'jotai';
+import { useSetAtom, type Store } from 'jotai';
 import { useMemo } from 'react';
 
 import { anchorElAtom } from '../atoms';
 
-const useMenuActions = () => {
-  const setAnchorEl = useSetAtom(anchorElAtom);
+const useMenuActions = (store?: Store) => {
+  const setAnchorEl = useSetAtom(anchorElAtom, { store });
 
   return useMemo(() => {
     return {

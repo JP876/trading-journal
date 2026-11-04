@@ -1,4 +1,4 @@
-import { atom, createStore } from 'jotai';
+import { atom } from 'jotai';
 
 type TDzStatusOptions = 'isDragging';
 type TDzStatus = { [key in TDzStatusOptions]: boolean };
@@ -21,7 +21,7 @@ export const dzSetFilesAtom = atom(null, (_, set, value: File[]) => {
 
 export const dzRemoveFileAtom = atom(null, (get, set, value: string) => {
   let prevFiles = get(dzFilesAtom);
-  if (!prevFiles) return;
+  if (!prevFiles) return null;
   let nextValue = prevFiles.filter((el) => el.fileId !== value);
   set(dzFilesAtom, nextValue);
 });
@@ -38,11 +38,9 @@ export const dzUpateStatusAtom = atom(null, (get, set, value: TDzStatus) => {
 export const dzContianerElAtom = atom<HTMLElement | null>(null);
 export const dzInputElAtom = atom<HTMLElement | null>(null);
 
-export const dropzoneStore = createStore();
-
-export const clearDropzoneStore = atom(null, () => {
-  dropzoneStore.set(dzFilesAtom, null);
-  dropzoneStore.set(dzStatusAtom, INITIAL_STATUS);
-  dropzoneStore.set(dzContianerElAtom, null);
-  dropzoneStore.set(dzInputElAtom, null);
+export const clearDropzoneStore = atom(null, (_, set) => {
+  set(dzFilesAtom, null);
+  set(dzStatusAtom, INITIAL_STATUS);
+  set(dzContianerElAtom, null);
+  set(dzInputElAtom, null);
 });

@@ -1,12 +1,19 @@
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+
+import { getTradingSessions } from '../api/tradingSessions';
 import { QueryKey } from '../enums';
-import { queryClient } from '../lib/queryClient';
-import type { TradingSessionsResult } from '../types/tradingSessions';
 
 const useMainSession = () => {
-  const sessions = queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]);
-  const mainSession = sessions?.results?.find((el) => el?.isMain);
+  const sessionsQuery = useQuery({
+    queryKey: [QueryKey.TRADING_SESSIONS],
+    queryFn: () => getTradingSessions(),
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
+  const mainSession = sessionsQuery.data?.results?.find((el) => el?.isMain);
 
-  return [mainSession];
+  return useMemo(() => [mainSession], [mainSession?.id]);
 };
 
 export default useMainSession;

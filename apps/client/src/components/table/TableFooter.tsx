@@ -1,12 +1,12 @@
 import Stack from '@mui/material/Stack';
+import { memo, useCallback } from 'react';
 
 import type { PaginationInfo } from '../../types';
 import RowsPerPageSelect from './RowsPerPageSelect';
 import PaginationContainer from './PaginationContainer';
 import ResultsMain from './Results';
-import { memo } from 'react';
 
-type TableMainFooterProps = {
+type TTableMainFooterProps = {
   hideResults?: boolean;
   hideRowPerPage?: boolean;
   hidePagination?: boolean;
@@ -20,7 +20,11 @@ const TableMainFooter = ({
   hideResults,
   hidePagination,
   hideRowPerPage,
-}: TableMainFooterProps) => {
+}: TTableMainFooterProps) => {
+  const handleScroll = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   if (!currentPage) return null;
 
   return (
@@ -31,7 +35,7 @@ const TableMainFooter = ({
       <Stack direction="row" alignItems="center" gap={2}>
         {itemsPerPage && totalItems && !hideRowPerPage ? <RowsPerPageSelect itemsPerPage={itemsPerPage} /> : null}
         {totalPages && !hidePagination ? (
-          <PaginationContainer currentPage={currentPage} totalPages={totalPages} />
+          <PaginationContainer currentPage={currentPage} totalPages={totalPages} onChange={handleScroll} />
         ) : null}
       </Stack>
     </Stack>

@@ -1,16 +1,17 @@
-import { useSetAtom } from 'jotai';
-import { useCallback } from 'react';
+import { useSetAtom, type Store } from 'jotai';
+import { useMemo } from 'react';
 
-import { dropzoneStore, dzRemoveFileAtom } from '../atoms';
+import { dzRemoveFileAtom } from '../atoms';
 
-const useRemoveFile = () => {
-  const removeFile = useSetAtom(dzRemoveFileAtom, { store: dropzoneStore });
+const useRemoveFile = (store?: Store) => {
+  const removeFile = useSetAtom(dzRemoveFileAtom, { store });
 
-  const handleRemoveFile = useCallback((id: string) => {
-    removeFile(id);
+  return useMemo(() => {
+    const handleRemoveFile = (id: string) => {
+      removeFile(id);
+    };
+    return [handleRemoveFile];
   }, []);
-
-  return [handleRemoveFile];
 };
 
 export default useRemoveFile;
