@@ -1,24 +1,15 @@
-import { lazy, useState } from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import GoogleIcon from '@mui/icons-material/Google';
+import { lazy, useState } from 'react';
 
 import LoginForm from './forms/Login';
 import GuestLogin from './GuestLogin';
 
 const RegisterForm = lazy(() => import('./forms/Register'));
-
-const GoogleButton = () => {
-  return (
-    <Button fullWidth size="small" variant="outlined" startIcon={<GoogleIcon />}>
-      Google
-    </Button>
-  );
-};
 
 const AuthPage = () => {
   const [show, setShow] = useState<'login' | 'register'>('login');
