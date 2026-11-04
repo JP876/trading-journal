@@ -9,6 +9,7 @@ import { QueryKey } from '../../../enums';
 import useMainSession from '../../../hooks/useMainSession';
 import withCatch from '../../../lib/withCatch';
 import type { Pair } from '../../../types/pair';
+import useSnackbar from '../../../hooks/useSnackbar';
 
 const useExportTrades = () => {
   const { data: pairsData } = useQuery({
@@ -18,14 +19,31 @@ const useExportTrades = () => {
   });
   const [mainSession] = useMainSession();
 
+  const { openSnackbar } = useSnackbar();
+
   const handleExport = useCallback(async () => {
     if (!Array.isArray(pairsData) || pairsData.length === 0 || !mainSession) {
+      openSnackbar({
+        severity: 'error',
+        message: "We couldn't generate the export file. Please try again later.",
+      });
       return null;
     }
 
     let [error, tradesData] = await withCatch(getTrades({}));
-    if (error || !tradesData?.results) {
-      console.error(error);
+
+    if (error) {
+      openSnackbar({
+        severity: 'error',
+        message: 'Something went wrong while loading your trades. Try again in a moment.',
+      });
+      return null;
+    }
+    if (!Array.isArray(tradesData?.results) || tradesData.results.length === 0) {
+      openSnackbar({
+        severity: 'error',
+        message: 'No trades to export yet. Add trades and try again',
+      });
       return null;
     }
 

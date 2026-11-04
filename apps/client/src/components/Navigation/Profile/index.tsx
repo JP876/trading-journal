@@ -11,6 +11,7 @@ import useSnackbar from '../../../hooks/useSnackbar';
 import withCatch from '../../../lib/withCatch';
 import MenuActions from '../../MenuActions';
 import useMenuActions from '../../MenuActions/hooks/useMenuActions';
+import { memo } from 'react';
 
 const MenuActionButton = () => {
   const user = useAtomValue(userAtom);
@@ -42,14 +43,12 @@ const ProfileMain = () => {
   };
 
   return (
-    <>
-      <MenuActions renderMenuBtn={() => <MenuActionButton />}>
-        <MenuActions.Item label="Profile" icon={<AccountCircleIcon fontSize="small" />} onClick={() => null} />
-        <MenuActions.Divider />
-        <MenuActions.Item label="Logout" icon={<LogoutIcon fontSize="small" />} onClick={handleLogout} />
-      </MenuActions>
-    </>
+    <MenuActions renderMenuBtn={() => <MenuActionButton />}>
+      <MenuActions.Item label="Profile" icon={<AccountCircleIcon fontSize="small" />} onClick={() => null} />
+      <MenuActions.Divider />
+      <MenuActions.Item label="Logout" icon={<LogoutIcon fontSize="small" />} onClick={handleLogout} />
+    </MenuActions>
   );
 };
 
-export default ProfileMain;
+export default memo(ProfileMain);

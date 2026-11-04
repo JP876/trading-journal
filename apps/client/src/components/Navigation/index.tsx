@@ -1,4 +1,6 @@
-import { useTheme } from '@mui/material';
+import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import MenuIcon from '@mui/icons-material/Menu';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -9,15 +11,14 @@ import { useAtom } from 'jotai';
 import { memo } from 'react';
 import { Outlet } from 'react-router';
 
-import { navigationDrawer } from '../../atoms/navigationDrawer';
-import getIcon from '../getIcon';
+import { navigationDrawerAtom } from '../../atoms/navigationDrawer';
+import { TradesPageModal } from '../../pages/trades/enums';
+import DialogMain from '../DialogMain';
 import ColorModeMain from './ColorMode';
+import IntroForm from './Intro';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
-import DialogMain from '../DialogMain';
-import { TradesPageModal } from '../../pages/trades/enums';
-import IntroForm from './Intro';
 
 const MainContainer = memo(() => {
   return (
@@ -39,8 +40,7 @@ const NavigationModalList = memo(() => {
 });
 
 const NavigationMain = () => {
-  const theme = useTheme();
-  const [drawer, setDrawer] = useAtom(navigationDrawer);
+  const [drawer, setDrawer] = useAtom(navigationDrawerAtom);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -53,12 +53,12 @@ const NavigationMain = () => {
             edge="start"
             sx={[{ mr: 5 }, !!drawer?.open && { display: 'none' }]}
           >
-            {getIcon('menu')}
+            <MenuIcon />
           </IconButton>
 
           <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" gap={1}>
-              {getIcon('candlestick')}
+              <CandlestickChartIcon />
               <Typography variant="h6">LogMyTrades</Typography>
             </Stack>
 
@@ -73,11 +73,11 @@ const NavigationMain = () => {
       <Drawer variant="permanent" open={!!drawer?.open}>
         <DrawerHeader>
           <IconButton onClick={() => setDrawer({ open: false })}>
-            {theme.direction === 'rtl' ? getIcon('chevronRight') : getIcon('chevronLeft')}
+            <ChevronLeftIcon />
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <NavigationList open={!!drawer?.open} />
+        <NavigationList />
       </Drawer>
 
       <NavigationModalList />

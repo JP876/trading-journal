@@ -1,3 +1,4 @@
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Badge from '@mui/material/Badge';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider, { type DividerProps } from '@mui/material/Divider';
@@ -7,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { Provider, useAtomValue } from 'jotai';
 
-import getIcon from '../getIcon';
 import { anchorElAtom } from './atoms';
 import useMenuActions from './hooks/useMenuActions';
 import type { MenuActionsItemProps, MenuActionsProps } from './types';
@@ -65,7 +65,7 @@ const MenuActionsMain = ({ children, menuProps, btnProps, renderMenuBtn }: MenuA
         renderMenuBtn()
       ) : (
         <IconButton size="small" aria-label="settings" {...btnProps} onClick={handleClick}>
-          {btnProps?.children || getIcon('moreVert')}
+          {btnProps?.children || <MoreVertIcon />}
         </IconButton>
       )}
 

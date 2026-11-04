@@ -1,11 +1,12 @@
-import { Box, Button, useColorScheme } from '@mui/material';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 import AutoModeIcon from '@mui/icons-material/AutoMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import { Box, Button, useColorScheme } from '@mui/material';
+import { memo } from 'react';
 
 import MenuActions from '../../MenuActions';
-import type { MenuActionsItemProps } from '../../MenuActions/types';
 import useMenuActions from '../../MenuActions/hooks/useMenuActions';
+import type { MenuActionsItemProps } from '../../MenuActions/types';
 
 type ModeOptionsType = 'system' | 'light' | 'dark';
 
@@ -86,4 +87,4 @@ const ColorModeMain = () => {
   );
 };
 
-export default ColorModeMain;
+export default memo(ColorModeMain);

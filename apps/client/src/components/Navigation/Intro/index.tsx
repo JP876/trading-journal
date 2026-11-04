@@ -1,4 +1,8 @@
-import { Button, Divider, Stack, Typography } from '@mui/material';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import CloseIcon from '@mui/icons-material/Close';
 import { Controller } from 'react-hook-form';
 
 import AddRandomTradesContainer from '../../../pages/trades/forms/AddRandomTrades/AddRandomTradesContainer';
@@ -22,7 +26,7 @@ const IntroForm = () => {
   return (
     <Stack gap={2}>
       <Typography variant="body1">
-        Customize a few details and we’ll create sample trades for you, so you can try out the platform with a more
+        Customize a few details and we'll create sample trades for you, so you can try out the platform with a more
         complete dashboard. The trades are for demonstration only. Prefer to start with an empty account? Select Cancel.
       </Typography>
 
@@ -93,7 +97,7 @@ const IntroForm = () => {
 
             <Stack direction="row" alignItems="center" justifyContent="flex-end">
               <Stack direction="row" gap={2}>
-                <Button variant="outlined" size="small" onClick={handleClose}>
+                <Button variant="outlined" size="small" startIcon={<CloseIcon />} onClick={handleClose}>
                   Cancel
                 </Button>
                 <SubmitButton loading={isLoading} />
