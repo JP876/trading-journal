@@ -114,8 +114,8 @@ const columns: ColumnDef<TStatisticTableRow>[] = [
 
 const StatisticsList = () => {
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
   const [mainSession] = useMainSession();
 

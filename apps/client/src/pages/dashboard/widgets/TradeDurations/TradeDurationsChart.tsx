@@ -47,8 +47,8 @@ const TradeDurationsChart = () => {
   const updatePeriods = useSetAtom(updatePeriodsAtom, { store: tradeDurationsChartStore });
 
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
   const chartData = (() => {

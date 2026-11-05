@@ -34,14 +34,14 @@ type TConsecutiveTradesChartProps = {};
 const ConsecutiveTradesChart = ({}: TConsecutiveTradesChartProps) => {
   const theme = useTheme();
 
-  const trades = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+  const tradesQuery = useQuery({
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
   const chartData = (() => {
-    if (!Array.isArray(trades.data?.results)) return null;
-    return transformData(getConsecutiveTrades(trades.data.results));
+    if (!Array.isArray(tradesQuery.data?.results)) return null;
+    return transformData(getConsecutiveTrades(tradesQuery.data.results));
   })();
 
   const chartProps = useMemo(() => {

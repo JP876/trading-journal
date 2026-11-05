@@ -1,11 +1,11 @@
-import { lazy, memo, useState } from 'react';
+import { lazy, memo, Suspense, useState, ViewTransition } from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-
-import TradingSessionsMain from './TradingSessions';
+import { Skeleton } from '@mui/material';
 
 const TagsMain = lazy(() => import('./Tags'));
+const TradingSessionsMain = lazy(() => import('./TradingSessions'));
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -22,7 +22,7 @@ const TabPanel = ({ children, index, value }: TabPanelProps) => {
       aria-labelledby={`vertical-tab-${index}`}
       sx={{ width: '100%' }}
     >
-      {value === index && <Box sx={{ p: 2, pl: 4, width: 'inherit' }}>{children}</Box>}
+      <Box sx={{ p: 2, pl: 4, width: 'inherit' }}>{children}</Box>
     </Box>
   );
 };
@@ -32,6 +32,10 @@ const a11yProps = (index: number) => {
     id: `vertical-tab-${index}`,
     'aria-controls': `vertical-tabpanel-${index}`,
   };
+};
+
+const SessionTabFallback = () => {
+  return <Skeleton variant="rectangular" sx={{ width: '100%', height: '15rem' }}></Skeleton>;
 };
 
 const SettingsNavigation = () => {
@@ -54,11 +58,20 @@ const SettingsNavigation = () => {
         <Tab label="Sessions" {...a11yProps(0)} />
         <Tab label="Tags" {...a11yProps(1)} />
       </Tabs>
+
       <TabPanel value={value} index={0}>
-        <TradingSessionsMain />
+        <ViewTransition>
+          <Suspense fallback={<SessionTabFallback />}>
+            <TradingSessionsMain />
+          </Suspense>
+        </ViewTransition>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <TagsMain />
+        <ViewTransition>
+          <Suspense fallback={<SessionTabFallback />}>
+            <TagsMain />
+          </Suspense>
+        </ViewTransition>
       </TabPanel>
     </Box>
   );

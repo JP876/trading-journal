@@ -5,17 +5,19 @@ import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
+import { lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router';
 
 import { getTrades } from '../../api/trades';
 import { QueryKey } from '../../enums';
 import TradingSessionSelect from '../trades/TradingSessionSelect';
 import useResetWidgets from './hooks/useResetWidgets';
-import ConsecutiveTrades from './widgets/ConsecutiveTrades';
-import Performance from './widgets/Performance';
-import ProfitablePairs from './widgets/ProfitablePairs';
-import Statistics from './widgets/Statistics';
-import TradeDurations from './widgets/TradeDurations';
+
+const ConsecutiveTrades = lazy(() => import('./widgets/ConsecutiveTrades'));
+const Performance = lazy(() => import('./widgets/Performance'));
+const ProfitablePairs = lazy(() => import('./widgets/ProfitablePairs'));
+const Statistics = lazy(() => import('./widgets/Statistics'));
+const TradeDurations = lazy(() => import('./widgets/TradeDurations'));
 
 const WidgetsContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
@@ -109,10 +111,18 @@ const LoadingTrades = () => {
   );
 };
 
+type TWidgetFallbackProps = {
+  gridArea: string;
+};
+
+const WidgetFallback = ({ gridArea }: TWidgetFallbackProps) => (
+  <Skeleton variant="rectangular" sx={{ gridArea, height: '100%', width: '100%' }}></Skeleton>
+);
+
 const DashboardContent = () => {
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
   if (tradesQuery.isPending || tradesQuery.isLoading) return <LoadingTrades />;
@@ -130,11 +140,21 @@ const DashboardContent = () => {
 
   return (
     <WidgetsContainer>
-      <Statistics paperProps={{ sx: { gridArea: 'stats', overflowY: 'auto' } }} />
-      <Performance paperProps={{ sx: { gridArea: 'performance' } }} />
-      <ProfitablePairs paperProps={{ sx: { gridArea: 'profitable' } }} />
-      <ConsecutiveTrades paperProps={{ sx: { gridArea: 'consecutive' } }} />
-      <TradeDurations paperProps={{ sx: { gridArea: 'durations' } }} />
+      <Suspense fallback={<WidgetFallback gridArea="stats" />}>
+        <Statistics paperProps={{ sx: { gridArea: 'stats', overflowY: 'auto' } }} />
+      </Suspense>
+      <Suspense fallback={<WidgetFallback gridArea="performance" />}>
+        <Performance paperProps={{ sx: { gridArea: 'performance' } }} />
+      </Suspense>
+      <Suspense fallback={<WidgetFallback gridArea="profitable" />}>
+        <ProfitablePairs paperProps={{ sx: { gridArea: 'profitable' } }} />
+      </Suspense>
+      <Suspense fallback={<WidgetFallback gridArea="consecutive" />}>
+        <ConsecutiveTrades paperProps={{ sx: { gridArea: 'consecutive' } }} />
+      </Suspense>
+      <Suspense fallback={<WidgetFallback gridArea="durations" />}>
+        <TradeDurations paperProps={{ sx: { gridArea: 'durations' } }} />
+      </Suspense>
     </WidgetsContainer>
   );
 };

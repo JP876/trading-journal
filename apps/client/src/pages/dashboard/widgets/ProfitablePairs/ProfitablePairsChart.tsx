@@ -20,8 +20,8 @@ const ProfitablePairsChart = () => {
   const theme = useTheme();
 
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES],
-    queryFn: () => getTrades({}),
+    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
+    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
   const pairsQuery = useQuery({
