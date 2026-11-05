@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import { RouterProvider } from 'react-router';
+import { RouterProvider } from 'react-router/dom';
 
 import { router } from './router';
 import RetryContainer from './components/feedback/RetryContainer';

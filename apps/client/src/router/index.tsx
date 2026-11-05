@@ -78,4 +78,4 @@ const routes: RouteObject[] = [
   },
 ];
 
-export const router = createBrowserRouter(routes, {});
+export const router = createBrowserRouter(routes, { future: {} });
