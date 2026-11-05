@@ -27,6 +27,7 @@ export const getStatistics = (trades: Trade[], accountSize: number): TStatistics
   let duration = new DurationStatistics();
   let count = new CountTradesStatistic();
   let perf = new PerformanceStatistic(accountSize);
+  perf.peakEquity = firstTrade.profit ?? 0;
 
   let daysProcessed = differenceInDays(firstTrade.openDate!, lastTrade.closeDate!);
 
@@ -38,8 +39,8 @@ export const getStatistics = (trades: Trade[], accountSize: number): TStatistics
   }
 
   count.update(null);
-  perf.update(null, count);
   duration.update(null);
+  perf.update(null, count);
 
   let winRate: TStatistic = {
     all: getWinRate(count.win.all, count.trades.all),
@@ -54,6 +55,8 @@ export const getStatistics = (trades: Trade[], accountSize: number): TStatistics
     returnPercentage: perf.returnPercentage,
     avgProft: perf.avgProft,
     avgLoss: perf.avgLoss,
+    maxDrawdown: perf.maxDrawdown,
+    maxDrawdownPercentage: perf.maxDrawdonwPercentage,
     tradesCount: count.trades,
     lossTrades: count.loss,
     winTrades: count.win,

@@ -8,6 +8,10 @@ class PerformanceStatistic implements Statistic {
   avgProft: TStatistic = { all: null, long: null, short: null };
   avgLoss: TStatistic = { all: null, long: null, short: null };
 
+  maxDrawdown: number = 0;
+  maxDrawdonwPercentage: number = 0;
+  peakEquity: number = 0;
+
   private accountSize: number = 0;
 
   constructor(accountSize: number) {
@@ -32,10 +36,18 @@ class PerformanceStatistic implements Statistic {
         this.returnPercentage = this.finalProft / this.accountSize;
       }
 
+      if (this.maxDrawdown && this.peakEquity) {
+        this.maxDrawdonwPercentage = (this.maxDrawdown / this.peakEquity) * 100;
+      }
+
       return;
     }
 
     this.finalProft = this.finalProft + trade.profit;
+
+    this.peakEquity = Math.max(this.peakEquity, this.finalProft);
+    let currentDrawdown = this.peakEquity - this.finalProft;
+    this.maxDrawdown = Math.max(currentDrawdown, this.maxDrawdown);
 
     if (trade.result === 'win' && trade.profit >= 0) {
       this.avgProft[trade.direction] = (this.avgProft[trade.direction] ?? 0) + trade.profit;

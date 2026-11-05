@@ -49,6 +49,8 @@ export type TStatisticsReturn = {
   returnPercentage: number;
   avgProft: TStatistic;
   avgLoss: TStatistic;
+  maxDrawdown: number;
+  maxDrawdownPercentage: number;
   tradesCount: TStatistic;
   lossTrades: TStatistic;
   winTrades: TStatistic;

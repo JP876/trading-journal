@@ -24,6 +24,7 @@ type TFormatedStatisticsReturn = {
   daysProcessed: number;
   monthsProcessed: number;
   avgTradesPerDay: number;
+  maxDrawdown: number;
   returnPercentage: string;
   tableData: TStatisticTableRow[];
 };
@@ -47,10 +48,11 @@ const formatStatistic = (data: TStatistic, fn: (value: number) => string) => {
 const formatTradeDurations = (data: TStatistic) => formatStatistic(data, formatSeconds);
 
 const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsReturn => {
-  let finalData = {
+  return {
     daysProcessed: data.daysProcessed,
     monthsProcessed: data.monthsProcessed,
     avgTradesPerDay: data.avgTradesPerDay,
+    maxDrawdown: +data.maxDrawdown.toFixed(1),
     returnPercentage: data.returnPercentage ? `${(data.returnPercentage * 100).toFixed(1)}%` : '-',
     tableData: [
       {
@@ -77,7 +79,6 @@ const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsRetur
       { ...formatTradeDurations(data.shortestLostTrades), label: 'Shortest loss', rowId: 'shortestLoss' },
     ],
   };
-  return finalData;
 };
 
 const columns: ColumnDef<TStatisticTableRow>[] = [
@@ -137,10 +138,12 @@ const StatisticsList = () => {
         <Typography fontWeight="bold"> {statsData.monthsProcessed}</Typography>
         <Typography>Average trades per day</Typography>
         <Typography fontWeight="bold"> {statsData.avgTradesPerDay}</Typography>
-        <Typography>Account size</Typography>
+        <Typography>Initial account size</Typography>
         <Typography fontWeight="bold"> {Price.formatToCurrency(mainSession?.accountSize)}</Typography>
         <Typography>Return %</Typography>
         <Typography fontWeight="bold"> {statsData.returnPercentage}</Typography>
+        <Typography>Max drawdown</Typography>
+        <Typography fontWeight="bold"> {Price.formatToCurrency(statsData.maxDrawdown)}</Typography>
       </Box>
       <TableMain data={statsData.tableData} columns={columns} />
     </Stack>
