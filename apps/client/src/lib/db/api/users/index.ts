@@ -15,14 +15,14 @@ export const hasUsersDB = () => {
 };
 
 export const createUserDB = async (): Promise<[Error, null] | [null, UserDB]> => {
-  const addResult = await withCatch(db.users.add({ name: '', image: null, isLoggedIn: true, variety: 'GUEST' }));
-  if (addResult.error) return [addResult.error, null];
+  const [addError] = await withCatch(db.users.add({ name: '', image: null, isLoggedIn: true, variety: 'GUEST' }));
+  if (addError) return [addError, null];
 
-  const userResult = await withCatch(getLoggedInUserDB());
-  if (userResult.error) return [userResult.error, null];
+  const [error, user] = await withCatch(getLoggedInUserDB());
+  if (error) return [error, null];
 
-  if (!userResult.data?.id) {
+  if (!user?.id) {
     return [new Error('Logged in user not found'), null];
   }
-  return [null, userResult.data];
+  return [null, user];
 };

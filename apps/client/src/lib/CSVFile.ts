@@ -21,20 +21,22 @@ export async function readCSVFile<T>(
 }
 
 export async function handleCSVFile<T>(file: File) {
-  let csvResult = await withCatch(readCSVFile<T>(file));
-  if (csvResult.error || (Array.isArray(csvResult.data?.errors) && csvResult.data?.errors?.length > 0)) {
+  const [error, result] = await withCatch(readCSVFile<T>(file));
+
+  if (error || (Array.isArray(result?.errors) && result?.errors?.length > 0)) {
     getDefaultStore().set(openSnackbarAtom, {
       severity: 'error',
       message: "We couldn't read this CSV. Make sure it uses UTF-8 encoding, then try again.",
     });
     return;
   }
-  if (!Array.isArray(csvResult.data?.data) || csvResult.data.data.length === 0) {
+  if (!Array.isArray(result?.data) || result.data.length === 0) {
     getDefaultStore().set(openSnackbarAtom, {
       severity: 'error',
       message: 'This CSV appears to be empty. Check the file and upload it again.',
     });
     return;
   }
-  return csvResult.data;
+
+  return result;
 }

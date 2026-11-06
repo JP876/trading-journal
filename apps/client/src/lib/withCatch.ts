@@ -1,19 +1,9 @@
-type Ok<T> = {
-  data: T;
-  error: null;
-};
-type Err<E> = {
-  data: null;
-  error: E;
-};
-type Result<T, E> = Ok<T> | Err<E>;
-
-async function withCatch<T, E = Error>(promise: Promise<T>): Promise<Result<T, E>> {
+async function withCatch<T, E = Error>(promise: Promise<T>): Promise<[E, null] | [null, T]> {
   try {
     const data = await promise;
-    return { data, error: null };
+    return [null, data];
   } catch (error) {
-    return { data: null, error: error as E };
+    return [error as E, null];
   }
 }
 

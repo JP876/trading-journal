@@ -11,20 +11,20 @@ import { addTradingSessionDB } from '../tradingSessions';
 import { createUserDB, getAllUsersDB } from '../users';
 
 export const loginUserDB = async (userId?: number): Promise<[Error, null] | [null, UserDB]> => {
-  let usersResult = await withCatch(getAllUsersDB());
-  if (usersResult.error) {
-    return [usersResult.error, null] as const;
+  const [usersError, users] = await withCatch(getAllUsersDB());
+  if (usersError) {
+    return [usersError, null];
   }
 
-  let user: UserDB | null = usersResult.data[0];
+  let user: UserDB | null = users[0];
   if (userId) {
-    user = usersResult.data.find((u) => u.id === userId) || null;
+    user = users.find((u) => u.id === userId) || null;
   }
 
   if (user?.id) {
-    const updateResult = await withCatch(db.users.update(user.id, { isLoggedIn: true, variety: 'GUEST' }));
-    if (updateResult.error) {
-      return [updateResult.error, null];
+    const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true, variety: 'GUEST' }));
+    if (error) {
+      return [error, null];
     }
 
     getDefaultStore().set(snackbarAtom, {
@@ -37,14 +37,14 @@ export const loginUserDB = async (userId?: number): Promise<[Error, null] | [nul
   const [addError, newUser] = await createUserDB();
   if (addError) return [addError, null];
 
-  const sessionResult = await withCatch(
+  const [sessionError] = await withCatch(
     addTradingSessionDB({
       title: `Initial session ${format(new Date(), 'MM/yy')}`,
       isMain: true,
       accountSize: 50_000,
     })
   );
-  if (sessionResult.error) return [sessionResult.error, null];
+  if (sessionError) return [sessionError, null];
 
   getDefaultStore().set(openModalAtom, { id: TradesPageModal.INTRO });
   return [null, newUser];

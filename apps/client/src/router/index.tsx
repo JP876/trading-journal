@@ -32,9 +32,9 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
     }
   }
 
-  const refreshResult = await withCatch(refreshToken());
+  const [error] = await withCatch(refreshToken());
 
-  if (refreshResult.error) {
+  if (error) {
     showErrorMessage();
     throw redirect('/');
   }
@@ -42,20 +42,20 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const userInfo = getDefaultStore().get(userAtom);
   if (userInfo) return await next();
 
-  const userResult = await withCatch(axiosInstance.get<User>('auth/me'));
+  const [userError, user] = await withCatch(axiosInstance.get<User>('auth/me'));
 
-  if (userResult.error) {
+  if (userError) {
     showErrorMessage();
     throw redirect('/');
   }
 
-  getDefaultStore().set(userAtom, userResult.data.data);
+  getDefaultStore().set(userAtom, user.data);
   return await next();
 };
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
-  const refreshResult = await withCatch(refreshToken());
-  if (refreshResult.error) {
+  const [error] = await withCatch(refreshToken());
+  if (error) {
     return await next();
   }
   return redirect('/dashboard');

@@ -29,11 +29,11 @@ import { TradesPageModal } from '../enums';
 const dzStore = createStore();
 
 const getPairsAndSession = async (): Promise<[Pair[] | null, TradingSession | null]> => {
-  let [sessions, pairs] = await Promise.all([
+  const [sessions, pairs] = await Promise.all([
     queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]),
     queryClient.getQueryData<Pair[]>([QueryKey.PAIRS]),
   ]);
-  let mainSession = sessions?.results?.find((el) => el?.isMain);
+  const mainSession = sessions?.results?.find((el) => el?.isMain);
   return [pairs || null, mainSession || null];
 };
 
@@ -53,9 +53,9 @@ const ConfirmImportButton = () => {
     }
 
     let trades = transformTrades(parsedFileResult.data, pairs, mainSession);
-    let addMultipleResult = await withCatch(addMultipleTradesDB(trades));
+    const [error] = await withCatch(addMultipleTradesDB(trades));
 
-    if (addMultipleResult.error) {
+    if (error) {
       openSnackbar({
         severity: 'error',
         message: "We couldn't save these trades. Your data hasn't been imported. Please try again.",
@@ -157,7 +157,7 @@ const ImportTradesAction = () => {
     if (tradesData.length === 0) {
       return;
     }
-    let result = await handleCSVFile<Trade>(tradesData[0].file);
+    const result = await handleCSVFile<Trade>(tradesData[0].file);
     if (result) setParesedFileResult(result);
   }, []);
 

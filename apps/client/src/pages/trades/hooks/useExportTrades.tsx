@@ -30,16 +30,16 @@ const useExportTrades = () => {
       return null;
     }
 
-    let tradesResult = await withCatch(getTrades({}));
+    const [tradesError, trades] = await withCatch(getTrades({}));
 
-    if (tradesResult.error) {
+    if (tradesError) {
       openSnackbar({
         severity: 'error',
         message: 'Something went wrong while loading your trades. Try again in a moment.',
       });
       return null;
     }
-    if (!Array.isArray(tradesResult.data?.results) || tradesResult.data.results.length === 0) {
+    if (trades.results.length === 0) {
       openSnackbar({
         severity: 'error',
         message: 'No trades to export yet. Add trades and try again',
@@ -47,7 +47,7 @@ const useExportTrades = () => {
       return null;
     }
 
-    let { results } = tradesResult.data;
+    const { results } = trades;
 
     let uniquePairs = [...new Set(results.map((t) => t.pair))];
     let pairs = uniquePairs.reduce(
