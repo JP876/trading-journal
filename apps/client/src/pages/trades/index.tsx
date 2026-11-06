@@ -202,70 +202,68 @@ const TradesPage = () => {
 
   return (
     <TableProviders rowsPerPage={20}>
-      <Paper sx={{ p: 2 }}>
-        <Stack mb={4} direction="row" alignItems="center" justifyContent="space-between">
-          <Stack direction="row" alignItems="center" gap={2}>
-            <Typography variant="h4">Trades</Typography>
+      <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">
+        <Stack direction="row" alignItems="center" gap={2}>
+          <Typography variant="h4">Trades</Typography>
 
-            <Stack direction="row" alignItems="center" gap={1}>
-              {user?.variety === 'GUEST' ? (
-                <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
-                  {/* Implemented only when user is logged in as guest */}
-                  <MenuActions.Item
-                    icon={<AddIcon />}
-                    label="Add trade"
-                    onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
-                  />
-                  <MenuActions.Divider />
-                  <MenuActions.Item
-                    icon={<PublishIcon />}
-                    label="Import trades"
-                    onClick={(_, handleClose) =>
-                      handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))
-                    }
-                  />
-                  <ExportTradesItem />
-                  <MenuActions.Divider />
-                  <MenuActions.Item
-                    icon={<QueueIcon />}
-                    label="Add random trades"
-                    onClick={(_, handleClose) =>
-                      handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))
-                    }
-                  />
-                </MenuActions>
-              ) : (
-                <IconButton
-                  size="small"
-                  aria-label="add-trade-button"
-                  onClick={() => openModal(TradesPageModal.ADD_TRADE)}
-                >
-                  <AddIcon />
-                </IconButton>
-              )}
+          <Stack direction="row" alignItems="center" gap={1}>
+            {user?.variety === 'GUEST' ? (
+              <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
+                {/* Implemented only when user is logged in as guest */}
+                <MenuActions.Item
+                  icon={<AddIcon />}
+                  label="Add trade"
+                  onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
+                />
+                <MenuActions.Divider />
+                <MenuActions.Item
+                  icon={<PublishIcon />}
+                  label="Import trades"
+                  onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))}
+                />
+                <ExportTradesItem />
+                <MenuActions.Divider />
+                <MenuActions.Item
+                  icon={<QueueIcon />}
+                  label="Add random trades"
+                  onClick={(_, handleClose) =>
+                    handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))
+                  }
+                />
+              </MenuActions>
+            ) : (
+              <IconButton
+                size="small"
+                aria-label="add-trade-button"
+                onClick={() => openModal(TradesPageModal.ADD_TRADE)}
+              >
+                <AddIcon />
+              </IconButton>
+            )}
 
-              <TradesFiltersButton />
-            </Stack>
-          </Stack>
-          <Stack direction="row" alignItems="center" gap={2}>
-            <IconButton
-              size="small"
-              aria-label="trades-settings-button"
-              onClick={() => openModal(TradesPageModal.SETTINGS)}
-            >
-              <SettingsIcon />
-            </IconButton>
-            <TradingSessionSelect />
+            <TradesFiltersButton />
           </Stack>
         </Stack>
+        <Stack direction="row" alignItems="center" gap={2}>
+          <IconButton
+            size="small"
+            aria-label="trades-settings-button"
+            onClick={() => openModal(TradesPageModal.SETTINGS)}
+          >
+            <SettingsIcon />
+          </IconButton>
+          <TradingSessionSelect />
+        </Stack>
+      </Stack>
 
-        <Stack>
-          <TradesFiltersContainer>
-            <TradesFilters />
-          </TradesFiltersContainer>
+      <Stack>
+        <TradesFiltersContainer>
+          <TradesFilters />
+        </TradesFiltersContainer>
+        <Paper sx={{ p: 2 }}>
           <TradesTableMain />
-        </Stack>
-      </Paper>
+        </Paper>
+      </Stack>
 
       <TradesModalList />
     </TableProviders>
