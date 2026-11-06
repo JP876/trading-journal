@@ -1,6 +1,7 @@
+import { getDefaultStore } from 'jotai';
+import { userAtom } from '../../atoms/user';
 import { axiosInstance } from '../../lib/axiosInstance';
 import { db } from '../../lib/db';
-import { getCurrentUser } from '../../lib/db/api/auth';
 import { isGuest } from '../../lib/utils';
 import withDelay from '../../lib/withDelay';
 import type { LoginFormData, RegisterFormData } from '../../types/auth';
@@ -13,14 +14,14 @@ export const registerUser = async (data: RegisterFormData) => {
   return response.data;
 };
 
-export const loginUser = async (data: LoginFormData) => {
+export const loginUser = async (data: LoginFormData): Promise<User> => {
   const response = await withDelay(axiosInstance.post('auth/login', data));
   return response.data;
 };
 
 export const logoutUser = async () => {
   if (isGuest()) {
-    const user = await getCurrentUser();
+    const user = getDefaultStore().get(userAtom);
     return await db.users.update(user!.id, { isLoggedIn: false });
   }
 
@@ -34,8 +35,9 @@ export const refreshToken = async (): Promise<RefreshTokenData | null> => {
 };
 
 export const getLoggedInUser = async () => {
-  const user = await getCurrentUser();
-  if (user) return user;
+  if (isGuest()) {
+    return getDefaultStore().get(userAtom);
+  }
 
   const response = await axiosInstance.get<User>('auth/me');
   return response.data;

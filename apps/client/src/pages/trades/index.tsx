@@ -201,7 +201,7 @@ const TradesPage = () => {
   };
 
   return (
-    <TableProviders>
+    <TableProviders rowsPerPage={20}>
       <Paper sx={{ p: 2 }}>
         <Stack mb={4} direction="row" alignItems="center" justifyContent="space-between">
           <Stack direction="row" alignItems="center" gap={2}>

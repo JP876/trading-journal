@@ -5,7 +5,7 @@ import type { PaginationInfo } from '..';
 export const TradingSessionFormSchema = z.object({
   title: z.string().nonempty('This field is required'),
   description: z.string().max(400).optional(),
-  accountSize: z.number().positive(),
+  accountSize: z.number().min(1_000).positive(),
   isMain: z.boolean().optional(),
   defaultPairId: z.number().positive().optional(),
   defaultTakeProfit: z.number().int().positive().optional(),

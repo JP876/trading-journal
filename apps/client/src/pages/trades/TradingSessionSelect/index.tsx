@@ -1,14 +1,14 @@
-import { useId } from 'react';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useId } from 'react';
 
-import useSnackbar from '../../../hooks/useSnackbar';
 import { editTradingSession, getTradingSessions } from '../../../api/tradingSessions';
 import { QueryKey } from '../../../enums';
+import useSnackbar from '../../../hooks/useSnackbar';
 
 export type TTradingSessionSelectProps = {
   onSuccess?: () => void;

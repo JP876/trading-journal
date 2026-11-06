@@ -1,18 +1,18 @@
-import { lazy } from 'react';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { useAtomValue } from 'jotai';
+import { lazy, Suspense } from 'react';
 
-import TradingSessionsTable from './TableMain';
-import useModal from '../../../../hooks/useModal';
-import { TradesPageModal } from '../../enums';
 import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
-import type { TradingSession } from '../../../../types/tradingSessions';
-import TableProviders from '../../../../components/table/providers';
 import TextFilter from '../../../../components/table/filters/TextFilter';
+import TableProviders from '../../../../components/table/providers';
+import useModal from '../../../../hooks/useModal';
+import type { TradingSession } from '../../../../types/tradingSessions';
+import { TradesPageModal } from '../../enums';
+import TradingSessionsTable from './TableMain';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
@@ -22,7 +22,7 @@ const TradingSessionModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
 
   return (
-    <>
+    <Suspense>
       <DialogMain
         id={TradesPageModal.DELETE_TRADING_SESSION}
         title="Are you absolutely sure?"
@@ -39,7 +39,7 @@ const TradingSessionModalList = () => {
       <DialogMain id={TradesPageModal.EDIT_TRADING_SESSION} title="Edit trading session">
         <EditTradingSessionForm session={modalInfo?.[TradesPageModal.EDIT_TRADING_SESSION]?.data as TradingSession} />
       </DialogMain>
-    </>
+    </Suspense>
   );
 };
 

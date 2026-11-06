@@ -11,14 +11,11 @@ const GuestLogin = () => {
   const { openSnackbar } = useSnackbar();
 
   const handleClick = async () => {
-    const error = await loginUserDB();
-
+    const [error] = await loginUserDB();
     if (error) {
       openSnackbar({ severity: 'error', message: "We couldn't update your data. Try again or refresh." });
       return;
     }
-
-    openSnackbar({ severity: 'success', message: `Welcome! You're in guest mode — feel free to look around.` });
     navigate('/dashboard', { replace: true });
   };
 

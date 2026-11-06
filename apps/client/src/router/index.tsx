@@ -6,10 +6,10 @@ import { refreshToken } from '../api/auth';
 import { openSnackbarAtom } from '../atoms/snackbar';
 import { userAtom } from '../atoms/user';
 import { axiosInstance } from '../lib/axiosInstance';
-import { getCurrentUser } from '../lib/db/api/auth';
 import withCatch from '../lib/withCatch';
 import type { User } from '../types/user';
 import ProtectedRoutes from './ProtectedRoutes';
+import { getLoggedInUserDB, hasUsersDB } from '../lib/db/api/users';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));
@@ -24,16 +24,17 @@ const showErrorMessage = () => {
 };
 
 const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
-  const user = await getCurrentUser();
-
-  if (user?.isLoggedIn) {
-    getDefaultStore().set(userAtom, user);
-    return await next();
+  if (hasUsersDB()) {
+    let user = await getLoggedInUserDB();
+    if (user) {
+      getDefaultStore().set(userAtom, user);
+      return await next();
+    }
   }
 
-  const [error] = await withCatch(refreshToken());
+  const refreshResult = await withCatch(refreshToken());
 
-  if (error) {
+  if (refreshResult.error) {
     showErrorMessage();
     throw redirect('/');
   }
@@ -41,20 +42,20 @@ const protectedRouteMiddleware: MiddlewareFunction = async (_, next) => {
   const userInfo = getDefaultStore().get(userAtom);
   if (userInfo) return await next();
 
-  const [userErr, response] = await withCatch(axiosInstance.get<User>('auth/me'));
+  const userResult = await withCatch(axiosInstance.get<User>('auth/me'));
 
-  if (userErr) {
+  if (userResult.error) {
     showErrorMessage();
     throw redirect('/');
   }
 
-  getDefaultStore().set(userAtom, response.data);
+  getDefaultStore().set(userAtom, userResult.data.data);
   return await next();
 };
 
 const authMiddleware: MiddlewareFunction = async (_, next) => {
-  const [error] = await withCatch(refreshToken());
-  if (error) {
+  const refreshResult = await withCatch(refreshToken());
+  if (refreshResult.error) {
     return await next();
   }
   return redirect('/dashboard');

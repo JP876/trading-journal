@@ -1,11 +1,10 @@
-import { lazy, memo, Suspense, useState, ViewTransition } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { Skeleton } from '@mui/material';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import { memo, useState } from 'react';
 
-const TagsMain = lazy(() => import('./Tags'));
-const TradingSessionsMain = lazy(() => import('./TradingSessions'));
+import TagsMain from './Tags';
+import TradingSessionsMain from './TradingSessions';
 
 type TabPanelProps = {
   children: React.ReactNode;
@@ -34,10 +33,6 @@ const a11yProps = (index: number) => {
   };
 };
 
-const SessionTabFallback = () => {
-  return <Skeleton variant="rectangular" sx={{ width: '100%', height: '15rem' }}></Skeleton>;
-};
-
 const SettingsNavigation = () => {
   const [value, setValue] = useState(0);
 
@@ -60,18 +55,10 @@ const SettingsNavigation = () => {
       </Tabs>
 
       <TabPanel value={value} index={0}>
-        <ViewTransition>
-          <Suspense fallback={<SessionTabFallback />}>
-            <TradingSessionsMain />
-          </Suspense>
-        </ViewTransition>
+        <TradingSessionsMain />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <ViewTransition>
-          <Suspense fallback={<SessionTabFallback />}>
-            <TagsMain />
-          </Suspense>
-        </ViewTransition>
+        <TagsMain />
       </TabPanel>
     </Box>
   );

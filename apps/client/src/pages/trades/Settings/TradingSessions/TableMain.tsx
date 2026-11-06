@@ -1,13 +1,13 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { QueryKey } from '../../../../enums';
 import { getTradingSessions } from '../../../../api/tradingSessions';
-import useColumns from './hooks/useColumns';
-import TableMain from '../../../../components/table/TableMain';
-import { usePaginationState } from '../../../../components/table/providers/Pagination';
 import { useFiltersState } from '../../../../components/table/providers/Filters';
+import { usePaginationState } from '../../../../components/table/providers/Pagination';
 import TableMainFooter from '../../../../components/table/TableFooter';
+import TableMain from '../../../../components/table/TableMain';
+import { QueryKey } from '../../../../enums';
+import useColumns from './hooks/useColumns';
 
 const TradingSessionsTable = () => {
   const { page, rowsPerPage } = usePaginationState();

@@ -53,9 +53,9 @@ const ConfirmImportButton = () => {
     }
 
     let trades = transformTrades(parsedFileResult.data, pairs, mainSession);
-    let [addErr] = await withCatch(addMultipleTradesDB(trades));
+    let addMultipleResult = await withCatch(addMultipleTradesDB(trades));
 
-    if (addErr) {
+    if (addMultipleResult.error) {
       openSnackbar({
         severity: 'error',
         message: "We couldn't save these trades. Your data hasn't been imported. Please try again.",

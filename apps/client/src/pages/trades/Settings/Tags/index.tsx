@@ -1,25 +1,27 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 import { useAtomValue } from 'jotai';
+import { lazy, Suspense } from 'react';
 
+import { modalAtom } from '../../../../atoms/modal';
+import DialogMain from '../../../../components/DialogMain';
+import TextFilter from '../../../../components/table/filters/TextFilter';
+import TableProviders from '../../../../components/table/providers';
 import useModal from '../../../../hooks/useModal';
+import type { Tag } from '../../../../types/tag';
 import { TradesPageModal } from '../../enums';
 import TagsTableMain from './TagsTable';
-import DialogMain from '../../../../components/DialogMain';
-import { modalAtom } from '../../../../atoms/modal';
-import EditTagForm from './forms/EditForm';
-import type { Tag } from '../../../../types/tag';
-import DeleteTag from './DeleteTag';
-import TableProviders from '../../../../components/table/providers';
-import TextFilter from '../../../../components/table/filters/TextFilter';
+
+const EditTagForm = lazy(() => import('./forms/EditForm'));
+const DeleteTag = lazy(() => import('./DeleteTag'));
 
 const TagModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
 
   return (
-    <>
+    <Suspense>
       <DialogMain id={TradesPageModal.EDIT_TAG} title="Edit tag">
         <EditTagForm tag={modalInfo?.[TradesPageModal.EDIT_TAG]?.data as Tag} />
       </DialogMain>
@@ -32,7 +34,7 @@ const TagModalList = () => {
       >
         <DeleteTag tag={modalInfo?.[TradesPageModal.DELETE_TAG]?.data as Tag} />
       </DialogMain>
-    </>
+    </Suspense>
   );
 };
 
