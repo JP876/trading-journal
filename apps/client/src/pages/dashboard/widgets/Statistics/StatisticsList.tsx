@@ -12,7 +12,7 @@ import { formatSeconds } from '../../utils/duration';
 import { getStatistics } from '../../utils/statistics';
 import type { TStatistic, TStatisticsReturn } from '../../utils/types';
 import useMainSession from '../../../../hooks/useMainSession';
-import Price from '../../../../lib/Price';
+import { formatToCurrency } from '../../../../lib/price';
 
 type TStatisticTableRow = {
   [k in keyof TStatistic]: number | string | null;
@@ -64,12 +64,12 @@ const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsRetur
       { ...data.winTrades, label: 'Won trades', rowId: 'wonTrades' },
       { ...data.lossTrades, label: 'Lost trades', rowId: 'lostTrades' },
       {
-        ...formatStatistic(data.avgProft, (value) => Price.formatToCurrency(value)),
+        ...formatStatistic(data.avgProft, (value) => formatToCurrency(value)),
         label: 'Average profit',
         rowId: 'avgProfit',
       },
       {
-        ...formatStatistic(data.avgLoss, (value) => Price.formatToCurrency(value)),
+        ...formatStatistic(data.avgLoss, (value) => formatToCurrency(value)),
         label: 'Average loss',
         rowId: 'avgLoss',
       },
@@ -139,11 +139,11 @@ const StatisticsList = () => {
         <Typography>Average trades per day</Typography>
         <Typography fontWeight="bold"> {statsData.avgTradesPerDay}</Typography>
         <Typography>Initial account size</Typography>
-        <Typography fontWeight="bold"> {Price.formatToCurrency(mainSession?.accountSize)}</Typography>
+        <Typography fontWeight="bold"> {formatToCurrency(mainSession?.accountSize)}</Typography>
         <Typography>Return %</Typography>
         <Typography fontWeight="bold"> {statsData.returnPercentage}</Typography>
         <Typography>Max drawdown</Typography>
-        <Typography fontWeight="bold"> {Price.formatToCurrency(statsData.maxDrawdown)}</Typography>
+        <Typography fontWeight="bold"> {formatToCurrency(statsData.maxDrawdown)}</Typography>
       </Box>
       <TableMain data={statsData.tableData} columns={columns} />
     </Stack>

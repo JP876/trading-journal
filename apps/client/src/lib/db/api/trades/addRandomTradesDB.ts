@@ -4,10 +4,10 @@ import { addMultipleTradesDB } from '.';
 import { db } from '../..';
 import type { Pair } from '../../../../types/pair';
 import type { AddRandomTradesFormType, Direction, Result, Trade } from '../../../../types/trade';
-import Price from '../../../Price';
 import { getRandomFloat, getRandomInt, getRandomItem, shuffleArray } from '../../../utils';
 import { findPairById } from '../pairs';
 import { getRandomTagIdsDB } from '../tags';
+import { calculateProfit } from '../../../price';
 
 export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   count: 1_000,
@@ -92,7 +92,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     let profit: number | undefined;
 
     if (pairInfo?.pair) {
-      let calculatedProfit = Price.calculateProfit(result === 'win' ? tp : sl, pairInfo.pair, {
+      let calculatedProfit = calculateProfit(result === 'win' ? tp : sl, pairInfo.pair, {
         positionSize: ps,
       });
       if (calculatedProfit) {
