@@ -22,7 +22,7 @@ import { AppBar, Drawer, DrawerHeader } from './styledComps';
 
 const MainContainer = memo(() => {
   return (
-    <Box sx={{ flexGrow: 1, p: 6, maxWidth: '1920px', margin: '0 auto' }}>
+    <Box sx={{ flexGrow: 1, p: 6, maxWidth: 'min(120rem, 100%)', marginInline: 'auto' }}>
       <DrawerHeader />
       <Outlet />
     </Box>
