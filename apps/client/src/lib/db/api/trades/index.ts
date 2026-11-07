@@ -8,8 +8,8 @@ import type { TradingSession } from '../../../../types/tradingSessions';
 import handlePagination from '../../pagination';
 import { findMainTradingSession } from '../tradingSessions';
 
-export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]> => {
-  const [sessions] = await Promise.all([db.tradingSessions.toArray(), db.trades.toArray()]);
+export const getTradesCountPerTradingSessionDB = async (user: number | string): Promise<TradesCount[]> => {
+  const sessions = await db.tradingSessions.where({ user: user }).toArray();
   const result: TradesCount[] = [];
 
   let index = 0;
@@ -25,8 +25,8 @@ export const getTradesCountPerTradingSessionDB = async (): Promise<TradesCount[]
   return result;
 };
 
-export const getTradesProfitDB = async (session: TradingSession) => {
-  const trades = await db.trades.where({ tradingSession: session.id }).toArray();
+export const getTradesProfitDB = async (user: number | string, session: TradingSession) => {
+  const trades = await db.trades.where({ tradingSession: session.id, user: user }).toArray();
   const performance = getPerformance(trades, session.accountSize);
 
   return {
@@ -35,11 +35,14 @@ export const getTradesProfitDB = async (session: TradingSession) => {
   };
 };
 
-export const getTradesDB = async (params: TGetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
-  const [session] = await Promise.all([findMainTradingSession()]);
-  const totalCount = await db.trades.where({ tradingSession: session.id }).count();
+export const getTradesDB = async (
+  user: number | string,
+  params: TGetTradesOptions
+): Promise<PaginationInfo<Trade[]>> => {
+  const [session] = await Promise.all([findMainTradingSession(user)]);
+  const totalCount = await db.trades.where({ tradingSession: session.id, user: user }).count();
 
-  const query = db.trades.where({ tradingSession: session.id }).filter((trade) => {
+  const query = db.trades.where({ tradingSession: session.id, user: user }).filter((trade) => {
     const pair = params.pair ? params.pair === trade.pair : true;
     const result = params.result ? params.result === trade.result : true;
 
@@ -74,7 +77,7 @@ export const getTradesDB = async (params: TGetTradesOptions): Promise<Pagination
   return { ...finalData, totalItemsExcludingFilter: totalCount };
 };
 
-export const addTradeDB = async (trade: TradeFormSchemaType & { tradingSessionId: number }) => {
+export const addTradeDB = async (user: number | string, trade: TradeFormSchemaType & { tradingSessionId: number }) => {
   const { tradingSessionId, pairId, ...restTrade } = trade;
 
   return db.trades.add({
@@ -86,6 +89,7 @@ export const addTradeDB = async (trade: TradeFormSchemaType & { tradingSessionId
     closeDate: trade.closeDate && format(trade.closeDate, 'yyyy-MM-dd HH:mm'),
     createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    user: user,
   });
 };
 

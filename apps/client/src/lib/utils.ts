@@ -94,6 +94,7 @@ export const increasingRange = (min: number, max: number, step: number): number[
 };
 
 export const isGuest = () => getDefaultStore().get(userAtom)?.variety === 'GUEST';
+export const getCurrentUser = () => getDefaultStore().get(userAtom);
 
 // Fisher-Yates (Durstenfeld) algorithm
 export const shuffleArray = <T>(arr: T[]): T[] => {

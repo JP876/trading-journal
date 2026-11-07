@@ -22,7 +22,10 @@ export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   endDate: new Date(),
 };
 
-export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tradingSessionId: number }) => {
+export const addRandomTradesDB = async (
+  options: AddRandomTradesFormType & { tradingSessionId: number; user: number | string }
+) => {
+  const { user } = options;
   const tags = await db.tags.toArray();
   const count = options?.count || ADD_RANDOM_TRADES_OPTIONS.count;
 
@@ -101,6 +104,7 @@ export const addRandomTradesDB = async (options: AddRandomTradesFormType & { tra
     }
 
     return {
+      user: user,
       tags: tags.length < 2 ? [] : getRandomTagIdsDB(tags),
       tradingSession: options.tradingSessionId,
       pair: pairId,

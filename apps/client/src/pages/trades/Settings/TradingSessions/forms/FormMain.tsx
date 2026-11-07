@@ -61,7 +61,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
 
       <Divider sx={{ my: 2 }}>Default trade values</Divider>
 
-      <Stack direction="row" alignItems="center" gap={4}>
+      <Stack direction="row" alignItems="center" gap={2}>
         <Controller
           name="defaultPairId"
           control={form.control}
@@ -74,7 +74,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
         />
       </Stack>
 
-      <Stack direction="row" alignContent="center" gap={4}>
+      <Stack direction="row" alignContent="center" gap={2}>
         <Controller
           name="defaultTakeProfit"
           control={form.control}

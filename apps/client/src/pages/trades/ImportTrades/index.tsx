@@ -5,13 +5,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { createStore, Provider, useAtomValue, useSetAtom } from 'jotai';
+import { createStore, getDefaultStore, Provider, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 
+import { userAtom } from '../../../atoms/user';
 import Dropzone from '../../../components/Dropzone';
 import { dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
 import useRemoveFile from '../../../components/Dropzone/hooks/useRemoveFile';
 import { QueryKey } from '../../../enums';
+import useModal from '../../../hooks/useModal';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { handleCSVFile } from '../../../lib/CSVFile';
 import { addMultipleTradesDB } from '../../../lib/db/api/trades';
@@ -20,11 +22,10 @@ import withCatch from '../../../lib/withCatch';
 import type { Pair } from '../../../types/pair';
 import type { Trade } from '../../../types/trade';
 import type { TradingSession, TradingSessionsResult } from '../../../types/tradingSessions';
+import { TradesPageModal } from '../enums';
 import { importTradesStore, parsedFileResultAtom, resetStoreAtom } from './atoms';
 import Description from './Description';
 import transformTrades from './utils/transformTrades';
-import useModal from '../../../hooks/useModal';
-import { TradesPageModal } from '../enums';
 
 const dzStore = createStore();
 
@@ -43,16 +44,18 @@ const ConfirmImportButton = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const user = useAtomValue(userAtom, { store: getDefaultStore() });
   const parsedFileResult = useAtomValue(parsedFileResultAtom);
+  console.log(user);
 
   const handleImport = async () => {
     let [pairs, mainSession] = await getPairsAndSession();
 
-    if (!pairs || !mainSession || !parsedFileResult) {
+    if (!pairs || !mainSession || !parsedFileResult || !user) {
       return;
     }
 
-    let trades = transformTrades(parsedFileResult.data, pairs, mainSession);
+    const trades = transformTrades(user.id, parsedFileResult.data, pairs, mainSession);
     const [error] = await withCatch(addMultipleTradesDB(trades));
 
     if (error) {

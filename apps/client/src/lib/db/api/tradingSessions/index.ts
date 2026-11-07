@@ -18,8 +18,11 @@ const updateMainTradingSession = async (id: number) => {
     });
 };
 
-export const findMainTradingSession = async () => {
-  const session = await db.tradingSessions.where('isMain').equals(1).first();
+export const findMainTradingSession = async (user: number | string) => {
+  const session = await db.tradingSessions
+    .where({ user: user })
+    .and((el) => !!el.isMain)
+    .first();
   if (!session) {
     throw new Error(`Trading session not found`);
   }
@@ -35,9 +38,10 @@ export const findTradingSessionById = async (id: number) => {
 };
 
 export const getTradingSessionsDB = async (
+  user: number | string,
   params?: GetTradingSessionsOptions
 ): Promise<PaginationInfo<TradingSession[]>> => {
-  let query = db.tradingSessions.reverse();
+  let query = db.tradingSessions.where({ user: user }).reverse();
   const totalCount = await db.tradingSessions.count();
 
   if (params?.title) {
@@ -50,7 +54,7 @@ export const getTradingSessionsDB = async (
   return { ...(await handlePagination(query, params)), totalItemsExcludingFilter: totalCount };
 };
 
-export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) => {
+export const addTradingSessionDB = async (user: number | string, data: TradingSessionFormSchemaType) => {
   const { defaultPairId, ...session } = data;
 
   const id = await db.tradingSessions.add({
@@ -60,6 +64,7 @@ export const addTradingSessionDB = async (data: TradingSessionFormSchemaType) =>
     defaultOpenDate: session.defaultOpenDate && format(session.defaultOpenDate, 'dd/MM/yyyy HH:mm'),
     defaultPair: defaultPairId || null,
     isMain: +!!data.isMain,
+    user: user,
   });
 
   if (session.isMain) {

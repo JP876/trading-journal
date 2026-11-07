@@ -16,8 +16,8 @@ export const db = new Dexie('LogMyTradesDB') as Dexie & {
 
 db.version(2).stores({
   users: '++id, name, email, isLoggedIn',
-  tradingSessions: `++id, title, isMain`,
-  trades: `++id, pair, result, direction, openDate, closeDate, *tags, tradingSession`,
+  tradingSessions: `++id, user, title, isMain`,
+  trades: `++id, user, pair, result, direction, openDate, closeDate, *tags, tradingSession, [tradingSession+user]`,
   tags: '++id, user, title',
   pairs: '++id, pair',
 });

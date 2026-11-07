@@ -69,6 +69,7 @@ export type Trade = {
   closeDate?: string;
   createdAt: string;
   updatedAt: string;
+  user?: number | string;
 } & Omit<
   TradeFormSchemaType,
   'pairId' | 'tradingSessionId' | 'result' | 'direction' | 'tags' | 'openDate' | 'closeDate'

@@ -7,13 +7,14 @@ import {
   getTradesDB,
 } from '../../lib/db/api/trades';
 import transformToFormData from '../../lib/transformToFormData';
-import { isGuest } from '../../lib/utils';
+import { getCurrentUser, isGuest } from '../../lib/utils';
 import type { PaginationInfo } from '../../types';
 import type { TGetTradesOptions, Trade, TradeFormSchemaType, TradesCount, TradesResult } from '../../types/trade';
 
 export const getTrades = async (params: TGetTradesOptions): Promise<PaginationInfo<Trade[]>> => {
-  if (isGuest()) {
-    return getTradesDB(params);
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return getTradesDB(user.id, params);
   }
   const response = await axiosInstance.get<TradesResult>('trades', {
     params: {
@@ -30,16 +31,18 @@ export const getTrades = async (params: TGetTradesOptions): Promise<PaginationIn
 };
 
 export const getTradesCountPerTradingSession = async (): Promise<TradesCount[]> => {
-  if (isGuest()) {
-    return getTradesCountPerTradingSessionDB();
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return getTradesCountPerTradingSessionDB(user.id);
   }
   const response = await axiosInstance.get<TradesCount[]>('trades/count-per-session');
   return response.data;
 };
 
 export const addTrade = async (trade: TradeFormSchemaType & { tradingSessionId: number }) => {
-  if (isGuest()) {
-    return addTradeDB(trade);
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return addTradeDB(user.id, trade);
   }
   const response = await axiosInstance.post('trades', transformToFormData(trade));
   return response.data;

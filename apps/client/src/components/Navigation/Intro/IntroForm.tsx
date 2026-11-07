@@ -20,18 +20,25 @@ import FormMain from '../../form/FormMain';
 import SelectInput from '../../form/SelectInput';
 import SubmitButton from '../../form/SubmitButton';
 import TextInput from '../../form/TextInput';
+import { getCurrentUser } from '../../../lib/utils';
 
 type TIntroForm = AddRandomTradesFormType & TradingSessionFormSchemaType;
 
 const IntroFormSchema = AddRandomTradesFormSchema.extend(TradingSessionFormSchema.shape);
 
 const addIntroDataDB = async (data: TIntroForm) => {
-  let mainSession = await findMainTradingSession();
+  const user = getCurrentUser();
+  if (!user) {
+    throw new Error(`User info not found`);
+  }
+
+  let mainSession = await findMainTradingSession(user.id);
   if (!mainSession) {
     throw new Error(`Main session not found`);
   }
+
   await editTradingSessionDB(mainSession.id, data);
-  return await addRandomTradesDB({ ...data, tradingSessionId: mainSession.id });
+  return await addRandomTradesDB({ ...data, tradingSessionId: mainSession.id, user: user.id });
 };
 
 const DEFAULT_VALUES: TIntroForm = {
@@ -73,11 +80,11 @@ const IntroForm = () => {
 
   return (
     <FormMain<TIntroForm> onSubmit={mutation.mutate} form={form}>
-      <Stack direction="row" alignItems="center" gap={4}>
+      <Stack direction="row" alignItems="center" gap={2}>
         <Controller
           name="title"
           control={form.control}
-          render={(props) => <TextInput label="Title *" inputProps={{ sx: { flex: '0 0 65%' } }} {...props} />}
+          render={(props) => <TextInput label="Title *" inputProps={{ sx: { flex: '0 0 66%' } }} {...props} />}
         />
         <Controller
           name="accountSize"
@@ -98,7 +105,7 @@ const IntroForm = () => {
           />
         )}
       />
-      <Stack direction="row" alignItems="center" gap={4}>
+      <Stack direction="row" alignItems="center" gap={2}>
         <Controller
           name="count"
           control={form.control}
@@ -127,7 +134,7 @@ const IntroForm = () => {
           )}
         />
       </Stack>
-      <Stack direction="row" alignItems="center" gap={4}>
+      <Stack direction="row" alignItems="center" gap={2}>
         <Controller
           name="startDate"
           control={form.control}

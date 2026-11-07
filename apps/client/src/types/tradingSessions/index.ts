@@ -22,6 +22,7 @@ export type TradingSession = {
   createdAt: string;
   updatedAt: string;
   defaultOpenDate?: string;
+  user: number | string;
 } & Omit<TradingSessionFormSchemaType, 'isMain' | 'defaultPairId' | 'defaultOpenDate'>;
 
 export type TradingSessionsResult = PaginationInfo<TradingSession[]>;

@@ -38,7 +38,7 @@ export const loginUserDB = async (userId?: number): Promise<[Error, null] | [nul
   if (addError) return [addError, null];
 
   const [sessionError] = await withCatch(
-    addTradingSessionDB({
+    addTradingSessionDB(newUser.id, {
       title: `Initial session ${format(new Date(), 'MM/yy')}`,
       isMain: true,
       accountSize: 50_000,

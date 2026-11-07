@@ -5,7 +5,7 @@ import {
   editTradingSessionDB,
   getTradingSessionsDB,
 } from '../../lib/db/api/tradingSessions';
-import { isGuest } from '../../lib/utils';
+import { getCurrentUser, isGuest } from '../../lib/utils';
 import type { PaginationInfo } from '../../types';
 import type {
   GetTradingSessionsOptions,
@@ -14,8 +14,9 @@ import type {
 } from '../../types/tradingSessions';
 
 export const getTradingSessions = async (params?: GetTradingSessionsOptions) => {
-  if (isGuest()) {
-    return await getTradingSessionsDB({ ...params });
+  const currentUser = getCurrentUser();
+  if (currentUser?.variety === 'GUEST') {
+    return await getTradingSessionsDB(currentUser.id, { ...params });
   }
 
   const response = await axiosInstance.get<PaginationInfo<TradingSession[]>>('trading-sessions', {
@@ -29,8 +30,9 @@ export const getTradingSessions = async (params?: GetTradingSessionsOptions) => 
 };
 
 export const addTradingSession = async (data: TradingSessionFormSchemaType) => {
-  if (isGuest()) {
-    return await addTradingSessionDB(data);
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return await addTradingSessionDB(user.id, data);
   }
 
   const response = await axiosInstance.post('trading-sessions', { ...data, isMain: +!!data.isMain });

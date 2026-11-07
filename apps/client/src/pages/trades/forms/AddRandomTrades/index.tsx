@@ -28,7 +28,7 @@ const AddRandomTradesForm = () => {
     <AddRandomTradesContainer>
       {({ form, isLoading }) => (
         <>
-          <Stack direction="row" alignItems="center" gap={4}>
+          <Stack direction="row" alignItems="center" gap={2}>
             <Controller
               name="count"
               control={form.control}
@@ -49,7 +49,7 @@ const AddRandomTradesForm = () => {
             />
           </Stack>
 
-          <Stack direction="row" alignItems="center" gap={4}>
+          <Stack direction="row" alignItems="center" gap={2}>
             <Controller
               name="winPercentage"
               control={form.control}
@@ -119,7 +119,7 @@ const AddRandomTradesForm = () => {
             )}
           />
 
-          <Stack direction="row" alignItems="center" gap={4}>
+          <Stack direction="row" alignItems="center" gap={2}>
             <Controller
               name="startDate"
               control={form.control}

@@ -1,14 +1,15 @@
 import { axiosInstance } from '../../lib/axiosInstance';
 import { addTagDB, deleteTagDB, editTagDB, getTagsDB } from '../../lib/db/api/tags';
 import transformToFormData from '../../lib/transformToFormData';
-import { isGuest } from '../../lib/utils';
+import { getCurrentUser, isGuest } from '../../lib/utils';
 import withDelay from '../../lib/withDelay';
 import type { PaginationInfo } from '../../types';
 import type { GetTagsOptions, Tag, TagFormSchemaType } from '../../types/tag';
 
 export const getTags = async (params?: GetTagsOptions) => {
-  if (isGuest()) {
-    return getTagsDB(params);
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return getTagsDB(user.id, params);
   }
 
   const response = await withDelay(
@@ -25,8 +26,9 @@ export const getTags = async (params?: GetTagsOptions) => {
 };
 
 export const addTag = async (tag: TagFormSchemaType) => {
-  if (isGuest()) {
-    return addTagDB(tag);
+  const user = getCurrentUser();
+  if (user?.variety === 'GUEST') {
+    return addTagDB(user.id, tag);
   }
 
   const response = await axiosInstance.post('tags', transformToFormData(tag));

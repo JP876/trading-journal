@@ -3,7 +3,7 @@ import type { Pair } from '../../../../types/pair';
 import type { ClosedBy, Direction, Result, Trade } from '../../../../types/trade';
 import type { TradingSession } from '../../../../types/tradingSessions';
 
-const transformTrades = (trades: Trade[], pairs: Pair[], mainSession: TradingSession) => {
+const transformTrades = (user: number | string, trades: Trade[], pairs: Pair[], mainSession: TradingSession) => {
   let finalData: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[] = trades.map((t) => {
     let result: Result = 'be';
     let takeProfit = t?.takeProfit;
@@ -51,6 +51,7 @@ const transformTrades = (trades: Trade[], pairs: Pair[], mainSession: TradingSes
     }
 
     return {
+      user: user,
       pair: pair?.id || t.pair,
       takeProfit: takeProfit ?? mainSession?.defaultTakeProfit,
       stopLoss: stopLoss ?? mainSession?.defaultStopLoss,

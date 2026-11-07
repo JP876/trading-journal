@@ -14,7 +14,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom, useAtomValue } from 'jotai';
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 import { getTrades } from '../../api/trades';
 import { modalAtom } from '../../atoms/modal';
@@ -55,7 +55,7 @@ const TradesModalList = () => {
         <AddTradeForm />
       </DialogMain>
 
-      <DialogMain id={TradesPageModal.ADD_RANDOM_TRADES} title="Add random trades">
+      <DialogMain id={TradesPageModal.ADD_RANDOM_TRADES} title="Add sample trades">
         <AddRandomTradesForm />
       </DialogMain>
 
@@ -225,7 +225,7 @@ const TradesPage = () => {
                 <MenuActions.Divider />
                 <MenuActions.Item
                   icon={<QueueIcon />}
-                  label="Add random trades"
+                  label="Add sample trades"
                   onClick={(_, handleClose) =>
                     handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))
                   }
@@ -261,7 +261,9 @@ const TradesPage = () => {
           <TradesFilters />
         </TradesFiltersContainer>
         <Paper sx={{ p: 2 }}>
-          <TradesTableMain />
+          <Suspense fallback={null}>
+            <TradesTableMain />
+          </Suspense>
         </Paper>
       </Stack>
 

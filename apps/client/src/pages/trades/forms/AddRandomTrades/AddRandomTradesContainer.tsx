@@ -10,6 +10,7 @@ import useSnackbar from '../../../../hooks/useSnackbar';
 import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from '../../../../lib/db/api/trades/addRandomTradesDB';
 import { AddRandomTradesFormSchema, type AddRandomTradesFormType } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
+import { getCurrentUser } from '../../../../lib/utils';
 
 type TAddRandomTradesContainerProps = {
   children: (options: { form: UseFormReturn<AddRandomTradesFormType>; isLoading: boolean }) => React.ReactElement;
@@ -35,6 +36,9 @@ const AddRandomTradesContainer = ({ onSuccess, children }: TAddRandomTradesConta
       closeModal(TradesPageModal.ADD_RANDOM_TRADES);
       if (onSuccess) onSuccess();
     },
+    onError: () => {
+      openSnackbar({ severity: 'error', message: "Random trades couldn't be created. Try again in a moment." });
+    },
   });
 
   const form = useForm<AddRandomTradesFormType>({
@@ -47,7 +51,11 @@ const AddRandomTradesContainer = ({ onSuccess, children }: TAddRandomTradesConta
       console.warn('Main trading session not found');
       return;
     }
-    mutation.mutate({ tradingSessionId: mainSession.id, ...data });
+
+    const user = getCurrentUser();
+    if (!user) return;
+
+    mutation.mutate({ user: user.id, tradingSessionId: mainSession.id, ...data });
   };
 
   return (

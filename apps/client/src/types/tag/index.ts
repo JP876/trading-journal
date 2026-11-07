@@ -6,7 +6,12 @@ export const TagFormSchema = z.object({
 });
 
 export type TagFormSchemaType = z.infer<typeof TagFormSchema>;
-export type Tag = { id: number; createdAt: string; updatedAt: string } & TagFormSchemaType;
+export type Tag = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  user?: number | string;
+} & TagFormSchemaType;
 
 export type GetTagsOptions = {
   page?: number;

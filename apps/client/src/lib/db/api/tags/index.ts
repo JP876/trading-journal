@@ -21,8 +21,8 @@ export const getRandomTagIdsDB = (tags: Tag[]) => {
   }, []);
 };
 
-export const getTagsDB = async (params?: GetTagsOptions): Promise<PaginationInfo<Tag[]>> => {
-  let query = db.tags.reverse();
+export const getTagsDB = async (user: number | string, params?: GetTagsOptions): Promise<PaginationInfo<Tag[]>> => {
+  let query = db.tags.where({ user: user }).reverse();
   const totalCount = await db.tags.count();
 
   if (params?.title) {
@@ -35,11 +35,12 @@ export const getTagsDB = async (params?: GetTagsOptions): Promise<PaginationInfo
   return { ...(await handlePagination(query, params)), totalItemsExcludingFilter: totalCount };
 };
 
-export const addTagDB = async (tagData: TagFormSchemaType) => {
+export const addTagDB = async (user: number | string, tagData: TagFormSchemaType) => {
   return db.tags.add({
     ...tagData,
     createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
     updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    user: user,
   });
 };
 
