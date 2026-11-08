@@ -1,12 +1,15 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
+import { getPairs } from '../../../../api/pairs';
 import { addTrade } from '../../../../api/trades';
 import { QueryKey } from '../../../../enums';
 import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
+import { calculateProfit } from '../../../../lib/price';
+import type { Pair } from '../../../../types/pair';
 import { TradeFormSchema, type TradeFormSchemaType } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
 import TradeForm from '../TradeForm';
@@ -18,6 +21,12 @@ const AddTradeForm = () => {
   const { openSnackbar } = useSnackbar();
 
   const [mainSession] = useMainSession();
+
+  const pairsQuery = useQuery<Pair[]>({
+    queryKey: [QueryKey.PAIRS],
+    queryFn: () => getPairs(),
+    staleTime: Infinity,
+  });
 
   const mutation = useMutation({
     mutationFn: addTrade,
@@ -52,10 +61,29 @@ const AddTradeForm = () => {
     }
 
     const formData = { ...data };
+    const pair = (pairsQuery.data || []).find((p) => p.id === formData.pairId);
 
     if (!(formData?.openDate instanceof Date)) delete formData.openDate;
     if (!(formData?.closeDate instanceof Date)) delete formData.closeDate;
     if (!formData?.closedAt) delete formData.closedAt;
+
+    if (pair && formData.closedBy === 'user' && formData.closedAt) {
+      const profit = calculateProfit(formData.closedAt, pair.pair, {
+        positionSize: formData.positionSize,
+      });
+      if (profit) formData.profit = profit;
+    }
+
+    if (pair && formData.closedBy === 'tp/sl' && formData.stopLoss && formData.takeProfit) {
+      const profit = calculateProfit(formData.result === 'loss' ? formData.stopLoss : formData.takeProfit, pair.pair, {
+        positionSize: formData.positionSize,
+      });
+      if (profit) formData.profit = profit;
+    }
+
+    if (formData.profit && formData.result === 'loss') {
+      formData.profit = formData.profit * -1;
+    }
 
     mutation.mutate({ ...formData, tradingSessionId: mainSession.id });
   };
