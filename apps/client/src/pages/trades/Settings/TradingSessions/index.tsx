@@ -2,17 +2,17 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { createStore, Provider, useAtomValue } from 'jotai';
+import { createStore, getDefaultStore, Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { modalAtom } from '../../../../atoms';
 import DialogMain from '../../../../components/DialogMain';
+import { tablePaginationAtom } from '../../../../components/table/atoms';
 import TextFilter from '../../../../components/table/filters/TextFilter';
 import useModal from '../../../../hooks/useModal';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
 import TradingSessionsTable from './TableMain';
-import { tablePaginationAtom } from '../../../../components/table/atoms';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
@@ -22,7 +22,7 @@ const sessionTableStore = createStore();
 sessionTableStore.set(tablePaginationAtom, { pageIndex: 1, pageSize: 10 });
 
 const TradingSessionModalList = () => {
-  const modalInfo = useAtomValue(modalAtom);
+  const modalInfo = useAtomValue(modalAtom, { store: getDefaultStore() });
 
   return (
     <Suspense>

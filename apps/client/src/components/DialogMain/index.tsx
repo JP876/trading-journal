@@ -4,7 +4,7 @@ import Dialog, { type DialogProps } from '@mui/material/Dialog';
 import DialogContent, { type DialogContentProps } from '@mui/material/DialogContent';
 import DialogTitle, { type DialogTitleProps } from '@mui/material/DialogTitle';
 import type { TransitionProps } from '@mui/material/transitions';
-import { atom, useAtomValue } from 'jotai';
+import { atom, getDefaultStore, useAtomValue } from 'jotai';
 import { forwardRef, memo, useMemo } from 'react';
 
 import { modalAtom } from '../../atoms';
@@ -44,7 +44,7 @@ function DialogMain({
     return atom((get) => get(modalAtom)?.[id]);
   }, [id]);
 
-  const modalInfo = useAtomValue(singleModalAtom);
+  const modalInfo = useAtomValue(singleModalAtom, { store: getDefaultStore() });
   const { closeModal } = useModal();
 
   const handleCloseModal = () => closeModal(id);
