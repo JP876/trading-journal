@@ -11,6 +11,7 @@ import ClampedTextContainer from '../../../components/ClampedTextContainer';
 import { importTradesStore, parsedFileResultAtom } from './atoms';
 import { useAtomValue } from 'jotai';
 import { Tooltip, type SxProps } from '@mui/material';
+import type { tableMainFeatures } from '../../../components/table/consts';
 
 type TFieldDescription = {
   field: string;
@@ -70,7 +71,7 @@ const iconStyles: SxProps = {
 const Description = () => {
   const result = useAtomValue(parsedFileResultAtom, { store: importTradesStore });
 
-  const columns: ColumnDef<TFieldDescription>[] = useMemo(() => {
+  const columns: ColumnDef<typeof tableMainFeatures, TFieldDescription>[] = useMemo(() => {
     return [
       { accessorKey: 'field', size: 100, header: 'Field' },
       {

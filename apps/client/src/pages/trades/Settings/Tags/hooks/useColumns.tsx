@@ -13,6 +13,7 @@ import MenuActions from '../../../../../components/MenuActions';
 import { TradesPageModal } from '../../../enums';
 import checkBrightness from '../../../../../lib/checkBrighness';
 import { format } from 'date-fns';
+import { tableMainFeatures } from '../../../../../components/table/consts';
 
 const TagActions = ({ tag }: { tag: Tag }) => {
   const { openModal } = useModal();
@@ -42,7 +43,7 @@ const TagActions = ({ tag }: { tag: Tag }) => {
 };
 
 const useColumns = () => {
-  return useMemo<ColumnDef<Tag>[]>(() => {
+  return useMemo<ColumnDef<typeof tableMainFeatures, Tag>[]>(() => {
     return [
       {
         accessorKey: 'title',

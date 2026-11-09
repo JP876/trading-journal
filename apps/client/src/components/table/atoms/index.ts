@@ -1,3 +1,4 @@
+import type { PaginationState, SortingState } from '@tanstack/react-table';
 import { atom } from 'jotai';
 
 export type TTablePagination = {
@@ -25,4 +26,9 @@ export const updateFiltersAtom = atom(null, (get, set, value: TTableFilters) => 
 
 export const resetFiltersAtom = atom(null, (_, set) => {
   set(tableFiltersAtom, {});
+});
+
+export const tableAtoms = atom<{ sorting: SortingState; pagination: PaginationState }>({
+  sorting: [],
+  pagination: { pageIndex: 0, pageSize: 10 },
 });

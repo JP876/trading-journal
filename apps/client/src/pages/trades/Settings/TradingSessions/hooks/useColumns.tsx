@@ -19,6 +19,7 @@ import useSnackbar from '../../../../../hooks/useSnackbar';
 import { QueryKey } from '../../../../../enums';
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
 import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
+import { tableMainFeatures } from '../../../../../components/table/consts';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -85,7 +86,7 @@ const TradesCount = memo(({ id }: { id: number }) => {
 });
 
 const useColumns = () => {
-  return useMemo<ColumnDef<TradingSession>[]>(() => {
+  return useMemo<ColumnDef<typeof tableMainFeatures, TradingSession>[]>(() => {
     return [
       {
         accessorKey: 'title',

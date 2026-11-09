@@ -13,6 +13,7 @@ import { getStatistics } from '../../utils/statistics';
 import type { TStatistic, TStatisticsReturn } from '../../utils/types';
 import useMainSession from '../../../../hooks/useMainSession';
 import { formatToCurrency } from '../../../../lib/price';
+import type { tableMainFeatures } from '../../../../components/table/consts';
 
 type TStatisticTableRow = {
   [k in keyof TStatistic]: number | string | null;
@@ -81,7 +82,7 @@ const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsRetur
   };
 };
 
-const columns: ColumnDef<TStatisticTableRow>[] = [
+const columns: ColumnDef<typeof tableMainFeatures, TStatisticTableRow>[] = [
   {
     accessorKey: 'label',
     header: 'Statistic',

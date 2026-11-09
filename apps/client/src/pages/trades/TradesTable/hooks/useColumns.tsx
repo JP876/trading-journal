@@ -14,6 +14,7 @@ import { pairsAtom } from '../../../../atoms';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 import MenuActions from '../../../../components/MenuActions';
 import NotFoundValue from '../../../../components/NotFoundValue';
+import type { tableMainFeatures } from '../../../../components/table/consts';
 import useModal from '../../../../hooks/useModal';
 import type { Trade } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
@@ -55,17 +56,19 @@ const TradePairCell = ({ pair }: { pair: number }) => {
 };
 
 const useColumns = () => {
-  return useMemo<ColumnDef<Trade>[]>(() => {
+  return useMemo<ColumnDef<typeof tableMainFeatures, Trade>[]>(() => {
     return [
       {
         accessorKey: 'pair',
         header: 'Pair',
         enableHiding: false,
+        enableSorting: false,
         size: 140,
         cell: ({ row }) => <TradePairCell pair={row.original.pair} />,
       },
       {
         accessorKey: 'direction',
+        enableSorting: false,
         size: 120,
         header: () => <div>Direction</div>,
         cell: ({ row }) => {
@@ -105,6 +108,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'result',
+        enableSorting: false,
         header: 'Result',
         size: 120,
         cell: ({ row }) => {
@@ -153,6 +157,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'takeProfit',
+        enableSorting: false,
         size: 60,
         header: 'TP',
         cell: ({ row }) => {
@@ -180,6 +185,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'stopLoss',
+        enableSorting: false,
         header: 'SL',
         size: 60,
         cell: ({ row }) => {
@@ -207,6 +213,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'tags',
+        enableSorting: false,
         size: 200,
         header: 'Tags',
         cell: ({ row }) => {
@@ -219,6 +226,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'openDate',
+        enableSorting: false,
         header: 'Open',
         cell: ({ row }) => {
           const value = row.original.openDate;
@@ -230,6 +238,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'closeDate',
+        enableSorting: false,
         header: 'Close',
         cell: ({ row }) => {
           const value = row.original.closeDate;
@@ -241,6 +250,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'comment',
+        enableSorting: false,
         header: 'Comment',
         cell: ({ row }) => {
           const value = row.original.comment;
@@ -250,6 +260,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'actions',
+        enableSorting: false,
         header: '',
         size: 80,
         cell: ({ row }) => <TradeActions trade={row.original} />,

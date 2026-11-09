@@ -1,3 +1,5 @@
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { TableSortLabel } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -5,73 +7,81 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import {
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  type ColumnDef,
-  type Header,
-  type Row,
-  type TableOptions,
-} from '@tanstack/react-table';
-import { memo, useCallback } from 'react';
+import { useTable, type ColumnDef, type RowData, type TableOptions } from '@tanstack/react-table';
+import { memo } from 'react';
 
-type TableMainProps<TData> = {
+import { tableMainFeatures } from './consts';
+
+type TableMainProps<TData extends RowData> = {
   data: TData[];
-  columns: ColumnDef<TData, any>[];
-  tableOptions?: TableOptions<TData>;
+  columns: ColumnDef<typeof tableMainFeatures, TData>[];
+  tableOptions?: TableOptions<typeof tableMainFeatures, TData>;
 };
 
-function TableMain<TData = any>({ data, columns, tableOptions }: TableMainProps<TData>) {
-  const table = useReactTable({
+function getAriaSort(sortDirection: false | 'asc' | 'desc') {
+  if (sortDirection === 'asc') return 'ascending';
+  if (sortDirection === 'desc') return 'descending';
+  return 'none';
+}
+
+function TableMain<TData extends RowData>({ data, columns, tableOptions }: TableMainProps<TData>) {
+  const table = useTable({
+    features: tableMainFeatures,
     data: data || [],
     columns: columns,
-    getCoreRowModel: getCoreRowModel(),
     ...(tableOptions || {}),
   });
-
-  const renderHeader = useCallback((header: Header<TData, unknown>) => {
-    const value = header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext());
-
-    if (!header.column.getCanSort()) {
-      return (
-        <TableCell key={header.id} sx={{ width: header.getSize() }}>
-          {value}
-        </TableCell>
-      );
-    }
-
-    return (
-      <TableCell sx={{ width: header.getSize() }} key={header.id}>
-        {value}
-      </TableCell>
-    );
-  }, []);
-
-  const renderBodyRows = useCallback((row: Row<TData>) => {
-    return (
-      <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-        {row.getVisibleCells().map((cell) => (
-          <TableCell key={cell.id} sx={{ width: cell.column.getSize() }}>
-            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-          </TableCell>
-        ))}
-      </TableRow>
-    );
-  }, []);
 
   return (
     <TableContainer>
       <Table size="small" stickyHeader>
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>{headerGroup.headers.map(renderHeader)}</TableRow>
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                const sortDirection = header.column.getIsSorted();
+
+                return (
+                  <TableCell
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    sortDirection={sortDirection || false}
+                    aria-sort={getAriaSort(sortDirection || false)}
+                    data-sort={sortDirection || undefined}
+                    sx={{ width: header.getSize() }}
+                  >
+                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
+                      <TableSortLabel
+                        active={!!sortDirection}
+                        direction={sortDirection || undefined}
+                        onClick={header.column.getToggleSortingHandler()}
+                        IconComponent={ArrowDownwardIcon}
+                      >
+                        <table.FlexRender header={header} />
+                      </TableSortLabel>
+                    ) : (
+                      <Typography variant="subtitle2">
+                        <table.FlexRender header={header} />
+                      </Typography>
+                    )}
+                  </TableCell>
+                );
+              })}
+            </TableRow>
           ))}
         </TableHead>
 
         <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map(renderBodyRows)
+          {table.getRowModel().rows?.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id} hover>
+                {row.getAllCells().map((cell) => (
+                  <TableCell key={cell.id} sx={{ width: cell.column.getSize() }}>
+                    <table.FlexRender cell={cell} />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
           ) : (
             <TableRow sx={{ height: '3rem' }}>
               <TableCell colSpan={columns.length} sx={{ width: '100%', textAlign: 'center' }}>
