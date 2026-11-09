@@ -1,16 +1,16 @@
 import { useDebouncer } from '@tanstack/react-pacer';
+import { useSetAtom, type Store } from 'jotai';
 
-import { useFiltersDispatch } from '../providers/Filters';
-import { usePaginationDispatch } from '../providers/Pagination';
+import { resetFiltersAtom, updatePageAtom } from '../atoms';
 
-const useClearFilters = ({ wait = 400 }: { wait?: number }) => {
-  const filtersDispatch = useFiltersDispatch();
-  const paginationDispatch = usePaginationDispatch();
+const useClearFilters = ({ wait = 400, store }: { wait?: number; store?: Store }) => {
+  const resetFilters = useSetAtom(resetFiltersAtom, { store });
+  const updatePage = useSetAtom(updatePageAtom, { store });
 
   const debouncer = useDebouncer(
     () => {
-      filtersDispatch({ type: 'resetFilters' });
-      paginationDispatch({ type: 'updatePage', value: 1 });
+      resetFilters();
+      updatePage(1);
       return null;
     },
     { wait },

@@ -1,7 +1,8 @@
 import Pagination, { type PaginationProps } from '@mui/material/Pagination';
+import { useSetAtom } from 'jotai';
 import { memo } from 'react';
 
-import { usePaginationDispatch } from './providers/Pagination';
+import { updatePageAtom } from './atoms';
 
 type PaginationContainerProps = {
   currentPage: number;
@@ -11,10 +12,10 @@ type PaginationContainerProps = {
 };
 
 const PaginationContainer = ({ currentPage, totalPages, paginationProps, onChange }: PaginationContainerProps) => {
-  const dispatch = usePaginationDispatch();
+  const updatePage = useSetAtom(updatePageAtom);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    dispatch({ type: 'updatePage', value });
+    updatePage(value);
     if (onChange) {
       onChange(event, value);
     }

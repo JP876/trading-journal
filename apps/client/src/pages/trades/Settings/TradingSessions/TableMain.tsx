@@ -1,17 +1,17 @@
 import Stack from '@mui/material/Stack';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 
 import { getTradingSessions } from '../../../../api/tradingSessions';
-import { useFiltersState } from '../../../../components/table/providers/Filters';
-import { usePaginationState } from '../../../../components/table/providers/Pagination';
+import { tableFiltersAtom, tablePaginationAtom } from '../../../../components/table/atoms';
 import TableMainFooter from '../../../../components/table/TableFooter';
 import TableMain from '../../../../components/table/TableMain';
 import { QueryKey } from '../../../../enums';
 import useColumns from './hooks/useColumns';
 
 const TradingSessionsTable = () => {
-  const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { title?: string };
+  const { page, rowsPerPage } = useAtomValue(tablePaginationAtom);
+  const filters = useAtomValue<{ title?: string }>(tableFiltersAtom);
 
   const { data } = useQuery({
     queryKey: [QueryKey.TRADING_SESSIONS, page, rowsPerPage, filters.title],

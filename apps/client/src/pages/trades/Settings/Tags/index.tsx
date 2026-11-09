@@ -2,20 +2,23 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { useAtomValue } from 'jotai';
+import { createStore, Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
 import TextFilter from '../../../../components/table/filters/TextFilter';
-import TableProviders from '../../../../components/table/providers';
 import useModal from '../../../../hooks/useModal';
 import type { Tag } from '../../../../types/tag';
 import { TradesPageModal } from '../../enums';
 import TagsTableMain from './TagsTable';
+import { tablePaginationAtom } from '../../../../components/table/atoms';
 
 const EditTagForm = lazy(() => import('./forms/EditForm'));
 const DeleteTag = lazy(() => import('./DeleteTag'));
+
+const tagsTableStore = createStore();
+tagsTableStore.set(tablePaginationAtom, { page: 1, rowsPerPage: 10 });
 
 const TagModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
@@ -42,7 +45,7 @@ const TagsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <TableProviders>
+    <Provider store={tagsTableStore}>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Box>
@@ -63,7 +66,7 @@ const TagsMain = () => {
       </Stack>
 
       <TagModalList />
-    </TableProviders>
+    </Provider>
   );
 };
 

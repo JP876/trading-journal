@@ -4,7 +4,7 @@ import CheckIcon from '@mui/icons-material/Check';
 const SubmitButton = ({ ...rest }: ButtonProps) => {
   return (
     <Button startIcon={<CheckIcon />} size="small" variant="contained" type="submit" {...rest}>
-      Confirm
+      {rest?.children || 'Confirm'}
     </Button>
   );
 };

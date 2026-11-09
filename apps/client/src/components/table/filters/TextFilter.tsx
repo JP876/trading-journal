@@ -1,4 +1,5 @@
 import TextField, { type TextFieldProps } from '@mui/material/TextField';
+import type { Store } from 'jotai';
 
 import useFilter from '../hooks/useFilter';
 import LoadingAdornment from '../LoadingAdornment';
@@ -8,6 +9,7 @@ type TextFilterProps = {
   label: string;
   initialValue?: string;
   isLoading?: boolean;
+  store?: Store;
 };
 
 const TextFilter = ({
@@ -15,9 +17,10 @@ const TextFilter = ({
   label,
   initialValue,
   isLoading,
+  store,
   ...rest
 }: TextFilterProps & Omit<TextFieldProps, 'value' | 'onChange'>) => {
-  const [filterValue, handleFilterChange, { isPending }] = useFilter({ name, initialValue: initialValue || '' });
+  const [filterValue, handleFilterChange, { isPending }] = useFilter({ name, initialValue: initialValue || '', store });
 
   return (
     <TextField

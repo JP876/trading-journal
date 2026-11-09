@@ -1,35 +1,36 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDebouncer } from '@tanstack/react-pacer';
+import { useAtomValue, useSetAtom, type Store } from 'jotai';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useFiltersDispatch, useFiltersState, type FilterValue } from '../providers/Filters';
-import { usePaginationDispatch } from '../providers/Pagination';
+import { tableFiltersAtom, updateFiltersAtom, updatePageAtom, type TFilterValue } from '../atoms';
 
 type FiltersHookProps = {
   name: string;
-  initialValue: FilterValue;
+  initialValue: TFilterValue;
+  store?: Store;
   wait?: number;
 };
 
-function useFilter({ name, initialValue, wait = 600 }: FiltersHookProps) {
+function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) {
   const justMounted = useRef(true);
 
-  const filtersDispatch = useFiltersDispatch();
-  const paginationDispatch = usePaginationDispatch();
+  const updateTableFilters = useSetAtom(updateFiltersAtom, { store });
+  const updatePage = useSetAtom(updatePageAtom, { store });
 
-  const filtersValue = useFiltersState();
-  const [filterValue, setFilterValue] = useState<FilterValue>(initialValue);
+  const filtersValue = useAtomValue(tableFiltersAtom);
+  const [filterValue, setFilterValue] = useState<TFilterValue>(initialValue);
 
   const debouncer = useDebouncer(
     (value) => {
-      filtersDispatch({ type: 'updateFilter', value: { id: name, value } });
-      paginationDispatch({ type: 'updatePage', value: 1 });
+      updateTableFilters({ [name]: value });
+      updatePage(1);
       return null;
     },
     { wait },
     (state) => ({ isPending: state.isPending })
   );
 
-  const handleChange = useCallback((value: FilterValue) => {
+  const handleChange = useCallback((value: TFilterValue) => {
     setFilterValue(value);
     debouncer.maybeExecute(value);
   }, []);

@@ -1,10 +1,11 @@
-import { memo, useId } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import { useSetAtom } from 'jotai';
+import { memo, useId } from 'react';
 
-import { usePaginationDispatch } from './providers/Pagination';
+import { updateRowsPerPageAtom } from './atoms';
 
 type SelectOption = { value: number; label: number | string };
 
@@ -21,7 +22,8 @@ type RowsPerPageSelectProps = {
 
 const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPageSelectProps) => {
   const inputId = useId();
-  const dispatch = usePaginationDispatch();
+
+  const updateRowsPerPage = useSetAtom(updateRowsPerPageAtom);
 
   return (
     <Stack direction="row" alignItems="center" gap={2}>
@@ -31,7 +33,7 @@ const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPa
         size="small"
         variant="standard"
         value={itemsPerPage}
-        onChange={(event) => dispatch({ type: 'updateRowsPerPage', value: event.target.value })}
+        onChange={(event) => updateRowsPerPage(event.target.value)}
         slotProps={{
           input: { id: `rows-per-page-select-${inputId}` },
         }}

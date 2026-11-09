@@ -159,7 +159,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end">
-        <SubmitButton loading={isLoading} />
+        <SubmitButton loading={isLoading}>Save trade</SubmitButton>
       </Stack>
     </FormMain>
   );

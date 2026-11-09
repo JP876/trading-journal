@@ -2,13 +2,12 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { useAtomValue } from 'jotai';
+import { Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { modalAtom } from '../../../../atoms/modal';
 import DialogMain from '../../../../components/DialogMain';
 import TextFilter from '../../../../components/table/filters/TextFilter';
-import TableProviders from '../../../../components/table/providers';
 import useModal from '../../../../hooks/useModal';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
@@ -47,7 +46,7 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <TableProviders>
+    <Provider>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Box>
@@ -68,7 +67,7 @@ const TradingSessionsMain = () => {
       </Stack>
 
       <TradingSessionModalList />
-    </TableProviders>
+    </Provider>
   );
 };
 

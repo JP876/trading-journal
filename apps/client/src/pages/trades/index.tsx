@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
-import { useAtom, useAtomValue } from 'jotai';
+import { getDefaultStore, Provider, useAtom, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { getTrades } from '../../api/trades';
@@ -25,7 +25,6 @@ import MenuActions from '../../components/MenuActions';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
 import DateFilter from '../../components/table/filters/DateFilter';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
-import TableProviders from '../../components/table/providers';
 import { QueryKey } from '../../enums';
 import useModal from '../../hooks/useModal';
 import type { Trade } from '../../types/trade';
@@ -34,6 +33,7 @@ import { TradesPageModal } from './enums';
 import useExportTrades from './hooks/useExportTrades';
 import usePairsOptions from './hooks/usePairsOptions';
 import useTagsOptions from './hooks/useTagsOptions';
+import { tradesTableStore } from './store';
 import TradingSessionSelect from './TradingSessionSelect';
 
 const AddTradeForm = lazy(() => import('./forms/AddTrade'));
@@ -90,7 +90,7 @@ const TradesModalList = () => {
 const COLLAPSE_TIMEOUT = 200;
 
 const TradesFiltersContainer = ({ children }: { children: React.ReactNode }) => {
-  const tradesFilters = useAtomValue(tradesFiltersAtom);
+  const tradesFilters = useAtomValue(tradesFiltersAtom, { store: getDefaultStore() });
 
   return (
     <Collapse in={tradesFilters} timeout={COLLAPSE_TIMEOUT}>
@@ -137,8 +137,11 @@ const TradesFilters = () => {
 };
 
 const TradesFiltersButton = () => {
-  const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom);
-  const [clearFilters] = useClearFilters({ wait: COLLAPSE_TIMEOUT + 20 });
+  const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom, { store: getDefaultStore() });
+  const [clearFilters] = useClearFilters({
+    wait: COLLAPSE_TIMEOUT + 20,
+    store: tradesTableStore,
+  });
 
   const handleClick = () => {
     setTradesFilters((prevValue) => !prevValue);
@@ -201,7 +204,7 @@ const TradesPage = () => {
   };
 
   return (
-    <TableProviders rowsPerPage={20}>
+    <Box>
       <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap={2}>
           <Typography variant="h4">Trades</Typography>
@@ -244,6 +247,7 @@ const TradesPage = () => {
             <TradesFiltersButton />
           </Stack>
         </Stack>
+
         <Stack direction="row" alignItems="center" gap={2}>
           <IconButton
             size="small"
@@ -257,18 +261,20 @@ const TradesPage = () => {
       </Stack>
 
       <Stack>
-        <TradesFiltersContainer>
-          <TradesFilters />
-        </TradesFiltersContainer>
-        <Paper sx={{ p: 2 }}>
-          <Suspense fallback={null}>
-            <TradesTableMain />
-          </Suspense>
-        </Paper>
+        <Provider store={tradesTableStore}>
+          <TradesFiltersContainer>
+            <TradesFilters />
+          </TradesFiltersContainer>
+          <Paper sx={{ p: 2 }}>
+            <Suspense fallback={null}>
+              <TradesTableMain />
+            </Suspense>
+          </Paper>
+        </Provider>
       </Stack>
 
       <TradesModalList />
-    </TableProviders>
+    </Box>
   );
 };
 

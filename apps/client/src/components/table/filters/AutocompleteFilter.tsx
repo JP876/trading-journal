@@ -1,4 +1,3 @@
-import { memo, useCallback, useMemo } from 'react';
 import Autocomplete, {
   type AutocompleteProps,
   type AutocompleteRenderValueGetItemProps,
@@ -6,16 +5,19 @@ import Autocomplete, {
 import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import type { Store } from 'jotai';
+import { memo, useCallback, useMemo } from 'react';
 
-import type { AutocompleteOption } from '../../../types';
 import checkBrightness from '../../../lib/checkBrighness';
+import type { AutocompleteOption } from '../../../types';
+import type { TFilterValue } from '../atoms';
 import useFilter from '../hooks/useFilter';
-import type { FilterValue } from '../providers/Filters';
 
 type AutocompleteFilterProps = {
   label: string;
   name: string;
-  initialValue?: FilterValue;
+  initialValue?: TFilterValue;
+  store?: Store;
 };
 
 type RenderValueType = NonNullable<string | AutocompleteOption> | (string | AutocompleteOption)[] | null;
@@ -30,9 +32,10 @@ const AutocompleteFilter = ({
   initialValue,
   label,
   name,
+  store,
   ...rest
 }: AutocompleteFilterProps & CustomAutocompleteProps) => {
-  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: initialValue || '' });
+  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: initialValue || '', store });
 
   const value = useMemo(() => {
     if (!filterValue) return rest?.multiple ? [] : null;

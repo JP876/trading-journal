@@ -1,17 +1,17 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import Stack from '@mui/material/Stack';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 
-import { QueryKey } from '../../../../enums';
 import { getTags } from '../../../../api/tags';
-import useColumns from './hooks/useColumns';
-import TableMain from '../../../../components/table/TableMain';
-import { usePaginationState } from '../../../../components/table/providers/Pagination';
-import { useFiltersState } from '../../../../components/table/providers/Filters';
+import { tableFiltersAtom, tablePaginationAtom } from '../../../../components/table/atoms';
 import TableMainFooter from '../../../../components/table/TableFooter';
+import TableMain from '../../../../components/table/TableMain';
+import { QueryKey } from '../../../../enums';
+import useColumns from './hooks/useColumns';
 
 const TagsTableMain = () => {
-  const { page, rowsPerPage } = usePaginationState();
-  const filters = useFiltersState() as { title?: string };
+  const { page, rowsPerPage } = useAtomValue(tablePaginationAtom);
+  const filters = useAtomValue<{ title?: string }>(tableFiltersAtom);
 
   const { data } = useQuery({
     queryKey: [QueryKey.TAGS, page, rowsPerPage, filters.title],

@@ -1,19 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
 import { DateTimePicker, type DateTimePickerProps } from '@mui/x-date-pickers/DateTimePicker';
 import type { PickerValue } from '@mui/x-date-pickers/internals';
+import { format } from 'date-fns';
+import type { Store } from 'jotai';
+import { useEffect, useRef, useState } from 'react';
 
 import useFilter from '../hooks/useFilter';
-import { format } from 'date-fns';
 
 type DateFilterProps = DateTimePickerProps & {
   name: string;
+  store?: Store;
 };
 
-const DateFilter = ({ name, ...rest }: DateFilterProps) => {
+const DateFilter = ({ name, store, ...rest }: DateFilterProps) => {
   const dateRef = useRef<PickerValue | null>(null);
   const [date, setDate] = useState<PickerValue | null>(null);
 
-  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: null, wait: 0 });
+  const [filterValue, handleFilterChange] = useFilter({ name, initialValue: null, wait: 0, store });
 
   const handleOnChange = (newValue: PickerValue) => {
     dateRef.current = newValue;
