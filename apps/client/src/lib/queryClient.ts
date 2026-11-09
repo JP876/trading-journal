@@ -2,7 +2,7 @@ import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { getDefaultStore } from 'jotai';
 
-import { retryAtom } from '../atoms/retry';
+import { retryAtom } from '../atoms';
 import { createAuthEvent } from './authEvent';
 
 export const RETRY_OPTIONS = {

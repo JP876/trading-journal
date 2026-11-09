@@ -8,20 +8,19 @@ import Typography from '@mui/material/Typography';
 import { createStore, getDefaultStore, Provider, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useEffect, useState } from 'react';
 
-import { userAtom } from '../../../atoms/user';
+import { pairsAtom, userAtom } from '../../../atoms';
 import Dropzone from '../../../components/Dropzone';
 import { dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
 import useRemoveFile from '../../../components/Dropzone/hooks/useRemoveFile';
 import { QueryKey } from '../../../enums';
+import useMainSession from '../../../hooks/useMainSession';
 import useModal from '../../../hooks/useModal';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { handleCSVFile } from '../../../lib/CSVFile';
 import { addMultipleTradesDB } from '../../../lib/db/api/trades';
 import { queryClient } from '../../../lib/queryClient';
 import withCatch from '../../../lib/withCatch';
-import type { Pair } from '../../../types/pair';
 import type { Trade } from '../../../types/trade';
-import type { TradingSession, TradingSessionsResult } from '../../../types/tradingSessions';
 import { TradesPageModal } from '../enums';
 import { importTradesStore, parsedFileResultAtom, resetStoreAtom } from './atoms';
 import Description from './Description';
@@ -29,28 +28,18 @@ import transformTrades from './utils/transformTrades';
 
 const dzStore = createStore();
 
-const getPairsAndSession = async (): Promise<[Pair[] | null, TradingSession | null]> => {
-  const [sessions, pairs] = await Promise.all([
-    queryClient.getQueryData<TradingSessionsResult>([QueryKey.TRADING_SESSIONS]),
-    queryClient.getQueryData<Pair[]>([QueryKey.PAIRS]),
-  ]);
-  const mainSession = sessions?.results?.find((el) => el?.isMain);
-  return [pairs || null, mainSession || null];
-};
-
 const ConfirmImportButton = () => {
   const { openSnackbar } = useSnackbar();
   const { closeModal } = useModal();
 
   const [loading, setLoading] = useState(false);
+  const [mainSession] = useMainSession();
 
   const user = useAtomValue(userAtom, { store: getDefaultStore() });
+  const pairs = useAtomValue(pairsAtom, { store: getDefaultStore() });
   const parsedFileResult = useAtomValue(parsedFileResultAtom);
-  console.log(user);
 
   const handleImport = async () => {
-    let [pairs, mainSession] = await getPairsAndSession();
-
     if (!pairs || !mainSession || !parsedFileResult || !user) {
       return;
     }

@@ -1,7 +1,7 @@
 import { getDefaultStore } from 'jotai';
 import Papa, { type ParseLocalConfig, type ParseResult } from 'papaparse';
 
-import { openSnackbarAtom } from '../atoms/snackbar';
+import { openSnackbarAtom } from '../atoms';
 import withCatch from './withCatch';
 
 export async function readCSVFile<T>(

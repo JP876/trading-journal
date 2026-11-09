@@ -3,15 +3,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, IconButton, Tooltip } from '@mui/material';
 import { useAtomValue } from 'jotai';
+import { memo } from 'react';
 
 import { logoutUser } from '../../../api/auth';
-import { userAtom } from '../../../atoms/user';
+import { userAtom } from '../../../atoms';
 import useLogout from '../../../hooks/useLogout';
 import useSnackbar from '../../../hooks/useSnackbar';
 import withCatch from '../../../lib/withCatch';
 import MenuActions from '../../MenuActions';
 import useMenuActions from '../../MenuActions/hooks/useMenuActions';
-import { memo } from 'react';
 
 const MenuActionButton = () => {
   const user = useAtomValue(userAtom);

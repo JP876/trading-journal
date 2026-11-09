@@ -1,15 +1,15 @@
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import { useForm } from 'react-hook-form';
 
-import { getPairs } from '../../../../api/pairs';
 import { addTrade } from '../../../../api/trades';
+import { pairsAtom } from '../../../../atoms';
 import { QueryKey } from '../../../../enums';
 import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
 import { calculateProfit } from '../../../../lib/price';
-import type { Pair } from '../../../../types/pair';
 import { TradeFormSchema, type TradeFormSchemaType } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
 import TradeForm from '../TradeForm';
@@ -21,12 +21,7 @@ const AddTradeForm = () => {
   const { openSnackbar } = useSnackbar();
 
   const [mainSession] = useMainSession();
-
-  const pairsQuery = useQuery<Pair[]>({
-    queryKey: [QueryKey.PAIRS],
-    queryFn: () => getPairs(),
-    staleTime: Infinity,
-  });
+  const pairs = useAtomValue(pairsAtom, { store: getDefaultStore() });
 
   const mutation = useMutation({
     mutationFn: addTrade,
@@ -61,7 +56,7 @@ const AddTradeForm = () => {
     }
 
     const formData = { ...data };
-    const pair = (pairsQuery.data || []).find((p) => p.id === formData.pairId);
+    const pair = (pairs || []).find((p) => p.id === formData.pairId);
 
     if (!(formData?.openDate instanceof Date)) delete formData.openDate;
     if (!(formData?.closeDate instanceof Date)) delete formData.closeDate;

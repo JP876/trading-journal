@@ -1,6 +1,5 @@
-import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import Box from '@mui/material/Box';
 import {
   BarChart,
   type AxisValueFormatterContext,
@@ -8,12 +7,14 @@ import {
   type BarItem,
   type BarLabelContext,
 } from '@mui/x-charts';
+import { useQuery } from '@tanstack/react-query';
+import { getDefaultStore, useAtomValue } from 'jotai';
 
-import { getPairs } from '../../../../api/pairs';
 import { getTrades } from '../../../../api/trades';
+import { pairsAtom } from '../../../../atoms';
 import { QueryKey } from '../../../../enums';
-import { getPairsByProfitability } from '../../utils/profitability';
 import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
+import { getPairsByProfitability } from '../../utils/profitability';
 import type { TPairProfitability } from '../../utils/types';
 
 const ProfitablePairsChart = () => {
@@ -24,15 +25,11 @@ const ProfitablePairsChart = () => {
     queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
   });
 
-  const pairsQuery = useQuery({
-    queryKey: [QueryKey.PAIRS],
-    queryFn: () => getPairs(),
-    staleTime: Infinity,
-  });
+  const pairs = useAtomValue(pairsAtom, { store: getDefaultStore() });
 
   const chartData = (() => {
-    if (!tradesQuery.data?.results || !pairsQuery?.data) return null;
-    return getPairsByProfitability(tradesQuery.data.results, pairsQuery.data);
+    if (!tradesQuery.data?.results || !pairs) return null;
+    return getPairsByProfitability(tradesQuery.data.results, pairs);
   })();
 
   const chartProps = (() => {

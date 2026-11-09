@@ -3,7 +3,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { getDefaultStore, useAtomValue } from 'jotai';
 import { memo } from 'react';
 
-import { snackbarAtom } from '../../atoms/snackbar';
+import { snackbarAtom } from '../../atoms';
 import useSnackbar from '../../hooks/useSnackbar';
 
 const SnackbarContainer = () => {

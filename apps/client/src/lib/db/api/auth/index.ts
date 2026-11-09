@@ -2,8 +2,7 @@ import { format } from 'date-fns';
 import { getDefaultStore } from 'jotai';
 
 import { db } from '../..';
-import { openModalAtom } from '../../../../atoms/modal';
-import { snackbarAtom } from '../../../../atoms/snackbar';
+import { openModalAtom, snackbarAtom } from '../../../../atoms';
 import { TradesPageModal } from '../../../../pages/trades/enums';
 import type { UserDB } from '../../../../types/user';
 import withCatch from '../../../withCatch';

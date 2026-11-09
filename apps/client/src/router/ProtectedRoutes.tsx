@@ -1,9 +1,11 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
+import { getDefaultStore, useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
 
 import { refreshToken } from '../api/auth';
 import { getPairs } from '../api/pairs';
+import { pairsAtom } from '../atoms';
 import { QueryKey } from '../enums';
 import useLogout from '../hooks/useLogout';
 import useSnackbar from '../hooks/useSnackbar';
@@ -23,13 +25,21 @@ const ProtectedRoutes = () => {
   const { openSnackbar } = useSnackbar();
   const [logout] = useLogout();
 
-  useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
+  const setPairs = useSetAtom(pairsAtom, { store: getDefaultStore() });
+
+  const { data, isFetched } = useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
   useQuery({
     ...refreshTokenQueryOptions,
     refetchInterval: REFETCH_INTERVAL,
     refetchIntervalInBackground: true,
     enabled: enabled,
   });
+
+  useEffect(() => {
+    if (isFetched && Array.isArray(data) && data.length > 0) {
+      setPairs(data);
+    }
+  }, [isFetched, data]);
 
   useEffect(() => {
     (async () => {

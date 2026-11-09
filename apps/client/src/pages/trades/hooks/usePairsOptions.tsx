@@ -1,8 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
-import { getPairs } from '../../../api/pairs';
-import { QueryKey } from '../../../enums';
+import { pairsAtom } from '../../../atoms';
 import type { AutocompleteOption } from '../../../types';
 import type { Pair } from '../../../types/pair';
 
@@ -30,16 +29,12 @@ const formatPairsData = (data: Pair[]) => {
 };
 
 const usePairsOptions = () => {
-  const pairsQuery = useQuery<Pair[]>({
-    queryKey: [QueryKey.PAIRS],
-    queryFn: () => getPairs(),
-    staleTime: Infinity,
-  });
+  const pairs = useAtomValue(pairsAtom, { store: getDefaultStore() });
 
   return useMemo<AutocompleteOption[]>(() => {
-    if (!Array.isArray(pairsQuery.data)) return [];
-    return formatPairsData(pairsQuery.data);
-  }, [pairsQuery.isFetched]);
+    if (!Array.isArray(pairs)) return [];
+    return formatPairsData(pairs);
+  }, [pairs]);
 };
 
 export default usePairsOptions;

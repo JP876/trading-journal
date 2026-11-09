@@ -1,6 +1,6 @@
 import { useDebouncer } from '@tanstack/react-pacer';
-import { useAtomValue, useSetAtom, type Store } from 'jotai';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { atom, useAtomValue, useSetAtom, type Store } from 'jotai';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { tableFiltersAtom, updateFiltersAtom, updatePageAtom, type TFilterValue } from '../atoms';
 
@@ -14,15 +14,19 @@ type FiltersHookProps = {
 function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) {
   const justMounted = useRef(true);
 
-  const updateTableFilters = useSetAtom(updateFiltersAtom, { store });
+  const filterValueAtom = useMemo(() => {
+    return atom((get) => get(tableFiltersAtom)?.[name]);
+  }, [name]);
+
+  const updateFilters = useSetAtom(updateFiltersAtom, { store });
   const updatePage = useSetAtom(updatePageAtom, { store });
 
-  const filtersValue = useAtomValue(tableFiltersAtom);
+  const filtersValue = useAtomValue(filterValueAtom);
   const [filterValue, setFilterValue] = useState<TFilterValue>(initialValue);
 
   const debouncer = useDebouncer(
     (value) => {
-      updateTableFilters({ [name]: value });
+      updateFilters({ [name]: value });
       updatePage(1);
       return null;
     },
@@ -36,11 +40,11 @@ function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) 
   }, []);
 
   useEffect(() => {
-    if (!justMounted.current && !filtersValue?.[name]) {
+    if (!justMounted.current && !filtersValue) {
       setFilterValue(null);
     }
     justMounted.current = false;
-  }, [filtersValue?.[name]]);
+  }, [filtersValue]);
 
   return [filterValue, handleChange, { ...debouncer.state }] as const;
 }

@@ -1,23 +1,20 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import type { Trade } from '../../../types/trade';
+import { deleteTrade } from '../../../api/trades';
+import { QueryKey } from '../../../enums';
 import useModal from '../../../hooks/useModal';
 import useSnackbar from '../../../hooks/useSnackbar';
-import { deleteTrade } from '../../../api/trades';
 import { TradesPageModal } from '../enums';
-import { QueryKey } from '../../../enums';
+import useTradeDetails from '../hooks/useTradeDetails';
 
-type DeleteTradeProps = {
-  trade: Trade;
-};
-
-const DeleteTrade = ({ trade }: DeleteTradeProps) => {
+const DeleteTrade = () => {
   const queryClient = useQueryClient();
+  const trade = useTradeDetails(TradesPageModal.DELETE_TRADE);
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();

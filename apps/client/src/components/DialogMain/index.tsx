@@ -1,14 +1,14 @@
-import { forwardRef, memo } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton, Slide, Stack, type Breakpoint } from '@mui/material';
 import Dialog, { type DialogProps } from '@mui/material/Dialog';
 import DialogContent, { type DialogContentProps } from '@mui/material/DialogContent';
 import DialogTitle, { type DialogTitleProps } from '@mui/material/DialogTitle';
-import { IconButton, Slide, Stack, type Breakpoint } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import type { TransitionProps } from '@mui/material/transitions';
-import { useAtomValue } from 'jotai';
+import { atom, useAtomValue } from 'jotai';
+import { forwardRef, memo, useMemo } from 'react';
 
+import { modalAtom } from '../../atoms';
 import useModal from '../../hooks/useModal';
-import { modalAtom } from '../../atoms/modal';
 
 type DialogMainPropsType = {
   id: string;
@@ -40,7 +40,11 @@ function DialogMain({
   children,
   size,
 }: DialogMainPropsType) {
-  const modalInfo = useAtomValue(modalAtom)?.[id];
+  const singleModalAtom = useMemo(() => {
+    return atom((get) => get(modalAtom)?.[id]);
+  }, [id]);
+
+  const modalInfo = useAtomValue(singleModalAtom);
   const { closeModal } = useModal();
 
   const handleCloseModal = () => closeModal(id);

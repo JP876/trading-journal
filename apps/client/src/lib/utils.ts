@@ -1,6 +1,5 @@
 import { getDefaultStore } from 'jotai';
-
-import { userAtom } from '../atoms/user';
+import { userAtom } from '../atoms';
 
 export const getRandomInt = (min: number = 0, max: number = 1, roundTo?: number) => {
   let num = Math.floor(Math.random() * (max - min + 1)) + min;

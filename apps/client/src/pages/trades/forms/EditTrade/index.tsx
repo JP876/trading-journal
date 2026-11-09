@@ -7,15 +7,14 @@ import { QueryKey } from '../../../../enums';
 import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
 import useSnackbar from '../../../../hooks/useSnackbar';
-import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from '../../../../types/trade';
+import { EditTradeFormSchema, type EditTradeFormSchemaType } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
+import useTradeDetails from '../../hooks/useTradeDetails';
 import TradeForm from '../TradeForm';
 
-type EditTradeFormProps = {
-  trade: Trade;
-};
+const EditTradeForm = () => {
+  const trade = useTradeDetails(TradesPageModal.EDIT_TRADE);
 
-const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   const queryClient = useQueryClient();
 
   const { closeModal } = useModal();
@@ -29,7 +28,7 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
       if (!session) {
         throw new Error('Main trading session not found');
       }
-      return editTrade(trade.id, { ...data, tradingSessionId: session });
+      return editTrade(trade!.id, { ...data, tradingSessionId: session });
     },
     onSuccess: async () => {
       await Promise.all([
@@ -56,6 +55,11 @@ const EditTradeForm = ({ trade }: EditTradeFormProps) => {
   });
 
   const onSubmit = (data: EditTradeFormSchemaType) => {
+    if (!trade) {
+      console.error(`Trade details not found: ${trade}`);
+      return;
+    }
+
     const formData = { ...data };
 
     if (!(formData?.openDate instanceof Date)) delete formData.openDate;

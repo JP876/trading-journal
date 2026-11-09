@@ -8,11 +8,10 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { useAtomValue } from 'jotai';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import { memo } from 'react';
 import { Link, useLocation } from 'react-router';
-
-import { navigationDrawerAtom } from '../../atoms/navigationDrawer';
+import { navigationDrawerAtom } from '../../atoms';
 
 type TNavItem = { label: string; to: string; icon: React.ReactNode };
 
@@ -48,7 +47,7 @@ type TNavigationListItem = {
 };
 
 const NavigationListItem = ({ label, to, icon, activeLinkTo }: TNavigationListItem) => {
-  const drawer = useAtomValue(navigationDrawerAtom);
+  const drawer = useAtomValue(navigationDrawerAtom, { store: getDefaultStore() });
   let open = !!drawer?.open;
 
   return (

@@ -14,6 +14,12 @@ export type ModalInfo<T = {}> = {
 };
 export type ModalAtom = Record<string, ModalInfo>;
 
+export type TRetryAtomValue = {
+  isRetrying: boolean;
+  count: number;
+  error: Error | null;
+};
+
 export type SelectOption<T = string | number> = {
   value: T;
   label: string;

@@ -1,7 +1,7 @@
 import { getDefaultStore, useSetAtom } from 'jotai';
 import { useCallback, useMemo } from 'react';
 
-import { closeModalAtom, openModalAtom } from '../atoms/modal';
+import { closeModalAtom, openModalAtom } from '../atoms';
 
 const useModal = () => {
   const open = useSetAtom(openModalAtom, { store: getDefaultStore() });

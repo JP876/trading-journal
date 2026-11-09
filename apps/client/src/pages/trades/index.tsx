@@ -17,9 +17,8 @@ import { getDefaultStore, Provider, useAtom, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { getTrades } from '../../api/trades';
-import { modalAtom } from '../../atoms/modal';
+import { userAtom } from '../../atoms';
 import { tradesFiltersAtom } from '../../atoms/trades';
-import { userAtom } from '../../atoms/user';
 import DialogMain from '../../components/DialogMain';
 import MenuActions from '../../components/MenuActions';
 import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
@@ -27,7 +26,6 @@ import DateFilter from '../../components/table/filters/DateFilter';
 import useClearFilters from '../../components/table/hooks/useClearFilters';
 import { QueryKey } from '../../enums';
 import useModal from '../../hooks/useModal';
-import type { Trade } from '../../types/trade';
 import { resultOptions } from './consts';
 import { TradesPageModal } from './enums';
 import useExportTrades from './hooks/useExportTrades';
@@ -47,8 +45,6 @@ const TradesTableMain = lazy(() => import('./TradesTable'));
 const AddTagForm = lazy(() => import('./Settings/Tags/forms/AddForm'));
 
 const TradesModalList = () => {
-  const modalInfo = useAtomValue(modalAtom);
-
   return (
     <>
       <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
@@ -64,7 +60,7 @@ const TradesModalList = () => {
       </DialogMain>
 
       <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
-        <EditTradeForm trade={modalInfo?.[TradesPageModal.EDIT_TRADE]?.data as Trade} />
+        <EditTradeForm />
       </DialogMain>
 
       <DialogMain
@@ -73,7 +69,7 @@ const TradesModalList = () => {
         hideCloseBtn
         dialogContentProps={{ dividers: false }}
       >
-        <DeleteTrade trade={modalInfo?.[TradesPageModal.DELETE_TRADE]?.data as Trade} />
+        <DeleteTrade />
       </DialogMain>
 
       <DialogMain id={TradesPageModal.SETTINGS} title="Settings" size="md">

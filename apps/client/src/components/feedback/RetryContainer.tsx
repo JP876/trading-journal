@@ -1,14 +1,14 @@
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useAtomValue } from 'jotai';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import { memo, useEffect } from 'react';
 
-import { retryAtom } from '../../atoms/retry';
+import { retryAtom } from '../../atoms';
 import useSnackbar from '../../hooks/useSnackbar';
 import { RETRY_OPTIONS } from '../../lib/queryClient';
 
 const RetryContainer = () => {
-  const retryInfo = useAtomValue(retryAtom);
+  const retryInfo = useAtomValue(retryAtom, { store: getDefaultStore() });
   const { openSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {

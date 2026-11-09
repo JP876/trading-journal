@@ -1,5 +1,5 @@
 import { getDefaultStore } from 'jotai';
-import { userAtom } from '../../atoms/user';
+import { userAtom } from '../../atoms';
 import { axiosInstance } from '../../lib/axiosInstance';
 import { db } from '../../lib/db';
 import { isGuest } from '../../lib/utils';

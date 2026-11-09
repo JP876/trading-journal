@@ -5,16 +5,15 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
 import { type ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { useMemo } from 'react';
 
-import { getPairs } from '../../../../api/pairs';
+import { getDefaultStore, useAtomValue } from 'jotai';
+import { pairsAtom } from '../../../../atoms';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 import MenuActions from '../../../../components/MenuActions';
 import NotFoundValue from '../../../../components/NotFoundValue';
-import { QueryKey } from '../../../../enums';
 import useModal from '../../../../hooks/useModal';
 import type { Trade } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
@@ -48,8 +47,8 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
 };
 
 const TradePairCell = ({ pair }: { pair: number }) => {
-  const pairsQuery = useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
-  const pairData = (pairsQuery.data || []).find((el) => el.id === pair);
+  const pairs = useAtomValue(pairsAtom, { store: getDefaultStore() });
+  const pairData = (pairs || []).find((el) => el.id === pair);
 
   if (!pairData) return <NotFoundValue />;
   return <Typography variant="body2">{pairData.pair}</Typography>;

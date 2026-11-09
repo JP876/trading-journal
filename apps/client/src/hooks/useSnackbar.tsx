@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from 'react';
 import { getDefaultStore, useSetAtom } from 'jotai';
+import { useCallback, useMemo } from 'react';
 
-import { closeSnackbarAtom, openSnackbarAtom } from '../atoms/snackbar';
+import { closeSnackbarAtom, openSnackbarAtom } from '../atoms';
 import type { SnackbarAtom } from '../types/snackbar';
 
 const useSnackbar = () => {

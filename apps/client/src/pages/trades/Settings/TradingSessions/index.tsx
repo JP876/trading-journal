@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import { Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
-import { modalAtom } from '../../../../atoms/modal';
+import { modalAtom } from '../../../../atoms';
 import DialogMain from '../../../../components/DialogMain';
 import TextFilter from '../../../../components/table/filters/TextFilter';
 import useModal from '../../../../hooks/useModal';

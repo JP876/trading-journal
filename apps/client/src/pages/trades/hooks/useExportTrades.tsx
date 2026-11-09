@@ -1,22 +1,17 @@
-import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import Papa from 'papaparse';
 import { useCallback } from 'react';
 
-import { getPairs } from '../../../api/pairs';
 import { getTrades } from '../../../api/trades';
-import { QueryKey } from '../../../enums';
+import { pairsAtom } from '../../../atoms';
 import useMainSession from '../../../hooks/useMainSession';
+import useSnackbar from '../../../hooks/useSnackbar';
 import withCatch from '../../../lib/withCatch';
 import type { Pair } from '../../../types/pair';
-import useSnackbar from '../../../hooks/useSnackbar';
 
 const useExportTrades = () => {
-  const { data: pairsData } = useQuery({
-    queryKey: [QueryKey.PAIRS],
-    queryFn: () => getPairs(),
-    staleTime: Infinity,
-  });
+  const pairsData = useAtomValue(pairsAtom, { store: getDefaultStore() });
   const [mainSession] = useMainSession();
 
   const { openSnackbar } = useSnackbar();

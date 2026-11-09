@@ -7,11 +7,10 @@ import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { useAtom } from 'jotai';
+import { getDefaultStore, useAtom } from 'jotai';
 import { memo } from 'react';
 import { Outlet } from 'react-router';
 
-import { navigationDrawerAtom } from '../../atoms/navigationDrawer';
 import { TradesPageModal } from '../../pages/trades/enums';
 import DialogMain from '../DialogMain';
 import ColorModeMain from './ColorMode';
@@ -19,6 +18,7 @@ import IntroForm from './Intro';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
+import { navigationDrawerAtom } from '../../atoms';
 
 const MainContainer = memo(() => {
   return (
@@ -40,7 +40,7 @@ const NavigationModalList = memo(() => {
 });
 
 const NavigationMain = () => {
-  const [drawer, setDrawer] = useAtom(navigationDrawerAtom);
+  const [drawer, setDrawer] = useAtom(navigationDrawerAtom, { store: getDefaultStore() });
 
   return (
     <Box sx={{ display: 'flex' }}>

@@ -3,13 +3,12 @@ import { lazy } from 'react';
 import { createBrowserRouter, redirect, type MiddlewareFunction, type RouteObject } from 'react-router';
 
 import { refreshToken } from '../api/auth';
-import { openSnackbarAtom } from '../atoms/snackbar';
-import { userAtom } from '../atoms/user';
+import { openSnackbarAtom, userAtom } from '../atoms';
 import { axiosInstance } from '../lib/axiosInstance';
+import { getLoggedInUserDB, hasUsersDB } from '../lib/db/api/users';
 import withCatch from '../lib/withCatch';
 import type { User } from '../types/user';
 import ProtectedRoutes from './ProtectedRoutes';
-import { getLoggedInUserDB, hasUsersDB } from '../lib/db/api/users';
 
 const NavigationMain = lazy(() => import('../components/Navigation'));
 const AuthPage = lazy(() => import('../pages/auth'));
