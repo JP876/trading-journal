@@ -10,7 +10,7 @@ import { QueryKey } from '../../../../enums';
 import useColumns from './hooks/useColumns';
 
 const TagsTableMain = () => {
-  const { page, rowsPerPage } = useAtomValue(tablePaginationAtom);
+  const { pageIndex: page, pageSize: rowsPerPage } = useAtomValue(tablePaginationAtom);
   const filters = useAtomValue<{ title?: string }>(tableFiltersAtom);
 
   const { data } = useQuery({

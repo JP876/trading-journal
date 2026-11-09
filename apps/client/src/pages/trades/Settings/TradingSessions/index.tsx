@@ -2,7 +2,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { Provider, useAtomValue } from 'jotai';
+import { createStore, Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
 import { modalAtom } from '../../../../atoms';
@@ -12,10 +12,14 @@ import useModal from '../../../../hooks/useModal';
 import type { TradingSession } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
 import TradingSessionsTable from './TableMain';
+import { tablePaginationAtom } from '../../../../components/table/atoms';
 
 const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
 const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
 const DeleteTradingSession = lazy(() => import('./DeleteTradingSession'));
+
+const sessionTableStore = createStore();
+sessionTableStore.set(tablePaginationAtom, { pageIndex: 1, pageSize: 10 });
 
 const TradingSessionModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
@@ -46,7 +50,7 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <Provider>
+    <Provider store={sessionTableStore}>
       <Stack gap={2}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Box>

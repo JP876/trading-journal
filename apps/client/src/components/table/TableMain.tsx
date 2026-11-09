@@ -1,16 +1,18 @@
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { TableSortLabel } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
 import { useTable, type ColumnDef, type RowData, type TableOptions } from '@tanstack/react-table';
 import { memo } from 'react';
 
 import { tableMainFeatures } from './consts';
+import { useAtom } from 'jotai';
+import { tablePaginationAtom } from './atoms';
 
 type TableMainProps<TData extends RowData> = {
   data: TData[];
@@ -25,12 +27,22 @@ function getAriaSort(sortDirection: false | 'asc' | 'desc') {
 }
 
 function TableMain<TData extends RowData>({ data, columns, tableOptions }: TableMainProps<TData>) {
-  const table = useTable({
-    features: tableMainFeatures,
-    data: data || [],
-    columns: columns,
-    ...(tableOptions || {}),
-  });
+  const [pagination, setPagination] = useAtom(tablePaginationAtom);
+
+  const table = useTable(
+    {
+      features: tableMainFeatures,
+      data: data || [],
+      columns: columns,
+      state: { pagination },
+      onPaginationChange: setPagination,
+      manualSorting: true,
+      manualPagination: true,
+      manualFiltering: true,
+      ...(tableOptions || {}),
+    },
+    (_) => ({})
+  );
 
   return (
     <TableContainer>
@@ -91,6 +103,8 @@ function TableMain<TData extends RowData>({ data, columns, tableOptions }: Table
           )}
         </TableBody>
       </Table>
+
+      <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>{() => null}</table.Subscribe>
     </TableContainer>
   );
 }

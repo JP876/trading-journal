@@ -18,7 +18,7 @@ const EditTagForm = lazy(() => import('./forms/EditForm'));
 const DeleteTag = lazy(() => import('./DeleteTag'));
 
 const tagsTableStore = createStore();
-tagsTableStore.set(tablePaginationAtom, { page: 1, rowsPerPage: 10 });
+tagsTableStore.set(tablePaginationAtom, { pageIndex: 1, pageSize: 10 });
 
 const TagModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
