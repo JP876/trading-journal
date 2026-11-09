@@ -17,6 +17,9 @@ const WidgetContainerPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const WidgetContainerHeader = styled(Stack)(({ theme }) => ({
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  flexDirection: 'row',
   position: 'sticky',
   top: 0,
   left: 0,
@@ -39,7 +42,7 @@ export type TWidgetContainerProps = {
 const WidgetContainer = ({ title, description, renderActions, paperProps, children }: TWidgetContainerProps) => {
   return (
     <WidgetContainerPaper {...paperProps}>
-      <WidgetContainerHeader direction="row" alignItems="center" justifyContent="space-between">
+      <WidgetContainerHeader>
         <Stack>
           <Typography variant="h5">{title}</Typography>
           <ClampedTextContainer variant="caption" maxRows={1}>

@@ -54,9 +54,9 @@ const DashboardHeader = () => {
   const [handleReset] = useResetWidgets();
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
       <Typography variant="h4">Dashboard</Typography>
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <TradingSessionSelect onSuccess={handleReset} />
       </Stack>
     </Stack>
@@ -72,10 +72,10 @@ const TradesNotFound = () => {
 
   return (
     <Stack
-      direction="column"
-      gap={2}
       sx={[
         (theme) => ({
+          flexDirection: 'column',
+          gap: theme.spacing(2),
           position: 'fixed',
           zIndex: theme.zIndex.modal - 1,
           top: '50%',
@@ -90,7 +90,7 @@ const TradesNotFound = () => {
       <Typography variant="body1">
         You haven't added any trades yet, so your dashboard is empty. Add trades whenever you're ready.
       </Typography>
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
         <Button size="small" variant="outlined" onClick={handleClick}>
           Go to Trades page
         </Button>

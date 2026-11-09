@@ -28,11 +28,11 @@ const TableMainFooter = ({
   if (!currentPage) return null;
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between">
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
       {itemsPerPage && totalItems && !hideResults ? (
         <ResultsMain currentPage={currentPage} itemsPerPage={itemsPerPage} totalItems={totalItems} />
       ) : null}
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         {itemsPerPage && totalItems && !hideRowPerPage ? <RowsPerPageSelect itemsPerPage={itemsPerPage} /> : null}
         {totalPages && !hidePagination ? (
           <PaginationContainer currentPage={currentPage} totalPages={totalPages} onChange={handleScroll} />

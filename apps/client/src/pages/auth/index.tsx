@@ -19,10 +19,10 @@ const AuthPage = () => {
   };
 
   return (
-    <Stack sx={{ height: '100vh' }} direction="row" alignItems="center" justifyContent="center">
+    <Stack sx={[{ height: '100vh', justifyContent: 'center', alignItems: 'center' }]} direction="row">
       <Paper sx={{ width: '30vw', minWidth: '28rem', p: 4, gap: 4, display: 'flex', flexDirection: 'column' }}>
-        <Stack gap={1} alignItems="center">
-          <Typography variant="h5" fontWeight="bold">
+        <Stack sx={[{ alignItems: 'center' }]}>
+          <Typography variant="h5" sx={[(theme) => ({ fontWeight: theme.typography.fontWeightBold })]}>
             Welcome back
           </Typography>
         </Stack>
@@ -38,7 +38,17 @@ const AuthPage = () => {
               Or continue with
             </Divider>
             <LoginForm />
-            <Stack mt={-2} direction="row" alignItems="center" justifyContent="center" gap={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={[
+                (theme) => ({
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBlockStart: theme.spacing(-2),
+                }),
+              ]}
+            >
               <Typography sx={{ fontWeight: 'medium' }} variant="body2">
                 Don&apos;t have an account?
               </Typography>
@@ -53,7 +63,17 @@ const AuthPage = () => {
               Or with username, email and password
             </Divider>
             <RegisterForm />
-            <Stack mt={-2} direction="row" alignItems="center" justifyContent="center" gap={1}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={[
+                (theme) => ({
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBlockStart: theme.spacing(-2),
+                }),
+              ]}
+            >
               <Typography sx={{ fontWeight: 'medium' }} variant="body2">
                 Have an account?
               </Typography>

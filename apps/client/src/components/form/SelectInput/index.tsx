@@ -81,7 +81,7 @@ function SelectInput({
     const rest = formatedSelected.slice(maxTags || 2).length;
 
     return (
-      <Stack direction="row" alignItems="center" sx={{ flexWrap: 'wrap', gap: 0.5 }}>
+      <Stack sx={{ flexWrap: 'wrap', gap: 0.5, flexDirection: 'row', alignItems: 'center' }}>
         {formatedSelected.slice(0, maxTags || 2).map(({ value, label, chipProps, chipBackground }) =>
           renderChips ? (
             <Chip
@@ -133,10 +133,6 @@ function SelectInput({
         name={name}
         MenuProps={{
           ...inputProps?.MenuProps,
-          PaperProps: {
-            ...inputProps?.MenuProps?.PaperProps,
-            sx: { maxHeight: '24rem', ...inputProps?.MenuProps?.PaperProps?.sx },
-          },
         }}
         {...restField}
         onChange={handleChange}

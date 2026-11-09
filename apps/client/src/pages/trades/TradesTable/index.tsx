@@ -15,14 +15,14 @@ const TradesTableMain = () => {
 
   if (isLoading) {
     return (
-      <Stack direction="row" alignItems="center" justifyContent="center" my={8}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', my: 8 }}>
         <CircularProgress />
       </Stack>
     );
   }
 
   return (
-    <Stack gap={2}>
+    <Stack spacing={2}>
       <TableMain data={data?.results || []} columns={columns} />
       <TableMainFooter
         totalItems={data?.totalItems}

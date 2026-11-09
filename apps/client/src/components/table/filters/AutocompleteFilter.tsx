@@ -98,11 +98,7 @@ const AutocompleteFilter = ({
       });
     }
 
-    return (
-      <Typography ml={1} sx={{ lineHeight: 0 }}>
-        {typeof value === 'string' ? value : value?.label}
-      </Typography>
-    );
+    return <Typography sx={{ lineHeight: 0, ml: 1 }}>{typeof value === 'string' ? value : value?.label}</Typography>;
   }, []);
 
   return (

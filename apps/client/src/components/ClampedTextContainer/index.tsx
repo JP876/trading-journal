@@ -18,7 +18,7 @@ const ClampedTextContainer = ({ tooltipProps, ...rest }: ClampedTextContainerPro
   const renderTitle = useCallback((show: boolean, children: React.ReactNode) => {
     if (!show) return '';
     return (
-      <Typography m={0.4} variant="body2">
+      <Typography sx={{ m: 0.4 }} variant="body2">
         {children}
       </Typography>
     );

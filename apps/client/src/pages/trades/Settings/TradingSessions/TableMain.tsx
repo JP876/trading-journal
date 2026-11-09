@@ -24,7 +24,7 @@ const TradingSessionsTable = () => {
   const columns = useColumns();
 
   return (
-    <Stack gap={2}>
+    <Stack spacing={2}>
       <TableMain data={data?.results || []} columns={columns} />
       <TableMainFooter
         totalItems={data?.totalItems}

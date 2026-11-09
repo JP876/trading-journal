@@ -25,7 +25,7 @@ const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="center">
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
       <MenuActions>
         <MenuActions.Item
           label="Edit session"
@@ -82,7 +82,7 @@ const TradesCount = memo(({ id }: { id: number }) => {
   const { data } = useQuery(getTradesPerTradingSessionQuery());
   const count = (data || []).find((el) => el.tradingSession === id)?.count || 0;
 
-  return <Typography textAlign="center">{count}</Typography>;
+  return <Typography sx={{ textAlign: 'center' }}>{count}</Typography>;
 });
 
 const useColumns = () => {
@@ -110,7 +110,7 @@ const useColumns = () => {
       {
         accessorKey: 'id',
         header: () => (
-          <Stack direction="row" alignItems="center">
+          <Stack sx={{ flexDirection: 'row', alignItems: 'center' }}>
             <NumbersIcon fontSize="small" />
             Trades
           </Stack>

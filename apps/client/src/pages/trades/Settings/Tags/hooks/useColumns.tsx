@@ -19,7 +19,7 @@ const TagActions = ({ tag }: { tag: Tag }) => {
   const { openModal } = useModal();
 
   return (
-    <Stack direction="row" alignItems="center" justifyContent="center">
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
       <MenuActions>
         <MenuActions.Item
           label="Edit tag"

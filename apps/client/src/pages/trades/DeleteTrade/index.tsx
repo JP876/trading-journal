@@ -42,9 +42,9 @@ const DeleteTrade = () => {
   };
 
   return (
-    <Stack mt={-2} gap={2}>
+    <Stack sx={{ mt: -2, gap: 2 }}>
       <Typography>This action cannot be undone. This will permanently delete trade.</Typography>
-      <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
+      <Stack sx={{ direction: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
         <Button
           disabled={mutation.isPending}
           color="inherit"

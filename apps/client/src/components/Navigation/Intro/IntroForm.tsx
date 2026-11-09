@@ -80,7 +80,7 @@ const IntroForm = () => {
 
   return (
     <FormMain<TIntroForm> onSubmit={mutation.mutate} form={form}>
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="title"
           control={form.control}
@@ -105,7 +105,7 @@ const IntroForm = () => {
           />
         )}
       />
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="count"
           control={form.control}
@@ -134,7 +134,7 @@ const IntroForm = () => {
           )}
         />
       </Stack>
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="startDate"
           control={form.control}
@@ -146,7 +146,7 @@ const IntroForm = () => {
           render={(props) => <CloseDateInput label="End Date" addHoursCount={24 * 14} {...props} />}
         />
       </Stack>
-      <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
         <CloseModalButton modalId={TradesPageModal.INTRO} />
         <SubmitButton loading={mutation.isPending} />
       </Stack>

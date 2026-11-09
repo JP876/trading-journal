@@ -3,7 +3,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 const NotFoundValue = () => {
   return (
-    <Stack height="100%" direction="row" alignItems="center">
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', height: '100%' }}>
       <CloseIcon fontSize="small" />
     </Stack>
   );

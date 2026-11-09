@@ -53,7 +53,7 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
   };
 
   return (
-    <Stack mt={-2} gap={2}>
+    <Stack sx={{ mt: -2, gap: 2 }}>
       <Typography>
         This action{' '}
         <Box component="span" sx={(theme) => ({ color: theme.palette.error.main, textTransform: 'uppercase' })}>
@@ -67,7 +67,7 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
       </Typography>
 
       <Box>
-        <Typography mb={1}>Please type in the title of the trading session to confirm.</Typography>
+        <Typography sx={{ mb: 1 }}>Please type in the title of the trading session to confirm.</Typography>
         <TextField
           fullWidth
           label="Trading session title"
@@ -77,7 +77,7 @@ const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
         />
       </Box>
 
-      <Stack direction="row" alignItems="center" gap={2} justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
         <Button
           disabled={mutation.isPending}
           color="inherit"

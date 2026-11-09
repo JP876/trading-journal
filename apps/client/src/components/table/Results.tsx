@@ -10,11 +10,11 @@ type ResultsMainProps = {
 
 const ResultsMain = ({ currentPage, itemsPerPage, totalItems }: ResultsMainProps) => {
   if (!totalItems) {
-    return <Stack direction="row" alignItems="center" gap={2}></Stack>;
+    return <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}></Stack>;
   }
 
   return (
-    <Stack direction="row" alignItems="center" gap={2}>
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
       <Typography>
         Results {((currentPage || 1) - 1) * itemsPerPage + 1} -{' '}
         {currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage} out of {totalItems}

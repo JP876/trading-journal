@@ -95,7 +95,7 @@ const Description = () => {
                 arrow
                 disableInteractive
                 title={
-                  <Typography m={0.4} variant="body2">
+                  <Typography sx={{ m: 0.4 }} variant="body2">
                     {isRequired}
                   </Typography>
                 }
@@ -117,7 +117,7 @@ const Description = () => {
   }, [result]);
 
   return (
-    <Stack gap={1}>
+    <Stack sx={{ gap: 1 }}>
       <Typography variant="body1">
         Upload a CSV file to import your trades. Match each column to a trade field, then review the data before
         importing.

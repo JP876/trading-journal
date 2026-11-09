@@ -27,7 +27,7 @@ const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPa
   const updateRowsPerPage = useSetAtom(updateRowsPerPageAtom);
 
   return (
-    <Stack direction="row" alignItems="center" gap={2}>
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
       <Typography>Rows per page</Typography>
       <Select
         sx={{ width: '3.2rem' }}

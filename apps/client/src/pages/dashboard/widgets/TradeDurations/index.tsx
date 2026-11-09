@@ -85,7 +85,7 @@ const TradeDurations = ({ paperProps }: TTradeDurationsProps) => {
         description="Your quickest profit. This is the ideal duration for your winning strategy."
         paperProps={paperProps}
         renderActions={() => (
-          <Stack direction="row" alignItems="center" gap={1}>
+          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
             <ResetButton />
             <PeriodSelect />
           </Stack>

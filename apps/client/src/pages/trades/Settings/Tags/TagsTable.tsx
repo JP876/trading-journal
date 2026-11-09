@@ -23,7 +23,7 @@ const TagsTableMain = () => {
   const columns = useColumns();
 
   return (
-    <Stack gap={2}>
+    <Stack spacing={2}>
       <TableMain columns={columns} data={data?.results || []} />
       <TableMainFooter
         totalItems={data?.totalItems}

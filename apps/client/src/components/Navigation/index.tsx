@@ -56,13 +56,13 @@ const NavigationMain = () => {
             <MenuIcon />
           </IconButton>
 
-          <Stack sx={{ width: '100%' }} direction="row" alignItems="center" justifyContent="space-between">
-            <Stack direction="row" alignItems="center" gap={1}>
+          <Stack sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
+            <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
               <CandlestickChartIcon />
               <Typography variant="h6">LogMyTrades</Typography>
             </Stack>
 
-            <Stack direction="row" alignItems="center" gap={4}>
+            <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
               <ColorModeMain />
               <ProfileMain />
             </Stack>

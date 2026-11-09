@@ -22,10 +22,8 @@ const MenuActionButton = ({ mode }: { mode: ModeOptionsType }) => {
     <Button
       startIcon={
         <Box
-          display="flex"
-          alignItems="center"
           sx={[
-            { position: 'relative', mr: 2.5 },
+            { position: 'relative', mr: 2.5, display: 'flex', alignItems: 'center' },
             (theme) => ({
               svg: {
                 position: 'absolute',

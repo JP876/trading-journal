@@ -38,7 +38,7 @@ const TradeTagsCell = ({ tags }: { tags: number[] }) => {
   const renderHiddenTags = () => {
     if (!Array.isArray(tags) || visibleTagsCount === tags.length) return '';
     return (
-      <Stack gap={1} my={0.4}>
+      <Stack sx={{ gap: 1, my: 0.4 }}>
         {tagsData.slice(visibleTagsCount, tagsData.length).map((tag) => (
           <Chip
             key={tag.id}
@@ -93,10 +93,10 @@ const TradeTagsCell = ({ tags }: { tags: number[] }) => {
     <Box sx={{ width: '100%', position: 'relative' }}>
       <Stack
         ref={containerRef}
-        direction="row"
-        alignItems="center"
-        gap={1}
         sx={(theme) => ({
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 1,
           flexWrap: 'wrap',
           height: '1.5rem',
           overflow: 'hidden',

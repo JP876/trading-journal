@@ -24,7 +24,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
 
   return (
-    <Stack direction="row" alignItems="center" gap={2}>
+    <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
       <MenuActions>
         <MenuActions.Item
           label="Edit trade"
@@ -81,11 +81,9 @@ const useColumns = () => {
           return (
             <Chip
               label={
-                <Stack direction="row" alignItems="center" gap={0.5}>
+                <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 0.5 }}>
                   {valueIcon}
-                  <Typography variant="caption" textAlign="center" lineHeight=".8rem">
-                    {direction}
-                  </Typography>
+                  <Typography sx={{ textAlign: 'center', lineHeight: '.8rem' }}>{direction}</Typography>
                 </Stack>
               }
               size="small"

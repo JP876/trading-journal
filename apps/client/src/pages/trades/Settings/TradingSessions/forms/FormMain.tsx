@@ -23,7 +23,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
 
   return (
     <FormMain onSubmit={onSubmit} form={form}>
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller name="title" control={form.control} render={(props) => <TextInput label="Title *" {...props} />} />
         <Controller
           name="accountSize"
@@ -51,7 +51,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center' }}>
         <Controller
           name="description"
           control={form.control}
@@ -61,7 +61,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
 
       <Divider sx={{ my: 2 }}>Default trade values</Divider>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="defaultPairId"
           control={form.control}
@@ -74,7 +74,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
         />
       </Stack>
 
-      <Stack direction="row" alignContent="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="defaultTakeProfit"
           control={form.control}
@@ -87,7 +87,7 @@ const TradingSessionForm = ({ onSubmit, form, isLoading }: TradingSessionFormPro
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
         <SubmitButton loading={isLoading} />
       </Stack>
     </FormMain>

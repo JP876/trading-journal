@@ -8,5 +8,10 @@ export const theme = createTheme({
   },
   components: {
     MuiDialog: {},
+    MuiStack: {
+      defaultProps: {
+        useFlexGap: true,
+      },
+    },
   },
 });

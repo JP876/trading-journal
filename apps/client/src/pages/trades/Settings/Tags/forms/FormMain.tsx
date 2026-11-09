@@ -20,7 +20,7 @@ const TagForm = ({ onSubmit, form, isLoading }: TagFormProps) => {
       <Controller name="title" control={form.control} render={(props) => <TextInput label="Title *" {...props} />} />
       <Controller name="color" control={form.control} render={(props) => <ColorInput {...props} label="Color *" />} />
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
         <SubmitButton loading={isLoading} />
       </Stack>
     </FormMain>

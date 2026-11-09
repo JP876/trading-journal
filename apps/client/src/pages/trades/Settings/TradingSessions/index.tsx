@@ -51,12 +51,12 @@ const TradingSessionsMain = () => {
 
   return (
     <Provider store={sessionTableStore}>
-      <Stack gap={2}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack spacing={2}>
+        <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
             <TextFilter name="title" label="Title" />
           </Box>
-          <Stack direction="row" alignItems="center" gap={2}>
+          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
             <Button
               size="small"
               variant="contained"

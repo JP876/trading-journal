@@ -55,7 +55,7 @@ const FilesPreview = ({ value, handleDeleteFile }: FilesPreviewProps) => {
         <ListItem
           key={`file-${index}`}
           secondaryAction={
-            <Stack direction="row" alignItems="center" gap={1}>
+            <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
               {file instanceof File ? null : (
                 <IconButton size="small" onClick={() => window.open(file.path, '_blank')}>
                   <DownloadIcon />

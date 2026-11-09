@@ -62,7 +62,7 @@ function DialogMain({
       disablePortal
       onClose={handleCloseModal}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <DialogTitle {...dialogTitleProps}>{title}</DialogTitle>
         {hideCloseBtn ? null : (
           <IconButton sx={{ mr: 3 }} size="small" onClick={handleCloseModal}>

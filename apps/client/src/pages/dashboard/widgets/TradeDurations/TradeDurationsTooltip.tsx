@@ -46,13 +46,13 @@ const formatTooltipData = (data: TDurationAnalysisValue['trades'], fraction: num
 const TradeDurationsTooltipContent = ({ data, title, seriesItems }: TTradeDurationsTooltipContentProps) => {
   return (
     <ChartsTooltipPaper sx={(theme) => ({ padding: theme.spacing(1), display: 'flex', flexDirection: 'column' })}>
-      <Typography mb={0.5} variant="subtitle1" fontWeight="bold">
+      <Typography sx={[(theme) => ({ mb: 0.5, fontWeight: theme.typography.fontWeightBold })]} variant="subtitle1">
         {title}
       </Typography>
 
       <Divider sx={(theme) => ({ marginInline: theme.spacing(-1) })} />
 
-      <Stack gap={2} mt={1}>
+      <Stack sx={{ gap: 2, mt: 1 }}>
         {seriesItems.map((item) => {
           const seriesId = item.seriesId as 'WON_TRADES' | 'LOST_TRADES';
           let isWon = seriesId === 'WON_TRADES';
@@ -61,7 +61,7 @@ const TradeDurationsTooltipContent = ({ data, title, seriesItems }: TTradeDurati
 
           return (
             <Stack key={item.seriesId}>
-              <Stack direction="row" alignItems="center" gap={2}>
+              <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
                 <Box
                   sx={(theme) => ({
                     width: theme.spacing(2),
@@ -71,7 +71,9 @@ const TradeDurationsTooltipContent = ({ data, title, seriesItems }: TTradeDurati
                   })}
                 />
                 <Typography>{`${item.formattedLabel}:`}</Typography>
-                <Typography fontWeight="bold">{item.value}</Typography>
+                <Typography sx={[(theme) => ({ fontWeight: theme.typography.fontWeightBold })]}>
+                  {item.value}
+                </Typography>
               </Stack>
 
               <TableContainer>

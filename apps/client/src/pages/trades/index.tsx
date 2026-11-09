@@ -201,11 +201,11 @@ const TradesPage = () => {
 
   return (
     <Box>
-      <Stack mb={2} direction="row" alignItems="center" justifyContent="space-between">
-        <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+        <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
           <Typography variant="h4">Trades</Typography>
 
-          <Stack direction="row" alignItems="center" gap={1}>
+          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
             {user?.variety === 'GUEST' ? (
               <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
                 {/* Implemented only when user is logged in as guest */}
@@ -244,7 +244,7 @@ const TradesPage = () => {
           </Stack>
         </Stack>
 
-        <Stack direction="row" alignItems="center" gap={2}>
+        <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
           <IconButton
             size="small"
             aria-label="trades-settings-button"

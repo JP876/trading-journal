@@ -44,7 +44,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
   return (
     <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="pairId"
           control={form.control}
@@ -62,7 +62,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="entryPrice"
           control={form.control}
@@ -75,7 +75,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="direction"
           control={form.control}
@@ -88,7 +88,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" gap={2}>
+      <Stack sx={{ flexDirection: 'row', gap: 2 }}>
         <Controller
           name="tags"
           control={form.control}
@@ -105,7 +105,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <AddTagButton />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="closedBy"
           control={form.control}
@@ -126,7 +126,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="takeProfit"
           control={form.control}
@@ -139,7 +139,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="openDate"
           control={form.control}
@@ -148,7 +148,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller name="closeDate" control={form.control} render={(props) => <CloseDateInput {...props} />} />
       </Stack>
 
-      <Stack direction="row" alignItems="center">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <Controller
           name="comment"
           control={form.control}
@@ -158,7 +158,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
         <SubmitButton loading={isLoading}>Save trade</SubmitButton>
       </Stack>
     </FormMain>

@@ -130,22 +130,33 @@ const StatisticsList = () => {
 
   if (!statsData) return null;
 
+  const listInfoData = [
+    { label: 'Days processed', value: statsData.daysProcessed },
+    { label: 'Months processed', value: statsData.monthsProcessed },
+    { label: 'Average trades per day', value: statsData.avgTradesPerDay },
+    { label: 'Initial account size', value: formatToCurrency(mainSession?.accountSize) },
+    { label: 'Return %', value: statsData.returnPercentage },
+    { label: 'Max drawdown', value: formatToCurrency(statsData.maxDrawdown) },
+  ];
+
   return (
-    <Stack gap={2}>
-      <Box sx={[(theme) => ({ display: 'grid', gridTemplateColumns: '1fr fit-content(50%)', gap: theme.spacing(1) })]}>
-        <Typography>Days processed</Typography>
-        <Typography fontWeight="bold"> {statsData.daysProcessed}</Typography>
-        <Typography>Months processed</Typography>
-        <Typography fontWeight="bold"> {statsData.monthsProcessed}</Typography>
-        <Typography>Average trades per day</Typography>
-        <Typography fontWeight="bold"> {statsData.avgTradesPerDay}</Typography>
-        <Typography>Initial account size</Typography>
-        <Typography fontWeight="bold"> {formatToCurrency(mainSession?.accountSize)}</Typography>
-        <Typography>Return %</Typography>
-        <Typography fontWeight="bold"> {statsData.returnPercentage}</Typography>
-        <Typography>Max drawdown</Typography>
-        <Typography fontWeight="bold"> {formatToCurrency(statsData.maxDrawdown)}</Typography>
-      </Box>
+    <Stack spacing={1}>
+      {listInfoData.map(({ label, value }, index) => (
+        <Box
+          key={label}
+          sx={[
+            (theme) => ({
+              display: 'grid',
+              gridTemplateColumns: '1fr fit-content(50%)',
+              rowGap: theme.spacing(1),
+              marginBlockEnd: theme.spacing(index + 1 === listInfoData.length ? 2 : 0),
+            }),
+          ]}
+        >
+          <Typography>{label}</Typography>
+          <Typography sx={[(theme) => ({ fontWeight: theme.typography.fontWeightBold })]}>{value}</Typography>
+        </Box>
+      ))}
       <TableMain data={statsData.tableData} columns={columns} />
     </Stack>
   );

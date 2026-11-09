@@ -104,10 +104,8 @@ const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
 
   return (
     <Stack
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
       sx={[
+        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
         (theme) => ({
           border: `1px solid ${theme.palette.grey[200]}`,
           paddingInline: theme.spacing(2),
@@ -115,7 +113,7 @@ const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
         }),
       ]}
     >
-      <Stack direction="row" alignItems="center" gap={2}>
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
         <InsertDriveFileIcon color="primary" />
         <Stack>
           <Typography variant="subtitle2">{name}</Typography>
@@ -134,7 +132,7 @@ const SelectedFiles = () => {
 
   if (!files) return null;
   return (
-    <Stack gap={0.5}>
+    <Stack spacing={0.5}>
       {files.map(({ file, fileId }) => (
         <SelectedFile key={fileId} name={file.name} size={file.size} id={fileId} />
       ))}
@@ -154,7 +152,7 @@ const ImportTradesAction = () => {
   }, []);
 
   return (
-    <Stack gap={1} my={1}>
+    <Stack sx={{ gap: 1, my: 1 }}>
       <Dropzone
         store={dzStore}
         accept=".csv, text/csv"
@@ -170,10 +168,10 @@ const ImportTradesAction = () => {
 
 const ImportTradesMain = () => {
   return (
-    <Stack gap={2}>
+    <Stack spacing={2}>
       <Description />
       <ImportTradesAction />
-      <Stack direction="row" alignItems="center" justifyContent="flex-end">
+      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
         <ConfirmImportButton />
       </Stack>
     </Stack>
