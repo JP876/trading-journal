@@ -2,12 +2,9 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { createStore, getDefaultStore, Provider, useAtomValue } from 'jotai';
+import { createStore, Provider } from 'jotai';
 import { lazy, Suspense } from 'react';
 
-import type { TradingSession } from '../../../../types/tradingSessions';
-
-import { modalAtom } from '../../../../atoms';
 import DialogMain from '../../../../components/DialogMain';
 import { tablePaginationAtom } from '../../../../components/table/atoms';
 import TextFilter from '../../../../components/table/filters/TextFilter';
@@ -23,8 +20,6 @@ const sessionTableStore = createStore();
 sessionTableStore.set(tablePaginationAtom, { pageIndex: 0, pageSize: 10 });
 
 const TradingSessionModalList = () => {
-  const modalInfo = useAtomValue(modalAtom, { store: getDefaultStore() });
-
   return (
     <Suspense>
       <DialogMain
@@ -33,7 +28,7 @@ const TradingSessionModalList = () => {
         hideCloseBtn
         dialogContentProps={{ dividers: false }}
       >
-        <DeleteTradingSession session={modalInfo?.[TradesPageModal.DELETE_TRADING_SESSION]?.data as TradingSession} />
+        <DeleteTradingSession />
       </DialogMain>
 
       <DialogMain id={TradesPageModal.ADD_TRADING_SESSION} title="Add trading session">
@@ -41,7 +36,7 @@ const TradingSessionModalList = () => {
       </DialogMain>
 
       <DialogMain id={TradesPageModal.EDIT_TRADING_SESSION} title="Edit trading session">
-        <EditTradingSessionForm session={modalInfo?.[TradesPageModal.EDIT_TRADING_SESSION]?.data as TradingSession} />
+        <EditTradingSessionForm />
       </DialogMain>
     </Suspense>
   );
