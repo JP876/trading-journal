@@ -5,16 +5,18 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import type { Trade } from '../../../types/trade';
+
 import { deleteTrade } from '../../../api/trades';
 import { QueryKey } from '../../../enums';
 import useModal from '../../../hooks/useModal';
+import useModalData from '../../../hooks/useModalData';
 import useSnackbar from '../../../hooks/useSnackbar';
 import { TradesPageModal } from '../enums';
-import useTradeDetails from '../hooks/useTradeDetails';
 
 const DeleteTrade = () => {
   const queryClient = useQueryClient();
-  const trade = useTradeDetails(TradesPageModal.DELETE_TRADE);
+  const trade = useModalData<Trade>(TradesPageModal.DELETE_TRADE);
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();

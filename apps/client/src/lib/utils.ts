@@ -1,5 +1,6 @@
 import { getDefaultStore } from 'jotai';
-import { userAtom } from '../atoms';
+
+import { userAtom, userVarietyAtom } from '../atoms';
 
 export const getRandomInt = (min: number = 0, max: number = 1, roundTo?: number) => {
   let num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -47,7 +48,7 @@ export const decreasingExponentialRange = (
   min: number,
   step: number,
   roundTo: number = 30,
-  limit: number = 10
+  limit: number = 10,
 ) => {
   if (max <= 0 || min <= 0) throw new Error('max and min must be positive');
   if (max < min) throw new Error('max must be greater than or equal to min');
@@ -92,7 +93,7 @@ export const increasingRange = (min: number, max: number, step: number): number[
   return values;
 };
 
-export const isGuest = () => getDefaultStore().get(userAtom)?.variety === 'GUEST';
+export const isGuest = () => getDefaultStore().get(userVarietyAtom) === 'GUEST';
 export const getCurrentUser = () => getDefaultStore().get(userAtom);
 
 // Fisher-Yates (Durstenfeld) algorithm
@@ -112,10 +113,11 @@ export const shuffleArray = <T>(arr: T[]): T[] => {
 export const pipe = <T extends any[], R>(fn1: (...args: T) => R, ...fns: Array<(a: R) => R>) => {
   const piped = fns.reduce(
     (prevFn, nextFn) => (value: R) => nextFn(prevFn(value)),
-    (value) => value
+    (value) => value,
   );
   return (...args: T) => piped(fn1(...args));
 };
 
-export const compose = <R>(fn1: (a: R) => R, ...fns: Array<(a: R) => R>) =>
-  fns.reduce((prevFn, nextFn) => (value) => prevFn(nextFn(value)), fn1);
+export const compose = <R>(fn1: (a: R) => R, ...fns: Array<(a: R) => R>) => {
+  return fns.reduce((prevFn, nextFn) => (value) => prevFn(nextFn(value)), fn1);
+};

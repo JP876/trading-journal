@@ -1,34 +1,41 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
 import { editTradingSession } from '../../../../../../api/tradingSessions';
+import { QueryKey } from '../../../../../../enums';
+import useModal from '../../../../../../hooks/useModal';
+import useModalData from '../../../../../../hooks/useModalData';
+import useSnackbar from '../../../../../../hooks/useSnackbar';
 import {
   TradingSessionFormSchema,
   type TradingSession,
   type TradingSessionFormSchemaType,
 } from '../../../../../../types/tradingSessions';
-import TradingSessionForm from '../FormMain';
-import useModal from '../../../../../../hooks/useModal';
-import { QueryKey } from '../../../../../../enums';
 import { TradesPageModal } from '../../../../enums';
-import useSnackbar from '../../../../../../hooks/useSnackbar';
+import TradingSessionForm from '../FormMain';
 
-type EditTradingSessionFormProps = {
-  session: TradingSession;
-};
-
-const EditTradingSessionForm = ({ session }: EditTradingSessionFormProps) => {
+const EditTradingSessionForm = () => {
   const queryClient = useQueryClient();
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();
 
+  const session = useModalData<TradingSession>(TradesPageModal.EDIT_TRADING_SESSION);
+
   const mutation = useMutation({
-    mutationFn: (data: TradingSessionFormSchemaType) => editTradingSession(session.id, data),
+    mutationFn: (data: TradingSessionFormSchemaType) => {
+      if (!session) {
+        throw new Error(`Session details not found: ${session}`);
+      }
+      return editTradingSession(session!.id, data);
+    },
     onSuccess: async () => {
+      if (!session) {
+        throw new Error(`Session details not found: ${session}`);
+      }
       await queryClient.invalidateQueries({ queryKey: [QueryKey.TRADING_SESSIONS] });
-      if (form.getValues('isMain') !== !!session.isMain) {
+      if (form.getValues('isMain') !== !!session!.isMain) {
         await queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] });
       }
       closeModal(TradesPageModal.EDIT_TRADING_SESSION);
@@ -52,6 +59,10 @@ const EditTradingSessionForm = ({ session }: EditTradingSessionFormProps) => {
   });
 
   const onSubmit = (data: TradingSessionFormSchemaType) => {
+    if (!session?.id) {
+      console.error(`Session details not found: ${session}`);
+      return;
+    }
     mutation.mutate({ ...data });
   };
 

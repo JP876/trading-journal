@@ -42,3 +42,4 @@ export const closeSnackbarAtom = atom(null, (get, set) => {
 });
 
 export const userAtom = atom<UserDB | User | null>(null);
+export const userVarietyAtom = atom((get) => get(userAtom)?.variety);

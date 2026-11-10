@@ -6,14 +6,14 @@ import { editTrade } from '../../../../api/trades';
 import { QueryKey } from '../../../../enums';
 import useMainSession from '../../../../hooks/useMainSession';
 import useModal from '../../../../hooks/useModal';
+import useModalData from '../../../../hooks/useModalData';
 import useSnackbar from '../../../../hooks/useSnackbar';
-import { EditTradeFormSchema, type EditTradeFormSchemaType } from '../../../../types/trade';
+import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
-import useTradeDetails from '../../hooks/useTradeDetails';
 import TradeForm from '../TradeForm';
 
 const EditTradeForm = () => {
-  const trade = useTradeDetails(TradesPageModal.EDIT_TRADE);
+  const trade = useModalData<Trade>(TradesPageModal.EDIT_TRADE);
 
   const queryClient = useQueryClient();
 

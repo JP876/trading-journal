@@ -1,26 +1,26 @@
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ClearIcon from '@mui/icons-material/Clear';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import type { Tag } from '../../../../../types/tag';
 
 import { deleteTag } from '../../../../../api/tags';
 import { QueryKey } from '../../../../../enums';
-import useSnackbar from '../../../../../hooks/useSnackbar';
 import useModal from '../../../../../hooks/useModal';
+import useModalData from '../../../../../hooks/useModalData';
+import useSnackbar from '../../../../../hooks/useSnackbar';
 import { TradesPageModal } from '../../../enums';
-import type { Tag } from '../../../../../types/tag';
 
-type DeleteTagProps = {
-  tag: Tag;
-};
-
-const DeleteTag = ({ tag }: DeleteTagProps) => {
+const DeleteTag = () => {
   const queryClient = useQueryClient();
 
   const { openSnackbar } = useSnackbar();
   const { closeModal } = useModal();
+
+  const tag = useModalData<Tag>(TradesPageModal.DELETE_TAG);
 
   const mutation = useMutation({
     mutationFn: deleteTag,

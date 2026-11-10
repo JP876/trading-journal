@@ -1,29 +1,28 @@
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
-import useModal from '../../../../../hooks/useModal';
-import useSnackbar from '../../../../../hooks/useSnackbar';
+import type { TradingSession } from '../../../../../types/tradingSessions';
+
 import { deleteTradingSession } from '../../../../../api/tradingSessions';
 import { QueryKey } from '../../../../../enums';
+import useModal from '../../../../../hooks/useModal';
+import useModalData from '../../../../../hooks/useModalData';
+import useSnackbar from '../../../../../hooks/useSnackbar';
 import { TradesPageModal } from '../../../enums';
-import type { TradingSession } from '../../../../../types/tradingSessions';
 import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
 
-type DeleteTradingSessionProps = {
-  session?: TradingSession;
-};
-
-const DeleteTradingSession = ({ session }: DeleteTradingSessionProps) => {
+const DeleteTradingSession = () => {
   const queryClient = useQueryClient();
 
   const [title, setTitle] = useState('');
+  const session = useModalData<TradingSession>(TradesPageModal.DELETE_TRADING_SESSION);
 
   const { closeModal } = useModal();
   const { openSnackbar } = useSnackbar();

@@ -2,27 +2,34 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
-import { QueryKey } from '../../../../../../enums';
 import { editTag } from '../../../../../../api/tags';
-import { TradesPageModal } from '../../../../enums';
-import { TagFormSchema, type Tag, type TagFormSchemaType } from '../../../../../../types/tag';
-import TagForm from '../FormMain';
-import useSnackbar from '../../../../../../hooks/useSnackbar';
+import { QueryKey } from '../../../../../../enums';
 import useModal from '../../../../../../hooks/useModal';
+import useModalData from '../../../../../../hooks/useModalData';
+import useSnackbar from '../../../../../../hooks/useSnackbar';
+import { TagFormSchema, type Tag, type TagFormSchemaType } from '../../../../../../types/tag';
+import { TradesPageModal } from '../../../../enums';
+import TagForm from '../FormMain';
 
-type EditTagFormProps = {
-  tag: Tag;
-};
-
-const EditTagForm = ({ tag }: EditTagFormProps) => {
+const EditTagForm = () => {
   const queryClient = useQueryClient();
 
   const { openSnackbar } = useSnackbar();
   const { closeModal } = useModal();
 
+  const tag = useModalData<Tag>(TradesPageModal.EDIT_TAG);
+
   const mutation = useMutation({
-    mutationFn: (data: TagFormSchemaType) => editTag(tag.id, data),
+    mutationFn: (data: TagFormSchemaType) => {
+      if (!tag) {
+        throw new Error(`Tag details not found: ${tag}`);
+      }
+      return editTag(tag!.id, data);
+    },
     onSuccess: async () => {
+      if (!tag) {
+        throw new Error(`Tag details not found: ${tag}`);
+      }
       await queryClient.invalidateQueries({ queryKey: [QueryKey.TAGS] });
       closeModal(TradesPageModal.EDIT_TAG);
       openSnackbar({ severity: 'success', message: 'Your tag details have been saved.' });
@@ -38,6 +45,10 @@ const EditTagForm = ({ tag }: EditTagFormProps) => {
   });
 
   const onSubmit = (data: TagFormSchemaType) => {
+    if (!tag?.id) {
+      console.error(`Tag details not found: ${tag}`);
+      return;
+    }
     mutation.mutate({ ...data });
   };
 
