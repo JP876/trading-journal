@@ -5,12 +5,13 @@ import Stack from '@mui/material/Stack';
 import { createStore, getDefaultStore, Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
+import type { TradingSession } from '../../../../types/tradingSessions';
+
 import { modalAtom } from '../../../../atoms';
 import DialogMain from '../../../../components/DialogMain';
 import { tablePaginationAtom } from '../../../../components/table/atoms';
 import TextFilter from '../../../../components/table/filters/TextFilter';
 import useModal from '../../../../hooks/useModal';
-import type { TradingSession } from '../../../../types/tradingSessions';
 import { TradesPageModal } from '../../enums';
 import TradingSessionsTable from './TableMain';
 
@@ -19,7 +20,7 @@ const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
 const DeleteTradingSession = lazy(() => import('./DeleteTradingSession'));
 
 const sessionTableStore = createStore();
-sessionTableStore.set(tablePaginationAtom, { pageIndex: 1, pageSize: 10 });
+sessionTableStore.set(tablePaginationAtom, { pageIndex: 0, pageSize: 10 });
 
 const TradingSessionModalList = () => {
   const modalInfo = useAtomValue(modalAtom, { store: getDefaultStore() });

@@ -1,25 +1,27 @@
-import { memo, useMemo } from 'react';
-import Typography from '@mui/material/Typography';
+import type { ColumnDef } from '@tanstack/react-table';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import NumbersIcon from '@mui/icons-material/Numbers';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import NumbersIcon from '@mui/icons-material/Numbers';
-import type { ColumnDef } from '@tanstack/react-table';
+import Typography from '@mui/material/Typography';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
+import { memo, useMemo } from 'react';
 
 import type { TradingSession } from '../../../../../types/tradingSessions';
-import MenuActions from '../../../../../components/MenuActions';
-import useModal from '../../../../../hooks/useModal';
-import { TradesPageModal } from '../../../enums';
-import NotFoundValue from '../../../../../components/NotFoundValue';
+
 import { editTradingSession } from '../../../../../api/tradingSessions';
-import useSnackbar from '../../../../../hooks/useSnackbar';
-import { QueryKey } from '../../../../../enums';
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
-import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
+import MenuActions from '../../../../../components/MenuActions';
+import NotFoundValue from '../../../../../components/NotFoundValue';
 import { tableMainFeatures } from '../../../../../components/table/consts';
+import { QueryKey } from '../../../../../enums';
+import useModal from '../../../../../hooks/useModal';
+import useSnackbar from '../../../../../hooks/useSnackbar';
+import { TradesPageModal } from '../../../enums';
+import { getTradesPerTradingSessionQuery } from '../../../queryOptions';
 
 const TradingSessionActions = ({ session }: { session: TradingSession }) => {
   const { openModal } = useModal();
@@ -90,6 +92,7 @@ const useColumns = () => {
     return [
       {
         accessorKey: 'title',
+        enableSorting: false,
         header: 'Title',
         size: 140,
         cell: ({ row }) => {
@@ -99,6 +102,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'createdAt',
+        enableSorting: false,
         header: 'Created',
         size: 60,
         cell: ({ row }) => {
@@ -109,6 +113,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'id',
+        enableSorting: false,
         header: () => (
           <Stack sx={{ flexDirection: 'row', alignItems: 'center' }}>
             <NumbersIcon fontSize="small" />
@@ -120,12 +125,14 @@ const useColumns = () => {
       },
       {
         accessorKey: 'isMain',
+        enableSorting: false,
         header: 'Main',
         size: 80,
         cell: ({ row }) => <TradingSessionMainSwitch id={row.original.id} isMain={!!row.original.isMain} />,
       },
       {
         accessorKey: 'description',
+        enableSorting: false,
         header: 'Description',
         minSize: 300,
         cell: ({ row }) => {
@@ -135,6 +142,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'actions',
+        enableSorting: false,
         header: '',
         size: 80,
         cell: ({ row }) => <TradingSessionActions session={row.original} />,

@@ -1,17 +1,19 @@
-import { memo, useMemo } from 'react';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import type { ColumnDef } from '@tanstack/react-table';
+
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
-import type { ColumnDef } from '@tanstack/react-table';
-
-import TableMain from '../../../components/table/TableMain';
-import ClampedTextContainer from '../../../components/ClampedTextContainer';
-import { importTradesStore, parsedFileResultAtom } from './atoms';
-import { useAtomValue } from 'jotai';
 import { Tooltip, type SxProps } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import { useAtomValue } from 'jotai';
+import { memo, useMemo } from 'react';
+
 import type { tableMainFeatures } from '../../../components/table/consts';
+
+import ClampedTextContainer from '../../../components/ClampedTextContainer';
+import TableMain from '../../../components/table/TableMain';
+import { importTradesStore, parsedFileResultAtom } from './atoms';
 
 type TFieldDescription = {
   field: string;
@@ -71,12 +73,13 @@ const iconStyles: SxProps = {
 const Description = () => {
   const result = useAtomValue(parsedFileResultAtom, { store: importTradesStore });
 
-  const columns: ColumnDef<typeof tableMainFeatures, TFieldDescription>[] = useMemo(() => {
+  const columns = useMemo<ColumnDef<typeof tableMainFeatures, TFieldDescription>[]>(() => {
     return [
-      { accessorKey: 'field', size: 100, header: 'Field' },
+      { accessorKey: 'field', size: 100, header: 'Field', enableSorting: false },
       {
         size: 50,
         header: 'Found',
+        enableSorting: false,
         cell: ({ row }) => {
           let id = row.original.field;
           let isFound = result?.meta && result?.meta.fields?.includes(id);
@@ -85,6 +88,7 @@ const Description = () => {
       },
       {
         header: 'Required',
+        enableSorting: false,
         size: 50,
         cell: ({ row }) => {
           let isRequired = row.original.required;
@@ -109,6 +113,7 @@ const Description = () => {
       },
       {
         accessorKey: 'description',
+        enableSorting: false,
         size: 400,
         header: 'Description',
         cell: ({ row }) => <ClampedTextContainer variant="body2">{row.original.description}</ClampedTextContainer>,

@@ -1,17 +1,38 @@
-import { useQuery } from '@tanstack/react-query';
 import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useAtomValue } from 'jotai';
 
-import useColumns from './hooks/useColumns';
+import { getTrades } from '../../../api/trades';
+import { tableFiltersAtom, tablePaginationAtom } from '../../../components/table/atoms';
 import TableMain from '../../../components/table/TableMain';
-import useTradesQueryOptions from './hooks/useTradesQueryOptions';
-import TableMainFooter from '../../../components/table/TableFooter';
+import { QueryKey } from '../../../enums';
+import { tradesTableStore } from '../store';
+import useColumns from './hooks/useColumns';
 
 const TradesTableMain = () => {
-  const options = useTradesQueryOptions();
   const columns = useColumns();
 
-  const { data, isLoading } = useQuery({ ...options });
+  const { pageIndex, pageSize } = useAtomValue(tablePaginationAtom, { store: tradesTableStore });
+  const filters = useAtomValue(tableFiltersAtom, { store: tradesTableStore });
+
+  const { data, isLoading } = useQuery({
+    queryKey: [
+      QueryKey.TRADES,
+      pageIndex + 1,
+      pageSize,
+      filters.pair,
+      filters.result,
+      filters.openDate,
+      filters.closeDate,
+      filters.tags,
+    ],
+    queryFn: () =>
+      getTrades({ page: pageIndex + 1, sortBy: 'id', direction: 'asc', rowsPerPage: pageSize, ...filters }),
+    placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
+  });
 
   if (isLoading) {
     return (
@@ -22,15 +43,7 @@ const TradesTableMain = () => {
   }
 
   return (
-    <Stack spacing={2}>
-      <TableMain data={data?.results || []} columns={columns} />
-      <TableMainFooter
-        totalItems={data?.totalItems}
-        totalPages={data?.totalPages}
-        itemsPerPage={data?.itemsPerPage}
-        currentPage={data?.currentPage}
-      />
-    </Stack>
+    <TableMain data={data?.results || []} columns={columns} pageCount={data?.totalPages} rowCount={data?.totalItems} />
   );
 };
 

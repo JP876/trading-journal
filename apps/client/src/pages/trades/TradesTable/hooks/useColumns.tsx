@@ -7,16 +7,17 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { type ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { getDefaultStore, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
-import { getDefaultStore, useAtomValue } from 'jotai';
+import type { tableMainFeatures } from '../../../../components/table/consts';
+import type { Trade } from '../../../../types/trade';
+
 import { pairsAtom } from '../../../../atoms';
 import ClampedTextContainer from '../../../../components/ClampedTextContainer';
 import MenuActions from '../../../../components/MenuActions';
 import NotFoundValue from '../../../../components/NotFoundValue';
-import type { tableMainFeatures } from '../../../../components/table/consts';
 import useModal from '../../../../hooks/useModal';
-import type { Trade } from '../../../../types/trade';
 import { TradesPageModal } from '../../enums';
 import TradeTagsCell from '../TradeTagsCell';
 

@@ -10,11 +10,11 @@ const useClearFilters = ({ wait = 400, store }: { wait?: number; store?: Store }
   const debouncer = useDebouncer(
     () => {
       resetFilters();
-      updatePage(1);
+      updatePage(0);
       return null;
     },
     { wait },
-    (state) => ({ isPending: state.isPending })
+    (state) => ({ isPending: state.isPending }),
   );
 
   return [debouncer.maybeExecute, { ...debouncer.state }] as const;

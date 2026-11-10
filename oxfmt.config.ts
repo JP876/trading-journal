@@ -7,6 +7,8 @@ export default defineConfig({
   semi: true,
   singleQuote: true,
   arrowParens: 'always',
+  embeddedLanguageFormatting: 'auto',
+  jsdoc: true,
   sortPackageJson: {
     sortScripts: true,
   },

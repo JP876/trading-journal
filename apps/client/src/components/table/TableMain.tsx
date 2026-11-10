@@ -1,47 +1,63 @@
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
 import Typography from '@mui/material/Typography';
-import { useTable, type ColumnDef, type RowData, type TableOptions } from '@tanstack/react-table';
+import { useTable, type Cell_Core, type ColumnDef, type RowData, type TableOptions } from '@tanstack/react-table';
+import { useAtom } from 'jotai';
 import { memo } from 'react';
 
+import { tablePaginationAtom, tableSortingAtom } from './atoms';
 import { tableMainFeatures } from './consts';
-import { useAtom } from 'jotai';
-import { tablePaginationAtom } from './atoms';
+import TableHeadCell from './TableHeadCell';
+import TablePaginationMain from './TablePaginationMain';
 
 type TableMainProps<TData extends RowData> = {
   data: TData[];
   columns: ColumnDef<typeof tableMainFeatures, TData>[];
-  tableOptions?: TableOptions<typeof tableMainFeatures, TData>;
+  hidePageSizeSelect?: boolean;
+} & Omit<TableOptions<typeof tableMainFeatures, TData>, 'features' | 'data' | 'columns'>;
+
+type TTableBodyCellProps<TData extends RowData> = {
+  cell: Cell_Core<typeof tableMainFeatures, TData>;
+  children: React.ReactNode;
 };
 
-function getAriaSort(sortDirection: false | 'asc' | 'desc') {
-  if (sortDirection === 'asc') return 'ascending';
-  if (sortDirection === 'desc') return 'descending';
-  return 'none';
+function TableBodyCell<TData extends RowData>({ cell, children }: TTableBodyCellProps<TData>) {
+  return (
+    <TableCell key={cell.id} sx={{ width: cell.column.getSize() }}>
+      {children}
+    </TableCell>
+  );
 }
 
-function TableMain<TData extends RowData>({ data, columns, tableOptions }: TableMainProps<TData>) {
-  const [pagination, setPagination] = useAtom(tablePaginationAtom);
+function TableMain<TData extends RowData>({
+  data,
+  columns,
+  hidePageSizeSelect,
+  ...tableOptions
+}: TableMainProps<TData>) {
+  // const [columnFilters, setColumnFilters] = useAtom(tableFiltersAtom);
+  const [paginationState, setPagination] = useAtom(tablePaginationAtom);
+  const [sortingState, setSorting] = useAtom(tableSortingAtom);
 
   const table = useTable(
     {
       features: tableMainFeatures,
       data: data || [],
       columns: columns,
-      state: { pagination },
+      state: { pagination: paginationState, sorting: sortingState },
+      // onColumnFiltersChange: setColumnFilters,
       onPaginationChange: setPagination,
+      onSortingChange: setSorting,
       manualSorting: true,
       manualPagination: true,
-      manualFiltering: true,
+      // manualFiltering: true,
       ...(tableOptions || {}),
     },
-    (_) => ({})
+    (_) => null,
   );
 
   return (
@@ -50,35 +66,11 @@ function TableMain<TData extends RowData>({ data, columns, tableOptions }: Table
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                const sortDirection = header.column.getIsSorted();
-
-                return (
-                  <TableCell
-                    key={header.id}
-                    colSpan={header.colSpan}
-                    sortDirection={sortDirection || false}
-                    aria-sort={getAriaSort(sortDirection || false)}
-                    data-sort={sortDirection || undefined}
-                    sx={{ width: header.getSize() }}
-                  >
-                    {header.isPlaceholder ? null : header.column.getCanSort() ? (
-                      <TableSortLabel
-                        active={!!sortDirection}
-                        direction={sortDirection || undefined}
-                        onClick={header.column.getToggleSortingHandler()}
-                        IconComponent={ArrowDownwardIcon}
-                      >
-                        <table.FlexRender header={header} />
-                      </TableSortLabel>
-                    ) : (
-                      <Typography variant="subtitle2">
-                        <table.FlexRender header={header} />
-                      </Typography>
-                    )}
-                  </TableCell>
-                );
-              })}
+              {headerGroup.headers.map((header) => (
+                <TableHeadCell key={header.id} header={header}>
+                  <table.FlexRender header={header} />
+                </TableHeadCell>
+              ))}
             </TableRow>
           ))}
         </TableHead>
@@ -88,9 +80,9 @@ function TableMain<TData extends RowData>({ data, columns, tableOptions }: Table
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id} hover>
                 {row.getAllCells().map((cell) => (
-                  <TableCell key={cell.id} sx={{ width: cell.column.getSize() }}>
+                  <TableBodyCell key={cell.id} cell={cell}>
                     <table.FlexRender cell={cell} />
-                  </TableCell>
+                  </TableBodyCell>
                 ))}
               </TableRow>
             ))
@@ -104,7 +96,18 @@ function TableMain<TData extends RowData>({ data, columns, tableOptions }: Table
         </TableBody>
       </Table>
 
-      <table.Subscribe selector={(state) => ({ sorting: state.sorting })}>{() => null}</table.Subscribe>
+      {tableOptions?.pageCount && tableOptions?.rowCount ? (
+        <table.Subscribe selector={(state) => ({ pagination: state.pagination })}>
+          {({ pagination }) => (
+            <TablePaginationMain
+              table={table}
+              pageIndex={pagination.pageIndex}
+              pageSize={pagination.pageSize}
+              hidePageSizeSelect={hidePageSizeSelect}
+            />
+          )}
+        </table.Subscribe>
+      ) : null}
     </TableContainer>
   );
 }

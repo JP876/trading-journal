@@ -1,10 +1,8 @@
-import Stack from '@mui/material/Stack';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useAtomValue } from 'jotai';
 
 import { getTags } from '../../../../api/tags';
 import { tableFiltersAtom, tablePaginationAtom } from '../../../../components/table/atoms';
-import TableMainFooter from '../../../../components/table/TableFooter';
 import TableMain from '../../../../components/table/TableMain';
 import { QueryKey } from '../../../../enums';
 import useColumns from './hooks/useColumns';
@@ -23,16 +21,13 @@ const TagsTableMain = () => {
   const columns = useColumns();
 
   return (
-    <Stack spacing={2}>
-      <TableMain columns={columns} data={data?.results || []} />
-      <TableMainFooter
-        totalItems={data?.totalItems}
-        totalPages={data?.totalPages}
-        itemsPerPage={data?.itemsPerPage}
-        currentPage={data?.currentPage}
-        hideRowPerPage
-      />
-    </Stack>
+    <TableMain
+      columns={columns}
+      data={data?.results || []}
+      pageCount={data?.totalPages}
+      rowCount={data?.totalItems}
+      hidePageSizeSelect
+    />
   );
 };
 

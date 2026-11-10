@@ -11,6 +11,7 @@ import { getDefaultStore, useAtom } from 'jotai';
 import { memo } from 'react';
 import { Outlet } from 'react-router';
 
+import { navigationDrawerAtom } from '../../atoms';
 import { TradesPageModal } from '../../pages/trades/enums';
 import DialogMain from '../DialogMain';
 import ColorModeMain from './ColorMode';
@@ -18,7 +19,6 @@ import IntroForm from './Intro';
 import NavigationList from './NavigationList';
 import ProfileMain from './Profile';
 import { AppBar, Drawer, DrawerHeader } from './styledComps';
-import { navigationDrawerAtom } from '../../atoms';
 
 const MainContainer = memo(() => {
   return (

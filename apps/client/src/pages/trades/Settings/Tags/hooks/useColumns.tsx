@@ -1,19 +1,21 @@
-import { useMemo } from 'react';
+import type { ColumnDef } from '@tanstack/react-table';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import type { ColumnDef } from '@tanstack/react-table';
+import { format } from 'date-fns';
+import { useMemo } from 'react';
 
 import type { Tag } from '../../../../../types/tag';
+
 import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
-import useModal from '../../../../../hooks/useModal';
 import MenuActions from '../../../../../components/MenuActions';
-import { TradesPageModal } from '../../../enums';
-import checkBrightness from '../../../../../lib/checkBrighness';
-import { format } from 'date-fns';
 import { tableMainFeatures } from '../../../../../components/table/consts';
+import useModal from '../../../../../hooks/useModal';
+import checkBrightness from '../../../../../lib/checkBrighness';
+import { TradesPageModal } from '../../../enums';
 
 const TagActions = ({ tag }: { tag: Tag }) => {
   const { openModal } = useModal();
@@ -47,6 +49,7 @@ const useColumns = () => {
     return [
       {
         accessorKey: 'title',
+        enableSorting: false,
         header: 'Title',
         cell: ({ row }) => {
           const value = row.original.title;
@@ -55,12 +58,14 @@ const useColumns = () => {
       },
       {
         accessorKey: 'createdAt',
+        enableSorting: false,
         header: 'Created',
         size: 80,
         cell: ({ row }) => <Typography>{format(row.original.createdAt, 'dd/MM/yyyy')}</Typography>,
       },
       {
         accessorKey: 'color',
+        enableSorting: false,
         header: 'Color',
         cell: ({ row }) => {
           const value = row.original.color;
@@ -81,6 +86,7 @@ const useColumns = () => {
       },
       {
         accessorKey: 'actions',
+        enableSorting: false,
         header: '',
         size: 80,
         cell: ({ row }) => <TagActions tag={row.original} />,

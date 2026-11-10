@@ -1,4 +1,5 @@
 import type { PaginationState, SortingState } from '@tanstack/react-table';
+
 import { atom } from 'jotai';
 
 export type TFilterValue = string | number | null;

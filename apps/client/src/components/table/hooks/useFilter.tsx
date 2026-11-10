@@ -27,11 +27,11 @@ function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) 
   const debouncer = useDebouncer(
     (value) => {
       updateFilters({ [name]: value });
-      updatePage(1);
+      updatePage(0);
       return null;
     },
     { wait },
-    (state) => ({ isPending: state.isPending })
+    (state) => ({ isPending: state.isPending }),
   );
 
   const handleChange = useCallback((value: TFilterValue) => {

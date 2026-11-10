@@ -3,6 +3,8 @@ import {
   columnSizingFeature,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFn_equalsString,
+  filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -14,6 +16,10 @@ import {
 export const tableMainFeatures = tableFeatures({
   columnFilteringFeature: columnFilteringFeature,
   globalFilteringFeature: globalFilteringFeature,
+  filterFns: {
+    includesString: filterFn_includesString,
+    equalsString: filterFn_equalsString,
+  },
   rowPaginationFeature: rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
   rowSortingFeature: rowSortingFeature,

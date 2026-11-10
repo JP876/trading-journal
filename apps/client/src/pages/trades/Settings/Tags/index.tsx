@@ -5,12 +5,13 @@ import Stack from '@mui/material/Stack';
 import { createStore, Provider, useAtomValue } from 'jotai';
 import { lazy, Suspense } from 'react';
 
+import type { Tag } from '../../../../types/tag';
+
 import { modalAtom } from '../../../../atoms';
 import DialogMain from '../../../../components/DialogMain';
 import { tablePaginationAtom } from '../../../../components/table/atoms';
 import TextFilter from '../../../../components/table/filters/TextFilter';
 import useModal from '../../../../hooks/useModal';
-import type { Tag } from '../../../../types/tag';
 import { TradesPageModal } from '../../enums';
 import TagsTableMain from './TagsTable';
 
@@ -18,7 +19,7 @@ const EditTagForm = lazy(() => import('./forms/EditForm'));
 const DeleteTag = lazy(() => import('./DeleteTag'));
 
 const tagsTableStore = createStore();
-tagsTableStore.set(tablePaginationAtom, { pageIndex: 1, pageSize: 10 });
+tagsTableStore.set(tablePaginationAtom, { pageIndex: 0, pageSize: 10 });
 
 const TagModalList = () => {
   const modalInfo = useAtomValue(modalAtom);
