@@ -84,7 +84,9 @@ const useColumns = () => {
               label={
                 <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 0.5 }}>
                   {valueIcon}
-                  <Typography sx={{ textAlign: 'center', lineHeight: '.8rem' }}>{direction}</Typography>
+                  <Typography variant="inherit" sx={{ textAlign: 'center', lineHeight: '.8rem' }}>
+                    {direction}
+                  </Typography>
                 </Stack>
               }
               size="small"

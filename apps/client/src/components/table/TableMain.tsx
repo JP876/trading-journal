@@ -18,7 +18,7 @@ type TableMainProps<TData extends RowData> = {
   data: TData[];
   columns: ColumnDef<typeof tableMainFeatures, TData>[];
   hidePageSizeSelect?: boolean;
-} & Omit<TableOptions<typeof tableMainFeatures, TData>, 'features' | 'data' | 'columns'>;
+} & Omit<TableOptions<typeof tableMainFeatures, TData>, 'features' | 'data' | 'columns' | 'initialState'>;
 
 type TTableBodyCellProps<TData extends RowData> = {
   cell: Cell_Core<typeof tableMainFeatures, TData>;
