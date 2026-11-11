@@ -13,7 +13,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
-import { getDefaultStore, Provider, useAtom, useAtomValue } from "jotai";
+import { getDefaultStore, useAtom, useAtomValue } from "jotai";
 import { lazy, Suspense } from "react";
 
 import type { TSelectInputOption } from "../../components/inputs/SelectInput";
@@ -26,10 +26,10 @@ import ColumnVisibilitySelect from "../../components/table/ColumnVisibilitySelec
 import AutocompleteFilter from "../../components/table/filters/AutocompleteFilter";
 import DateFilter from "../../components/table/filters/DateFilter";
 import useClearFilters from "../../components/table/hooks/useClearFilters";
+import TableProvider from "../../components/table/TableProvider";
 import { QueryKey } from "../../enums";
 import useModal from "../../hooks/useModal";
 import { tradesFiltersAtom, visibilityAtom } from "./atoms";
-import { tradesTableStore } from "./atoms/store";
 import { resultOptions } from "./consts";
 import { TradesPageModal } from "./enums";
 import useExportTrades from "./hooks/useExportTrades";
@@ -137,10 +137,7 @@ const TradesFilters = () => {
 
 const TradesFiltersButton = () => {
   const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom, { store: getDefaultStore() });
-  const [clearFilters] = useClearFilters({
-    wait: COLLAPSE_TIMEOUT + 20,
-    store: tradesTableStore,
-  });
+  const [clearFilters] = useClearFilters({ wait: COLLAPSE_TIMEOUT + 20 });
 
   const handleClick = () => {
     setTradesFilters((prevValue) => !prevValue);
@@ -256,11 +253,13 @@ const visibilityOptions: TSelectInputOption[] = [
   { value: "comment", label: "Comment" },
 ];
 
+const initialFilters = { pair: null, result: null, openDate: null, closeDate: null, tags: null };
+
 const TradesPage = () => {
   const user = useAtomValue(userAtom);
 
   return (
-    <Provider store={tradesTableStore}>
+    <TableProvider filters={initialFilters}>
       <Stack
         sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap" }}
       >
@@ -290,7 +289,7 @@ const TradesPage = () => {
       </Paper>
 
       <TradesModalList />
-    </Provider>
+    </TableProvider>
   );
 };
 

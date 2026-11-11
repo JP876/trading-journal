@@ -1,23 +1,19 @@
-import AddIcon from '@mui/icons-material/Add';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { createStore, Provider } from 'jotai';
-import { lazy, Suspense } from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { lazy, Suspense } from "react";
 
-import DialogMain from '../../../../components/DialogMain';
-import { tablePaginationAtom } from '../../../../components/table/atoms';
-import TextFilter from '../../../../components/table/filters/TextFilter';
-import useModal from '../../../../hooks/useModal';
-import { TradesPageModal } from '../../enums';
-import TradingSessionsTable from './TableMain';
+import DialogMain from "../../../../components/DialogMain";
+import TextFilter from "../../../../components/table/filters/TextFilter";
+import TableProvider from "../../../../components/table/TableProvider";
+import useModal from "../../../../hooks/useModal";
+import { TradesPageModal } from "../../enums";
+import TradingSessionsTable from "./TableMain";
 
-const AddTradingSessionForm = lazy(() => import('./forms/AddForm'));
-const EditTradingSessionForm = lazy(() => import('./forms/EditForm'));
-const DeleteTradingSession = lazy(() => import('./DeleteTradingSession'));
-
-const sessionTableStore = createStore();
-sessionTableStore.set(tablePaginationAtom, { pageIndex: 0, pageSize: 10 });
+const AddTradingSessionForm = lazy(() => import("./forms/AddForm"));
+const EditTradingSessionForm = lazy(() => import("./forms/EditForm"));
+const DeleteTradingSession = lazy(() => import("./DeleteTradingSession"));
 
 const TradingSessionModalList = () => {
   return (
@@ -46,13 +42,13 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <Provider store={sessionTableStore}>
+    <TableProvider pageSize={10}>
       <Stack spacing={2}>
-        <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
             <TextFilter name="title" label="Title" />
           </Box>
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <Button
               size="small"
               variant="contained"
@@ -67,7 +63,7 @@ const TradingSessionsMain = () => {
       </Stack>
 
       <TradingSessionModalList />
-    </Provider>
+    </TableProvider>
   );
 };
 

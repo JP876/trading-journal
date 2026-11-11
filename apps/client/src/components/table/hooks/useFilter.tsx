@@ -1,8 +1,8 @@
-import { useDebouncer } from '@tanstack/react-pacer';
-import { atom, useAtomValue, useSetAtom, type Store } from 'jotai';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDebouncer } from "@tanstack/react-pacer";
+import { atom, useAtomValue, useSetAtom, type Store } from "jotai";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { tableFiltersAtom, updateFiltersAtom, updatePageAtom, type TFilterValue } from '../atoms';
+import { tableFiltersAtom, updateFiltersAtom, updatePageAtom, type TFilterValue } from "../atoms";
 
 type FiltersHookProps = {
   name: string;
@@ -21,7 +21,7 @@ function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) 
   const updateFilters = useSetAtom(updateFiltersAtom, { store });
   const updatePage = useSetAtom(updatePageAtom, { store });
 
-  const filtersValue = useAtomValue(filterValueAtom);
+  const filtersValue = useAtomValue(filterValueAtom, { store });
   const [filterValue, setFilterValue] = useState<TFilterValue>(initialValue);
 
   const debouncer = useDebouncer(
@@ -40,8 +40,8 @@ function useFilter({ name, initialValue, store, wait = 600 }: FiltersHookProps) 
   }, []);
 
   useEffect(() => {
-    if (!justMounted.current && !filtersValue) {
-      setFilterValue(null);
+    if (!justMounted.current) {
+      setFilterValue(filtersValue ? filtersValue : null);
     }
     justMounted.current = false;
   }, [filtersValue]);

@@ -1,22 +1,18 @@
-import AddIcon from '@mui/icons-material/Add';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import { createStore, Provider } from 'jotai';
-import { lazy, Suspense } from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import { lazy, Suspense } from "react";
 
-import DialogMain from '../../../../components/DialogMain';
-import { tablePaginationAtom } from '../../../../components/table/atoms';
-import TextFilter from '../../../../components/table/filters/TextFilter';
-import useModal from '../../../../hooks/useModal';
-import { TradesPageModal } from '../../enums';
-import TagsTableMain from './TagsTable';
+import DialogMain from "../../../../components/DialogMain";
+import TextFilter from "../../../../components/table/filters/TextFilter";
+import TableProvider from "../../../../components/table/TableProvider";
+import useModal from "../../../../hooks/useModal";
+import { TradesPageModal } from "../../enums";
+import TagsTableMain from "./TagsTable";
 
-const EditTagForm = lazy(() => import('./forms/EditForm'));
-const DeleteTag = lazy(() => import('./DeleteTag'));
-
-const tagsTableStore = createStore();
-tagsTableStore.set(tablePaginationAtom, { pageIndex: 0, pageSize: 10 });
+const EditTagForm = lazy(() => import("./forms/EditForm"));
+const DeleteTag = lazy(() => import("./DeleteTag"));
 
 const TagModalList = () => {
   return (
@@ -41,13 +37,13 @@ const TagsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <Provider store={tagsTableStore}>
+    <TableProvider pageSize={10}>
       <Stack spacing={2}>
-        <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
             <TextFilter name="title" label="Title" />
           </Box>
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <Button
               size="small"
               variant="contained"
@@ -62,7 +58,7 @@ const TagsMain = () => {
       </Stack>
 
       <TagModalList />
-    </Provider>
+    </TableProvider>
   );
 };
 

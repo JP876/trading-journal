@@ -1,30 +1,31 @@
-import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { createStore, getDefaultStore, Provider, useAtomValue, useSetAtom } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { createStore, getDefaultStore, Provider, useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 
-import { pairsAtom, userAtom } from '../../../atoms';
-import Dropzone from '../../../components/Dropzone';
-import { dzFilesAtom, type TDzFile } from '../../../components/Dropzone/atoms';
-import useRemoveFile from '../../../components/Dropzone/hooks/useRemoveFile';
-import { QueryKey } from '../../../enums';
-import useMainSession from '../../../hooks/useMainSession';
-import useModal from '../../../hooks/useModal';
-import useSnackbar from '../../../hooks/useSnackbar';
-import { handleCSVFile } from '../../../lib/CSVFile';
-import { addMultipleTradesDB } from '../../../lib/db/api/trades';
-import { queryClient } from '../../../lib/queryClient';
-import withCatch from '../../../lib/withCatch';
-import type { Trade } from '../../../types/trade';
-import { TradesPageModal } from '../enums';
-import { importTradesStore, parsedFileResultAtom, resetStoreAtom } from './atoms';
-import Description from './Description';
-import transformTrades from './utils/transformTrades';
+import type { Trade } from "../../../types/trade";
+
+import { pairsAtom, userAtom } from "../../../atoms";
+import Dropzone from "../../../components/Dropzone";
+import { dzFilesAtom, type TDzFile } from "../../../components/Dropzone/atoms";
+import useRemoveFile from "../../../components/Dropzone/hooks/useRemoveFile";
+import { QueryKey } from "../../../enums";
+import useMainSession from "../../../hooks/useMainSession";
+import useModal from "../../../hooks/useModal";
+import useSnackbar from "../../../hooks/useSnackbar";
+import { handleCSVFile } from "../../../lib/CSVFile";
+import { addMultipleTradesDB } from "../../../lib/db/api/trades";
+import { queryClient } from "../../../lib/queryClient";
+import withCatch from "../../../lib/withCatch";
+import { TradesPageModal } from "../enums";
+import { importTradesStore, parsedFileResultAtom, resetStoreAtom } from "./atoms";
+import Description from "./Description";
+import transformTrades from "./utils/transformTrades";
 
 const dzStore = createStore();
 
@@ -49,7 +50,7 @@ const ConfirmImportButton = () => {
 
     if (error) {
       openSnackbar({
-        severity: 'error',
+        severity: "error",
         message: "We couldn't save these trades. Your data hasn't been imported. Please try again.",
       });
       return;
@@ -62,7 +63,7 @@ const ConfirmImportButton = () => {
     closeModal(TradesPageModal.IMPORT_TRADES);
 
     openSnackbar({
-      severity: 'success',
+      severity: "success",
       message: "Import successful. We've added your trades to your account.",
     });
   };
@@ -105,7 +106,7 @@ const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
   return (
     <Stack
       sx={[
-        { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+        { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
         (theme) => ({
           border: `1px solid ${theme.palette.grey[200]}`,
           paddingInline: theme.spacing(2),
@@ -113,7 +114,7 @@ const SelectedFile = ({ name, size, id }: TSelectedFileProps) => {
         }),
       ]}
     >
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <InsertDriveFileIcon color="primary" />
         <Stack>
           <Typography variant="subtitle2">{name}</Typography>
@@ -160,7 +161,6 @@ const ImportTradesAction = () => {
         buttonLabel="Upload file (.csv)"
         label="Drag 'n' drop CSV file"
       />
-
       <SelectedFiles />
     </Stack>
   );
@@ -171,7 +171,7 @@ const ImportTradesMain = () => {
     <Stack spacing={2}>
       <Description />
       <ImportTradesAction />
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
         <ConfirmImportButton />
       </Stack>
     </Stack>

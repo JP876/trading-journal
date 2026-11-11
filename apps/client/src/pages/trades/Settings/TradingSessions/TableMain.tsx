@@ -1,11 +1,11 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 
-import { getTradingSessions } from '../../../../api/tradingSessions';
-import { tableFiltersAtom, tablePaginationAtom } from '../../../../components/table/atoms';
-import TableMain from '../../../../components/table/TableMain';
-import { QueryKey } from '../../../../enums';
-import useColumns from './hooks/useColumns';
+import { getTradingSessions } from "../../../../api/tradingSessions";
+import { tableFiltersAtom, tablePaginationAtom } from "../../../../components/table/atoms";
+import TableMain from "../../../../components/table/TableMain";
+import { QueryKey } from "../../../../enums";
+import useColumns from "./hooks/useColumns";
 
 const TradingSessionsTable = () => {
   const { pageIndex: page, pageSize: rowsPerPage } = useAtomValue(tablePaginationAtom);

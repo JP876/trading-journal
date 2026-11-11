@@ -8,7 +8,6 @@ import { tableFiltersAtom, tablePaginationAtom } from "../../../components/table
 import TableMain from "../../../components/table/TableMain";
 import { QueryKey } from "../../../enums";
 import { visibilityAtom } from "../atoms";
-import { tradesTableStore } from "../atoms/store";
 import useColumns from "./hooks/useColumns";
 
 const jAtoms = {
@@ -18,8 +17,8 @@ const jAtoms = {
 const TradesTableMain = () => {
   const columns = useColumns();
 
-  const { pageIndex, pageSize } = useAtomValue(tablePaginationAtom, { store: tradesTableStore });
-  const filters = useAtomValue(tableFiltersAtom, { store: tradesTableStore });
+  const { pageIndex, pageSize } = useAtomValue(tablePaginationAtom);
+  const filters = useAtomValue(tableFiltersAtom);
 
   const { data, isLoading } = useQuery({
     queryKey: [
