@@ -2,7 +2,7 @@
   "devDependencies": {
     "@types/papaparse": "^5.5.2",
     "oxfmt": "^0.78.0",
-    "turbo": "^2.4.4"
+    "turbo": "^2.11.10"
   },
   "scripts": {
     "dev": "turbo run dev",
@@ -12,5 +12,8 @@
   "workspaces": [
     "apps/*"
   ],
-  "packageManager": "npm@12.2.2"
+  "packageManager": "npm@12.2.2",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3"
+  }
 }
