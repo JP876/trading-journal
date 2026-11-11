@@ -1,19 +1,19 @@
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useSetAtom } from 'jotai';
-import { memo, useId } from 'react';
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useSetAtom } from "jotai";
+import { memo, useId } from "react";
 
-import { updateRowsPerPageAtom } from './atoms';
+import { updateRowsPerPageAtom } from "./atoms";
 
-type SelectOption = { value: number; label: number | string };
+type SelectOption = { value: number; label: string };
 
 const defaultOptions: SelectOption[] = [
-  { value: 10, label: 10 },
-  { value: 20, label: 20 },
-  { value: 50, label: 50 },
-  { value: 100, label: 100 },
+  { value: 10, label: "10" },
+  { value: 20, label: "20" },
+  { value: 50, label: "50" },
+  { value: 100, label: "100" },
 ];
 
 type RowsPerPageSelectProps = {
@@ -27,10 +27,10 @@ const RowsPerPageSelect = ({ itemsPerPage, options = defaultOptions }: RowsPerPa
   const updateRowsPerPage = useSetAtom(updateRowsPerPageAtom);
 
   return (
-    <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
       <Typography>Rows per page</Typography>
       <Select
-        sx={{ width: '3.2rem' }}
+        sx={{ width: "3.2rem" }}
         size="small"
         variant="standard"
         value={itemsPerPage}

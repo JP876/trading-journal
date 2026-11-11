@@ -1,15 +1,15 @@
-import { Stack } from '@mui/material';
-import { Controller } from 'react-hook-form';
+import { Stack } from "@mui/material";
+import { minutesToHours } from "date-fns";
+import { Controller } from "react-hook-form";
 
-import { minutesToHours } from 'date-fns';
-import DateTimeInput from '../../../../components/form/DateTimeInput';
-import SelectInput from '../../../../components/form/SelectInput';
-import SliderInput from '../../../../components/form/SliderInput';
-import SubmitButton from '../../../../components/form/SubmitButton';
-import TextInput from '../../../../components/form/TextInput';
-import usePairsOptions from '../../hooks/usePairsOptions';
-import CloseDateInput from '../CloseDateInput';
-import AddRandomTradesContainer from './AddRandomTradesContainer';
+import DateTimeInput from "../../../../components/form/DateTimeInput";
+import SelectFormInput from "../../../../components/form/SelectInput";
+import SliderInput from "../../../../components/form/SliderInput";
+import SubmitButton from "../../../../components/form/SubmitButton";
+import TextInput from "../../../../components/form/TextInput";
+import usePairsOptions from "../../hooks/usePairsOptions";
+import CloseDateInput from "../CloseDateInput";
+import AddRandomTradesContainer from "./AddRandomTradesContainer";
 
 const getMarks = (length: number = 200, step: number = 20) => {
   return Array.from({ length: length / 10 }).map((_, i) => ({ value: i * step, label: i * step }));
@@ -28,17 +28,17 @@ const AddRandomTradesForm = () => {
     <AddRandomTradesContainer>
       {({ form, isLoading }) => (
         <>
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <Controller
               name="count"
               control={form.control}
-              render={(props) => <TextInput label="Count" {...props} inputProps={{ type: 'number' }} />}
+              render={(props) => <TextInput label="Count" {...props} inputProps={{ type: "number" }} />}
             />
             <Controller
               name="pairs"
               control={form.control}
               render={(props) => (
-                <SelectInput
+                <SelectFormInput
                   {...props}
                   options={pairsOptions}
                   label="Pairs"
@@ -49,7 +49,7 @@ const AddRandomTradesForm = () => {
             />
           </Stack>
 
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <Controller
               name="winPercentage"
               control={form.control}
@@ -57,7 +57,7 @@ const AddRandomTradesForm = () => {
                 <TextInput
                   label="Win Rate"
                   {...props}
-                  inputProps={{ type: 'number', slotProps: { input: { endAdornment: '%' } } }}
+                  inputProps={{ type: "number", slotProps: { input: { endAdornment: "%" } } }}
                 />
               )}
             />
@@ -68,7 +68,7 @@ const AddRandomTradesForm = () => {
                 <TextInput
                   label="Direction: LONG"
                   {...props}
-                  inputProps={{ type: 'number', slotProps: { input: { endAdornment: '%' } } }}
+                  inputProps={{ type: "number", slotProps: { input: { endAdornment: "%" } } }}
                 />
               )}
             />
@@ -119,7 +119,7 @@ const AddRandomTradesForm = () => {
             )}
           />
 
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
             <Controller
               name="startDate"
               control={form.control}
@@ -132,7 +132,7 @@ const AddRandomTradesForm = () => {
             />
           </Stack>
 
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
             <SubmitButton loading={isLoading} />
           </Stack>
         </>

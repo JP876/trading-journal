@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useId } from 'react';
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useId } from "react";
 
-import { editTradingSession, getTradingSessions } from '../../../api/tradingSessions';
-import { QueryKey } from '../../../enums';
-import useSnackbar from '../../../hooks/useSnackbar';
+import { editTradingSession, getTradingSessions } from "../../../api/tradingSessions";
+import { QueryKey } from "../../../enums";
+import useSnackbar from "../../../hooks/useSnackbar";
 
 export type TTradingSessionSelectProps = {
   onSuccess?: () => void;
@@ -30,7 +30,7 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
   const mutation = useMutation({
     mutationFn: (id: number) => editTradingSession(id, { isMain: true }),
     onSuccess: async () => {
-      openSnackbar({ severity: 'success', message: 'The trading session was processed successfully.' });
+      openSnackbar({ severity: "success", message: "The trading session was processed successfully." });
       if (onSuccess) onSuccess();
       await Promise.all([
         queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
@@ -38,7 +38,7 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
       ]);
     },
     onError: () => {
-      openSnackbar({ severity: 'error', message: 'Something went wrong while submitting your session.' });
+      openSnackbar({ severity: "error", message: "Something went wrong while submitting your session." });
     },
   });
 
@@ -47,7 +47,7 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
   };
 
   return (
-    <Box sx={{ minWidth: '16rem' }}>
+    <Box sx={{ minWidth: "15rem" }}>
       <FormControl size="small" fullWidth>
         <InputLabel htmlFor="trading-session-select" id={labelId}>
           Main trading session
@@ -55,9 +55,9 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
         <Select
           labelId={labelId}
           slotProps={{
-            input: { id: 'trading-session-select' },
+            input: { id: "trading-session-select" },
           }}
-          value={(data?.results || []).find((el) => el?.isMain)?.id.toString() || ''}
+          value={(data?.results || []).find((el) => el?.isMain)?.id.toString() || ""}
           label="Main trading session"
           onChange={handleChange}
           disabled={!Array.isArray(data?.results) || data?.results?.length === 0}

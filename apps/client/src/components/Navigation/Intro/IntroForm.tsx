@@ -1,26 +1,26 @@
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import Stack from '@mui/material/Stack';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { Controller, useForm } from 'react-hook-form';
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import Stack from "@mui/material/Stack";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { Controller, useForm } from "react-hook-form";
 
-import { QueryKey } from '../../../enums';
-import useModal from '../../../hooks/useModal';
-import useSnackbar from '../../../hooks/useSnackbar';
-import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from '../../../lib/db/api/trades/addRandomTradesDB';
-import { editTradingSessionDB, findMainTradingSession } from '../../../lib/db/api/tradingSessions';
-import { TradesPageModal } from '../../../pages/trades/enums';
-import CloseDateInput from '../../../pages/trades/forms/CloseDateInput';
-import usePairsOptions from '../../../pages/trades/hooks/usePairsOptions';
-import { AddRandomTradesFormSchema, type AddRandomTradesFormType } from '../../../types/trade';
-import { TradingSessionFormSchema, type TradingSessionFormSchemaType } from '../../../types/tradingSessions';
-import CloseModalButton from '../../form/CloseModalButton';
-import DateTimeInput from '../../form/DateTimeInput';
-import FormMain from '../../form/FormMain';
-import SelectInput from '../../form/SelectInput';
-import SubmitButton from '../../form/SubmitButton';
-import TextInput from '../../form/TextInput';
-import { getCurrentUser } from '../../../lib/utils';
+import { QueryKey } from "../../../enums";
+import useModal from "../../../hooks/useModal";
+import useSnackbar from "../../../hooks/useSnackbar";
+import { ADD_RANDOM_TRADES_OPTIONS, addRandomTradesDB } from "../../../lib/db/api/trades/addRandomTradesDB";
+import { editTradingSessionDB, findMainTradingSession } from "../../../lib/db/api/tradingSessions";
+import { getCurrentUser } from "../../../lib/utils";
+import { TradesPageModal } from "../../../pages/trades/enums";
+import CloseDateInput from "../../../pages/trades/forms/CloseDateInput";
+import usePairsOptions from "../../../pages/trades/hooks/usePairsOptions";
+import { AddRandomTradesFormSchema, type AddRandomTradesFormType } from "../../../types/trade";
+import { TradingSessionFormSchema, type TradingSessionFormSchemaType } from "../../../types/tradingSessions";
+import CloseModalButton from "../../form/CloseModalButton";
+import DateTimeInput from "../../form/DateTimeInput";
+import FormMain from "../../form/FormMain";
+import SelectFormInput from "../../form/SelectInput";
+import SubmitButton from "../../form/SubmitButton";
+import TextInput from "../../form/TextInput";
 
 type TIntroForm = AddRandomTradesFormType & TradingSessionFormSchemaType;
 
@@ -44,7 +44,7 @@ const addIntroDataDB = async (data: TIntroForm) => {
 const DEFAULT_VALUES: TIntroForm = {
   ...ADD_RANDOM_TRADES_OPTIONS,
   accountSize: 50_000,
-  title: `Initial session ${format(new Date(), 'MM/yy')}`,
+  title: `Initial session ${format(new Date(), "MM/yy")}`,
   isMain: true,
 };
 
@@ -66,8 +66,8 @@ const IntroForm = () => {
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
       ]);
       openSnackbar({
-        severity: 'success',
-        message: 'Done! Your sample trades are ready to view.',
+        severity: "success",
+        message: "Done! Your sample trades are ready to view.",
       });
       closeModal(TradesPageModal.INTRO);
     },
@@ -80,23 +80,23 @@ const IntroForm = () => {
 
   return (
     <FormMain<TIntroForm> onSubmit={mutation.mutate} form={form}>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="title"
           control={form.control}
-          render={(props) => <TextInput label="Title *" inputProps={{ sx: { flex: '0 0 66%' } }} {...props} />}
+          render={(props) => <TextInput label="Title *" inputProps={{ sx: { flex: "0 0 66%" } }} {...props} />}
         />
         <Controller
           name="accountSize"
           control={form.control}
-          render={(props) => <TextInput label="Account size" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Account size" {...props} inputProps={{ type: "number" }} />}
         />
       </Stack>
       <Controller
         name="pairs"
         control={form.control}
         render={(props) => (
-          <SelectInput
+          <SelectFormInput
             {...props}
             options={pairsOptions}
             label="Pairs"
@@ -105,11 +105,11 @@ const IntroForm = () => {
           />
         )}
       />
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="count"
           control={form.control}
-          render={(props) => <TextInput label="Count" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Count" {...props} inputProps={{ type: "number" }} />}
         />
         <Controller
           name="winPercentage"
@@ -118,7 +118,7 @@ const IntroForm = () => {
             <TextInput
               label="Win Rate"
               {...props}
-              inputProps={{ type: 'number', slotProps: { input: { endAdornment: '%' } } }}
+              inputProps={{ type: "number", slotProps: { input: { endAdornment: "%" } } }}
             />
           )}
         />
@@ -129,12 +129,12 @@ const IntroForm = () => {
             <TextInput
               label="Direction: LONG"
               {...props}
-              inputProps={{ type: 'number', slotProps: { input: { endAdornment: '%' } } }}
+              inputProps={{ type: "number", slotProps: { input: { endAdornment: "%" } } }}
             />
           )}
         />
       </Stack>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="startDate"
           control={form.control}
@@ -146,7 +146,7 @@ const IntroForm = () => {
           render={(props) => <CloseDateInput label="End Date" addHoursCount={24 * 14} {...props} />}
         />
       </Stack>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2, justifyContent: "flex-end" }}>
         <CloseModalButton modalId={TradesPageModal.INTRO} />
         <SubmitButton loading={mutation.isPending} />
       </Stack>

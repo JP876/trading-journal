@@ -1,13 +1,22 @@
-import type { PaginationState, SortingState } from '@tanstack/react-table';
+import type { ColumnVisibilityState, PaginationState, SortingState } from "@tanstack/react-table";
 
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
 export type TFilterValue = string | number | null;
 export type TTableFilters = Record<string, TFilterValue>;
 
+export type TTableInfo = {
+  visibility?: {
+    id: string;
+  }[];
+};
+
 export const tablePaginationAtom = atom<PaginationState>({ pageIndex: 0, pageSize: 20 });
 export const tableSortingAtom = atom<SortingState>([]);
 export const tableFiltersAtom = atom<TTableFilters>({});
+export const tableColumnVisibilityAtom = atom<ColumnVisibilityState>({});
+
+export const tableInfoAtom = atom<TTableInfo>({});
 
 export const updatePageAtom = atom(null, (get, set, value: number) => {
   set(tablePaginationAtom, { ...get(tablePaginationAtom), pageIndex: value });

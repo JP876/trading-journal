@@ -1,23 +1,24 @@
-import NewLabelIcon from '@mui/icons-material/NewLabel';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import { memo } from 'react';
-import { Controller, Watch, type UseFormReturn } from 'react-hook-form';
+import NewLabelIcon from "@mui/icons-material/NewLabel";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import { memo } from "react";
+import { Controller, Watch, type UseFormReturn } from "react-hook-form";
 
-import AutocompleteInput from '../../../components/form/AutocompleteInput';
-import DateTimeInput from '../../../components/form/DateTimeInput';
-import FormMain from '../../../components/form/FormMain';
-import SelectInput from '../../../components/form/SelectInput';
-import SubmitButton from '../../../components/form/SubmitButton';
-import TextInput from '../../../components/form/TextInput';
-import useModal from '../../../hooks/useModal';
-import type { TradeFormSchemaType } from '../../../types/trade';
-import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from '../consts';
-import { TradesPageModal } from '../enums';
-import usePairsOptions from '../hooks/usePairsOptions';
-import useTagsOptions from '../hooks/useTagsOptions';
-import CloseDateInput from './CloseDateInput';
+import type { TradeFormSchemaType } from "../../../types/trade";
+
+import AutocompleteInput from "../../../components/form/AutocompleteInput";
+import DateTimeInput from "../../../components/form/DateTimeInput";
+import FormMain from "../../../components/form/FormMain";
+import SelectFormInput from "../../../components/form/SelectInput";
+import SubmitButton from "../../../components/form/SubmitButton";
+import TextInput from "../../../components/form/TextInput";
+import useModal from "../../../hooks/useModal";
+import { closedByOptions, directonOptions, orderTypeOptions, resultOptions } from "../consts";
+import { TradesPageModal } from "../enums";
+import usePairsOptions from "../hooks/usePairsOptions";
+import useTagsOptions from "../hooks/useTagsOptions";
+import CloseDateInput from "./CloseDateInput";
 
 type FormSchema = TradeFormSchemaType;
 type TradeFormProps = {
@@ -44,7 +45,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
 
   return (
     <FormMain<FormSchema> onSubmit={onSubmit} form={form}>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="pairId"
           control={form.control}
@@ -53,47 +54,47 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller
           name="positionSize"
           control={form.control}
-          render={(props) => <TextInput label="Position size *" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Position size *" {...props} inputProps={{ type: "number" }} />}
         />
         <Controller
           name="result"
           control={form.control}
-          render={(props) => <SelectInput options={resultOptions} label="Result *" {...props} />}
+          render={(props) => <SelectFormInput options={resultOptions} label="Result *" {...props} />}
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="entryPrice"
           control={form.control}
-          render={(props) => <TextInput label="Entry price " {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Entry price " {...props} inputProps={{ type: "number" }} />}
         />
         <Controller
           name="closePrice"
           control={form.control}
-          render={(props) => <TextInput label="Close price" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Close price" {...props} inputProps={{ type: "number" }} />}
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="direction"
           control={form.control}
-          render={(props) => <SelectInput options={directonOptions} label="Direction *" {...props} />}
+          render={(props) => <SelectFormInput options={directonOptions} label="Direction *" {...props} />}
         />
         <Controller
           name="orderType"
           control={form.control}
-          render={(props) => <SelectInput options={orderTypeOptions} label="Order type" {...props} />}
+          render={(props) => <SelectFormInput options={orderTypeOptions} label="Order type" {...props} />}
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", gap: 2 }}>
         <Controller
           name="tags"
           control={form.control}
           render={(props) => (
-            <SelectInput
+            <SelectFormInput
               {...props}
               options={tagsOptions}
               label="Tags"
@@ -105,11 +106,11 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <AddTagButton />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="closedBy"
           control={form.control}
-          render={(props) => <SelectInput options={closedByOptions} label="Closed by" {...props} />}
+          render={(props) => <SelectFormInput options={closedByOptions} label="Closed by" {...props} />}
         />
         <Controller
           name="closedAt"
@@ -117,29 +118,29 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
           render={(props) => (
             <Watch
               control={form.control}
-              name={['closedBy']}
+              name={["closedBy"]}
               render={([closedBy]) => (
-                <TextInput label="Closed at" {...props} type="number" inputProps={{ disabled: closedBy === 'tp/sl' }} />
+                <TextInput label="Closed at" {...props} type="number" inputProps={{ disabled: closedBy === "tp/sl" }} />
               )}
             />
           )}
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="takeProfit"
           control={form.control}
-          render={(props) => <TextInput label="Take Profit *" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Take Profit *" {...props} inputProps={{ type: "number" }} />}
         />
         <Controller
           name="stopLoss"
           control={form.control}
-          render={(props) => <TextInput label="Stop Loss *" {...props} inputProps={{ type: 'number' }} />}
+          render={(props) => <TextInput label="Stop Loss *" {...props} inputProps={{ type: "number" }} />}
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="openDate"
           control={form.control}
@@ -148,7 +149,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         <Controller name="closeDate" control={form.control} render={(props) => <CloseDateInput {...props} />} />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
         <Controller
           name="comment"
           control={form.control}
@@ -158,7 +159,7 @@ const TradeForm = ({ onSubmit, form, isLoading }: TradeFormProps) => {
         />
       </Stack>
 
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
         <SubmitButton loading={isLoading}>Save trade</SubmitButton>
       </Stack>
     </FormMain>

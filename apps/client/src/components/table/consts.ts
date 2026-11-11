@@ -1,6 +1,7 @@
 import {
   columnFilteringFeature,
   columnSizingFeature,
+  columnVisibilityFeature,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFn_equalsString,
@@ -11,7 +12,7 @@ import {
   sortFn_alphanumeric,
   sortFn_text,
   tableFeatures,
-} from '@tanstack/react-table';
+} from "@tanstack/react-table";
 
 export const tableMainFeatures = tableFeatures({
   columnFilteringFeature: columnFilteringFeature,
@@ -29,4 +30,5 @@ export const tableMainFeatures = tableFeatures({
     text: sortFn_text,
   },
   columnSizingFeature: columnSizingFeature,
+  columnVisibilityFeature: columnVisibilityFeature,
 });

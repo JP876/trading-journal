@@ -1,31 +1,31 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { type ColumnDef } from '@tanstack/react-table';
-import { format } from 'date-fns';
-import { getDefaultStore, useAtomValue } from 'jotai';
-import { useMemo } from 'react';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import TrendingDownIcon from "@mui/icons-material/TrendingDown";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { type ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { getDefaultStore, useAtomValue } from "jotai";
+import { useMemo } from "react";
 
-import type { tableMainFeatures } from '../../../../components/table/consts';
-import type { Trade } from '../../../../types/trade';
+import type { tableMainFeatures } from "../../../../components/table/consts";
+import type { Trade } from "../../../../types/trade";
 
-import { pairsAtom } from '../../../../atoms';
-import ClampedTextContainer from '../../../../components/ClampedTextContainer';
-import MenuActions from '../../../../components/MenuActions';
-import NotFoundValue from '../../../../components/NotFoundValue';
-import useModal from '../../../../hooks/useModal';
-import { TradesPageModal } from '../../enums';
-import TradeTagsCell from '../TradeTagsCell';
+import { pairsAtom } from "../../../../atoms";
+import ClampedTextContainer from "../../../../components/ClampedTextContainer";
+import MenuActions from "../../../../components/MenuActions";
+import NotFoundValue from "../../../../components/NotFoundValue";
+import useModal from "../../../../hooks/useModal";
+import { TradesPageModal } from "../../enums";
+import TradeTagsCell from "../TradeTagsCell";
 
 const TradeActions = ({ trade }: { trade: Trade }) => {
   const { openModal } = useModal();
 
   return (
-    <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
       <MenuActions>
         <MenuActions.Item
           label="Edit trade"
@@ -60,15 +60,15 @@ const useColumns = () => {
   return useMemo<ColumnDef<typeof tableMainFeatures, Trade>[]>(() => {
     return [
       {
-        accessorKey: 'pair',
-        header: 'Pair',
+        accessorKey: "pair",
+        header: "Pair",
         enableHiding: false,
         enableSorting: false,
         size: 140,
         cell: ({ row }) => <TradePairCell pair={row.original.pair} />,
       },
       {
-        accessorKey: 'direction',
+        accessorKey: "direction",
         enableSorting: false,
         size: 120,
         header: () => <div>Direction</div>,
@@ -77,27 +77,27 @@ const useColumns = () => {
           if (!direction) return <NotFoundValue />;
 
           const valueIcon =
-            direction === 'long' ? <TrendingUpIcon fontSize="small" /> : <TrendingDownIcon fontSize="small" />;
+            direction === "long" ? <TrendingUpIcon fontSize="small" /> : <TrendingDownIcon fontSize="small" />;
 
           return (
             <Chip
               label={
-                <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 0.5 }}>
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 0.5 }}>
                   {valueIcon}
-                  <Typography variant="inherit" sx={{ textAlign: 'center', lineHeight: '.8rem' }}>
+                  <Typography variant="inherit" sx={{ textAlign: "center", lineHeight: ".8rem" }}>
                     {direction}
                   </Typography>
                 </Stack>
               }
               size="small"
               sx={[
-                { textTransform: 'uppercase', width: '5.4rem' },
-                direction === 'long' &&
+                { textTransform: "uppercase", width: "5.4rem" },
+                direction === "long" &&
                   ((theme) => ({
                     backgroundColor: theme.palette.success.light,
                     color: theme.palette.background.default,
                   })),
-                direction === 'short' &&
+                direction === "short" &&
                   ((theme) => ({
                     backgroundColor: theme.palette.error.main,
                     color: theme.palette.background.default,
@@ -108,9 +108,9 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'result',
+        accessorKey: "result",
         enableSorting: false,
-        header: 'Result',
+        header: "Result",
         size: 120,
         cell: ({ row }) => {
           let { result, closedBy, closedAt, takeProfit, stopLoss } = row.original;
@@ -122,15 +122,15 @@ const useColumns = () => {
           const info = (() => {
             let by, amount;
             switch (result) {
-              case 'be':
+              case "be":
                 return { label: result };
-              case 'loss':
-                by = closedBy === 'tp/sl' ? 'SL' : 'U';
-                amount = closedBy === 'tp/sl' ? stopLoss : closedAt;
+              case "loss":
+                by = closedBy === "tp/sl" ? "SL" : "U";
+                amount = closedBy === "tp/sl" ? stopLoss : closedAt;
                 return { label: `${result} ${by}/${amount}` };
-              case 'win':
-                by = closedBy === 'tp/sl' ? 'TP' : 'U';
-                amount = closedBy === 'tp/sl' ? takeProfit : closedAt;
+              case "win":
+                by = closedBy === "tp/sl" ? "TP" : "U";
+                amount = closedBy === "tp/sl" ? takeProfit : closedAt;
                 return { label: `${result} ${by}/${amount}` };
             }
           })();
@@ -140,13 +140,13 @@ const useColumns = () => {
               label={info.label}
               size="small"
               sx={[
-                (_) => ({ textTransform: 'uppercase', minWidth: '5.4rem' }),
-                result === 'win' &&
+                (_) => ({ textTransform: "uppercase", minWidth: "5.4rem" }),
+                result === "win" &&
                   ((theme) => ({
                     backgroundColor: theme.palette.success.light,
                     color: theme.palette.background.default,
                   })),
-                result === 'loss' &&
+                result === "loss" &&
                   ((theme) => ({
                     backgroundColor: theme.palette.error.main,
                     color: theme.palette.background.default,
@@ -157,10 +157,10 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'takeProfit',
+        accessorKey: "takeProfit",
         enableSorting: false,
         size: 60,
-        header: 'TP',
+        header: "TP",
         cell: ({ row }) => {
           let { takeProfit, result, closedBy } = row.original;
           if (!takeProfit) return <NotFoundValue />;
@@ -171,8 +171,8 @@ const useColumns = () => {
             <Typography
               variant="body2"
               sx={[
-                result === 'win' &&
-                  closedBy === 'tp/sl' &&
+                result === "win" &&
+                  closedBy === "tp/sl" &&
                   ((theme) => ({
                     color: theme.palette.success.light,
                     fontWeight: 600,
@@ -185,9 +185,9 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'stopLoss',
+        accessorKey: "stopLoss",
         enableSorting: false,
-        header: 'SL',
+        header: "SL",
         size: 60,
         cell: ({ row }) => {
           let { stopLoss, result, closedBy } = row.original;
@@ -199,8 +199,8 @@ const useColumns = () => {
             <Typography
               variant="body2"
               sx={[
-                result === 'loss' &&
-                  closedBy === 'tp/sl' &&
+                result === "loss" &&
+                  closedBy === "tp/sl" &&
                   ((theme) => ({
                     color: theme.palette.error.light,
                     fontWeight: 600,
@@ -213,10 +213,10 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'tags',
+        accessorKey: "tags",
         enableSorting: false,
         size: 200,
-        header: 'Tags',
+        header: "Tags",
         cell: ({ row }) => {
           const value = row.original.tags;
           if (!Array.isArray(value) || value.length === 0) {
@@ -226,33 +226,34 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'openDate',
+        accessorKey: "openDate",
         enableSorting: false,
-        header: 'Open',
+        header: "Open",
         cell: ({ row }) => {
           const value = row.original.openDate;
           if (!value) return <NotFoundValue />;
           return (
-            <ClampedTextContainer variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</ClampedTextContainer>
+            <ClampedTextContainer variant="body2">{format(new Date(value), "dd/MM/yy HH:mm")}</ClampedTextContainer>
           );
         },
       },
       {
-        accessorKey: 'closeDate',
+        accessorKey: "closeDate",
         enableSorting: false,
-        header: 'Close',
+        header: "Close",
         cell: ({ row }) => {
           const value = row.original.closeDate;
           if (!value) return <NotFoundValue />;
           return (
-            <ClampedTextContainer variant="body2">{format(new Date(value), 'dd/MM/yy HH:mm')}</ClampedTextContainer>
+            <ClampedTextContainer variant="body2">{format(new Date(value), "dd/MM/yy HH:mm")}</ClampedTextContainer>
           );
         },
       },
       {
-        accessorKey: 'comment',
+        accessorKey: "comment",
         enableSorting: false,
-        header: 'Comment',
+        size: 240,
+        header: "Comment",
         cell: ({ row }) => {
           const value = row.original.comment;
           if (!value) return <NotFoundValue />;
@@ -260,9 +261,9 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'actions',
+        accessorKey: "actions",
         enableSorting: false,
-        header: '',
+        header: "",
         size: 80,
         cell: ({ row }) => <TradeActions trade={row.original} />,
         enableHiding: false,

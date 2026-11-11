@@ -1,14 +1,19 @@
-import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useAtomValue } from 'jotai';
+import CircularProgress from "@mui/material/CircularProgress";
+import Stack from "@mui/material/Stack";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useAtomValue } from "jotai";
 
-import { getTrades } from '../../../api/trades';
-import { tableFiltersAtom, tablePaginationAtom } from '../../../components/table/atoms';
-import TableMain from '../../../components/table/TableMain';
-import { QueryKey } from '../../../enums';
-import { tradesTableStore } from '../store';
-import useColumns from './hooks/useColumns';
+import { getTrades } from "../../../api/trades";
+import { tableFiltersAtom, tablePaginationAtom } from "../../../components/table/atoms";
+import TableMain from "../../../components/table/TableMain";
+import { QueryKey } from "../../../enums";
+import { visibilityAtom } from "../atoms";
+import { tradesTableStore } from "../atoms/store";
+import useColumns from "./hooks/useColumns";
+
+const jAtoms = {
+  visibility: visibilityAtom,
+};
 
 const TradesTableMain = () => {
   const columns = useColumns();
@@ -28,7 +33,7 @@ const TradesTableMain = () => {
       filters.tags,
     ],
     queryFn: () =>
-      getTrades({ page: pageIndex + 1, sortBy: 'id', direction: 'asc', rowsPerPage: pageSize, ...filters }),
+      getTrades({ page: pageIndex + 1, sortBy: "id", direction: "asc", rowsPerPage: pageSize, ...filters }),
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
     staleTime: Infinity,
@@ -36,14 +41,20 @@ const TradesTableMain = () => {
 
   if (isLoading) {
     return (
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', my: 8 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "center", my: 8 }}>
         <CircularProgress />
       </Stack>
     );
   }
 
   return (
-    <TableMain data={data?.results || []} columns={columns} pageCount={data?.totalPages} rowCount={data?.totalItems} />
+    <TableMain
+      data={data?.results || []}
+      columns={columns}
+      pageCount={data?.totalPages}
+      rowCount={data?.totalItems}
+      jAtoms={jAtoms}
+    />
   );
 };
 

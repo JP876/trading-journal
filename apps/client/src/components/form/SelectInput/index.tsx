@@ -1,29 +1,20 @@
-import { useId } from 'react';
-import Select, { type SelectChangeEvent, type SelectProps } from '@mui/material/Select';
-import MenuItem, { type MenuItemProps } from '@mui/material/MenuItem';
-import Chip, { type ChipProps } from '@mui/material/Chip';
-import InputLabel from '@mui/material/InputLabel';
-import ListSubheader from '@mui/material/ListSubheader';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import { type ControllerFieldState, type FieldValues, type UseFormStateReturn } from 'react-hook-form';
+import Chip from "@mui/material/Chip";
+import { type SelectChangeEvent, type SelectProps } from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { type ControllerFieldState, type FieldValues, type UseFormStateReturn } from "react-hook-form";
 
-import type { FormField, SelectOption } from '../../../types';
-import checkBrightness from '../../../lib/checkBrighness';
+import type { FormField } from "../../../types";
+import type { TSelectInputOption } from "../../inputs/SelectInput";
 
-export type SelectInputOption<T = string | number> = SelectOption<T> & {
-  menuItemProps?: MenuItemProps | ((options: { value: any }) => MenuItemProps);
-  chipProps?: ChipProps;
-  renderSubheader?: boolean;
-};
+import checkBrightness from "../../../lib/checkBrighness";
+import SelectInput from "../../inputs/SelectInput";
 
-type SelectInputPropsType = {
+type TSelectFormInputProps = {
   field: FormField;
   fieldState: ControllerFieldState;
   formState: UseFormStateReturn<FieldValues>;
-  options: SelectInputOption[];
+  options: TSelectInputOption[];
   label: string;
   renderChips?: boolean;
   inputProps?: SelectProps;
@@ -32,7 +23,7 @@ type SelectInputPropsType = {
   addAllOption?: boolean;
 };
 
-function SelectInput({
+function SelectFormInput({
   field,
   fieldState,
   options,
@@ -41,11 +32,9 @@ function SelectInput({
   inputProps,
   helperText,
   maxTags,
-}: SelectInputPropsType) {
-  const labelId = useId();
-
+}: TSelectFormInputProps) {
   const { value, name, onChange, ...restField } = field;
-  const selectValue = inputProps?.multiple ? value || [] : value || '';
+  const selectValue = inputProps?.multiple ? value || [] : value || "";
 
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     if (!inputProps?.multiple) {
@@ -54,7 +43,7 @@ function SelectInput({
     }
 
     if (!Array.isArray(event.target.value)) {
-      console.warn('Select target value is not an array');
+      console.warn("Select target value is not an array");
       return;
     }
     const nextValue = event.target.value;
@@ -66,14 +55,14 @@ function SelectInput({
       const value = options.find((o) => o?.value === selected);
       return (
         <Typography variant="body1" sx={{ lineHeight: 1.4 }}>
-          {value?.label || ''}
+          {value?.label || ""}
         </Typography>
       );
     }
 
     if (!Array.isArray(selected)) return null;
 
-    const formatedSelected: SelectInputOption[] = selected.reduce((acc, id) => {
+    const formatedSelected: TSelectInputOption[] = selected.reduce((acc, id) => {
       const option = options.find((option) => id === option.value);
       return option?.value ? [...acc, { ...option }] : acc;
     }, []);
@@ -81,7 +70,7 @@ function SelectInput({
     const rest = formatedSelected.slice(maxTags || 2).length;
 
     return (
-      <Stack sx={{ flexWrap: 'wrap', gap: 0.5, flexDirection: 'row', alignItems: 'center' }}>
+      <Stack sx={{ flexWrap: "wrap", gap: 0.5, flexDirection: "row", alignItems: "center" }}>
         {formatedSelected.slice(0, maxTags || 2).map(({ value, label, chipProps, chipBackground }) =>
           renderChips ? (
             <Chip
@@ -90,69 +79,44 @@ function SelectInput({
               {...(chipProps || {})}
               size="small"
               sx={(theme) => ({
-                ...(typeof chipProps?.sx === 'function' ? chipProps?.sx(theme) : {}),
-                height: '22px',
+                ...(typeof chipProps?.sx === "function" ? chipProps?.sx(theme) : {}),
+                height: "22px",
                 backgroundColor: chipBackground,
-                color: checkBrightness(chipBackground) ? 'white' : 'black',
+                color: checkBrightness(chipBackground) ? "white" : "black",
               })}
             />
           ) : (
             <Typography key={value} variant="body1" sx={{ lineHeight: 1.4 }}>
               {label}
             </Typography>
-          )
+          ),
         )}
         {renderChips ? (
           <Chip
-            sx={{ display: rest ? 'inline-flex' : 'none', height: '22px' }}
+            sx={{ display: rest ? "inline-flex" : "none", height: "22px" }}
             size="small"
             label={`... ${rest}`}
           ></Chip>
         ) : (
-          <Typography sx={{ display: rest ? 'block' : 'none' }}>{`... ${rest}`}</Typography>
+          <Typography sx={{ display: rest ? "block" : "none" }}>{`... ${rest}`}</Typography>
         )}
       </Stack>
     );
   };
 
   return (
-    <FormControl fullWidth size="small" error={!!fieldState.error}>
-      <InputLabel htmlFor={`${label}-form-select`} id={labelId}>
-        {label}
-      </InputLabel>
-      <Select
-        labelId={labelId}
-        renderValue={handleRenderValue}
-        label={label}
-        {...inputProps}
-        slotProps={{
-          ...inputProps?.slotProps,
-          input: { id: `${label}-form-select`, ...inputProps?.slotProps?.input },
-        }}
-        value={selectValue}
-        name={name}
-        MenuProps={{
-          ...inputProps?.MenuProps,
-        }}
-        {...restField}
-        onChange={handleChange}
-      >
-        {options.map(({ value, label, menuItemProps, renderSubheader }) => {
-          const itemProps = typeof menuItemProps === 'function' ? menuItemProps({ value }) : menuItemProps;
-
-          if (renderSubheader) {
-            return <ListSubheader key={value}>{label}</ListSubheader>;
-          }
-          return (
-            <MenuItem key={value} {...(itemProps || {})} value={value}>
-              {label}
-            </MenuItem>
-          );
-        })}
-      </Select>
-      <FormHelperText>{!!fieldState.error ? fieldState.error.message : helperText || ' '}</FormHelperText>
-    </FormControl>
+    <SelectInput
+      label={label}
+      value={selectValue}
+      onChange={handleChange}
+      renderValue={handleRenderValue}
+      options={options}
+      {...inputProps}
+      {...restField}
+      formControlProps={{ error: !!fieldState.error }}
+      helperText={!!fieldState.error ? fieldState.error.message : helperText || " "}
+    />
   );
 }
 
-export default SelectInput;
+export default SelectFormInput;

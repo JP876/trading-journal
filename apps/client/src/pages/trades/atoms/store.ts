@@ -1,6 +1,6 @@
-import { createStore } from 'jotai';
+import { createStore } from "jotai";
 
-import { tableFiltersAtom, tablePaginationAtom } from '../../components/table/atoms';
+import { tableFiltersAtom, tablePaginationAtom } from "../../../components/table/atoms";
 
 export const tradesTableStore = createStore();
 

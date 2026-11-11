@@ -1,48 +1,51 @@
-import AddIcon from '@mui/icons-material/Add';
-import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FilterListIcon from '@mui/icons-material/FilterList';
-import FilterListOffIcon from '@mui/icons-material/FilterListOff';
-import PublishIcon from '@mui/icons-material/Publish';
-import QueueIcon from '@mui/icons-material/Queue';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Box from '@mui/material/Box';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
-import { getDefaultStore, Provider, useAtom, useAtomValue } from 'jotai';
-import { lazy, Suspense } from 'react';
+import AddIcon from "@mui/icons-material/Add";
+import ControlPointIcon from "@mui/icons-material/ControlPoint";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import FilterListOffIcon from "@mui/icons-material/FilterListOff";
+import PublishIcon from "@mui/icons-material/Publish";
+import QueueIcon from "@mui/icons-material/Queue";
+import SettingsIcon from "@mui/icons-material/Settings";
+import Box from "@mui/material/Box";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { getDefaultStore, Provider, useAtom, useAtomValue } from "jotai";
+import { lazy, Suspense } from "react";
 
-import { getTrades } from '../../api/trades';
-import { userAtom } from '../../atoms';
-import { tradesFiltersAtom } from '../../atoms/trades';
-import DialogMain from '../../components/DialogMain';
-import MenuActions from '../../components/MenuActions';
-import AutocompleteFilter from '../../components/table/filters/AutocompleteFilter';
-import DateFilter from '../../components/table/filters/DateFilter';
-import useClearFilters from '../../components/table/hooks/useClearFilters';
-import { QueryKey } from '../../enums';
-import useModal from '../../hooks/useModal';
-import { resultOptions } from './consts';
-import { TradesPageModal } from './enums';
-import useExportTrades from './hooks/useExportTrades';
-import usePairsOptions from './hooks/usePairsOptions';
-import useTagsOptions from './hooks/useTagsOptions';
-import { tradesTableStore } from './store';
-import TradingSessionSelect from './TradingSessionSelect';
+import type { TSelectInputOption } from "../../components/inputs/SelectInput";
 
-const AddTradeForm = lazy(() => import('./forms/AddTrade'));
-const AddRandomTradesForm = lazy(() => import('./forms/AddRandomTrades'));
-const EditTradeForm = lazy(() => import('./forms/EditTrade'));
-const DeleteTrade = lazy(() => import('./DeleteTrade'));
-const TradesSettingsMain = lazy(() => import('./Settings'));
-const ImportTrades = lazy(() => import('./ImportTrades'));
+import { getTrades } from "../../api/trades";
+import { userAtom } from "../../atoms";
+import DialogMain from "../../components/DialogMain";
+import MenuActions from "../../components/MenuActions";
+import ColumnVisibilitySelect from "../../components/table/ColumnVisibilitySelect";
+import AutocompleteFilter from "../../components/table/filters/AutocompleteFilter";
+import DateFilter from "../../components/table/filters/DateFilter";
+import useClearFilters from "../../components/table/hooks/useClearFilters";
+import { QueryKey } from "../../enums";
+import useModal from "../../hooks/useModal";
+import { tradesFiltersAtom, visibilityAtom } from "./atoms";
+import { tradesTableStore } from "./atoms/store";
+import { resultOptions } from "./consts";
+import { TradesPageModal } from "./enums";
+import useExportTrades from "./hooks/useExportTrades";
+import usePairsOptions from "./hooks/usePairsOptions";
+import useTagsOptions from "./hooks/useTagsOptions";
+import TradingSessionSelect from "./TradingSessionSelect";
 
-const TradesTableMain = lazy(() => import('./TradesTable'));
-const AddTagForm = lazy(() => import('./Settings/Tags/forms/AddForm'));
+const AddTradeForm = lazy(() => import("./forms/AddTrade"));
+const AddRandomTradesForm = lazy(() => import("./forms/AddRandomTrades"));
+const EditTradeForm = lazy(() => import("./forms/EditTrade"));
+const DeleteTrade = lazy(() => import("./DeleteTrade"));
+const TradesSettingsMain = lazy(() => import("./Settings"));
+const ImportTrades = lazy(() => import("./ImportTrades"));
+
+const TradesTableMain = lazy(() => import("./TradesTable"));
+const AddTagForm = lazy(() => import("./Settings/Tags/forms/AddForm"));
 
 const TradesModalList = () => {
   return (
@@ -110,10 +113,10 @@ const TradesFilters = () => {
     <Box
       sx={{
         mb: 2,
-        width: '100%',
+        width: "100%",
         gap: 2,
-        display: 'grid',
-        gridTemplateColumns: { xl: 'repeat(6, 1fr)', lg: '12rem 12rem repeat(3, 1fr)', md: 'repeat(3, 1fr)' },
+        display: "grid",
+        gridTemplateColumns: { xl: "repeat(6, 1fr)", lg: "12rem 12rem repeat(3, 1fr)", md: "repeat(3, 1fr)" },
       }}
     >
       <AutocompleteFilter
@@ -147,29 +150,29 @@ const TradesFiltersButton = () => {
   return (
     <Box
       sx={(theme) => ({
-        width: '34px',
-        height: '34px',
-        position: 'relative',
+        width: "34px",
+        height: "34px",
+        position: "relative",
 
-        '& svg': {
-          position: 'absolute',
-          transition: theme.transitions.create(['opacity']),
+        "& svg": {
+          position: "absolute",
+          transition: theme.transitions.create(["opacity"]),
         },
-        '#open': { opacity: +!tradesFilters },
-        '#close': { opacity: +!!tradesFilters },
+        "#open": { opacity: +!tradesFilters },
+        "#close": { opacity: +!!tradesFilters },
       })}
     >
       <IconButton
         size="small"
-        aria-label={`${tradesFilters ? 'close' : 'open'}-filters-button`}
+        aria-label={`${tradesFilters ? "close" : "open"}-filters-button`}
         onClick={handleClick}
         sx={{
-          width: 'inherit',
-          height: 'inherit',
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          width: "inherit",
+          height: "inherit",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
         }}
       >
         <FilterListIcon id="open" />
@@ -190,9 +193,8 @@ const ExportTradesItem = () => {
   return <MenuActions.Item icon={<FileDownloadIcon />} label="Export trades" onClick={handleClick} />;
 };
 
-const TradesPage = () => {
+const GuestMenuActions = () => {
   const { openModal } = useModal();
-  const user = useAtomValue(userAtom);
 
   const handleClick = (handleClose: () => void, fn: () => void) => {
     handleClose();
@@ -200,77 +202,95 @@ const TradesPage = () => {
   };
 
   return (
-    <Box>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
-        <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
+    <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
+      {/* Implemented only when user is logged in as guest */}
+      <MenuActions.Item
+        icon={<AddIcon />}
+        label="Add trade"
+        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
+      />
+      <MenuActions.Divider />
+      <MenuActions.Item
+        icon={<PublishIcon />}
+        label="Import trades"
+        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))}
+      />
+      <ExportTradesItem />
+      <MenuActions.Divider />
+      <MenuActions.Item
+        icon={<QueueIcon />}
+        label="Add sample trades"
+        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))}
+      />
+    </MenuActions>
+  );
+};
+
+const AddTradeButton = () => {
+  const { openModal } = useModal();
+  return (
+    <IconButton size="small" aria-label="add-trade-button" onClick={() => openModal(TradesPageModal.ADD_TRADE)}>
+      <AddIcon />
+    </IconButton>
+  );
+};
+
+const SettingsButton = () => {
+  const { openModal } = useModal();
+  return (
+    <IconButton size="small" aria-label="trades-settings-button" onClick={() => openModal(TradesPageModal.SETTINGS)}>
+      <SettingsIcon />
+    </IconButton>
+  );
+};
+
+const visibilityOptions: TSelectInputOption[] = [
+  { value: "pair", label: "Pair" },
+  { value: "direction", label: "Direction" },
+  { value: "result", label: "Result" },
+  { value: "takeProfit", label: "Take profit" },
+  { value: "stopLoss", label: "Stop loss" },
+  { value: "tags", label: "Tags" },
+  { value: "openDate", label: "Open date" },
+  { value: "closeDate", label: "Close date" },
+  { value: "comment", label: "Comment" },
+];
+
+const TradesPage = () => {
+  const user = useAtomValue(userAtom);
+
+  return (
+    <Provider store={tradesTableStore}>
+      <Stack
+        sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap" }}
+      >
+        <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
           <Typography variant="h4">Trades</Typography>
 
-          <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
-            {user?.variety === 'GUEST' ? (
-              <MenuActions btnProps={{ children: <ControlPointIcon /> }}>
-                {/* Implemented only when user is logged in as guest */}
-                <MenuActions.Item
-                  icon={<AddIcon />}
-                  label="Add trade"
-                  onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
-                />
-                <MenuActions.Divider />
-                <MenuActions.Item
-                  icon={<PublishIcon />}
-                  label="Import trades"
-                  onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))}
-                />
-                <ExportTradesItem />
-                <MenuActions.Divider />
-                <MenuActions.Item
-                  icon={<QueueIcon />}
-                  label="Add sample trades"
-                  onClick={(_, handleClose) =>
-                    handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))
-                  }
-                />
-              </MenuActions>
-            ) : (
-              <IconButton
-                size="small"
-                aria-label="add-trade-button"
-                onClick={() => openModal(TradesPageModal.ADD_TRADE)}
-              >
-                <AddIcon />
-              </IconButton>
-            )}
-
+          <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            {user?.variety === "GUEST" ? <GuestMenuActions /> : <AddTradeButton />}
             <TradesFiltersButton />
           </Stack>
         </Stack>
 
-        <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-          <IconButton
-            size="small"
-            aria-label="trades-settings-button"
-            onClick={() => openModal(TradesPageModal.SETTINGS)}
-          >
-            <SettingsIcon />
-          </IconButton>
+        <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+          <ColumnVisibilitySelect options={visibilityOptions} anAtom={visibilityAtom} />
           <TradingSessionSelect />
+          <SettingsButton />
         </Stack>
       </Stack>
 
-      <Stack>
-        <Provider store={tradesTableStore}>
-          <TradesFiltersContainer>
-            <TradesFilters />
-          </TradesFiltersContainer>
-          <Paper sx={{ p: 2 }}>
-            <Suspense fallback={null}>
-              <TradesTableMain />
-            </Suspense>
-          </Paper>
-        </Provider>
-      </Stack>
+      <TradesFiltersContainer>
+        <TradesFilters />
+      </TradesFiltersContainer>
+      <Paper sx={{ p: 2 }}>
+        <Suspense fallback={null}>
+          <TradesTableMain />
+        </Suspense>
+      </Paper>
 
       <TradesModalList />
-    </Box>
+    </Provider>
   );
 };
 
