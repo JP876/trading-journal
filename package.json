@@ -1,7 +1,5 @@
 {
   "devDependencies": {
-    "@types/papaparse": "^5.5.2",
-    "oxfmt": "^0.78.0",
     "turbo": "^2.11.10"
   },
   "scripts": {

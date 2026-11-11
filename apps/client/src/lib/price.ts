@@ -1,5 +1,5 @@
-import { exchangeRates } from '../consts';
-import type { TCurrentRate } from '../types';
+import { exchangeRates } from "../consts";
+import type { TCurrentRate } from "../types";
 
 export type TFormatToPipsOptions = {
   pair?: string;
@@ -14,7 +14,7 @@ export type TCalculateProfitOptions = {
 };
 
 const DEFAULT_CALCULATE_PROFIT_OPTIONS: Required<TCalculateProfitOptions> = {
-  baseCurrency: 'EUR',
+  baseCurrency: "EUR",
   positionSize: 10_000,
   rates: [],
   fraction: 4,
@@ -22,34 +22,38 @@ const DEFAULT_CALCULATE_PROFIT_OPTIONS: Required<TCalculateProfitOptions> = {
 
 export function getExchangeRates(baseCurrency: string) {
   switch (baseCurrency) {
-    case 'EUR':
+    case "EUR":
       return exchangeRates.EUR;
-    case 'USD':
+    case "USD":
       return exchangeRates.USD;
     default:
-      throw new Error('Unsupported base currency');
+      throw new Error("Unsupported base currency");
   }
 }
 
 export function getPipSize(pair?: string) {
   let pipSize = 0.0001;
-  if (pair && (pair.endsWith('JPY') || pair.endsWith('jpy'))) {
+  if (pair && (pair.endsWith("JPY") || pair.endsWith("jpy"))) {
     pipSize = 0.01;
   }
   return pipSize;
 }
 
 export function formatToCurrency(value?: number, options?: Intl.NumberFormatOptions) {
-  if (!value) return '-';
+  if (!value) return "-";
 
-  return new Intl.NumberFormat('de-DE', {
-    style: 'currency',
-    currency: 'EUR',
+  return new Intl.NumberFormat("de-DE", {
+    style: "currency",
+    currency: "EUR",
     ...(options || {}),
   }).format(value);
 }
 
-export function formatToPips(firstPrice: number, secondPrice: number, options?: TFormatToPipsOptions) {
+export function formatToPips(
+  firstPrice: number,
+  secondPrice: number,
+  options?: TFormatToPipsOptions,
+) {
   const pipSize = getPipSize(options?.pair);
   return +(Math.abs(firstPrice - secondPrice) / pipSize).toFixed(options?.fraction || 2);
 }
@@ -57,7 +61,7 @@ export function formatToPips(firstPrice: number, secondPrice: number, options?: 
 export function calculateProfit(
   pipsValue: number,
   pair: string, // EUR/USD, EUR/JPY
-  options?: TCalculateProfitOptions
+  options?: TCalculateProfitOptions,
 ) {
   const positionSize = options?.positionSize || DEFAULT_CALCULATE_PROFIT_OPTIONS.positionSize;
   const baseCurrency = options?.baseCurrency || DEFAULT_CALCULATE_PROFIT_OPTIONS.baseCurrency;
@@ -66,7 +70,7 @@ export function calculateProfit(
   const pipSize = getPipSize(pair);
   const value = pipsValue * pipSize * positionSize;
 
-  const [, quote] = pair.split('/');
+  const [, quote] = pair.split("/");
   if (!quote) {
     console.error(`Quote currency not found from pair: ${pair}`);
     return null;
