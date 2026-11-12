@@ -62,7 +62,7 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
 };
 
 const routes: RouteObject[] = [
-  { path: "/", Component: AuthPage, middleware: [authMiddleware] },
+  { path: "/", Component: AuthPage, middleware: [authMiddleware], HydrateFallback: () => null },
   {
     Component: ProtectedRoutes,
     middleware: [protectedRouteMiddleware],

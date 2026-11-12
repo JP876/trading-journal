@@ -18,7 +18,7 @@ const DeleteTag = lazy(() => import("./DeleteTag"));
 const TagModalList = () => {
   return (
     <Suspense>
-      <DialogMain id={TradesPageModal.EDIT_TAG} title="Edit tag">
+      <DialogMain size="xs" id={TradesPageModal.EDIT_TAG} title="Edit tag">
         <EditTagForm />
       </DialogMain>
 
