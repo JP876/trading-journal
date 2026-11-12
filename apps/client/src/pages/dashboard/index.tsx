@@ -1,36 +1,36 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
-import { lazy, Suspense } from 'react';
-import { useNavigate } from 'react-router';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import { useQuery } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
+import { useNavigate } from "react-router";
 
-import { getTrades } from '../../api/trades';
-import { QueryKey } from '../../enums';
-import TradingSessionSelect from '../trades/TradingSessionSelect';
-import useResetWidgets from './hooks/useResetWidgets';
+import { getTrades } from "../../api/trades";
+import { QueryKey } from "../../enums";
+import TradingSessionSelect from "../trades/TradingSessionSelect";
+import useResetWidgets from "./hooks/useResetWidgets";
 
-const ConsecutiveTrades = lazy(() => import('./widgets/ConsecutiveTrades'));
-const Performance = lazy(() => import('./widgets/Performance'));
-const ProfitablePairs = lazy(() => import('./widgets/ProfitablePairs'));
-const Statistics = lazy(() => import('./widgets/Statistics'));
-const TradeDurations = lazy(() => import('./widgets/TradeDurations'));
+const ConsecutiveTrades = lazy(() => import("./widgets/ConsecutiveTrades"));
+const Performance = lazy(() => import("./widgets/Performance"));
+const ProfitablePairs = lazy(() => import("./widgets/ProfitablePairs"));
+const Statistics = lazy(() => import("./widgets/Statistics"));
+const TradeDurations = lazy(() => import("./widgets/TradeDurations"));
 
 const WidgetsContainer = styled(Box)(({ theme }) => ({
-  display: 'grid',
+  display: "grid",
   gap: theme.spacing(2),
-  gridTemplateColumns: '2fr 3fr 3fr',
-  gridAutoRows: 'clamp(20rem, 32vw, 24rem)',
+  gridTemplateColumns: "2fr 3fr 3fr",
+  gridAutoRows: "clamp(20rem, 32vw, 24rem)",
   gridTemplateAreas: `
     "stats performance profitable"
     "stats consecutive durations"
   `,
 
-  [theme.breakpoints.down('xl')]: {
-    gridTemplateColumns: 'repeat(2, 1fr)',
+  [theme.breakpoints.down("xl")]: {
+    gridTemplateColumns: "repeat(2, 1fr)",
     gridTemplateAreas: `
       "stats performance"
       "stats durations"
@@ -38,8 +38,8 @@ const WidgetsContainer = styled(Box)(({ theme }) => ({
     `,
   },
 
-  [theme.breakpoints.down('md')]: {
-    gridTemplateColumns: '1fr',
+  [theme.breakpoints.down("md")]: {
+    gridTemplateColumns: "1fr",
     gridTemplateAreas: `
       "stats"
       "performance"
@@ -54,10 +54,10 @@ const DashboardHeader = () => {
   const [handleReset] = useResetWidgets();
 
   return (
-    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
       <Typography variant="h4">Dashboard</Typography>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}>
-        <TradingSessionSelect onSuccess={handleReset} />
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
+        <TradingSessionSelect onSettled={handleReset} />
       </Stack>
     </Stack>
   );
@@ -67,22 +67,22 @@ const TradesNotFound = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/trades', { viewTransition: true });
+    navigate("/trades", { viewTransition: true });
   };
 
   return (
     <Stack
       sx={[
         (theme) => ({
-          flexDirection: 'column',
+          flexDirection: "column",
           gap: theme.spacing(2),
-          position: 'fixed',
+          position: "fixed",
           zIndex: theme.zIndex.modal - 1,
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
           padding: theme.spacing(2),
-          maxWidth: 'min(32rem, 50vw)',
+          maxWidth: "min(32rem, 50vw)",
           backgroundColor: theme.palette.background.paper,
         }),
       ]}
@@ -90,7 +90,7 @@ const TradesNotFound = () => {
       <Typography variant="body1">
         You haven't added any trades yet, so your dashboard is empty. Add trades whenever you're ready.
       </Typography>
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
         <Button size="small" variant="outlined" onClick={handleClick}>
           Go to Trades page
         </Button>
@@ -102,11 +102,11 @@ const TradesNotFound = () => {
 const LoadingTrades = () => {
   return (
     <WidgetsContainer>
-      <Skeleton variant="rectangular" sx={{ gridArea: 'stats', height: '100%', width: '100%' }} />
-      <Skeleton variant="rectangular" sx={{ gridArea: 'performance', height: '100%', width: '100%' }} />
-      <Skeleton variant="rectangular" sx={{ gridArea: 'profitable', height: '100%', width: '100%' }} />
-      <Skeleton variant="rectangular" sx={{ gridArea: 'consecutive', height: '100%', width: '100%' }} />
-      <Skeleton variant="rectangular" sx={{ gridArea: 'durations', height: '100%', width: '100%' }} />
+      <Skeleton variant="rectangular" sx={{ gridArea: "stats", height: "100%", width: "100%" }} />
+      <Skeleton variant="rectangular" sx={{ gridArea: "performance", height: "100%", width: "100%" }} />
+      <Skeleton variant="rectangular" sx={{ gridArea: "profitable", height: "100%", width: "100%" }} />
+      <Skeleton variant="rectangular" sx={{ gridArea: "consecutive", height: "100%", width: "100%" }} />
+      <Skeleton variant="rectangular" sx={{ gridArea: "durations", height: "100%", width: "100%" }} />
     </WidgetsContainer>
   );
 };
@@ -116,13 +116,13 @@ type TWidgetFallbackProps = {
 };
 
 const WidgetFallback = ({ gridArea }: TWidgetFallbackProps) => (
-  <Skeleton variant="rectangular" sx={{ gridArea, height: '100%', width: '100%' }}></Skeleton>
+  <Skeleton variant="rectangular" sx={{ gridArea, height: "100%", width: "100%" }}></Skeleton>
 );
 
 const DashboardContent = () => {
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
-    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
+    queryKey: [QueryKey.TRADES, "closeDate", "desc"],
+    queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
   });
 
   if (tradesQuery.isPending || tradesQuery.isLoading) return <LoadingTrades />;
@@ -141,19 +141,19 @@ const DashboardContent = () => {
   return (
     <WidgetsContainer>
       <Suspense fallback={<WidgetFallback gridArea="stats" />}>
-        <Statistics paperProps={{ sx: { gridArea: 'stats', overflowY: 'auto' } }} />
+        <Statistics paperProps={{ sx: { gridArea: "stats", overflowY: "auto" } }} />
       </Suspense>
       <Suspense fallback={<WidgetFallback gridArea="performance" />}>
-        <Performance paperProps={{ sx: { gridArea: 'performance' } }} />
+        <Performance paperProps={{ sx: { gridArea: "performance" } }} />
       </Suspense>
       <Suspense fallback={<WidgetFallback gridArea="profitable" />}>
-        <ProfitablePairs paperProps={{ sx: { gridArea: 'profitable' } }} />
+        <ProfitablePairs paperProps={{ sx: { gridArea: "profitable" } }} />
       </Suspense>
       <Suspense fallback={<WidgetFallback gridArea="consecutive" />}>
-        <ConsecutiveTrades paperProps={{ sx: { gridArea: 'consecutive' } }} />
+        <ConsecutiveTrades paperProps={{ sx: { gridArea: "consecutive" } }} />
       </Suspense>
       <Suspense fallback={<WidgetFallback gridArea="durations" />}>
-        <TradeDurations paperProps={{ sx: { gridArea: 'durations' } }} />
+        <TradeDurations paperProps={{ sx: { gridArea: "durations" } }} />
       </Suspense>
     </WidgetsContainer>
   );

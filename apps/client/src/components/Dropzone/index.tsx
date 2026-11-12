@@ -1,12 +1,11 @@
-import { styled, type ButtonProps } from '@mui/material';
-import Box, { type BoxProps } from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import { Provider, useAtomValue, useSetAtom, useStore, type Store } from 'jotai';
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { styled, type ButtonProps } from "@mui/material";
+import Box, { type BoxProps } from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { useAtomValue, useSetAtom, useStore } from "jotai";
+import { memo, useCallback, useRef } from "react";
 
-import UploadButton from '../UploadButton';
+import UploadButton from "../UploadButton";
 import {
-  clearDropzoneStore,
   dzContianerElAtom,
   dzFilesAtom,
   dzInputElAtom,
@@ -14,10 +13,10 @@ import {
   dzSetFilesAtom,
   dzUpateStatusAtom,
   type TDzFile,
-} from './atoms';
+} from "./atoms";
 
 type TDropzoneContainerProps = BoxProps<
-  'div',
+  "div",
   {
     isDragging?: boolean;
     disabled?: boolean;
@@ -25,20 +24,20 @@ type TDropzoneContainerProps = BoxProps<
 >;
 
 const DropzoneContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== 'isDragging' && prop !== 'disabled',
+  shouldForwardProp: (prop) => prop !== "isDragging" && prop !== "disabled",
 })<TDropzoneContainerProps>(({ theme, isDragging, disabled }) => {
   return {
     border: `2px dashed ${theme.alpha(theme.palette.text.primary, 0.2)}`,
     backgroundColor: isDragging ? theme.alpha(theme.palette.text.secondary, 0.05) : theme.palette.background.default,
-    transition: theme.transitions.create(['background-color']),
-    width: '100%',
-    height: '100%',
+    transition: theme.transitions.create(["background-color"]),
+    width: "100%",
+    height: "100%",
     padding: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    pointerEvents: disabled ? 'none' : 'all',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    pointerEvents: disabled ? "none" : "all",
   };
 });
 
@@ -50,18 +49,17 @@ const handleDragOver = (event: React.DragEvent<Element>) => {
 type TDropzoneProps = {
   multiple?: boolean;
   disabled?: boolean;
-  accept?: React.InputHTMLAttributes<HTMLInputElement>['accept'];
+  accept?: React.InputHTMLAttributes<HTMLInputElement>["accept"];
   onChange?: (event: React.DragEvent<Element> | React.ChangeEvent<HTMLInputElement>, files: TDzFile[]) => void;
-  buttonLabel?: ButtonProps['children'];
+  buttonLabel?: ButtonProps["children"];
   label?: string;
 };
 
-const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label }: TDropzoneProps) => {
+const Dropzone = ({ multiple, disabled, accept, onChange, buttonLabel, label }: TDropzoneProps) => {
   const store = useStore();
   const dragTargetsRef = useRef<EventTarget[]>([]);
 
   const isDragging = useAtomValue(dzIsDraggingAtom);
-  const clearStore = useSetAtom(clearDropzoneStore);
 
   const setContainerEl = useSetAtom(dzContianerElAtom);
   const setInputEl = useSetAtom(dzInputElAtom);
@@ -73,7 +71,7 @@ const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label
       store.set(dzSetFilesAtom, [...files]);
       if (onChange) onChange(event, store.get(dzFilesAtom) || []);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleDrop = useCallback(
@@ -83,7 +81,7 @@ const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label
 
       let droppedFiles = Array.from(event.dataTransfer.files);
       if (accept) {
-        let options = accept.split(',').map((el) => el.trim());
+        let options = accept.split(",").map((el) => el.trim());
         droppedFiles = droppedFiles.reduce((acc, file) => {
           for (let option of options) {
             if (file.name.endsWith(option) || file.type.includes(option)) {
@@ -104,7 +102,7 @@ const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label
 
       if (onChange) onChange(event, store.get(dzFilesAtom) || []);
     },
-    [disabled, accept, onChange]
+    [disabled, accept, onChange],
   );
 
   const handleDragEnter = useCallback((event: React.DragEvent<Element>) => {
@@ -132,10 +130,6 @@ const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label
     store.set(dzUpateStatusAtom, { isDragging: false });
   }, []);
 
-  useEffect(() => {
-    clearStore();
-  }, []);
-
   return (
     <DropzoneContainer
       onDrop={handleDrop}
@@ -157,19 +151,11 @@ const DropzoneMain = ({ multiple, disabled, accept, onChange, buttonLabel, label
       </UploadButton>
       <Typography
         variant="subtitle1"
-        sx={[(theme) => ({ color: theme.palette.text[disabled ? 'disabled' : 'primary'] })]}
+        sx={[(theme) => ({ color: theme.palette.text[disabled ? "disabled" : "primary"] })]}
       >
         {label || "Drag 'n' drop some files here"}
       </Typography>
     </DropzoneContainer>
-  );
-};
-
-const Dropzone = ({ store, ...rest }: TDropzoneProps & { store?: Store }) => {
-  return (
-    <Provider store={store}>
-      <DropzoneMain {...rest} />
-    </Provider>
   );
 };
 

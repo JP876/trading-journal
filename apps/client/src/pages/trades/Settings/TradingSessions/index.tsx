@@ -5,6 +5,7 @@ import Stack from "@mui/material/Stack";
 import { lazy, Suspense } from "react";
 
 import DialogMain from "../../../../components/DialogMain";
+import { tablePaginationAtom } from "../../../../components/table/atoms";
 import TextFilter from "../../../../components/table/filters/TextFilter";
 import TableProvider from "../../../../components/table/TableProvider";
 import useModal from "../../../../hooks/useModal";
@@ -42,7 +43,7 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <TableProvider pageSize={10}>
+    <TableProvider atomValues={[[tablePaginationAtom, { pageIndex: 0, pageSize: 10 }]]}>
       <Stack spacing={2}>
         <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box>

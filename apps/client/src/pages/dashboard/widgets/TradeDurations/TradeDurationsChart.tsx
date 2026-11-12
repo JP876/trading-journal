@@ -1,19 +1,21 @@
-import { useTheme } from '@mui/material';
-import type { AxisValueFormatterContext, ChartsAxisData } from '@mui/x-charts';
-import { BarChart, barClasses, type BarChartProps } from '@mui/x-charts/BarChart';
-import { useQuery } from '@tanstack/react-query';
-import { useAtomValue, useSetAtom } from 'jotai';
+import type { AxisValueFormatterContext, ChartsAxisData } from "@mui/x-charts";
 
-import { getTrades } from '../../../../api/trades';
-import LoadingContainer from '../../../../components/feedback/LoadingContainer';
-import { QueryKey } from '../../../../enums';
-import { DEFAULT_BAR_CHART_PROPS } from '../../consts';
-import { formatSeconds, getTradeDurationAnalysis, getTradeDurationInfo } from '../../utils/duration';
-import type { TDurationAnalysis } from '../../utils/types';
-import { periodsAtom, periodsCountAtom, tradeDurationsChartStore, updatePeriodsAtom } from './atoms';
-import type { TTradeDurationsTooltipProps, TTransformedDataItem } from './types';
+import { useTheme } from "@mui/material";
+import { BarChart, barClasses, type BarChartProps } from "@mui/x-charts/BarChart";
+import { useQuery } from "@tanstack/react-query";
+import { useAtomValue, useSetAtom } from "jotai";
 
-declare module '@mui/x-charts' {
+import type { TDurationAnalysis } from "../../utils/types";
+import type { TTradeDurationsTooltipProps, TTransformedDataItem } from "./types";
+
+import { getTrades } from "../../../../api/trades";
+import LoadingContainer from "../../../../components/feedback/LoadingContainer";
+import { QueryKey } from "../../../../enums";
+import { DEFAULT_BAR_CHART_PROPS } from "../../consts";
+import { formatSeconds, getTradeDurationAnalysis, getTradeDurationInfo } from "../../utils/duration";
+import { periodsAtom, periodsCountAtom, updatePeriodsAtom } from "./atoms";
+
+declare module "@mui/x-charts" {
   interface TooltipPropsOverrides extends TTradeDurationsTooltipProps {}
 }
 
@@ -32,8 +34,8 @@ const transformData = (analysis: TDurationAnalysis, shortest: number = 0) => {
       ...prev,
       {
         interval: { start, startSec, end, endSec: +curr },
-        win: data.trades.filter((t) => t.result === 'win'),
-        loss: data.trades.filter((t) => t.result === 'loss'),
+        win: data.trades.filter((t) => t.result === "win"),
+        loss: data.trades.filter((t) => t.result === "loss"),
       },
     ];
   }, [] as TTransformedDataItem[]);
@@ -42,13 +44,13 @@ const transformData = (analysis: TDurationAnalysis, shortest: number = 0) => {
 const TradeDurationsChart = () => {
   const theme = useTheme();
 
-  const period = useAtomValue(periodsAtom, { store: tradeDurationsChartStore });
-  const periodsCount = useAtomValue(periodsCountAtom, { store: tradeDurationsChartStore });
-  const updatePeriods = useSetAtom(updatePeriodsAtom, { store: tradeDurationsChartStore });
+  const period = useAtomValue(periodsAtom);
+  const periodsCount = useAtomValue(periodsCountAtom);
+  const updatePeriods = useSetAtom(updatePeriodsAtom);
 
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
-    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
+    queryKey: [QueryKey.TRADES, "closeDate", "desc"],
+    queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
   });
 
   const chartData = (() => {
@@ -81,36 +83,36 @@ const TradeDurationsChart = () => {
         {
           ...DEFAULT_BAR_CHART_PROPS.xAxis,
           data: chartData.map((d) => d.interval),
-          label: 'Periods',
-          tickPlacement: 'end',
-          tickLabelPlacement: 'tick',
-          valueFormatter: (value: TTransformedDataItem['interval'], context: AxisValueFormatterContext) => {
-            if (context.location === 'tooltip') {
+          label: "Periods",
+          tickPlacement: "end",
+          tickLabelPlacement: "tick",
+          valueFormatter: (value: TTransformedDataItem["interval"], context: AxisValueFormatterContext) => {
+            if (context.location === "tooltip") {
               return `Period: ${value.start} - ${value.end}`;
             }
             return value.end;
           },
         },
       ],
-      yAxis: [{ label: 'Trades count', width: 48 }],
+      yAxis: [{ label: "Trades count", width: 48 }],
       margin: 0,
       series: [
         {
           ...DEFAULT_BAR_CHART_PROPS.series,
-          id: 'WON_TRADES',
+          id: "WON_TRADES",
           data: chartData.map((d) => d.win.length),
-          label: 'Won trades',
+          label: "Won trades",
           color: theme.palette.success.main,
         },
         {
           ...DEFAULT_BAR_CHART_PROPS.series,
-          id: 'LOST_TRADES',
+          id: "LOST_TRADES",
           data: chartData.map((d) => d.loss.length),
-          label: 'Lost trades',
+          label: "Lost trades",
           color: theme.palette.error.main,
         },
       ],
-      sx: [{ [`& .${barClasses.series}`]: { cursor: 'pointer' } }],
+      sx: [{ [`& .${barClasses.series}`]: { cursor: "pointer" } }],
       // slots: { tooltip: TradeDurationsTooltip },
       // slotProps: { tooltip: { chartData } },
     } as BarChartProps;

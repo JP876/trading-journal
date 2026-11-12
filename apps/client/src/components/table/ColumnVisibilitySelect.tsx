@@ -51,7 +51,7 @@ const ColumnVisibilitySelect = ({ anAtom, options, width, store }: TColumnVisibi
       onChange={handleChange}
       multiple
       options={selectOptions}
-      formControlProps={{ sx: { width: width || "15rem" } }}
+      formControlProps={{ sx: { width: width || "clamp(10rem, 20vw, 15rem)" } }}
     />
   );
 };

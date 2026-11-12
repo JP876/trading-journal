@@ -1,31 +1,17 @@
-import { createStore, Provider, type Store } from "jotai";
+import { createStore, Provider, type Store, type WritableAtom } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 import { createContext, useMemo } from "react";
 
-import { tableFiltersAtom, tablePaginationAtom, type TTableFilters } from "./atoms";
-
 type TTableProviderProps = {
   children: React.ReactNode;
-  pageSize?: number;
-  pageIndex?: number;
-  filters?: TTableFilters;
+  atomValues: Iterable<readonly [WritableAtom<unknown, [any], unknown>, unknown]>;
 };
 
-export const TableStoreContext = createContext<Store | null>(null);
+export const TableStoreContext = createContext<Store | undefined>(undefined);
 
-const TableProvider = ({ children, pageIndex, pageSize, filters }: TTableProviderProps) => {
+const TableProvider = ({ children, atomValues }: TTableProviderProps) => {
   const store = useMemo(() => createStore(), []);
-
-  const initialValues = useMemo(() => {
-    const values = new Map();
-
-    if (pageIndex || pageSize) values.set(tablePaginationAtom, { pageIndex: pageIndex ?? 0, pageSize: pageSize || 20 });
-    if (filters) values.set(tableFiltersAtom, { ...filters });
-
-    return values;
-  }, [pageIndex, pageSize, filters]);
-
-  useHydrateAtoms(initialValues, { store });
+  useHydrateAtoms(new Map(atomValues), { store });
 
   return (
     <TableStoreContext value={store}>

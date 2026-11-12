@@ -47,7 +47,7 @@ function SelectInput<TValue>({
         {...inputProps}
         slotProps={{
           ...inputProps?.slotProps,
-          input: { id: `${label}-form-select`, ...inputProps?.slotProps?.input },
+          input: { id: `${label}-select`, ...inputProps?.slotProps?.input },
         }}
       >
         {options.map(({ value, label, menuItemProps, renderSubheader }) => {

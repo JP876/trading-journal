@@ -1,6 +1,6 @@
-import { atom } from 'jotai';
+import { atom } from "jotai";
 
-type TDzStatusOptions = 'isDragging';
+type TDzStatusOptions = "isDragging";
 type TDzStatus = { [key in TDzStatusOptions]: boolean };
 
 export type TDzFile = {
@@ -37,10 +37,3 @@ export const dzUpateStatusAtom = atom(null, (get, set, value: TDzStatus) => {
 
 export const dzContianerElAtom = atom<HTMLElement | null>(null);
 export const dzInputElAtom = atom<HTMLElement | null>(null);
-
-export const clearDropzoneStore = atom(null, (_, set) => {
-  set(dzFilesAtom, null);
-  set(dzStatusAtom, INITIAL_STATUS);
-  set(dzContianerElAtom, null);
-  set(dzInputElAtom, null);
-});

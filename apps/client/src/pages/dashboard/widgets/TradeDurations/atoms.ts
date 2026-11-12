@@ -1,19 +1,15 @@
-import { atom, createStore } from 'jotai';
+import { atom, createStore } from "jotai";
 
 export const periodsAtom = atom<number[] | null>(null);
 export const periodsHistoryAtom = atom<number[][]>([]);
-export const periodsCountAtom = atom<string>('10');
+export const periodsCountAtom = atom<string>("10");
 
 export const tradeDurationsChartStore = createStore();
-
-tradeDurationsChartStore.set(periodsAtom, null);
-tradeDurationsChartStore.set(periodsCountAtom, '10');
-tradeDurationsChartStore.set(periodsHistoryAtom, []);
 
 export const resetStoreAtom = atom(null, (_, set) => {
   set(periodsAtom, null);
   set(periodsHistoryAtom, []);
-  set(periodsCountAtom, '10');
+  set(periodsCountAtom, "10");
 });
 
 export const updatePeriodsAtom = atom(null, (get, set, value: number[]) => {

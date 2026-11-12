@@ -1,21 +1,17 @@
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import { type SelectChangeEvent } from "@mui/material/Select";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useId } from "react";
+import { useMemo } from "react";
 
 import { editTradingSession, getTradingSessions } from "../../../api/tradingSessions";
+import SelectInput, { type TSelectInputOption } from "../../../components/inputs/SelectInput";
 import { QueryKey } from "../../../enums";
 import useSnackbar from "../../../hooks/useSnackbar";
 
 export type TTradingSessionSelectProps = {
-  onSuccess?: () => void;
+  onSettled?: () => void;
 };
 
-const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
-  const labelId = useId();
+const TradingSessionSelect = ({ onSettled }: TTradingSessionSelectProps) => {
   const queryClient = useQueryClient();
 
   const { openSnackbar } = useSnackbar();
@@ -27,14 +23,21 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
     staleTime: Infinity,
   });
 
+  const value = (data?.results || []).find((el) => el?.isMain)?.id.toString() || "";
+
+  const options = useMemo<TSelectInputOption[]>(() => {
+    if (!data?.results) return [];
+    return data.results.map((el) => ({ value: el.id, label: el.title }));
+  }, [data?.results]);
+
   const mutation = useMutation({
     mutationFn: (id: number) => editTradingSession(id, { isMain: true }),
-    onSuccess: async () => {
+    onSettled: async () => {
       openSnackbar({ severity: "success", message: "The trading session was processed successfully." });
-      if (onSuccess) onSuccess();
-      await Promise.all([
-        queryClient.refetchQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
-        queryClient.refetchQueries({ queryKey: [QueryKey.TRADES] }),
+      if (onSettled) onSettled();
+      return await Promise.all([
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADING_SESSIONS] }),
+        queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
       ]);
     },
     onError: () => {
@@ -47,29 +50,14 @@ const TradingSessionSelect = ({ onSuccess }: TTradingSessionSelectProps) => {
   };
 
   return (
-    <Box sx={{ minWidth: "15rem" }}>
-      <FormControl size="small" fullWidth>
-        <InputLabel htmlFor="trading-session-select" id={labelId}>
-          Main trading session
-        </InputLabel>
-        <Select
-          labelId={labelId}
-          slotProps={{
-            input: { id: "trading-session-select" },
-          }}
-          value={(data?.results || []).find((el) => el?.isMain)?.id.toString() || ""}
-          label="Main trading session"
-          onChange={handleChange}
-          disabled={!Array.isArray(data?.results) || data?.results?.length === 0}
-        >
-          {(data?.results || []).map((el) => (
-            <MenuItem key={el?.id} value={el.id}>
-              {el?.title}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </Box>
+    <SelectInput
+      options={options}
+      label="Main trading session"
+      value={value}
+      onChange={handleChange}
+      disabled={!Array.isArray(data?.results) || data?.results?.length === 0}
+      formControlProps={{ sx: { width: "clamp(10rem, 20vw, 15rem)" } }}
+    />
   );
 };
 

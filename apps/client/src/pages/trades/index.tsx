@@ -13,7 +13,7 @@ import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
-import { getDefaultStore, useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { lazy, Suspense } from "react";
 
 import type { TSelectInputOption } from "../../components/inputs/SelectInput";
@@ -22,6 +22,7 @@ import { getTrades } from "../../api/trades";
 import { userAtom } from "../../atoms";
 import DialogMain from "../../components/DialogMain";
 import MenuActions from "../../components/MenuActions";
+import { tableFiltersAtom } from "../../components/table/atoms";
 import ColumnVisibilitySelect from "../../components/table/ColumnVisibilitySelect";
 import AutocompleteFilter from "../../components/table/filters/AutocompleteFilter";
 import DateFilter from "../../components/table/filters/DateFilter";
@@ -89,7 +90,7 @@ const TradesModalList = () => {
 const COLLAPSE_TIMEOUT = 200;
 
 const TradesFiltersContainer = ({ children }: { children: React.ReactNode }) => {
-  const tradesFilters = useAtomValue(tradesFiltersAtom, { store: getDefaultStore() });
+  const tradesFilters = useAtomValue(tradesFiltersAtom);
 
   return (
     <Collapse in={tradesFilters} timeout={COLLAPSE_TIMEOUT}>
@@ -136,7 +137,7 @@ const TradesFilters = () => {
 };
 
 const TradesFiltersButton = () => {
-  const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom, { store: getDefaultStore() });
+  const [tradesFilters, setTradesFilters] = useAtom(tradesFiltersAtom);
   const [clearFilters] = useClearFilters({ wait: COLLAPSE_TIMEOUT + 20 });
 
   const handleClick = () => {
@@ -259,7 +260,7 @@ const TradesPage = () => {
   const user = useAtomValue(userAtom);
 
   return (
-    <TableProvider filters={initialFilters}>
+    <TableProvider atomValues={[[tableFiltersAtom, initialFilters]]}>
       <Stack
         sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap" }}
       >

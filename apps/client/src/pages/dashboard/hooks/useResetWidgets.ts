@@ -1,7 +1,7 @@
-import { useSetAtom } from 'jotai';
-import { useCallback } from 'react';
+import { useSetAtom } from "jotai";
+import { useCallback } from "react";
 
-import { resetStoreAtom, tradeDurationsChartStore } from '../widgets/TradeDurations/atoms';
+import { resetStoreAtom, tradeDurationsChartStore } from "../widgets/TradeDurations/atoms";
 
 const useResetWidgets = () => {
   const resetTradeDurations = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
