@@ -1,9 +1,12 @@
-import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { getDefaultStore } from 'jotai';
+import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import { getDefaultStore } from "jotai";
 
-import { retryAtom } from '../atoms';
-import { createAuthEvent } from './authEvent';
+import type { TAuthDetail } from "../types";
+
+import { retryAtom } from "../atoms";
+import { AUTH_EVENT_TYPE } from "../consts";
+import { dispatchCustomEvent } from "./utils";
 
 export const RETRY_OPTIONS = {
   count: 2,
@@ -14,7 +17,12 @@ const onError = (error: Error) => {
   getDefaultStore().set(retryAtom, { isRetrying: false, count: 0, error });
 
   if (error instanceof AxiosError && error.status === 401) {
-    document.dispatchEvent(createAuthEvent());
+    dispatchCustomEvent<TAuthDetail>(AUTH_EVENT_TYPE, {
+      detail: {
+        isAuthenticated: false,
+        prevLocation: undefined,
+      },
+    });
   }
 };
 

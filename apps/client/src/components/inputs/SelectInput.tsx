@@ -35,7 +35,7 @@ function SelectInput<TValue>({
   const labelId = useId();
 
   return (
-    <FormControl fullWidth size="small" {...(formControlProps || {})}>
+    <FormControl size="small" {...(formControlProps || {})}>
       {label ? (
         <InputLabel {...inputLabelProps} htmlFor={`${label}-form-select`} id={labelId}>
           {label}

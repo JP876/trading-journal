@@ -1,13 +1,12 @@
-import { useSetAtom } from "jotai";
 import { useCallback } from "react";
 
-import { resetStoreAtom, tradeDurationsChartStore } from "../widgets/TradeDurations/atoms";
+import { dispatchCustomEvent } from "../../../lib/utils";
+
+export const RESET_WIDGETS_EVENT = "resetWidgetsEvent";
 
 const useResetWidgets = () => {
-  const resetTradeDurations = useSetAtom(resetStoreAtom, { store: tradeDurationsChartStore });
-
   const reset = useCallback(() => {
-    resetTradeDurations();
+    dispatchCustomEvent(RESET_WIDGETS_EVENT);
   }, []);
 
   return [reset];

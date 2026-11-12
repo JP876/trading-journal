@@ -1,11 +1,11 @@
-import { z } from 'zod';
 import {
   type ControllerFieldState,
   type ControllerRenderProps,
   type FieldPath,
   type FieldValues,
   type UseFormStateReturn,
-} from 'react-hook-form';
+} from "react-hook-form";
+import { z } from "zod";
 
 export type APIError = { error: string; message: string; statusCode: number };
 
@@ -60,7 +60,13 @@ export type PaginationInfo<T = any> = {
   totalPages?: number;
 };
 
+export type TBaseCurrencyRates = "EUR" | "USD";
 export type TCurrentRate = {
   currency: string;
   rate: number;
+};
+
+export type TAuthDetail = {
+  isAuthenticated: boolean;
+  prevLocation?: string;
 };

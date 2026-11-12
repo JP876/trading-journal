@@ -1,6 +1,6 @@
-import { getDefaultStore } from 'jotai';
+import { getDefaultStore } from "jotai";
 
-import { userAtom, userVarietyAtom } from '../atoms';
+import { userAtom, userVarietyAtom } from "../atoms";
 
 export const getRandomInt = (min: number = 0, max: number = 1, roundTo?: number) => {
   let num = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -29,12 +29,12 @@ export const mapRange = (value: number, inMin: number, inMax: number, outMin: nu
 };
 
 export function decreasingLinearRange(start: number, end: number, count: number): number[] {
-  if (start < end) throw new Error('start must be greater than or equal to end');
-  if (!Number.isInteger(count) || count < 1) throw new Error('count must be a positive integer');
+  if (start < end) throw new Error("start must be greater than or equal to end");
+  if (!Number.isInteger(count) || count < 1) throw new Error("count must be a positive integer");
 
   if (count === 1) {
     if (start !== end) {
-      throw new Error('count must be at least 2 when start and end differ');
+      throw new Error("count must be at least 2 when start and end differ");
     }
     return [start];
   }
@@ -50,9 +50,9 @@ export const decreasingExponentialRange = (
   roundTo: number = 30,
   limit: number = 10,
 ) => {
-  if (max <= 0 || min <= 0) throw new Error('max and min must be positive');
-  if (max < min) throw new Error('max must be greater than or equal to min');
-  if (step <= 0) throw new Error('step must be greater than 0');
+  if (max <= 0 || min <= 0) throw new Error("max and min must be positive");
+  if (max < min) throw new Error("max must be greater than or equal to min");
+  if (step <= 0) throw new Error("step must be greater than 0");
 
   const roundNum = (v: number) => Math.round(v / roundTo) * roundTo;
   const values = [max];
@@ -77,8 +77,8 @@ export const decreasingExponentialRange = (
 };
 
 export const increasingRange = (min: number, max: number, step: number): number[] => {
-  if (min > max) throw new Error('min must be less than or equal to max');
-  if (step <= 0) throw new Error('step must be greater than 0');
+  if (min > max) throw new Error("min must be less than or equal to max");
+  if (step <= 0) throw new Error("step must be greater than 0");
 
   const values: number[] = [];
 
@@ -93,7 +93,7 @@ export const increasingRange = (min: number, max: number, step: number): number[
   return values;
 };
 
-export const isGuest = () => getDefaultStore().get(userVarietyAtom) === 'GUEST';
+export const isGuest = () => getDefaultStore().get(userVarietyAtom) === "GUEST";
 export const getCurrentUser = () => getDefaultStore().get(userAtom);
 
 // Fisher-Yates (Durstenfeld) algorithm
@@ -121,3 +121,14 @@ export const pipe = <T extends any[], R>(fn1: (...args: T) => R, ...fns: Array<(
 export const compose = <R>(fn1: (a: R) => R, ...fns: Array<(a: R) => R>) => {
   return fns.reduce((prevFn, nextFn) => (value) => prevFn(nextFn(value)), fn1);
 };
+// --------------------------------------------------------------------------
+
+export function dispatchCustomEvent<T = unknown>(
+  type: string,
+  eventInitDict?: CustomEventInit<T>,
+  element: EventTarget = document,
+) {
+  const event = new CustomEvent<T>(type, eventInitDict);
+  element.dispatchEvent(event);
+  return event;
+}

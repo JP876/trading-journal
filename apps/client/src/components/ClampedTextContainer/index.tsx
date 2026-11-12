@@ -1,8 +1,8 @@
-import { memo, useCallback, useEffect, useState } from 'react';
-import Tooltip, { type TooltipProps } from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
+import Tooltip, { type TooltipProps } from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import { memo, useCallback, useEffect, useState } from "react";
 
-import { ClampedText, type ClampedTextProps } from '../styledComps';
+import { ClampedText, type ClampedTextProps } from "../styledComps";
 
 type ClampedTextContainerProps = { tooltipProps?: TooltipProps } & ClampedTextProps;
 
@@ -16,7 +16,7 @@ const ClampedTextContainer = ({ tooltipProps, ...rest }: ClampedTextContainerPro
   }, []);
 
   const renderTitle = useCallback((show: boolean, children: React.ReactNode) => {
-    if (!show) return '';
+    if (!show) return "";
     return (
       <Typography sx={{ m: 0.4 }} variant="body2">
         {children}

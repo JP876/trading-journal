@@ -3,13 +3,16 @@ import { getDefaultStore, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 
+import type { TAuthDetail } from "../types";
+
 import { refreshToken } from "../api/auth";
 import { getPairs } from "../api/pairs";
 import { pairsAtom } from "../atoms";
+import { AUTH_EVENT_TYPE } from "../consts";
 import { QueryKey } from "../enums";
+import useEventListeners from "../hooks/useEventListeners";
 import useLogout from "../hooks/useLogout";
 import useSnackbar from "../hooks/useSnackbar";
-import { AUTH_EVENT_TYPE, type authDetailType } from "../lib/authEvent";
 import { isGuest } from "../lib/utils";
 
 const REFETCH_INTERVAL = 9 * 60 * 1_000;
@@ -30,6 +33,18 @@ const ProtectedRoutes = () => {
 
   const setPairs = useSetAtom(pairsAtom, { store: getDefaultStore() });
 
+  const handleEvent = (event: CustomEventInit<TAuthDetail>) => {
+    if (event.detail && !event.detail.isAuthenticated) {
+      setTimeout(() => {
+        logout(event.detail?.prevLocation);
+        openSnackbar({
+          severity: "error",
+          message: "Looks like you're not logged in. Please sign in.",
+        });
+      }, 0);
+    }
+  };
+
   const { data, isFetched } = useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
   useQuery({ ...refreshTokenQueryOptions, enabled: enabled });
 
@@ -40,33 +55,12 @@ const ProtectedRoutes = () => {
   }, [isFetched, data]);
 
   useEffect(() => {
-    (async () => {
-      if (!isGuest()) {
-        setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
-      }
-    })();
+    if (!isGuest()) {
+      setTimeout(() => setEnabled(true), REFETCH_INTERVAL);
+    }
   }, []);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const handleEvent = (event: CustomEventInit<authDetailType>) => {
-      if (event.detail && !event.detail.isAuthenticated) {
-        setTimeout(() => {
-          logout(event.detail?.prevLocation);
-          openSnackbar({
-            severity: "error",
-            message: "Looks like you're not logged in. Please sign in.",
-          });
-        }, 0);
-      }
-    };
-
-    document.addEventListener(AUTH_EVENT_TYPE, handleEvent, { signal: controller.signal });
-    return () => {
-      controller.abort();
-    };
-  }, [logout]);
+  useEventListeners([[AUTH_EVENT_TYPE, handleEvent]]);
 
   return <Outlet />;
 };
