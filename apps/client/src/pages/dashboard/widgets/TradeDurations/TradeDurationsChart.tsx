@@ -2,7 +2,7 @@ import type { AxisValueFormatterContext, ChartsAxisData } from "@mui/x-charts";
 
 import { useTheme } from "@mui/material";
 import { BarChart, barClasses, type BarChartProps } from "@mui/x-charts/BarChart";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import type { TDurationAnalysis } from "../../utils/types";
@@ -48,13 +48,13 @@ const TradeDurationsChart = () => {
   const periodsCount = useAtomValue(periodsCountAtom);
   const updatePeriods = useSetAtom(updatePeriodsAtom);
 
-  const tradesQuery = useQuery({
+  const tradesQuery = useSuspenseQuery({
     queryKey: [QueryKey.TRADES, "closeDate", "desc"],
     queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
   });
 
   const chartData = (() => {
-    if (!tradesQuery.data?.results || tradesQuery.data.results.length === 0) return null;
+    if (tradesQuery.data.results.length === 0) return null;
 
     let shortestDuration = period?.[0];
     let longestDuration = period?.[1];
@@ -130,7 +130,7 @@ const TradeDurationsChart = () => {
   };
 
   return (
-    <LoadingContainer isLoading={tradesQuery.isPending}>
+    <LoadingContainer isLoading={tradesQuery.isFetching}>
       <BarChart onAxisClick={handleAxisClick} borderRadius={2} {...(chartProps || { series: [] })} />
     </LoadingContainer>
   );

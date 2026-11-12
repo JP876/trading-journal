@@ -9,6 +9,8 @@ import { useId } from "react";
 
 import type { SelectOption } from "../../types";
 
+import useRenderSelectValue from "./hooks/useRenderSelectValue";
+
 export type TSelectInputOption<T = string | number> = SelectOption<T> & {
   menuItemProps?: MenuItemProps | ((options: { value: any }) => MenuItemProps);
   chipProps?: ChipProps;
@@ -21,18 +23,28 @@ export type TSelectInputProps<TValue> = {
   formControlProps?: FormControlProps;
   formHelperTextProps?: FormHelperTextProps;
   inputLabelProps?: InputLabelProps;
+  maxTags?: number;
+  renderChips?: boolean;
 } & SelectProps<TValue>;
 
-function SelectInput<TValue>({
+function SelectInput<TValue extends string | number | string[] | number[]>({
   label,
   helperText,
   options,
   formControlProps,
   formHelperTextProps,
   inputLabelProps,
+  maxTags,
+  renderChips,
   ...inputProps
 }: TSelectInputProps<TValue>) {
   const labelId = useId();
+
+  const [handleRenderValue] = useRenderSelectValue<TValue>(options, {
+    maxTags,
+    multiple: inputProps?.multiple,
+    renderChips,
+  });
 
   return (
     <FormControl size="small" {...(formControlProps || {})}>
@@ -44,6 +56,7 @@ function SelectInput<TValue>({
       <Select
         labelId={labelId}
         label={label}
+        renderValue={handleRenderValue}
         {...inputProps}
         slotProps={{
           ...inputProps?.slotProps,

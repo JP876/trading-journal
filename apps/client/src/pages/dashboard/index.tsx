@@ -1,11 +1,14 @@
+import ErrorIcon from "@mui/icons-material/Error";
+import InfoIcon from "@mui/icons-material/Info";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useNavigate } from "react-router";
 
 import { getTrades } from "../../api/trades";
@@ -50,6 +53,30 @@ const WidgetsContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
+const DashboardMessageContainer = styled(Stack)(({ theme }) => ({
+  flexDirection: "column",
+  alignItems: "center",
+  textAlign: "center",
+  gap: theme.spacing(2),
+  position: "fixed",
+  zIndex: theme.zIndex.modal - 1,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: theme.spacing(2),
+  maxWidth: "min(28rem, 50vw)",
+  backgroundColor: theme.palette.background.paper,
+
+  "& svg": {
+    width: "2rem",
+    height: "2rem",
+  },
+
+  "& p": {
+    textWrap: "pretty",
+  },
+}));
+
 const DashboardHeader = () => {
   const [handleReset] = useResetWidgets();
 
@@ -71,22 +98,8 @@ const TradesNotFound = () => {
   };
 
   return (
-    <Stack
-      sx={[
-        (theme) => ({
-          flexDirection: "column",
-          gap: theme.spacing(2),
-          position: "fixed",
-          zIndex: theme.zIndex.modal - 1,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          padding: theme.spacing(2),
-          maxWidth: "min(32rem, 50vw)",
-          backgroundColor: theme.palette.background.paper,
-        }),
-      ]}
-    >
+    <DashboardMessageContainer>
+      <InfoIcon color="info" />
       <Typography variant="body1">
         You haven't added any trades yet, so your dashboard is empty. Add trades whenever you're ready.
       </Typography>
@@ -95,7 +108,7 @@ const TradesNotFound = () => {
           Go to Trades page
         </Button>
       </Stack>
-    </Stack>
+    </DashboardMessageContainer>
   );
 };
 
@@ -111,21 +124,13 @@ const LoadingTrades = () => {
   );
 };
 
-type TWidgetFallbackProps = {
-  gridArea: string;
-};
-
-const WidgetFallback = ({ gridArea }: TWidgetFallbackProps) => (
-  <Skeleton variant="rectangular" sx={{ gridArea, height: "100%", width: "100%" }}></Skeleton>
-);
-
 const DashboardContent = () => {
-  const tradesQuery = useQuery({
+  const tradesQuery = useSuspenseQuery({
     queryKey: [QueryKey.TRADES, "closeDate", "desc"],
     queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
   });
 
-  if (tradesQuery.isPending || tradesQuery.isLoading) return <LoadingTrades />;
+  if (tradesQuery.isLoading) return <LoadingTrades />;
   if (!tradesQuery.isFetched) return null;
 
   let hasTrades = Array.isArray(tradesQuery.data?.results) && tradesQuery.data.results.length > 0;
@@ -140,31 +145,37 @@ const DashboardContent = () => {
 
   return (
     <WidgetsContainer>
-      <Suspense fallback={<WidgetFallback gridArea="stats" />}>
-        <Statistics paperProps={{ sx: { gridArea: "stats", overflowY: "auto" } }} />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback gridArea="performance" />}>
-        <Performance paperProps={{ sx: { gridArea: "performance" } }} />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback gridArea="profitable" />}>
-        <ProfitablePairs paperProps={{ sx: { gridArea: "profitable" } }} />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback gridArea="consecutive" />}>
-        <ConsecutiveTrades paperProps={{ sx: { gridArea: "consecutive" } }} />
-      </Suspense>
-      <Suspense fallback={<WidgetFallback gridArea="durations" />}>
-        <TradeDurations paperProps={{ sx: { gridArea: "durations" } }} />
-      </Suspense>
+      <Statistics paperProps={{ sx: { gridArea: "stats", overflowY: "auto" } }} />
+      <Performance paperProps={{ sx: { gridArea: "performance" } }} />
+      <ProfitablePairs paperProps={{ sx: { gridArea: "profitable" } }} />
+      <ConsecutiveTrades paperProps={{ sx: { gridArea: "consecutive" } }} />
+      <TradeDurations paperProps={{ sx: { gridArea: "durations" } }} />
     </WidgetsContainer>
+  );
+};
+
+const DashboardFallback = () => {
+  return (
+    <>
+      <LoadingTrades />
+      <DashboardMessageContainer>
+        <ErrorIcon color="error" />
+        <Typography variant="body1">
+          An error occurred while loading the dashboard. Please refresh to try again.
+        </Typography>
+      </DashboardMessageContainer>
+    </>
   );
 };
 
 const DashboardMain = () => {
   return (
-    <Box>
+    <ErrorBoundary fallbackRender={DashboardFallback}>
       <DashboardHeader />
-      <DashboardContent />
-    </Box>
+      <Suspense fallback={<LoadingTrades />}>
+        <DashboardContent />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 

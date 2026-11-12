@@ -101,6 +101,7 @@ const IntroForm = () => {
             options={pairsOptions}
             label="Pairs"
             renderChips
+            maxTags={6}
             inputProps={{ multiple: true, disabled: !pairsOptions.length }}
           />
         )}

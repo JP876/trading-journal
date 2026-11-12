@@ -50,6 +50,7 @@ const ColumnVisibilitySelect = ({ anAtom, options, width, store }: TColumnVisibi
       value={value}
       onChange={handleChange}
       multiple
+      renderChips
       options={selectOptions}
       formControlProps={{ sx: { width: width || "clamp(10rem, 20vw, 15rem)" } }}
     />
