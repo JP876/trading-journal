@@ -2,37 +2,13 @@ import AddIcon from "@mui/icons-material/Add";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import { lazy, Suspense } from "react";
 
-import DialogMain from "../../../../components/DialogMain";
 import { tablePaginationAtom } from "../../../../components/table/atoms";
 import TextFilter from "../../../../components/table/filters/TextFilter";
 import TableProvider from "../../../../components/table/TableProvider";
 import useModal from "../../../../hooks/useModal";
 import { TradesPageModal } from "../../enums";
 import TagsTableMain from "./TagsTable";
-
-const EditTagForm = lazy(() => import("./forms/EditForm"));
-const DeleteTag = lazy(() => import("./DeleteTag"));
-
-const TagModalList = () => {
-  return (
-    <Suspense>
-      <DialogMain size="xs" id={TradesPageModal.EDIT_TAG} title="Edit tag">
-        <EditTagForm />
-      </DialogMain>
-
-      <DialogMain
-        id={TradesPageModal.DELETE_TAG}
-        title="Are you absolutely sure?"
-        hideCloseBtn
-        dialogContentProps={{ dividers: false }}
-      >
-        <DeleteTag />
-      </DialogMain>
-    </Suspense>
-  );
-};
 
 const TagsMain = () => {
   const { openModal } = useModal();
@@ -49,7 +25,7 @@ const TagsMain = () => {
               size="small"
               variant="contained"
               startIcon={<AddIcon fontSize="small" />}
-              onClick={() => openModal(TradesPageModal.ADD_TAG)}
+              onClick={() => openModal(TradesPageModal.ADD_TAG, { title: "Add tag", size: "xs" })}
             >
               Add tag
             </Button>
@@ -57,8 +33,6 @@ const TagsMain = () => {
         </Stack>
         <TagsTableMain />
       </Stack>
-
-      <TagModalList />
     </TableProvider>
   );
 };

@@ -1,13 +1,14 @@
-import { format } from 'date-fns';
-import { getDefaultStore } from 'jotai';
+import { format } from "date-fns";
+import { getDefaultStore } from "jotai";
 
-import { db } from '../..';
-import { openModalAtom, snackbarAtom } from '../../../../atoms';
-import { TradesPageModal } from '../../../../pages/trades/enums';
-import type { UserDB } from '../../../../types/user';
-import withCatch from '../../../withCatch';
-import { addTradingSessionDB } from '../tradingSessions';
-import { createUserDB, getAllUsersDB } from '../users';
+import type { UserDB } from "../../../../types/user";
+
+import { db } from "../..";
+import { openModalAtom, snackbarAtom } from "../../../../atoms";
+import { TradesPageModal } from "../../../../pages/trades/enums";
+import withCatch from "../../../withCatch";
+import { addTradingSessionDB } from "../tradingSessions";
+import { createUserDB, getAllUsersDB } from "../users";
 
 export const loginUserDB = async (userId?: number): Promise<[Error, null] | [null, UserDB]> => {
   const [usersError, users] = await withCatch(getAllUsersDB());
@@ -21,13 +22,13 @@ export const loginUserDB = async (userId?: number): Promise<[Error, null] | [nul
   }
 
   if (user?.id) {
-    const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true, variety: 'GUEST' }));
+    const [error] = await withCatch(db.users.update(user.id, { isLoggedIn: true, variety: "GUEST" }));
     if (error) {
       return [error, null];
     }
 
     getDefaultStore().set(snackbarAtom, {
-      severity: 'success',
+      severity: "success",
       message: `Welcome! You're in guest mode — feel free to look around.`,
     });
     return [null, user];
@@ -38,13 +39,13 @@ export const loginUserDB = async (userId?: number): Promise<[Error, null] | [nul
 
   const [sessionError] = await withCatch(
     addTradingSessionDB(newUser.id, {
-      title: `Initial session ${format(new Date(), 'MM/yy')}`,
+      title: `Initial session ${format(new Date(), "MM/yy")}`,
       isMain: true,
       accountSize: 50_000,
-    })
+    }),
   );
   if (sessionError) return [sessionError, null];
 
-  getDefaultStore().set(openModalAtom, { id: TradesPageModal.INTRO });
+  getDefaultStore().set(openModalAtom, { id: TradesPageModal.INTRO, title: "You're exploring as a guest" });
   return [null, newUser];
 };

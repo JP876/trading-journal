@@ -1,24 +1,30 @@
-import { getDefaultStore, useSetAtom } from 'jotai';
-import { useCallback, useMemo } from 'react';
+import { getDefaultStore, useSetAtom } from "jotai";
+import { startTransition, useCallback, useMemo } from "react";
 
-import { closeModalAtom, openModalAtom } from '../atoms';
+import type { ModalInfo } from "../types";
+
+import { closeModalAtom, openModalAtom } from "../atoms";
 
 const useModal = () => {
   const open = useSetAtom(openModalAtom, { store: getDefaultStore() });
   const close = useSetAtom(closeModalAtom, { store: getDefaultStore() });
 
-  const openModal = useCallback((id: string, data?: any) => {
+  const openModal = useCallback((id: string, data?: ModalInfo) => {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
-    open({ id, data });
+    startTransition(() => {
+      open({ id, ...data });
+    });
   }, []);
 
   const closeModal = useCallback((id: string) => {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
-    close({ id });
+    startTransition(() => {
+      close({ id });
+    });
   }, []);
 
   return useMemo(() => ({ openModal, closeModal }), [closeModal, openModal]);

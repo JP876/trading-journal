@@ -1,18 +1,19 @@
-import { atom } from 'jotai';
-import { atomWithStorage } from 'jotai/utils';
+import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
-import type { ModalAtom, TRetryAtomValue } from '../types';
-import type { Pair } from '../types/pair';
-import type { SnackbarAtom } from '../types/snackbar';
-import type { User, UserDB } from '../types/user';
+import type { ModalAtom, ModalInfo, TRetryAtomValue } from "../types";
+import type { Pair } from "../types/pair";
+import type { SnackbarAtom } from "../types/snackbar";
+import type { User, UserDB } from "../types/user";
 
 export const pairsAtom = atom<Pair[] | null>(null);
 
 export const modalAtom = atom<ModalAtom>({});
 
-export const openModalAtom = atom(null, (get, set, value: { id: string; data?: any }) => {
-  let prevData = get(modalAtom);
-  set(modalAtom, { ...(prevData || {}), [value.id]: { data: value.data } });
+export const openModalAtom = atom(null, (get, set, value: { id: string; data?: any } & ModalInfo) => {
+  const { id, data, ...rest } = value;
+  const prevData = get(modalAtom);
+  set(modalAtom, { ...(prevData || {}), [id]: { data, ...rest } });
 });
 
 export const closeModalAtom = atom(null, (get, set, value: { id: string }) => {
@@ -21,7 +22,7 @@ export const closeModalAtom = atom(null, (get, set, value: { id: string }) => {
   set(modalAtom, { ...prevData });
 });
 
-export const navigationDrawerAtom = atomWithStorage<{ open: boolean } | null>('navigationDrawer', null);
+export const navigationDrawerAtom = atomWithStorage<{ open: boolean } | null>("navigationDrawer", null);
 
 export const retryAtom = atom<TRetryAtomValue>({
   isRetrying: false,
@@ -29,9 +30,9 @@ export const retryAtom = atom<TRetryAtomValue>({
   error: null,
 });
 
-export const snackbarAtom = atom<SnackbarAtom>({ open: false, message: '' });
+export const snackbarAtom = atom<SnackbarAtom>({ open: false, message: "" });
 
-export const openSnackbarAtom = atom(null, (get, set, value: Omit<SnackbarAtom, 'open'>) => {
+export const openSnackbarAtom = atom(null, (get, set, value: Omit<SnackbarAtom, "open">) => {
   let prevValue = get(snackbarAtom);
   set(snackbarAtom, { ...prevValue, autoHideDuration: 5_000, ...value, open: true });
 });

@@ -1,18 +1,18 @@
-import ClearIcon from '@mui/icons-material/Clear';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import ClearIcon from "@mui/icons-material/Clear";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import type { Trade } from '../../../types/trade';
+import type { Trade } from "../../../types/trade";
 
-import { deleteTrade } from '../../../api/trades';
-import { QueryKey } from '../../../enums';
-import useModal from '../../../hooks/useModal';
-import useModalData from '../../../hooks/useModalData';
-import useSnackbar from '../../../hooks/useSnackbar';
-import { TradesPageModal } from '../enums';
+import { deleteTrade } from "../../../api/trades";
+import { QueryKey } from "../../../enums";
+import useModal from "../../../hooks/useModal";
+import useModalData from "../../../hooks/useModalData";
+import useSnackbar from "../../../hooks/useSnackbar";
+import { TradesPageModal } from "../enums";
 
 const DeleteTrade = () => {
   const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ const DeleteTrade = () => {
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES_COUNT_PER_TRADING_SESSION] }),
         queryClient.invalidateQueries({ queryKey: [QueryKey.STATS] }),
       ]);
-      openSnackbar({ severity: 'success', message: 'Your trade have been deleted.' });
+      openSnackbar({ severity: "success", message: "Your trade have been deleted." });
       closeModal(TradesPageModal.DELETE_TRADE);
     },
   });
@@ -39,14 +39,14 @@ const DeleteTrade = () => {
     if (trade?.id) {
       mutation.mutate(trade.id);
     } else {
-      console.warn('Trade ID not found');
+      console.warn("Trade ID not found");
     }
   };
 
   return (
     <Stack sx={{ mt: -2, gap: 2 }}>
       <Typography>This action cannot be undone. This will permanently delete trade.</Typography>
-      <Stack sx={{ direction: 'row', alignItems: 'center', gap: 2, justifyContent: 'flex-end' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2, justifyContent: "flex-end" }}>
         <Button
           disabled={mutation.isPending}
           color="inherit"

@@ -7,11 +7,14 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 
+import type { TDialogMainProps } from "../components/DialogMain";
+
 export type APIError = { error: string; message: string; statusCode: number };
 
 export type ModalInfo<T = {}> = {
   data?: T;
-};
+  errorMessage?: string;
+} & Partial<Omit<TDialogMainProps, "children" | "id">>;
 export type ModalAtom = Record<string, ModalInfo>;
 
 export type TRetryAtomValue = {

@@ -32,7 +32,7 @@ const AddTagButton = memo(() => {
 
   return (
     <Tooltip arrow disableInteractive title="Add tag">
-      <IconButton sx={{ mb: 3.2 }} onClick={() => openModal(TradesPageModal.ADD_TAG)}>
+      <IconButton sx={{ mb: 3.2 }} onClick={() => openModal(TradesPageModal.ADD_TAG, { title: "Add tag", size: "xs" })}>
         <NewLabelIcon />
       </IconButton>
     </Tooltip>

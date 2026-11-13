@@ -1,20 +1,21 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, Slide, Stack, type Breakpoint } from '@mui/material';
-import Dialog, { type DialogProps } from '@mui/material/Dialog';
-import DialogContent, { type DialogContentProps } from '@mui/material/DialogContent';
-import DialogTitle, { type DialogTitleProps } from '@mui/material/DialogTitle';
-import type { TransitionProps } from '@mui/material/transitions';
-import { atom, getDefaultStore, useAtomValue } from 'jotai';
-import { forwardRef, memo, useMemo } from 'react';
+import type { TransitionProps } from "@mui/material/transitions";
 
-import { modalAtom } from '../../atoms';
-import useModal from '../../hooks/useModal';
+import CloseIcon from "@mui/icons-material/Close";
+import { IconButton, Slide, Stack, type Breakpoint } from "@mui/material";
+import Dialog, { type DialogProps } from "@mui/material/Dialog";
+import DialogContent, { type DialogContentProps } from "@mui/material/DialogContent";
+import DialogTitle, { type DialogTitleProps } from "@mui/material/DialogTitle";
+import { atom, getDefaultStore, useAtomValue } from "jotai";
+import { forwardRef, memo, useMemo } from "react";
 
-type DialogMainPropsType = {
+import { modalAtom } from "../../atoms";
+import useModal from "../../hooks/useModal";
+
+export type TDialogMainProps = {
   id: string;
   title: string | React.ReactNode;
   children: React.ReactNode;
-  dialogProps?: Omit<DialogProps, 'open' | 'onClose'>;
+  dialogProps?: Omit<DialogProps, "open" | "onClose">;
   dialogContentProps?: DialogContentProps;
   dialogTitleProps?: DialogTitleProps;
   hideCloseBtn?: boolean;
@@ -25,7 +26,7 @@ const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
   },
-  ref: React.Ref<unknown>
+  ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -39,7 +40,7 @@ function DialogMain({
   hideCloseBtn,
   children,
   size,
-}: DialogMainPropsType) {
+}: TDialogMainProps) {
   const singleModalAtom = useMemo(() => {
     return atom((get) => get(modalAtom)?.[id]);
   }, [id]);
@@ -51,18 +52,18 @@ function DialogMain({
 
   return (
     <Dialog
-      maxWidth={size || 'sm'}
+      maxWidth={size || "sm"}
       keepMounted={false}
       closeAfterTransition={true}
       disableRestoreFocus={true}
       slots={{ transition: Transition }}
-      slotProps={{ paper: { sx: { width: '100%' } } }}
+      slotProps={{ paper: { sx: { width: "100%" } } }}
       {...dialogProps}
       open={!!modalInfo}
       disablePortal
       onClose={handleCloseModal}
     >
-      <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
         <DialogTitle {...dialogTitleProps}>{title}</DialogTitle>
         {hideCloseBtn ? null : (
           <IconButton sx={{ mr: 3 }} size="small" onClick={handleCloseModal}>

@@ -5,7 +5,7 @@ import InputLabel, { type InputLabelProps } from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem, { type MenuItemProps } from "@mui/material/MenuItem";
 import Select, { type SelectProps } from "@mui/material/Select";
-import { useId } from "react";
+import { useCallback, useId } from "react";
 
 import type { SelectOption } from "../../types";
 
@@ -40,11 +40,25 @@ function SelectInput<TValue extends string | number | string[] | number[]>({
 }: TSelectInputProps<TValue>) {
   const labelId = useId();
 
-  const [handleRenderValue] = useRenderSelectValue<TValue>(options, {
+  const [renderValue] = useRenderSelectValue<TValue>(options, {
     maxTags,
     multiple: inputProps?.multiple,
     renderChips,
   });
+
+  const renderOptions = useCallback((options: TSelectInputOption[]) => {
+    return options.map(({ value, label, menuItemProps, renderSubheader }) => {
+      const itemProps = typeof menuItemProps === "function" ? menuItemProps({ value }) : menuItemProps;
+      if (renderSubheader) {
+        return <ListSubheader key={value}>{label}</ListSubheader>;
+      }
+      return (
+        <MenuItem key={value} {...(itemProps || {})} value={value}>
+          {label}
+        </MenuItem>
+      );
+    });
+  }, []);
 
   return (
     <FormControl size="small" {...(formControlProps || {})}>
@@ -56,24 +70,14 @@ function SelectInput<TValue extends string | number | string[] | number[]>({
       <Select
         labelId={labelId}
         label={label}
-        renderValue={handleRenderValue}
+        renderValue={renderValue}
         {...inputProps}
         slotProps={{
           ...inputProps?.slotProps,
           input: { id: `${label}-select`, ...inputProps?.slotProps?.input },
         }}
       >
-        {options.map(({ value, label, menuItemProps, renderSubheader }) => {
-          const itemProps = typeof menuItemProps === "function" ? menuItemProps({ value }) : menuItemProps;
-          if (renderSubheader) {
-            return <ListSubheader key={value}>{label}</ListSubheader>;
-          }
-          return (
-            <MenuItem key={value} {...(itemProps || {})} value={value}>
-              {label}
-            </MenuItem>
-          );
-        })}
+        {inputProps?.children || renderOptions(options)}
       </Select>
       <FormHelperText {...formHelperTextProps}>{helperText}</FormHelperText>
     </FormControl>

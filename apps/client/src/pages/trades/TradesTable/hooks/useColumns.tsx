@@ -31,7 +31,7 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Edit trade"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.EDIT_TRADE, trade);
+            openModal(TradesPageModal.EDIT_TRADE, { data: trade, title: "Edit trade" });
             handleClose();
           }}
         />
@@ -39,7 +39,12 @@ const TradeActions = ({ trade }: { trade: Trade }) => {
           label="Delete trade"
           icon={<DeleteIcon color="error" fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.DELETE_TRADE, trade);
+            openModal(TradesPageModal.DELETE_TRADE, {
+              data: trade,
+              title: "Are you absolutely sure?",
+              hideCloseBtn: true,
+              dialogContentProps: { dividers: false },
+            });
             handleClose();
           }}
         />

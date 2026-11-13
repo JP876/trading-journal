@@ -1,33 +1,33 @@
-import type { ColumnDef } from '@tanstack/react-table';
+import type { ColumnDef } from "@tanstack/react-table";
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { format } from 'date-fns';
-import { useMemo } from 'react';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { format } from "date-fns";
+import { useMemo } from "react";
 
-import type { Tag } from '../../../../../types/tag';
+import type { Tag } from "../../../../../types/tag";
 
-import ClampedTextContainer from '../../../../../components/ClampedTextContainer';
-import MenuActions from '../../../../../components/MenuActions';
-import { tableMainFeatures } from '../../../../../components/table/consts';
-import useModal from '../../../../../hooks/useModal';
-import checkBrightness from '../../../../../lib/checkBrighness';
-import { TradesPageModal } from '../../../enums';
+import ClampedTextContainer from "../../../../../components/ClampedTextContainer";
+import MenuActions from "../../../../../components/MenuActions";
+import { tableMainFeatures } from "../../../../../components/table/consts";
+import useModal from "../../../../../hooks/useModal";
+import checkBrightness from "../../../../../lib/checkBrighness";
+import { TradesPageModal } from "../../../enums";
 
 const TagActions = ({ tag }: { tag: Tag }) => {
   const { openModal } = useModal();
 
   return (
-    <Stack sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
       <MenuActions>
         <MenuActions.Item
           label="Edit tag"
           icon={<EditIcon fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.EDIT_TAG, tag);
+            openModal(TradesPageModal.EDIT_TAG, { data: tag, title: "Edit tag", size: "xs" });
             handleClose();
           }}
         />
@@ -35,7 +35,12 @@ const TagActions = ({ tag }: { tag: Tag }) => {
           label="Delete tag"
           icon={<DeleteIcon color="error" fontSize="small" />}
           onClick={(_, handleClose) => {
-            openModal(TradesPageModal.DELETE_TAG, tag);
+            openModal(TradesPageModal.DELETE_TAG, {
+              data: tag,
+              title: "Are you absolutely sure?",
+              hideCloseBtn: true,
+              dialogContentProps: { dividers: false },
+            });
             handleClose();
           }}
         />
@@ -48,25 +53,25 @@ const useColumns = () => {
   return useMemo<ColumnDef<typeof tableMainFeatures, Tag>[]>(() => {
     return [
       {
-        accessorKey: 'title',
+        accessorKey: "title",
         enableSorting: false,
-        header: 'Title',
+        header: "Title",
         cell: ({ row }) => {
           const value = row.original.title;
           return <ClampedTextContainer>{value}</ClampedTextContainer>;
         },
       },
       {
-        accessorKey: 'createdAt',
+        accessorKey: "createdAt",
         enableSorting: false,
-        header: 'Created',
+        header: "Created",
         size: 80,
-        cell: ({ row }) => <Typography>{format(row.original.createdAt, 'dd/MM/yyyy')}</Typography>,
+        cell: ({ row }) => <Typography>{format(row.original.createdAt, "dd/MM/yyyy")}</Typography>,
       },
       {
-        accessorKey: 'color',
+        accessorKey: "color",
         enableSorting: false,
-        header: 'Color',
+        header: "Color",
         cell: ({ row }) => {
           const value = row.original.color;
           return (
@@ -74,8 +79,8 @@ const useColumns = () => {
               label={value}
               size="small"
               sx={(theme) => ({
-                minWidth: '10rem',
-                textAlign: 'center',
+                minWidth: "10rem",
+                textAlign: "center",
                 backgroundColor: value,
                 color: checkBrightness(value) ? theme.palette.common.white : theme.palette.common.black,
                 paddingInline: theme.spacing(1),
@@ -85,9 +90,9 @@ const useColumns = () => {
         },
       },
       {
-        accessorKey: 'actions',
+        accessorKey: "actions",
         enableSorting: false,
-        header: '',
+        header: "",
         size: 80,
         cell: ({ row }) => <TagActions tag={row.original} />,
       },

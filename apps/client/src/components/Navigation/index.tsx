@@ -1,41 +1,29 @@
-import CandlestickChartIcon from '@mui/icons-material/CandlestickChart';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import MenuIcon from '@mui/icons-material/Menu';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import { getDefaultStore, useAtom } from 'jotai';
-import { memo } from 'react';
-import { Outlet } from 'react-router';
+import CandlestickChartIcon from "@mui/icons-material/CandlestickChart";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MenuIcon from "@mui/icons-material/Menu";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import { getDefaultStore, useAtom } from "jotai";
+import { memo } from "react";
+import { Outlet } from "react-router";
 
-import { navigationDrawerAtom } from '../../atoms';
-import { TradesPageModal } from '../../pages/trades/enums';
-import DialogMain from '../DialogMain';
-import ColorModeMain from './ColorMode';
-import IntroForm from './Intro';
-import NavigationList from './NavigationList';
-import ProfileMain from './Profile';
-import { AppBar, Drawer, DrawerHeader } from './styledComps';
+import { navigationDrawerAtom } from "../../atoms";
+import ColorModeMain from "./ColorMode";
+import ModalList from "./ModalList";
+import NavigationList from "./NavigationList";
+import ProfileMain from "./Profile";
+import { AppBar, Drawer, DrawerHeader } from "./styledComps";
 
 const MainContainer = memo(() => {
   return (
-    <Box sx={{ flexGrow: 1, p: 6, maxWidth: 'min(120rem, 100%)', marginInline: 'auto' }}>
+    <Box sx={{ flexGrow: 1, p: 6, maxWidth: "min(120rem, 100%)", marginInline: "auto" }}>
       <DrawerHeader />
       <Outlet />
     </Box>
-  );
-});
-
-const NavigationModalList = memo(() => {
-  return (
-    <>
-      <DialogMain size="sm" id={TradesPageModal.INTRO} title="You're exploring as a guest">
-        <IntroForm />
-      </DialogMain>
-    </>
   );
 });
 
@@ -43,7 +31,7 @@ const NavigationMain = () => {
   const [drawer, setDrawer] = useAtom(navigationDrawerAtom, { store: getDefaultStore() });
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <AppBar position="fixed" open={!!drawer?.open}>
         <Toolbar>
           <IconButton
@@ -51,18 +39,18 @@ const NavigationMain = () => {
             aria-label="open drawer"
             onClick={() => setDrawer({ open: true })}
             edge="start"
-            sx={[{ mr: 5 }, !!drawer?.open && { display: 'none' }]}
+            sx={[{ mr: 5 }, !!drawer?.open && { display: "none" }]}
           >
             <MenuIcon />
           </IconButton>
 
-          <Stack sx={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
-            <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 1 }}>
+          <Stack sx={{ width: "100%", alignItems: "center", justifyContent: "space-between", flexDirection: "row" }}>
+            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
               <CandlestickChartIcon />
               <Typography variant="h6">LogMyTrades</Typography>
             </Stack>
 
-            <Stack sx={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
               <ColorModeMain />
               <ProfileMain />
             </Stack>
@@ -80,7 +68,7 @@ const NavigationMain = () => {
         <NavigationList />
       </Drawer>
 
-      <NavigationModalList />
+      <ModalList />
       <MainContainer />
     </Box>
   );

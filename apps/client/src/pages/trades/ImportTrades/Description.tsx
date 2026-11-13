@@ -122,7 +122,7 @@ const Description = () => {
   }, [result]);
 
   return (
-    <Stack sx={{ gap: 1 }}>
+    <Stack sx={{ gap: 2 }}>
       <Typography variant="body1">
         Upload a CSV file to import your trades. Match each column to a trade field, then review the data before
         importing.

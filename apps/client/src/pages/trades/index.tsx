@@ -20,7 +20,6 @@ import type { TSelectInputOption } from "../../components/inputs/SelectInput";
 
 import { getTrades } from "../../api/trades";
 import { userAtom } from "../../atoms";
-import DialogMain from "../../components/DialogMain";
 import MenuActions from "../../components/MenuActions";
 import { tableFiltersAtom } from "../../components/table/atoms";
 import ColumnVisibilitySelect from "../../components/table/ColumnVisibilitySelect";
@@ -38,54 +37,7 @@ import usePairsOptions from "./hooks/usePairsOptions";
 import useTagsOptions from "./hooks/useTagsOptions";
 import TradingSessionSelect from "./TradingSessionSelect";
 
-const AddTradeForm = lazy(() => import("./forms/AddTrade"));
-const AddRandomTradesForm = lazy(() => import("./forms/AddRandomTrades"));
-const EditTradeForm = lazy(() => import("./forms/EditTrade"));
-const DeleteTrade = lazy(() => import("./DeleteTrade"));
-const TradesSettingsMain = lazy(() => import("./Settings"));
-const ImportTrades = lazy(() => import("./ImportTrades"));
-
 const TradesTableMain = lazy(() => import("./TradesTable"));
-const AddTagForm = lazy(() => import("./Settings/Tags/forms/AddForm"));
-
-const TradesModalList = () => {
-  return (
-    <>
-      <DialogMain id={TradesPageModal.ADD_TRADE} title="Add trade">
-        <AddTradeForm />
-      </DialogMain>
-
-      <DialogMain id={TradesPageModal.ADD_RANDOM_TRADES} title="Add sample trades">
-        <AddRandomTradesForm />
-      </DialogMain>
-
-      <DialogMain id={TradesPageModal.IMPORT_TRADES} size="md" title="Import trades">
-        <ImportTrades />
-      </DialogMain>
-
-      <DialogMain id={TradesPageModal.EDIT_TRADE} title="Edit trade">
-        <EditTradeForm />
-      </DialogMain>
-
-      <DialogMain
-        id={TradesPageModal.DELETE_TRADE}
-        title="Are you absolutely sure?"
-        hideCloseBtn
-        dialogContentProps={{ dividers: false }}
-      >
-        <DeleteTrade />
-      </DialogMain>
-
-      <DialogMain id={TradesPageModal.SETTINGS} title="Settings" size="md">
-        <TradesSettingsMain />
-      </DialogMain>
-
-      <DialogMain size="xs" id={TradesPageModal.ADD_TAG} title="Add tag">
-        <AddTagForm />
-      </DialogMain>
-    </>
-  );
-};
 
 const COLLAPSE_TIMEOUT = 200;
 
@@ -205,20 +157,28 @@ const GuestMenuActions = () => {
       <MenuActions.Item
         icon={<AddIcon />}
         label="Add trade"
-        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE))}
+        onClick={(_, handleClose) =>
+          handleClick(handleClose, () => openModal(TradesPageModal.ADD_TRADE, { title: "Add trade" }))
+        }
       />
       <MenuActions.Divider />
       <MenuActions.Item
         icon={<PublishIcon />}
         label="Import trades"
-        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.IMPORT_TRADES))}
+        onClick={(_, handleClose) =>
+          handleClick(handleClose, () =>
+            openModal(TradesPageModal.IMPORT_TRADES, { title: "Import trades", size: "md" }),
+          )
+        }
       />
       <ExportTradesItem />
       <MenuActions.Divider />
       <MenuActions.Item
         icon={<QueueIcon />}
         label="Add sample trades"
-        onClick={(_, handleClose) => handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES))}
+        onClick={(_, handleClose) =>
+          handleClick(handleClose, () => openModal(TradesPageModal.ADD_RANDOM_TRADES, { title: "Add sample trades" }))
+        }
       />
     </MenuActions>
   );
@@ -226,8 +186,13 @@ const GuestMenuActions = () => {
 
 const AddTradeButton = () => {
   const { openModal } = useModal();
+
   return (
-    <IconButton size="small" aria-label="add-trade-button" onClick={() => openModal(TradesPageModal.ADD_TRADE)}>
+    <IconButton
+      size="small"
+      aria-label="add-trade-button"
+      onClick={() => openModal(TradesPageModal.ADD_TRADE, { title: "Add trade" })}
+    >
       <AddIcon />
     </IconButton>
   );
@@ -235,8 +200,13 @@ const AddTradeButton = () => {
 
 const SettingsButton = () => {
   const { openModal } = useModal();
+
   return (
-    <IconButton size="small" aria-label="trades-settings-button" onClick={() => openModal(TradesPageModal.SETTINGS)}>
+    <IconButton
+      size="small"
+      aria-label="trades-settings-button"
+      onClick={() => openModal(TradesPageModal.SETTINGS, { title: "Settings", size: "md" })}
+    >
       <SettingsIcon />
     </IconButton>
   );
@@ -288,8 +258,6 @@ const TradesPage = () => {
           <TradesTableMain />
         </Suspense>
       </Paper>
-
-      <TradesModalList />
     </TableProvider>
   );
 };
