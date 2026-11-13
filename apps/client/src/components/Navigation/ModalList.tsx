@@ -6,6 +6,7 @@ import { modalAtom } from "../../atoms";
 import useSnackbar from "../../hooks/useSnackbar";
 import { TradesPageModal } from "../../pages/trades/enums";
 import DialogMain from "../DialogMain";
+import BackdropProgress from "../feedback/BackdropProgress";
 
 const IntroForm = lazy(() => import("./Intro"));
 
@@ -65,6 +66,12 @@ const ModalErrorFallback = ({ message }: { message?: string }) => {
   return null;
 };
 
+const ModalSuspenseFallback = () => (
+  <ViewTransition>
+    <BackdropProgress open />
+  </ViewTransition>
+);
+
 const ModalList = () => {
   const modalInfo = useAtomValue(modalAtom, { store: getDefaultStore() });
 
@@ -82,7 +89,7 @@ const ModalList = () => {
 
     return (
       <ErrorBoundary key={id} fallbackRender={() => <ModalErrorFallback message={info.errorMessage} />}>
-        <Suspense fallback={null}>
+        <Suspense fallback={<ModalSuspenseFallback />}>
           <ViewTransition>
             <DialogMain
               {...info}
