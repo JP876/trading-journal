@@ -12,6 +12,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { useNavigate } from "react-router";
 
 import { getTrades } from "../../api/trades";
+import JotaiProvider from "../../components/JotaiProvider";
 import { QueryKey } from "../../enums";
 import TradingSessionSelect from "../trades/TradingSessionSelect";
 import useResetWidgets from "./hooks/useResetWidgets";
@@ -171,10 +172,12 @@ const DashboardFallback = () => {
 const DashboardMain = () => {
   return (
     <ErrorBoundary fallbackRender={DashboardFallback}>
-      <DashboardHeader />
-      <Suspense fallback={<LoadingTrades />}>
-        <DashboardContent />
-      </Suspense>
+      <JotaiProvider>
+        <DashboardHeader />
+        <Suspense fallback={<LoadingTrades />}>
+          <DashboardContent />
+        </Suspense>
+      </JotaiProvider>
     </ErrorBoundary>
   );
 };

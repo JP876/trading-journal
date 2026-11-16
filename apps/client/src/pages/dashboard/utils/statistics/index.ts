@@ -1,10 +1,11 @@
-import { differenceInDays, differenceInMonths } from 'date-fns';
+import { differenceInDays, differenceInMonths } from "date-fns";
 
-import type { Trade } from '../../../../types/trade';
-import type { TStatistic, TStatisticsOptions, TStatisticsReturn } from '../types';
-import DurationStatistics from './Duration';
-import CountTradesStatistic from './CountTrades';
-import PerformanceStatistic from './Performance';
+import type { Trade } from "../../../../types/trade";
+import type { TStatistic, TStatisticsOptions, TStatisticsReturn } from "../types";
+
+import CountTradesStatistic from "./CountTrades";
+import DurationStatistics from "./Duration";
+import PerformanceStatistic from "./Performance";
 
 const DEFAULT_OPTIONS: TStatisticsOptions = {
   fraction: 2,
@@ -55,6 +56,7 @@ export const getStatistics = (trades: Trade[], accountSize: number): TStatistics
     returnPercentage: perf.returnPercentage,
     avgProft: perf.avgProft,
     avgLoss: perf.avgLoss,
+    avgRR: perf.avgRR,
     maxDrawdown: perf.maxDrawdown,
     maxDrawdownPercentage: perf.maxDrawdonwPercentage,
     tradesCount: count.trades,

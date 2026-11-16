@@ -1,7 +1,7 @@
-import { subDays } from 'date-fns';
+import { subDays } from "date-fns";
 
-import type { Trade } from '../../../types/trade';
-import type { TPerformanceReturn } from './types';
+import type { Trade } from "../../../types/trade";
+import type { TPerformanceReturn } from "./types";
 
 export const getPerformance = (trades: Trade[], accountSize: number) => {
   let startBalance = accountSize;
@@ -13,10 +13,12 @@ export const getPerformance = (trades: Trade[], accountSize: number) => {
     plPercentage: 0,
     endDate: subDays(new Date(trades[firstTradeIndex].closeDate!), 1),
   });
+  const withoutProfit = [];
 
   for (let i = firstTradeIndex; i < trades.length; i++) {
     let trade = trades[i];
     if (!trade?.profit || !trade?.closeDate) {
+      withoutProfit.push(trade);
       continue;
     }
 
@@ -31,5 +33,10 @@ export const getPerformance = (trades: Trade[], accountSize: number) => {
     startBalance = nextPl;
   }
 
-  return finalData;
+  return {
+    withoutProfit: withoutProfit,
+    withoutProfitCount: withoutProfit.length,
+    withProfit: finalData,
+    areAllTradesIncluded: !withoutProfit.length,
+  };
 };

@@ -1,5 +1,8 @@
+import { closestTo, isSameDay } from "date-fns";
+
+import type { TCurrencyRate, TRateInfo } from "../types";
+
 import { exchangeRates } from "../consts";
-import type { TCurrentRate } from "../types";
 
 export type TFormatToPipsOptions = {
   pair?: string;
@@ -9,8 +12,9 @@ export type TFormatToPipsOptions = {
 export type TCalculateProfitOptions = {
   baseCurrency?: string;
   positionSize?: number;
-  rates?: TCurrentRate[];
+  rates?: TRateInfo[];
   fraction?: number;
+  openDate?: Date;
 };
 
 const DEFAULT_CALCULATE_PROFIT_OPTIONS: Required<TCalculateProfitOptions> = {
@@ -18,9 +22,21 @@ const DEFAULT_CALCULATE_PROFIT_OPTIONS: Required<TCalculateProfitOptions> = {
   positionSize: 10_000,
   rates: [],
   fraction: 4,
+  openDate: new Date(),
 };
 
-export function getExchangeRates(baseCurrency: string) {
+export function getRates(currencyRate: TCurrencyRate, dateToCompare: Date = new Date()) {
+  const closest = closestTo(dateToCompare, [...currencyRate.keys()]);
+  if (!closest) return;
+  for (let key of currencyRate.keys()) {
+    if (isSameDay(closest, key)) {
+      return currencyRate.get(key);
+    }
+  }
+  return;
+}
+
+export function getCurrency(baseCurrency: string) {
   switch (baseCurrency) {
     case "EUR":
       return exchangeRates.EUR;
@@ -49,11 +65,7 @@ export function formatToCurrency(value?: number, options?: Intl.NumberFormatOpti
   }).format(value);
 }
 
-export function formatToPips(
-  firstPrice: number,
-  secondPrice: number,
-  options?: TFormatToPipsOptions,
-) {
+export function formatToPips(firstPrice: number, secondPrice: number, options?: TFormatToPipsOptions) {
   const pipSize = getPipSize(options?.pair);
   return +(Math.abs(firstPrice - secondPrice) / pipSize).toFixed(options?.fraction || 2);
 }
@@ -78,12 +90,13 @@ export function calculateProfit(
 
   if (quote === baseCurrency) return +value.toFixed(fraction);
 
-  let rates: TCurrentRate[] = [];
+  let rates: TRateInfo[] = [];
   if (Array.isArray(options?.rates) && options.rates.length > 0) {
     rates = options.rates;
   } else {
-    rates = getExchangeRates(baseCurrency);
+    rates = getRates(getCurrency(baseCurrency), options?.openDate) || [];
   }
+
   const rateInfo = rates.find((el) => el.currency === quote);
 
   if (!rateInfo) {

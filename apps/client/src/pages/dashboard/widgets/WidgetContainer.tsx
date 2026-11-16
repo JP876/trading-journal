@@ -1,4 +1,5 @@
 import ErrorIcon from "@mui/icons-material/Error";
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
 import { Tooltip } from "@mui/material";
 import Paper, { type PaperProps } from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -37,10 +38,11 @@ const WidgetContainerHeader = styled(Stack)(({ theme }) => ({
   borderBottom: `1px solid ${theme.palette.grey[200]}`,
 }));
 
-export type TWidgetContainerProps = {
+export type TWidgetContainerProps = (
+  | { title: string; description: string; warningTitle?: string; renderHeader?: never }
+  | { title: string; description?: never; warningTitle?: never; renderHeader: () => React.ReactNode }
+) & {
   children: React.ReactNode;
-  title: string;
-  description: string;
   renderActions?: () => React.ReactNode;
   paperProps?: PaperProps;
 };
@@ -87,7 +89,15 @@ type TWidgetContainerError = {
   actions: boolean;
 };
 
-const WidgetContainer = ({ title, description, renderActions, paperProps, children }: TWidgetContainerProps) => {
+const WidgetContainer = ({
+  title,
+  description,
+  warningTitle,
+  renderActions,
+  renderHeader,
+  paperProps,
+  children,
+}: TWidgetContainerProps) => {
   const setError = useSetAtom(widgetContainerErrorAtom);
 
   return (
@@ -95,10 +105,23 @@ const WidgetContainer = ({ title, description, renderActions, paperProps, childr
       <ErrorBoundary fallbackRender={() => <WidgetContainerFallback title={title} />}>
         <WidgetContainerHeader>
           <Stack>
-            <Typography variant="h5">{title}</Typography>
-            <ClampedTextContainer variant="caption" maxRows={1}>
-              {description}
-            </ClampedTextContainer>
+            {renderHeader ? (
+              renderHeader()
+            ) : (
+              <>
+                <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
+                  <Typography variant="h5">{title}</Typography>
+                  {warningTitle ? (
+                    <Tooltip arrow disableInteractive title={warningTitle}>
+                      <NewReleasesIcon color="error" fontSize="small" />
+                    </Tooltip>
+                  ) : null}
+                </Stack>
+                <ClampedTextContainer variant="caption" maxRows={1}>
+                  {description}
+                </ClampedTextContainer>
+              </>
+            )}
           </Stack>
           <ErrorBoundary
             FallbackComponent={WidgetActionsFallback}

@@ -1,13 +1,15 @@
-import { addMilliseconds, addMinutes, clamp, format, subMonths } from 'date-fns';
+import { addMilliseconds, addMinutes, clamp, format, subMonths } from "date-fns";
+import { getDefaultStore } from "jotai";
 
-import { addMultipleTradesDB } from '.';
-import { db } from '../..';
-import type { Pair } from '../../../../types/pair';
-import type { AddRandomTradesFormType, Direction, Result, Trade } from '../../../../types/trade';
-import { getRandomFloat, getRandomInt, getRandomItem, shuffleArray } from '../../../utils';
-import { findPairById } from '../pairs';
-import { getRandomTagIdsDB } from '../tags';
-import { calculateProfit } from '../../../price';
+import type { Pair } from "../../../../types/pair";
+import type { AddRandomTradesFormType, Direction, Result, Trade } from "../../../../types/trade";
+
+import { addMultipleTradesDB } from ".";
+import { db } from "../..";
+import { pairsAtom } from "../../../../atoms";
+import { calculateProfit } from "../../../price";
+import { getRandomFloat, getRandomInt, getRandomItem, shuffleArray } from "../../../utils";
+import { getRandomTagIdsDB } from "../tags";
 
 export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   count: 1_000,
@@ -22,43 +24,49 @@ export const ADD_RANDOM_TRADES_OPTIONS: Required<AddRandomTradesFormType> = {
   endDate: new Date(),
 };
 
+const findPairById = (id: number) => {
+  return getDefaultStore()
+    .get(pairsAtom)
+    .find((el) => el.id === id);
+};
+
 export const addRandomTradesDB = async (
-  options: AddRandomTradesFormType & { tradingSessionId: number; user: number | string }
+  options: AddRandomTradesFormType & { tradingSessionId: number; user: number | string },
 ) => {
   const { user } = options;
   const tags = await db.tags.toArray();
   const count = options?.count || ADD_RANDOM_TRADES_OPTIONS.count;
 
-  let startDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
-  let endDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
+  const startDate = options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate;
+  const endDate = options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate;
 
   const interval = (endDate.getTime() - startDate.getTime()) / count;
 
-  let pairIds: number[] = Array.from({ length: count }).map(() => {
+  const pairIds: number[] = Array.from({ length: count }).map(() => {
     if (Array.isArray(options?.pairs) && options.pairs.length) {
       return getRandomItem(options.pairs) || getRandomInt(1, 10);
     }
     return getRandomInt(1, 10);
   });
 
-  let uniquePairIds = [...new Set(pairIds)];
-  let pairsInfo: { [key: number]: Pair } = {};
-  let getPairsInfo = uniquePairIds.map((id) => findPairById(id));
+  const uniquePairIds = [...new Set(pairIds)];
+  const pairsInfo: { [key: number]: Pair } = {};
 
-  for await (const pair of getPairsInfo) {
-    pairsInfo[pair.id] = pair;
+  for (let pairId of uniquePairIds) {
+    const pair = findPairById(pairId);
+    if (pair) pairsInfo[pair.id] = pair;
   }
 
   const winRate = (options?.winPercentage || ADD_RANDOM_TRADES_OPTIONS.winPercentage) / 100;
   const directionPercentage = (options.longPercentage || ADD_RANDOM_TRADES_OPTIONS.longPercentage) / 100;
 
-  let resultArr: Result[] = shuffleArray([
-    ...Array.from({ length: count * winRate }).map(() => 'win' as const),
-    ...Array.from({ length: count * (1 - winRate) }).map(() => 'loss' as const),
+  const resultArr: Result[] = shuffleArray([
+    ...Array.from({ length: count * winRate }).map(() => "win" as const),
+    ...Array.from({ length: count * (1 - winRate) }).map(() => "loss" as const),
   ]);
-  let directionArr: Direction[] = shuffleArray([
-    ...Array.from({ length: count * directionPercentage }).map(() => 'long' as const),
-    ...Array.from({ length: count * (1 - directionPercentage) }).map(() => 'short' as const),
+  const directionArr: Direction[] = shuffleArray([
+    ...Array.from({ length: count * directionPercentage }).map(() => "long" as const),
+    ...Array.from({ length: count * (1 - directionPercentage) }).map(() => "short" as const),
   ]);
 
   let stopLoss = ADD_RANDOM_TRADES_OPTIONS.stopLoss;
@@ -81,7 +89,7 @@ export const addRandomTradesDB = async (
     positionSize = options.positionSize;
   }
 
-  const trades: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[] = Array.from({ length: count }).map((_, index) => {
+  const trades: Omit<Trade, "id" | "createdAt" | "updatedAt">[] = Array.from({ length: count }).map((_, index) => {
     let openDate = addMilliseconds(startDate, interval * index);
     let closeDate = addMinutes(openDate, getRandomInt(tradeDuration[0], tradeDuration[1]));
 
@@ -95,11 +103,12 @@ export const addRandomTradesDB = async (
     let profit: number | undefined;
 
     if (pairInfo?.pair) {
-      let calculatedProfit = calculateProfit(result === 'win' ? tp : sl, pairInfo.pair, {
+      let calculatedProfit = calculateProfit(result === "win" ? tp : sl, pairInfo.pair, {
         positionSize: ps,
+        openDate: openDate,
       });
       if (calculatedProfit) {
-        profit = result === 'win' ? calculatedProfit : calculatedProfit * -1;
+        profit = result === "win" ? calculatedProfit : calculatedProfit * -1;
       }
     }
 
@@ -112,7 +121,7 @@ export const addRandomTradesDB = async (
       direction: directionArr[index],
       stopLoss: sl,
       takeProfit: tp,
-      closedBy: 'tp/sl',
+      closedBy: "tp/sl",
       profit,
       positionSize: ps,
       openDate: format(
@@ -120,14 +129,14 @@ export const addRandomTradesDB = async (
           start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,
           end: options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate,
         }),
-        'yyyy-MM-dd HH:mm'
+        "yyyy-MM-dd HH:mm",
       ),
       closeDate: format(
         clamp(closeDate, {
           start: options?.startDate || ADD_RANDOM_TRADES_OPTIONS.startDate,
           end: options?.endDate || ADD_RANDOM_TRADES_OPTIONS.endDate,
         }),
-        'yyyy-MM-dd HH:mm'
+        "yyyy-MM-dd HH:mm",
       ),
     };
   });

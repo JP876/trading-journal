@@ -6,7 +6,9 @@ import type { Pair } from "../types/pair";
 import type { SnackbarAtom } from "../types/snackbar";
 import type { User, UserDB } from "../types/user";
 
-export const pairsAtom = atom<Pair[] | null>(null);
+import { pairs } from "../consts/pairs";
+
+export const pairsAtom = atom<Pair[]>(pairs);
 
 export const modalAtom = atom<ModalAtom>({});
 

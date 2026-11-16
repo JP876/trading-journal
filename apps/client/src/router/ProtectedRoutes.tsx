@@ -1,13 +1,10 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-import { getDefaultStore, useSetAtom } from "jotai";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 
 import type { TAuthDetail } from "../types";
 
 import { refreshToken } from "../api/auth";
-import { getPairs } from "../api/pairs";
-import { pairsAtom } from "../atoms";
 import { AUTH_EVENT_TYPE } from "../consts";
 import { QueryKey } from "../enums";
 import useEventListeners from "../hooks/useEventListeners";
@@ -31,8 +28,6 @@ const ProtectedRoutes = () => {
   const { openSnackbar } = useSnackbar();
   const [logout] = useLogout();
 
-  const setPairs = useSetAtom(pairsAtom, { store: getDefaultStore() });
-
   const handleEvent = (event: CustomEventInit<TAuthDetail>) => {
     if (event.detail && !event.detail.isAuthenticated) {
       setTimeout(() => {
@@ -45,14 +40,7 @@ const ProtectedRoutes = () => {
     }
   };
 
-  const { data, isFetched } = useQuery({ queryKey: [QueryKey.PAIRS], queryFn: getPairs, staleTime: Infinity });
   useQuery({ ...refreshTokenQueryOptions, enabled: enabled });
-
-  useEffect(() => {
-    if (isFetched && Array.isArray(data) && data.length > 0) {
-      setPairs(data);
-    }
-  }, [isFetched, data]);
 
   useEffect(() => {
     if (!isGuest()) {

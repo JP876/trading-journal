@@ -65,6 +65,7 @@ const AddTradeForm = () => {
     if (pair && formData.closedBy === "user" && formData.closedAt) {
       const profit = calculateProfit(formData.closedAt, pair.pair, {
         positionSize: formData.positionSize,
+        openDate: formData.openDate,
       });
       if (profit) formData.profit = profit;
     }
@@ -72,6 +73,7 @@ const AddTradeForm = () => {
     if (pair && formData.closedBy === "tp/sl" && formData.stopLoss && formData.takeProfit) {
       const profit = calculateProfit(formData.result === "loss" ? formData.stopLoss : formData.takeProfit, pair.pair, {
         positionSize: formData.positionSize,
+        openDate: formData.openDate,
       });
       if (profit) formData.profit = profit;
     }

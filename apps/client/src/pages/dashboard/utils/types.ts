@@ -1,5 +1,5 @@
-import type { Pair } from '../../../types/pair';
-import type { Result, Trade } from '../../../types/trade';
+import type { Pair } from "../../../types/pair";
+import type { Result, Trade } from "../../../types/trade";
 
 export type TStreakMap = { [key: string]: number };
 export type TStreakResult = { [R in Result]: TStreakMap };
@@ -49,6 +49,7 @@ export type TStatisticsReturn = {
   returnPercentage: number;
   avgProft: TStatistic;
   avgLoss: TStatistic;
+  avgRR: TStatistic;
   maxDrawdown: number;
   maxDrawdownPercentage: number;
   tradesCount: TStatistic;

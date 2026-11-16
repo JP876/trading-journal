@@ -64,7 +64,8 @@ export type PaginationInfo<T = any> = {
 };
 
 export type TBaseCurrencyRates = "EUR" | "USD";
-export type TCurrentRate = {
+export type TCurrencyRate = Map<Date, TRateInfo[]>;
+export type TRateInfo = {
   currency: string;
   rate: number;
 };

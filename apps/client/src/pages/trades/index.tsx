@@ -20,13 +20,13 @@ import type { TSelectInputOption } from "../../components/inputs/SelectInput";
 
 import { getTrades } from "../../api/trades";
 import { userAtom } from "../../atoms";
+import JotaiProvider from "../../components/JotaiProvider";
 import MenuActions from "../../components/MenuActions";
 import { tableFiltersAtom } from "../../components/table/atoms";
 import ColumnVisibilitySelect from "../../components/table/ColumnVisibilitySelect";
 import AutocompleteFilter from "../../components/table/filters/AutocompleteFilter";
 import DateFilter from "../../components/table/filters/DateFilter";
 import useClearFilters from "../../components/table/hooks/useClearFilters";
-import TableProvider from "../../components/table/TableProvider";
 import { QueryKey } from "../../enums";
 import useModal from "../../hooks/useModal";
 import { tradesFiltersAtom, visibilityAtom } from "./atoms";
@@ -60,7 +60,7 @@ const TradesFilters = () => {
     queryFn: () => getTrades({}),
   });
 
-  let uniquePairs = [...new Set((tradesQuery.data?.results || []).map((el) => el.pair))];
+  const uniquePairs = [...new Set((tradesQuery.data?.results || []).map((el) => el.pair))];
 
   return (
     <Box
@@ -230,9 +230,16 @@ const TradesPage = () => {
   const user = useAtomValue(userAtom);
 
   return (
-    <TableProvider atomValues={[[tableFiltersAtom, initialFilters]]}>
+    <JotaiProvider atomValues={[[tableFiltersAtom, initialFilters]]}>
       <Stack
-        sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", mb: 2, flexWrap: "wrap" }}
+        sx={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
+          flexWrap: "wrap",
+          rowGap: 2,
+        }}
       >
         <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
           <Typography variant="h4">Trades</Typography>
@@ -244,7 +251,7 @@ const TradesPage = () => {
         </Stack>
 
         <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 2 }}>
-          <ColumnVisibilitySelect options={visibilityOptions} anAtom={visibilityAtom} />
+          <ColumnVisibilitySelect options={visibilityOptions} anAtom={visibilityAtom} width="15rem" />
           <TradingSessionSelect />
           <SettingsButton />
         </Stack>
@@ -258,7 +265,7 @@ const TradesPage = () => {
           <TradesTableMain />
         </Suspense>
       </Paper>
-    </TableProvider>
+    </JotaiProvider>
   );
 };
 

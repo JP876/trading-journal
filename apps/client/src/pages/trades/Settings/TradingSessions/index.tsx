@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+import JotaiProvider from "../../../../components/JotaiProvider";
 import { tablePaginationAtom } from "../../../../components/table/atoms";
 import TextFilter from "../../../../components/table/filters/TextFilter";
-import TableProvider from "../../../../components/table/TableProvider";
 import useModal from "../../../../hooks/useModal";
 import { TradesPageModal } from "../../enums";
 import TradingSessionsTable from "./TableMain";
@@ -14,7 +14,7 @@ const TradingSessionsMain = () => {
   const { openModal } = useModal();
 
   return (
-    <TableProvider atomValues={[[tablePaginationAtom, { pageIndex: 0, pageSize: 10 }]]}>
+    <JotaiProvider atomValues={[[tablePaginationAtom, { pageIndex: 0, pageSize: 10 }]]}>
       <Stack spacing={2}>
         <Stack sx={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Box>
@@ -33,7 +33,7 @@ const TradingSessionsMain = () => {
         </Stack>
         <TradingSessionsTable />
       </Stack>
-    </TableProvider>
+    </JotaiProvider>
   );
 };
 

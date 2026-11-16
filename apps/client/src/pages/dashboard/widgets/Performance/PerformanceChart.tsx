@@ -1,14 +1,18 @@
-import { useTheme } from '@mui/material';
-import { LineChart, type AxisValueFormatterContext, type LineChartProps } from '@mui/x-charts';
-import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { useTheme } from "@mui/material";
+import { LineChart, type AxisValueFormatterContext, type LineChartProps } from "@mui/x-charts";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { useSetAtom } from "jotai";
+import { useEffect } from "react";
 
-import { getTrades } from '../../../../api/trades';
-import LoadingContainer from '../../../../components/feedback/LoadingContainer';
-import { QueryKey } from '../../../../enums';
-import useMainSession from '../../../../hooks/useMainSession';
-import type { Trade } from '../../../../types/trade';
-import { getPerformance } from '../../utils/performance';
+import type { Trade } from "../../../../types/trade";
+
+import { getTrades } from "../../../../api/trades";
+import LoadingContainer from "../../../../components/feedback/LoadingContainer";
+import { QueryKey } from "../../../../enums";
+import useMainSession from "../../../../hooks/useMainSession";
+import { updateDashboardWarningAtom } from "../../atoms";
+import { getPerformance } from "../../utils/performance";
 
 const formatChartData = (trades: Trade[], accountSize: number) => {
   return getPerformance(trades, accountSize);
@@ -18,9 +22,11 @@ const PerformanceChart = () => {
   const theme = useTheme();
   const [mainSession] = useMainSession();
 
+  const setDashboardWarnings = useSetAtom(updateDashboardWarningAtom);
+
   const tradesQuery = useQuery({
-    queryKey: [QueryKey.TRADES, 'closeDate', 'desc'],
-    queryFn: () => getTrades({ sortBy: 'closeDate', direction: 'desc' }),
+    queryKey: [QueryKey.TRADES, "closeDate", "desc"],
+    queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
   });
 
   const chartData = (() => {
@@ -35,22 +41,22 @@ const PerformanceChart = () => {
     if (!chartData || !mainSession) return null;
 
     return {
-      dataset: chartData,
+      dataset: chartData.withProfit,
       series: [
         {
-          id: 'pl',
-          dataKey: 'pl',
-          baseline: 'max',
-          yAxisId: 'pl-axis',
+          id: "pl",
+          dataKey: "pl",
+          baseline: "max",
+          yAxisId: "pl-axis",
         },
       ],
       yAxis: [
         {
-          id: 'pl-axis',
-          scaleType: 'linear',
-          position: 'left',
+          id: "pl-axis",
+          scaleType: "linear",
+          position: "left",
           colorMap: {
-            type: 'piecewise',
+            type: "piecewise",
             thresholds: [mainSession.accountSize],
             colors: [theme.palette.error.main, theme.palette.success.main],
           },
@@ -59,21 +65,28 @@ const PerformanceChart = () => {
       margin: { left: 0, right: 0, bottom: 0, top: 28 },
       xAxis: [
         {
-          dataKey: 'endDate',
-          label: 'Date',
-          scaleType: 'time',
-          valueFormatter: (value: Date, context: AxisValueFormatterContext<'time'>) => {
-            if (context.location === 'tooltip') {
-              let date = format(value, 'dd/MM/yyyy HH:mm');
+          dataKey: "endDate",
+          label: "Date",
+          scaleType: "time",
+          valueFormatter: (value: Date, context: AxisValueFormatterContext<"time">) => {
+            if (context.location === "tooltip") {
+              let date = format(value, "dd/MM/yyyy HH:mm");
               return date;
             }
-            return format(value, 'MM/yy');
+            return format(value, "MM/yy");
           },
         },
       ],
       grid: { vertical: true, horizontal: true },
     } as LineChartProps;
   })();
+
+  useEffect(() => {
+    if (!chartData?.areAllTradesIncluded) {
+      const message = `Account performance includes only trades with a calculated profit. ${chartData?.withoutProfitCount} trades are excluded.`;
+      setDashboardWarnings(["withoutProfit", { message }]);
+    }
+  }, [chartData]);
 
   return (
     <LoadingContainer isLoading={tradesQuery.isPending}>

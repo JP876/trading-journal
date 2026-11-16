@@ -1,12 +1,12 @@
+import { Box, CircularProgress } from "@mui/material";
 import { getDefaultStore, useAtomValue } from "jotai";
-import { lazy, memo, Suspense, useCallback, useEffect, ViewTransition } from "react";
+import { lazy, memo, Suspense, useCallback, useEffect, useRef, ViewTransition } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { modalAtom } from "../../atoms";
 import useSnackbar from "../../hooks/useSnackbar";
 import { TradesPageModal } from "../../pages/trades/enums";
 import DialogMain from "../DialogMain";
-import BackdropProgress from "../feedback/BackdropProgress";
 
 const IntroForm = lazy(() => import("./Intro"));
 
@@ -66,11 +66,32 @@ const ModalErrorFallback = ({ message }: { message?: string }) => {
   return null;
 };
 
-const ModalSuspenseFallback = () => (
-  <ViewTransition>
-    <BackdropProgress open />
-  </ViewTransition>
-);
+const ModalSuspenseFallback = () => {
+  const rootRef = useRef(document.getElementById("root")!);
+
+  useEffect(() => {
+    rootRef.current.style.pointerEvents = "none";
+    return () => {
+      rootRef.current.style.pointerEvents = "all";
+    };
+  }, []);
+
+  return (
+    <Box
+      sx={[
+        (theme) => ({
+          position: "fixed",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          zIndex: theme.zIndex.modal - 1,
+        }),
+      ]}
+    >
+      <CircularProgress color="info" size={72} />
+    </Box>
+  );
+};
 
 const ModalList = () => {
   const modalInfo = useAtomValue(modalAtom, { store: getDefaultStore() });

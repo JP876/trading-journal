@@ -1,23 +1,25 @@
-import { Dexie, type EntityTable } from 'dexie';
+import { Dexie, type EntityTable } from "dexie";
 
-import type { UserDB } from '../../types/user';
-import type { TradingSession } from '../../types/tradingSessions';
-import type { Trade } from '../../types/trade';
-import type { Tag } from '../../types/tag';
-import type { Pair } from '../../types/pair';
+import type { Tag } from "../../types/tag";
+import type { Trade } from "../../types/trade";
+import type { TradingSession } from "../../types/tradingSessions";
+import type { UserDB } from "../../types/user";
 
-export const db = new Dexie('LogMyTradesDB') as Dexie & {
-  users: EntityTable<UserDB, 'id'>;
-  tradingSessions: EntityTable<TradingSession, 'id'>;
-  trades: EntityTable<Trade, 'id'>;
-  tags: EntityTable<Tag, 'id'>;
-  pairs: EntityTable<Pair, 'id'>;
-};
+class LogMyTradesDB extends Dexie {
+  users!: EntityTable<UserDB, "id">;
+  tradingSessions!: EntityTable<TradingSession, "id">;
+  trades!: EntityTable<Trade, "id">;
+  tags!: EntityTable<Tag, "id">;
 
-db.version(2).stores({
-  users: '++id, name, email, isLoggedIn',
-  tradingSessions: `++id, user, title, isMain`,
-  trades: `++id, user, pair, result, direction, openDate, closeDate, *tags, tradingSession, [tradingSession+user]`,
-  tags: '++id, user, title',
-  pairs: '++id, pair',
-});
+  constructor() {
+    super("LogMyTradesDB");
+    this.version(2).stores({
+      users: "++id, name, email, isLoggedIn",
+      tradingSessions: `++id, user, title, isMain`,
+      trades: `++id, user, pair, result, direction, openDate, closeDate, *tags, tradingSession, [tradingSession+user]`,
+      tags: "++id, user, title",
+    });
+  }
+}
+
+export const db = new LogMyTradesDB();

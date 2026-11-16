@@ -1,8 +1,8 @@
-import WidgetContainer, { type TWidgetContainerProps } from '../WidgetContainer';
-import StatisticsList from './StatisticsList';
+import WidgetContainer, { type TWidgetContainerProps } from "../WidgetContainer";
+import StatisticsList from "./StatisticsList";
 
 type TStatisticsProps = {
-  paperProps?: TWidgetContainerProps['paperProps'];
+  paperProps?: TWidgetContainerProps["paperProps"];
 };
 
 const Statistics = ({ paperProps }: TStatisticsProps) => {
