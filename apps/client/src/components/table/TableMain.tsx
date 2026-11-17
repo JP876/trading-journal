@@ -1,3 +1,5 @@
+import ErrorIcon from "@mui/icons-material/Error";
+import Stack from "@mui/material/Stack";
 import Table, { type TableProps } from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -17,6 +19,7 @@ import {
 } from "@tanstack/react-table";
 import { useAtom, useSetAtom, type Store, type WritableAtom } from "jotai";
 import { memo, useEffect, type SetStateAction } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { tableColumnVisibilityAtom, tableInfoAtom, tablePaginationAtom, tableSortingAtom } from "./atoms";
 import { tableMainFeatures } from "./consts";
@@ -28,6 +31,8 @@ export type TTableMainProps<TData extends RowData> = {
   columns: ColumnDef<typeof tableMainFeatures, TData>[];
   size?: TableProps["size"];
   padding?: TableProps["padding"];
+  errorMessage?: string;
+  renderError?: () => React.ReactNode;
   hidePageSizeSelect?: boolean;
   jAtoms?: {
     pagination?: WritableAtom<PaginationState, [SetStateAction<PaginationState>], void>;
@@ -50,7 +55,7 @@ function TableBodyCell<TData extends RowData>({ cell, children }: TTableBodyCell
   );
 }
 
-function TableMain<TData extends RowData>({
+function TableMainContainer<TData extends RowData>({
   data,
   columns,
   size,
@@ -146,6 +151,27 @@ function TableMain<TData extends RowData>({
         </table.Subscribe>
       ) : null}
     </TableContainer>
+  );
+}
+
+const TableFallback = ({ message }: { message?: string }) => {
+  return (
+    <Stack sx={[() => ({ alignItems: "center", justifyContent: "center", height: "100%", width: "100%" })]}>
+      <Stack sx={{ width: "min(24rem, 90%)", alignItems: "center", gap: 2, my: 2 }}>
+        <ErrorIcon color="error" fontSize="large" />
+        <Typography variant="body1" sx={{ textAlign: "center", textWrap: "balance" }}>
+          {message || "We couldn't display the table. Please reload to try again."}
+        </Typography>
+      </Stack>
+    </Stack>
+  );
+};
+
+function TableMain<TData extends RowData>({ errorMessage, renderError, ...props }: TTableMainProps<TData>) {
+  return (
+    <ErrorBoundary fallbackRender={renderError ? renderError : () => <TableFallback message={errorMessage} />}>
+      <TableMainContainer {...props} />
+    </ErrorBoundary>
   );
 }
 

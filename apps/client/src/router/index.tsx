@@ -9,6 +9,7 @@ import { openSnackbarAtom, userAtom } from "../atoms";
 import { axiosInstance } from "../lib/axiosInstance";
 import { getLoggedInUserDB, hasUsersDB } from "../lib/db/api/users";
 import withCatch from "../lib/withCatch";
+import DashboardFallback from "../pages/dashboard/DashboardFallback";
 import ProtectedRoutes from "./ProtectedRoutes";
 
 const NavigationMain = lazy(() => import("../components/Navigation"));
@@ -71,7 +72,7 @@ const routes: RouteObject[] = [
       {
         Component: NavigationMain,
         children: [
-          { path: "/dashboard", Component: DashboardMain },
+          { path: "/dashboard", Component: DashboardMain, errorElement: <DashboardFallback /> },
           { path: "/trades", Component: TradesPage },
         ],
       },
