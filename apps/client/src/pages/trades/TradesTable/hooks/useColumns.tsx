@@ -104,7 +104,7 @@ const useColumns = () => {
                   })),
                 direction === "short" &&
                   ((theme) => ({
-                    backgroundColor: theme.palette.error.main,
+                    backgroundColor: theme.palette.error.light,
                     color: theme.palette.background.default,
                   })),
               ]}
@@ -153,7 +153,7 @@ const useColumns = () => {
                   })),
                 result === "loss" &&
                   ((theme) => ({
-                    backgroundColor: theme.palette.error.main,
+                    backgroundColor: theme.palette.error.light,
                     color: theme.palette.background.default,
                   })),
               ]}

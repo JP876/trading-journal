@@ -1,5 +1,5 @@
 import WidgetContainer, { type TWidgetContainerProps } from "../WidgetContainer";
-import StatisticsList from "./StatisticsList";
+import Summary from "./Summary";
 
 type TStatisticsProps = {
   paperProps?: TWidgetContainerProps["paperProps"];
@@ -12,7 +12,7 @@ const Statistics = ({ paperProps }: TStatisticsProps) => {
       description="Get an overview of your results, including win rate, average P&L, and trade count."
       paperProps={paperProps}
     >
-      <StatisticsList />
+      <Summary />
     </WidgetContainer>
   );
 };

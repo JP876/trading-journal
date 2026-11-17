@@ -3,7 +3,7 @@ import { LineChart, type AxisValueFormatterContext, type LineChartProps } from "
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 
 import type { Trade } from "../../../../types/trade";
 
@@ -84,7 +84,7 @@ const PerformanceChart = () => {
   useEffect(() => {
     if (!chartData?.areAllTradesIncluded) {
       const message = `Account performance includes only trades with a calculated profit. ${chartData?.withoutProfitCount} trades are excluded.`;
-      setDashboardWarnings(["withoutProfit", { message }]);
+      setDashboardWarnings(["foundTradesWithoutProfit", { message }]);
     }
   }, [chartData]);
 
@@ -95,4 +95,4 @@ const PerformanceChart = () => {
   );
 };
 
-export default PerformanceChart;
+export default memo(PerformanceChart);

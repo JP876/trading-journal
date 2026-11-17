@@ -22,40 +22,38 @@ class PerformanceStatistic implements Statistic {
     this.accountSize = accountSize;
   }
 
-  update(trade: Trade | null, count: CountTradesStatistic): void {
-    if (!trade || typeof trade.profit !== "number") {
-      if (this.avgProft.long && this.avgProft.short) {
-        this.avgProft.all = (this.avgProft.long + this.avgProft.short) / (count.win.all ?? 1);
-        this.avgProft.long = this.avgProft.long / (count.win.long || 1);
-        this.avgProft.short = this.avgProft.short / (count.win.short || 1);
-      }
-
-      if (this.totalSL.long && this.totalSL.short && this.totalTP.long && this.totalTP.short) {
-        this.totalSL.all = this.totalSL.long + this.totalSL.short;
-        this.totalTP.all = this.totalTP.long + this.totalTP.short;
-        this.avgRR.all = this.totalTP.all / this.totalSL.all;
-        this.avgRR.long = this.totalTP.long / this.totalSL.long;
-        this.avgRR.short = this.totalTP.short / this.totalSL.short;
-      }
-
-      if (this.avgLoss.long && this.avgLoss.short) {
-        this.avgLoss.all = (this.avgLoss.long + this.avgLoss.short) / (count.loss.all ?? 1);
-        this.avgLoss.long = this.avgLoss.long / (count.loss.long || 1);
-        this.avgLoss.short = this.avgLoss.short / (count.loss.short || 1);
-      }
-
-      if (this.finalProft) {
-        this.returnPercentage = this.finalProft / this.accountSize;
-      }
-
-      if (this.maxDrawdown && this.peakEquity) {
-        this.maxDrawdonwPercentage = (this.maxDrawdown / this.peakEquity) * 100;
-      }
-
-      return;
+  finalUpdate(count: CountTradesStatistic): void {
+    if (this.avgProft.long && this.avgProft.short) {
+      this.avgProft.all = (this.avgProft.long + this.avgProft.short) / (count.win.all ?? 1);
+      this.avgProft.long = this.avgProft.long / (count.win.long || 1);
+      this.avgProft.short = this.avgProft.short / (count.win.short || 1);
     }
 
-    this.finalProft = this.finalProft + trade.profit;
+    if (this.totalSL.long && this.totalSL.short && this.totalTP.long && this.totalTP.short) {
+      this.totalSL.all = this.totalSL.long + this.totalSL.short;
+      this.totalTP.all = this.totalTP.long + this.totalTP.short;
+      this.avgRR.all = this.totalTP.all / this.totalSL.all;
+      this.avgRR.long = this.totalTP.long / this.totalSL.long;
+      this.avgRR.short = this.totalTP.short / this.totalSL.short;
+    }
+
+    if (this.avgLoss.long && this.avgLoss.short) {
+      this.avgLoss.all = (this.avgLoss.long + this.avgLoss.short) / (count.loss.all ?? 1);
+      this.avgLoss.long = this.avgLoss.long / (count.loss.long || 1);
+      this.avgLoss.short = this.avgLoss.short / (count.loss.short || 1);
+    }
+
+    if (this.finalProft) {
+      this.returnPercentage = this.finalProft / this.accountSize;
+    }
+
+    if (this.maxDrawdown && this.peakEquity) {
+      this.maxDrawdonwPercentage = (this.maxDrawdown / this.peakEquity) * 100;
+    }
+  }
+
+  update(trade: Trade): void {
+    this.finalProft = this.finalProft + (trade.profit ?? 0);
 
     this.peakEquity = Math.max(this.peakEquity, this.finalProft);
     let currentDrawdown = this.peakEquity - this.finalProft;
@@ -67,10 +65,12 @@ class PerformanceStatistic implements Statistic {
       this.totalTP[trade.direction] = (this.totalTP[trade.direction] ?? 0) + tp;
     }
 
-    if (trade.result === "win" && trade.profit >= 0) {
-      this.avgProft[trade.direction] = (this.avgProft[trade.direction] ?? 0) + trade.profit;
-    } else if (trade.result === "loss") {
-      this.avgLoss[trade.direction] = (this.avgLoss[trade.direction] ?? 0) + trade.profit;
+    if (typeof trade.profit === "number") {
+      if (trade.result === "win" && trade.profit >= 0) {
+        this.avgProft[trade.direction] = (this.avgProft[trade.direction] ?? 0) + trade.profit;
+      } else if (trade.result === "loss") {
+        this.avgLoss[trade.direction] = (this.avgLoss[trade.direction] ?? 0) + trade.profit;
+      }
     }
   }
 }

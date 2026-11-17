@@ -47,6 +47,7 @@ export type TStatisticsReturn = {
   monthsProcessed: number;
   avgTradesPerDay: number;
   returnPercentage: number;
+  returnProfit: number;
   avgProft: TStatistic;
   avgLoss: TStatistic;
   avgRR: TStatistic;
@@ -74,5 +75,6 @@ export type TPerformanceReturn = {
 
 export abstract class Statistic {
   constructor() {}
-  abstract update(trade: Trade | null, ...args: any[]): void;
+  abstract update(trade: Trade, ...args: any[]): void;
+  abstract finalUpdate(...args: any[]): void;
 }

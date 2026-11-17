@@ -17,33 +17,33 @@ const getWinRate = (first: number | null, second: number | null, fraction?: numb
 };
 
 export const getStatistics = (trades: Trade[], accountSize: number): TStatisticsReturn => {
-  let firstOpenDateIndex = trades.findIndex((el) => el.openDate);
-  let lastCloseDateIndex = trades.reverse().findIndex((el) => el.closeDate);
+  const firstOpenDateIndex = trades.findIndex((el) => el.openDate);
+  const lastCloseDateIndex = trades.reverse().findIndex((el) => el.closeDate);
 
-  let firstTrade = trades[firstOpenDateIndex];
-  let lastTrade = trades.reverse()[lastCloseDateIndex];
+  const firstTrade = trades[firstOpenDateIndex];
+  const lastTrade = trades.reverse()[lastCloseDateIndex];
 
   let trade: Trade;
 
-  let duration = new DurationStatistics();
-  let count = new CountTradesStatistic();
-  let perf = new PerformanceStatistic(accountSize);
+  const duration = new DurationStatistics();
+  const count = new CountTradesStatistic();
+  const perf = new PerformanceStatistic(accountSize);
   perf.peakEquity = firstTrade.profit ?? 0;
 
-  let daysProcessed = differenceInDays(firstTrade.openDate!, lastTrade.closeDate!);
+  const daysProcessed = differenceInDays(firstTrade.openDate!, lastTrade.closeDate!);
 
   for (let i = 0; i < trades.length; i++) {
     trade = trades[i];
     count.update(trade);
     duration.update(trade);
-    perf.update(trade, count);
+    perf.update(trade);
   }
 
-  count.update(null);
-  duration.update(null);
-  perf.update(null, count);
+  count.finalUpdate();
+  duration.finalUpdate();
+  perf.finalUpdate(count);
 
-  let winRate: TStatistic = {
+  const winRate: TStatistic = {
     all: getWinRate(count.win.all, count.trades.all),
     long: getWinRate(count.win.long, count.trades.long),
     short: getWinRate(count.win.short, count.trades.short),
@@ -54,6 +54,7 @@ export const getStatistics = (trades: Trade[], accountSize: number): TStatistics
     monthsProcessed: differenceInMonths(firstTrade.openDate!, lastTrade.closeDate!),
     avgTradesPerDay: Math.round(trades.length / daysProcessed),
     returnPercentage: perf.returnPercentage,
+    returnProfit: perf.finalProft + accountSize,
     avgProft: perf.avgProft,
     avgLoss: perf.avgLoss,
     avgRR: perf.avgRR,

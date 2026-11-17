@@ -236,7 +236,7 @@ const TradesPage = () => {
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          mb: 2,
+          mb: 4,
           flexWrap: "wrap",
           rowGap: 2,
         }}

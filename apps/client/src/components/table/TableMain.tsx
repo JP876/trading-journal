@@ -1,4 +1,4 @@
-import Table from "@mui/material/Table";
+import Table, { type TableProps } from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -26,6 +26,8 @@ import TablePaginationMain from "./TablePaginationMain";
 export type TTableMainProps<TData extends RowData> = {
   data: TData[];
   columns: ColumnDef<typeof tableMainFeatures, TData>[];
+  size?: TableProps["size"];
+  padding?: TableProps["padding"];
   hidePageSizeSelect?: boolean;
   jAtoms?: {
     pagination?: WritableAtom<PaginationState, [SetStateAction<PaginationState>], void>;
@@ -51,6 +53,8 @@ function TableBodyCell<TData extends RowData>({ cell, children }: TTableBodyCell
 function TableMain<TData extends RowData>({
   data,
   columns,
+  size,
+  padding,
   hidePageSizeSelect,
   jAtoms,
   store,
@@ -95,7 +99,7 @@ function TableMain<TData extends RowData>({
 
   return (
     <TableContainer>
-      <Table size="small" stickyHeader>
+      <Table size={size || "small"} padding={padding || "normal"} stickyHeader>
         <TableHead>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

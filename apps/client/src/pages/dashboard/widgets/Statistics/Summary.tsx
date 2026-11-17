@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
+import NewReleasesIcon from "@mui/icons-material/NewReleases";
+import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
@@ -28,7 +30,7 @@ type TFormatedStatisticsReturn = {
   monthsProcessed: number;
   avgTradesPerDay: number;
   maxDrawdown: number;
-  returnPercentage: string;
+  returnProfit: string;
   tableData: TStatisticTableRow[];
 };
 
@@ -51,12 +53,14 @@ const formatStatistic = (data: TStatistic, fn: (value: number) => string) => {
 const formatTradeDurations = (data: TStatistic) => formatStatistic(data, formatSeconds);
 
 const formatStatisticsData = (data: TStatisticsReturn): TFormatedStatisticsReturn => {
+  const returnProfit = data.returnProfit ? `${formatToCurrency(data.returnProfit)}` : "-";
+
   return {
     daysProcessed: data.daysProcessed,
     monthsProcessed: data.monthsProcessed,
     avgTradesPerDay: data.avgTradesPerDay,
     maxDrawdown: +data.maxDrawdown.toFixed(1),
-    returnPercentage: data.returnPercentage ? `${(data.returnPercentage * 100).toFixed(1)}%` : "-",
+    returnProfit: `${returnProfit}`,
     tableData: [
       {
         ...formatStatistic(data.winRate, (value) => `${(value * 100).toFixed(1)}%`),
@@ -93,7 +97,7 @@ const columns: ColumnDef<typeof tableMainFeatures, TStatisticTableRow>[] = [
   },
   {
     accessorKey: "all",
-    size: 60,
+    size: 50,
     header: "All",
     cell: ({ row }) => {
       return <Box component="span">{row.original.all}</Box>;
@@ -101,7 +105,7 @@ const columns: ColumnDef<typeof tableMainFeatures, TStatisticTableRow>[] = [
   },
   {
     accessorKey: "long",
-    size: 60,
+    size: 50,
     header: "Long",
     cell: ({ row }) => {
       return <Box component="span">{row.original.long}</Box>;
@@ -109,7 +113,7 @@ const columns: ColumnDef<typeof tableMainFeatures, TStatisticTableRow>[] = [
   },
   {
     accessorKey: "short",
-    size: 60,
+    size: 50,
     header: "Short",
     cell: ({ row }) => {
       return <Box component="span">{row.original.short}</Box>;
@@ -117,7 +121,44 @@ const columns: ColumnDef<typeof tableMainFeatures, TStatisticTableRow>[] = [
   },
 ];
 
-const StatisticsList = () => {
+const StatisticsList = ({ statsData }: { statsData: TFormatedStatisticsReturn }) => {
+  const [mainSession] = useMainSession();
+
+  const listInfoData: { label: string; value: string; tooltipTitle?: string; renderValue?: () => React.ReactNode }[] = [
+    { label: "Days processed", value: statsData.daysProcessed.toString() },
+    { label: "Months processed", value: statsData.monthsProcessed.toString() },
+    { label: "Average trades per day", value: statsData.avgTradesPerDay.toString() },
+    { label: "Initial account size", value: formatToCurrency(mainSession?.accountSize) },
+    { label: "Return", value: statsData.returnProfit },
+    { label: "Max drawdown", value: formatToCurrency(statsData.maxDrawdown) },
+  ];
+
+  return listInfoData.map(({ label, value, tooltipTitle }, index) => (
+    <Box
+      key={label}
+      sx={[
+        (theme) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr fit-content(50%)",
+          rowGap: theme.spacing(1),
+          marginBlockEnd: theme.spacing(index + 1 === listInfoData.length ? 2 : 0),
+        }),
+      ]}
+    >
+      <Typography>{label}</Typography>
+      <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
+        <Typography sx={[(theme) => ({ fontWeight: theme.typography.fontWeightBold })]}>{value}</Typography>
+        {tooltipTitle ? (
+          <Tooltip arrow disableInteractive title={tooltipTitle}>
+            <NewReleasesIcon color="error" fontSize="small" />
+          </Tooltip>
+        ) : null}
+      </Stack>
+    </Box>
+  ));
+};
+
+const Summary = () => {
   const tradesQuery = useSuspenseQuery({
     queryKey: [QueryKey.TRADES, "closeDate", "desc"],
     queryFn: () => getTrades({ sortBy: "closeDate", direction: "desc" }),
@@ -133,36 +174,12 @@ const StatisticsList = () => {
 
   if (!statsData) return null;
 
-  const listInfoData = [
-    { label: "Days processed", value: statsData.daysProcessed },
-    { label: "Months processed", value: statsData.monthsProcessed },
-    { label: "Average trades per day", value: statsData.avgTradesPerDay },
-    { label: "Initial account size", value: formatToCurrency(mainSession?.accountSize) },
-    { label: "Return %", value: statsData.returnPercentage },
-    { label: "Max drawdown", value: formatToCurrency(statsData.maxDrawdown) },
-  ];
-
   return (
     <Stack spacing={1}>
-      {listInfoData.map(({ label, value }, index) => (
-        <Box
-          key={label}
-          sx={[
-            (theme) => ({
-              display: "grid",
-              gridTemplateColumns: "1fr fit-content(50%)",
-              rowGap: theme.spacing(1),
-              marginBlockEnd: theme.spacing(index + 1 === listInfoData.length ? 2 : 0),
-            }),
-          ]}
-        >
-          <Typography>{label}</Typography>
-          <Typography sx={[(theme) => ({ fontWeight: theme.typography.fontWeightBold })]}>{value}</Typography>
-        </Box>
-      ))}
+      <StatisticsList statsData={statsData} />
       <TableMain data={statsData.tableData} columns={columns} />
     </Stack>
   );
 };
 
-export default StatisticsList;
+export default Summary;

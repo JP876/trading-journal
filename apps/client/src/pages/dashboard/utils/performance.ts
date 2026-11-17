@@ -5,20 +5,20 @@ import type { TPerformanceReturn } from "./types";
 
 export const getPerformance = (trades: Trade[], accountSize: number) => {
   let startBalance = accountSize;
-  let firstTradeIndex = trades.findIndex((t) => t.closeDate);
+  const firstTradeIndex = trades.findIndex((t) => t.closeDate);
 
-  let finalData: TPerformanceReturn[] = [];
+  const finalData: TPerformanceReturn[] = [];
   finalData.push({
     pl: accountSize,
     plPercentage: 0,
     endDate: subDays(new Date(trades[firstTradeIndex].closeDate!), 1),
   });
-  const withoutProfit = [];
+  const foundTradesWithoutProfit = [];
 
   for (let i = firstTradeIndex; i < trades.length; i++) {
     let trade = trades[i];
-    if (!trade?.profit || !trade?.closeDate) {
-      withoutProfit.push(trade);
+    if ((typeof trade?.profit !== "number" && trade.profit === trade.profit) || !trade?.closeDate) {
+      foundTradesWithoutProfit.push(trade);
       continue;
     }
 
@@ -34,9 +34,9 @@ export const getPerformance = (trades: Trade[], accountSize: number) => {
   }
 
   return {
-    withoutProfit: withoutProfit,
-    withoutProfitCount: withoutProfit.length,
+    foundTradesWithoutProfit: foundTradesWithoutProfit,
+    withoutProfitCount: foundTradesWithoutProfit.length,
     withProfit: finalData,
-    areAllTradesIncluded: !withoutProfit.length,
+    areAllTradesIncluded: !foundTradesWithoutProfit.length,
   };
 };

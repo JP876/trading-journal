@@ -1,7 +1,6 @@
-import { atom, useAtomValue } from "jotai";
-import { useMemo } from "react";
+import { useAtomValue } from "jotai";
 
-import { dashboardWarningsAtom } from "../../atoms";
+import { foundTradesWithoutProfitAtom } from "../../atoms";
 import WidgetContainer, { type TWidgetContainerProps } from "../WidgetContainer";
 import PerformanceChart from "./PerformanceChart";
 
@@ -10,16 +9,13 @@ type TPerformanceProps = {
 };
 
 const Performance = ({ paperProps }: TPerformanceProps) => {
-  const withoutProfitAtom = useMemo(() => {
-    return atom((get) => get(dashboardWarningsAtom).get("withoutProfit"));
-  }, []);
-  const withoutProfit = useAtomValue(withoutProfitAtom);
+  const foundTradesWithoutProfit = useAtomValue(foundTradesWithoutProfitAtom);
 
   return (
     <WidgetContainer
       title="Account Performance"
       description="See your trading P&L trend for the selected account and date range."
-      warningTitle={withoutProfit?.message}
+      warningTitle={foundTradesWithoutProfit?.message}
       paperProps={paperProps}
     >
       <PerformanceChart />

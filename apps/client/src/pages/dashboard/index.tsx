@@ -25,7 +25,7 @@ const TradeDurations = lazy(() => import("./widgets/TradeDurations"));
 
 const WidgetsContainer = styled(Box)(({ theme }) => ({
   display: "grid",
-  gap: theme.spacing(2),
+  gap: theme.spacing(4),
   gridTemplateColumns: "2fr 3fr 3fr",
   gridAutoRows: "clamp(20rem, 32vw, 24rem)",
   gridTemplateAreas: `
@@ -43,6 +43,7 @@ const WidgetsContainer = styled(Box)(({ theme }) => ({
   },
 
   [theme.breakpoints.down("md")]: {
+    gap: theme.spacing(2),
     gridTemplateColumns: "1fr",
     gridTemplateAreas: `
       "stats"
@@ -146,7 +147,7 @@ const DashboardContent = () => {
 
   return (
     <WidgetsContainer>
-      <Statistics paperProps={{ sx: { gridArea: "stats", overflowY: "auto" } }} />
+      <Statistics paperProps={{ sx: { gridArea: "stats", overflow: "auto" } }} />
       <Performance paperProps={{ sx: { gridArea: "performance" } }} />
       <ProfitablePairs paperProps={{ sx: { gridArea: "profitable" } }} />
       <ConsecutiveTrades paperProps={{ sx: { gridArea: "consecutive" } }} />
