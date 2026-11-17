@@ -1,12 +1,13 @@
-import { format, isBefore } from 'date-fns';
+import { format, isBefore } from "date-fns";
 
-import { db } from '../..';
-import { getPerformance } from '../../../../pages/dashboard/utils/performance';
-import type { PaginationInfo } from '../../../../types';
-import type { TGetTradesOptions, Trade, TradeFormSchemaType, TradesCount } from '../../../../types/trade';
-import type { TradingSession } from '../../../../types/tradingSessions';
-import handlePagination from '../../pagination';
-import { findMainTradingSession } from '../tradingSessions';
+import type { PaginationInfo } from "../../../../types";
+import type { TGetTradesOptions, Trade, TradeFormSchemaType, TradesCount } from "../../../../types/trade";
+import type { TradingSession } from "../../../../types/tradingSessions";
+
+import { db } from "../..";
+import { getPerformance } from "../../../../pages/dashboard/utils/performance";
+import handlePagination from "../../pagination";
+import { findMainTradingSession } from "../tradingSessions";
 
 export const getTradesCountPerTradingSessionDB = async (user: number | string): Promise<TradesCount[]> => {
   const sessions = await db.tradingSessions.where({ user: user }).toArray();
@@ -31,13 +32,13 @@ export const getTradesProfitDB = async (user: number | string, session: TradingS
 
   return {
     count: trades.length,
-    profit: performance[performance.length - 1],
+    profit: performance.withProfit[performance.withProfit.length - 1],
   };
 };
 
 export const getTradesDB = async (
   user: number | string,
-  params: TGetTradesOptions
+  params: TGetTradesOptions,
 ): Promise<PaginationInfo<Trade[]>> => {
   const [session] = await Promise.all([findMainTradingSession(user)]);
   const totalCount = await db.trades.where({ tradingSession: session.id, user: user }).count();
@@ -50,7 +51,7 @@ export const getTradesDB = async (
 
     if (params.tags) {
       const t = params.tags
-        .split(',')
+        .split(",")
         .filter((t) => !isNaN(+t) && Number.isInteger(+t))
         .map((t) => +t);
       tags = trade.tags.some((tagId) => t.some((tId) => tId === tagId));
@@ -85,21 +86,21 @@ export const addTradeDB = async (user: number | string, trade: TradeFormSchemaTy
     tags: trade.tags || [],
     tradingSession: tradingSessionId,
     pair: pairId,
-    openDate: trade.openDate && format(trade.openDate, 'yyyy-MM-dd HH:mm'),
-    closeDate: trade.closeDate && format(trade.closeDate, 'yyyy-MM-dd HH:mm'),
-    createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
-    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    openDate: trade.openDate && format(trade.openDate, "yyyy-MM-dd HH:mm"),
+    closeDate: trade.closeDate && format(trade.closeDate, "yyyy-MM-dd HH:mm"),
+    createdAt: format(new Date(), "yyyy-MM-dd HH:mm"),
+    updatedAt: format(new Date(), "yyyy-MM-dd HH:mm"),
     user: user,
   });
 };
 
-export const addMultipleTradesDB = async (trades: Omit<Trade, 'id' | 'createdAt' | 'updatedAt'>[]) => {
-  const lastTrade = await db.trades.orderBy('id').last();
+export const addMultipleTradesDB = async (trades: Omit<Trade, "id" | "createdAt" | "updatedAt">[]) => {
+  const lastTrade = await db.trades.orderBy("id").last();
   const data = trades.map((t, index) => ({
     ...t,
     id: index + 1 + (lastTrade?.id ?? 0),
-    createdAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
-    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    createdAt: format(new Date(), "yyyy-MM-dd HH:mm"),
+    updatedAt: format(new Date(), "yyyy-MM-dd HH:mm"),
   }));
 
   return db.trades.bulkAdd(data);
@@ -113,9 +114,9 @@ export const editTradeDB = async (id: number, trade: TradeFormSchemaType & { tra
     tags: trade.tags || [],
     tradingSession: tradingSessionId,
     pair: pairId,
-    openDate: trade.openDate && format(trade.openDate, 'yyyy-MM-dd HH:mm'),
-    closeDate: trade.closeDate && format(trade.closeDate, 'yyyy-MM-dd HH:mm'),
-    updatedAt: format(new Date(), 'yyyy-MM-dd HH:mm'),
+    openDate: trade.openDate && format(trade.openDate, "yyyy-MM-dd HH:mm"),
+    closeDate: trade.closeDate && format(trade.closeDate, "yyyy-MM-dd HH:mm"),
+    updatedAt: format(new Date(), "yyyy-MM-dd HH:mm"),
   });
 };
 
