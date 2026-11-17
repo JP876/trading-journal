@@ -1,21 +1,23 @@
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import EmailIcon from '@mui/icons-material/Email';
-import LoginIcon from '@mui/icons-material/Login';
-import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
-import { useMutation } from '@tanstack/react-query';
-import type { AxiosError } from 'axios';
-import { Controller, useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router';
+import type { AxiosError } from "axios";
 
-import { loginUser } from '../../../../api/auth';
-import FormMain from '../../../../components/form/FormMain';
-import PasswordInput from '../../../../components/form/PasswordInput';
-import TextInput from '../../../../components/form/TextInput';
-import { defaultMsg } from '../../../../consts';
-import useSnackbar from '../../../../hooks/useSnackbar';
-import type { APIError } from '../../../../types';
-import { LoginFormSchema, type LoginFormData } from '../../../../types/auth';
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import EmailIcon from "@mui/icons-material/Email";
+import LoginIcon from "@mui/icons-material/Login";
+import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useMutation } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router";
+
+import type { APIError } from "../../../../types";
+
+import { loginUser } from "../../../../api/auth";
+import FormMain from "../../../../components/form/FormMain";
+import PasswordInput from "../../../../components/form/PasswordInput";
+import TextInput from "../../../../components/form/TextInput";
+import { defaultMsg } from "../../../../consts";
+import useSnackbar from "../../../../hooks/useSnackbar";
+import { LoginFormSchema, type LoginFormData } from "../../../../types/auth";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -24,16 +26,16 @@ const LoginForm = () => {
   const mutation = useMutation({
     mutationFn: loginUser,
     onError: (error: AxiosError<APIError>) => {
-      openSnackbar({ severity: 'error', message: error.response?.data.message || defaultMsg.error });
+      openSnackbar({ severity: "error", message: error.response?.data.message || defaultMsg.error });
     },
     onSuccess: (user) => {
-      navigate(location.state?.prevLocation || '/trades', {
+      navigate(location.state?.prevLocation || "/trades", {
         replace: true,
         viewTransition: true,
         state: null,
       });
       setTimeout(() => {
-        openSnackbar({ severity: 'success', message: `Welcome ${user.name}, you're now logged in.` });
+        openSnackbar({ severity: "success", message: `Welcome ${user.name}, you're now logged in.` });
       }, 200);
     },
   });
@@ -42,7 +44,7 @@ const LoginForm = () => {
 
   const form = useForm<LoginFormData>({
     resolver: standardSchemaResolver(LoginFormSchema),
-    defaultValues: { email: '', password: '' },
+    defaultValues: { email: "", password: "" },
   });
 
   return (

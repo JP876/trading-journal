@@ -1,17 +1,17 @@
-import Button from '@mui/material/Button';
-import AssignmentAddIcon from '@mui/icons-material/AssignmentAdd';
-import InputAdornment from '@mui/material/InputAdornment';
-import EmailIcon from '@mui/icons-material/Email';
-import PersonIcon from '@mui/icons-material/Person';
-import { useMutation } from '@tanstack/react-query';
-import { Controller, useForm } from 'react-hook-form';
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import AssignmentAddIcon from "@mui/icons-material/AssignmentAdd";
+import EmailIcon from "@mui/icons-material/Email";
+import PersonIcon from "@mui/icons-material/Person";
+import Button from "@mui/material/Button";
+import InputAdornment from "@mui/material/InputAdornment";
+import { useMutation } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 
-import { registerUser } from '../../../../api/auth';
-import { RegisterFormSchema, type RegisterFormData } from '../../../../types/auth';
-import FormMain from '../../../../components/form/FormMain';
-import TextInput from '../../../../components/form/TextInput';
-import PasswordInput from '../../../../components/form/PasswordInput';
+import { registerUser } from "../../../../api/auth";
+import FormMain from "../../../../components/form/FormMain";
+import PasswordInput from "../../../../components/form/PasswordInput";
+import TextInput from "../../../../components/form/TextInput";
+import { RegisterFormSchema, type RegisterFormData } from "../../../../types/auth";
 
 const UsernameStartAdornment = () => (
   <InputAdornment position="start">
@@ -30,7 +30,7 @@ const RegisterForm = () => {
 
   const form = useForm<RegisterFormData>({
     resolver: standardSchemaResolver(RegisterFormSchema),
-    defaultValues: { name: '', email: '', password: '' },
+    defaultValues: { name: "", email: "", password: "" },
   });
 
   const onSubmit = async (data: RegisterFormData) => {

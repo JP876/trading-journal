@@ -40,6 +40,7 @@ export const FallbackMessageContainer = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2),
   maxWidth: "min(28rem, 50vw)",
   backgroundColor: theme.palette.background.paper,
+  boxShadow: theme.shadows[10],
 
   "& svg": {
     width: "2rem",

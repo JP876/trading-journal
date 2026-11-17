@@ -9,6 +9,7 @@ import { openSnackbarAtom, userAtom } from "../atoms";
 import { axiosInstance } from "../lib/axiosInstance";
 import { getLoggedInUserDB, hasUsersDB } from "../lib/db/api/users";
 import withCatch from "../lib/withCatch";
+import AuthPageFallback from "../pages/auth/fallbacks/AuthPageFallback";
 import DashboardFallback from "../pages/dashboard/DashboardFallback";
 import TradesFallback from "../pages/trades/TradesFallback";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -64,7 +65,13 @@ const authMiddleware: MiddlewareFunction = async (_, next) => {
 };
 
 const routes: RouteObject[] = [
-  { path: "/", Component: AuthPage, middleware: [authMiddleware], HydrateFallback: () => null },
+  {
+    path: "/",
+    Component: AuthPage,
+    middleware: [authMiddleware],
+    HydrateFallback: () => null,
+    ErrorBoundary: AuthPageFallback,
+  },
   {
     Component: ProtectedRoutes,
     middleware: [protectedRouteMiddleware],
@@ -73,8 +80,8 @@ const routes: RouteObject[] = [
       {
         Component: NavigationMain,
         children: [
-          { path: "/dashboard", Component: DashboardMain, errorElement: <DashboardFallback /> },
-          { path: "/trades", Component: TradesPage, errorElement: <TradesFallback /> },
+          { path: "/dashboard", Component: DashboardMain, ErrorBoundary: DashboardFallback },
+          { path: "/trades", Component: TradesPage, ErrorBoundary: TradesFallback },
         ],
       },
     ],
