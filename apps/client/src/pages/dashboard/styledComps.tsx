@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 
 export const WidgetsContainer = styled(Box)(({ theme }) => ({
@@ -31,29 +30,5 @@ export const WidgetsContainer = styled(Box)(({ theme }) => ({
       "consecutive"
       "profitable"
     `,
-  },
-}));
-
-export const DashboardMessageContainer = styled(Stack)(({ theme }) => ({
-  flexDirection: "column",
-  alignItems: "center",
-  textAlign: "center",
-  gap: theme.spacing(2),
-  position: "fixed",
-  zIndex: theme.zIndex.modal - 1,
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  padding: theme.spacing(2),
-  maxWidth: "min(28rem, 50vw)",
-  backgroundColor: theme.palette.background.paper,
-
-  "& svg": {
-    width: "2rem",
-    height: "2rem",
-  },
-
-  "& p": {
-    textWrap: "pretty",
   },
 }));

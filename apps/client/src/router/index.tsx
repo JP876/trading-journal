@@ -10,6 +10,7 @@ import { axiosInstance } from "../lib/axiosInstance";
 import { getLoggedInUserDB, hasUsersDB } from "../lib/db/api/users";
 import withCatch from "../lib/withCatch";
 import DashboardFallback from "../pages/dashboard/DashboardFallback";
+import TradesFallback from "../pages/trades/TradesFallback";
 import ProtectedRoutes from "./ProtectedRoutes";
 
 const NavigationMain = lazy(() => import("../components/Navigation"));
@@ -73,7 +74,7 @@ const routes: RouteObject[] = [
         Component: NavigationMain,
         children: [
           { path: "/dashboard", Component: DashboardMain, errorElement: <DashboardFallback /> },
-          { path: "/trades", Component: TradesPage },
+          { path: "/trades", Component: TradesPage, errorElement: <TradesFallback /> },
         ],
       },
     ],

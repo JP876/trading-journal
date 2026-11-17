@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 
-import { DashboardMessageContainer } from "./styledComps";
+import { FallbackMessageContainer } from "../../components/styledComps";
 
 const TradesNotFound = () => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const TradesNotFound = () => {
   };
 
   return (
-    <DashboardMessageContainer>
+    <FallbackMessageContainer>
       <InfoIcon color="info" />
       <Typography variant="body1">
         You haven't added any trades yet, so your dashboard is empty. Add trades whenever you're ready.
@@ -24,7 +24,7 @@ const TradesNotFound = () => {
           Go to Trades page
         </Button>
       </Stack>
-    </DashboardMessageContainer>
+    </FallbackMessageContainer>
   );
 };
 

@@ -1,6 +1,8 @@
 import type { TSelectInputOption } from "../../components/inputs/SelectInput";
 import type { ClosedBy, Direction, OrderType, Result, TradeFormSchemaType } from "../../types/trade";
 
+export const COLLAPSE_TIMEOUT = 200;
+
 export const defaultTradeValues: Partial<TradeFormSchemaType> = {
   closedBy: "tp/sl",
   orderType: "market_order",

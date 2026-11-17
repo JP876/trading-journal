@@ -3,8 +3,8 @@ import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+import { FallbackMessageContainer } from "../../components/styledComps";
 import LoadingTrades from "./LoadingTrades";
-import { DashboardMessageContainer } from "./styledComps";
 
 const DashboardFallback = () => {
   return (
@@ -16,12 +16,12 @@ const DashboardFallback = () => {
         </Stack>
       </Stack>
       <LoadingTrades />
-      <DashboardMessageContainer>
+      <FallbackMessageContainer>
         <ErrorIcon color="error" />
         <Typography variant="body1">
           An error occurred while loading the dashboard. Please refresh to try again.
         </Typography>
-      </DashboardMessageContainer>
+      </FallbackMessageContainer>
     </>
   );
 };
