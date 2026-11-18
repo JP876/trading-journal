@@ -11,6 +11,7 @@ import { getLoggedInUserDB, hasUsersDB } from "../lib/db/api/users";
 import withCatch from "../lib/withCatch";
 import AuthPageFallback from "../pages/auth/fallbacks/AuthPageFallback";
 import DashboardFallback from "../pages/dashboard/DashboardFallback";
+import NotFound from "../pages/NotFound";
 import TradesFallback from "../pages/trades/TradesFallback";
 import ProtectedRoutes from "./ProtectedRoutes";
 
@@ -82,6 +83,7 @@ const routes: RouteObject[] = [
         children: [
           { path: "/dashboard", Component: DashboardMain, ErrorBoundary: DashboardFallback },
           { path: "/trades", Component: TradesPage, ErrorBoundary: TradesFallback },
+          { path: "*", element: <NotFound /> },
         ],
       },
     ],
