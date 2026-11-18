@@ -1,7 +1,8 @@
 import SearchOffIcon from "@mui/icons-material/SearchOff";
-import { Button, styled } from "@mui/material";
+import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
+import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 
@@ -16,7 +17,7 @@ const NotFoundContainer = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[10],
 }));
 
-const NotFount = () => {
+const NotFound = () => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -41,4 +42,4 @@ const NotFount = () => {
   );
 };
 
-export default NotFount;
+export default NotFound;
