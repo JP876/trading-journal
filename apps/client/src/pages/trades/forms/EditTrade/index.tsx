@@ -1,16 +1,16 @@
-import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { standardSchemaResolver } from "@hookform/resolvers/standard-schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 
-import { editTrade } from '../../../../api/trades';
-import { QueryKey } from '../../../../enums';
-import useMainSession from '../../../../hooks/useMainSession';
-import useModal from '../../../../hooks/useModal';
-import useModalData from '../../../../hooks/useModalData';
-import useSnackbar from '../../../../hooks/useSnackbar';
-import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from '../../../../types/trade';
-import { TradesPageModal } from '../../enums';
-import TradeForm from '../TradeForm';
+import { editTrade } from "../../../../api/trades";
+import { QueryKey } from "../../../../enums";
+import useMainSession from "../../../../hooks/useMainSession";
+import useModal from "../../../../hooks/useModal";
+import useModalData from "../../../../hooks/useModalData";
+import useSnackbar from "../../../../hooks/useSnackbar";
+import { EditTradeFormSchema, type EditTradeFormSchemaType, type Trade } from "../../../../types/trade";
+import { TradesPageModal } from "../../enums";
+import TradeForm from "../TradeForm";
 
 const EditTradeForm = () => {
   const trade = useModalData<Trade>(TradesPageModal.EDIT_TRADE);
@@ -26,7 +26,7 @@ const EditTradeForm = () => {
     mutationFn: (data: EditTradeFormSchemaType) => {
       const session = trade?.tradingSession || mainSession?.id;
       if (!session) {
-        throw new Error('Main trading session not found');
+        throw new Error("Main trading session not found");
       }
       return editTrade(trade!.id, { ...data, tradingSessionId: session });
     },
@@ -35,14 +35,14 @@ const EditTradeForm = () => {
         queryClient.invalidateQueries({ queryKey: [QueryKey.TRADES] }),
         queryClient.invalidateQueries({ queryKey: [QueryKey.STATS] }),
       ]);
-      openSnackbar({ severity: 'success', message: 'Your trade details have been updated.' });
+      openSnackbar({ severity: "success", message: "Your trade details have been updated." });
       closeModal(TradesPageModal.EDIT_TRADE);
     },
   });
 
   const form = useForm<EditTradeFormSchemaType>({
     resolver: standardSchemaResolver(EditTradeFormSchema),
-    reValidateMode: 'onChange',
+    reValidateMode: "onChange",
     defaultValues: {
       ...trade,
       openDate: trade?.openDate ? new Date(trade.openDate) : undefined,
